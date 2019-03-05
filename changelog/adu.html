@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<link rel="icon" type="image/png" href="../icon.png">
+		<title>Changelog</title>
+		<link rel="stylesheet" type="text/css" href="../stylesheets/changelog.css">
+	</head>
+	<body style='text-align:cente' bgcolor = "black">
+		<h1 align="center">CHANGELOG</h1>
+		<h2>March 2019 - I still hate doing things.</h2>
+		<list>
+		<li>Aarex released yet another update, and I need to merge it with this one. Hopefully this stops happening so frequently...</li>
+		<h3>NG↑↑ Updates:</h3>
+			<li>Added omni-dimensions and gravitons.</li>
+			<li>Added replicators.</li>
+			<li>Created system where you need to get more gravitons to unlock new replicators.</li>
+			<li>Nerfed replicator multiplier exponent ( 8 > 3 ).</li>
+			<li>Added 5 omnipotence milestones. They each require 5 times more omni-stat to unlock, and preserve more and more of the early game content, similar to eternity milestones and quantum speedruns.</li>
+			<li>Improved Eternity Upgrade 1's formula ( x+1 > x^1.5+1).</li>
+			<li>Improved Eternity Upgrade 2's formula ( (x/200)^log4(2x) > x^log(x)^3.75 ). It's the same as the post-1e12 eternities one from NG+++.</li>
+			<li>Tachyon Particle rebuyable upgrade 3 quadruples the TP gain instead of tripling.</li>
+			<li></li>
+		<h3>Broken stuff:</h3>
+			<li>"Faster than Keemstar" and "error" achievement rewards do not work.</li>
+			<li>NG---: Tickspeed Boost autobuyer is thoroughly broken... it doesn't work almost ever. But nobody cares about NG---, so fuck it. I ain't doing shit.</li>
+		</list>
+		<h2>February 2019 - I hate doing things.</h2>
+		<list>
+		<li>Right about now is when I took over from Aarex with development, at least of these mods. (I hope he's still working on stuff, and that it's easy to import into this so I don't have to rewrite everything.)</li>
+		<li>Fixed a bunch of issues with the mode selection UI.</li>
+		<li>Added Achievements++ and the QoL and Secrets mods. (Achievements++ isn't complete yet, there's still lots of things I need to add, which I'll do eventually.)</li>
+		<h3>NG↑ Updates:</h3>
+			<li>Started the Arrow Notation project, a series of mods that get you farther and farther into the late game.</li>
+			<li>Added NG^ as the first mod of the Arrow Notation set. (It's not under NG+ anymore.)</li>
+			<li>Added 4 new achievements for NG↑↑.</li>
+		<h3>Broken stuff:</h3>
+			<li>IT'S TIME FOR BREAK_BREAK_INFINITY.JS <button onclick = "document.getElementById('rant').style.display = ''; this.innerHTML = 'Well, here you go'">Show my rant about big numbers</button><span id = "rant" style = "display: none"><br><br>(Both break_infinity.js and logarithmica_numerus_lite.js, though they're advertised to be able to store numbers up to a hardcap of 1e1e308, have a softcap at 10^9 quadrillion. At this point the computer doesn't store the numbers precise enough to have any degree of accuracy when dealing with numbers that are orders of magnitude smaller - for example, the multiplier per 10 dimensions being x2 when you have a total multiplier of 1e1e69 will have a negligible effect unless you buy billions of dimensions at the same time and apply all of their multipliers at once instead of individually (which leads to problems of its own). If you don't then it just ignores the multiplication altogether or gets the number wrong by several orders of magnitude. The numbers are just so big at this point that if you multiply them by 10 or 100 or even 1000 it literally does nothing. Either that or it multiplies it by a ridiculously large factor that seems to be completely random and quickly leads to a superexponential loop that crashes my game. Basically, addition itself is broken. This means no Nanofield, no NG+4, and no NG↑↑↑. It sucks. Fortunately I'm working on a solution - a new library to store numbers so big your brain can't comprehend the number of digits in the base-10 representation of the number of digits in the number. The numbers will be stored double-logarithmically, instead of single-logarithmically. The accuracy at low values will be absolutely terrible - it will be even less accurate than logarithmica. (Javascript likes to do this stupid thing where it randomly changes numbers by the tiniest amount, for example, 4 + 1 is usually 5 but is occasionally 4.99999999999 or 5.00000000001. Not really a big deal most of the time unless you require whole numbers for array indexes or something. But 10^10^5 and 10^10^5.00000000001 are very different. That tiny error could multiply a number by 2, randomly, unnoticeably, and for literally no reason. (Again, multiplying by 2 is insignificant at >1e9Qa anyway, but in the early game, especially during an NG-x run, it kind of defeats the purpose.) Essentially, it fucks stuff up.) I have some ideas for workarounds, though, like a combination of break_infinity and logarithmica where the exponent stored by the break_infinity part is a logarithm itself, or something similar. It should theoretically get the job done until 1e1e9Qa.)<br><br></li>
+			<li>The "Autobuyer Autobuyer" option from QoL is completely defunct. Pressing it will just toggle the Replicanti button. (It won't break anything, though.)</li>
+			<li>I somehow added a bug where the game will become completely unresponsive when you reload the page. It doesn't even pop up the stuck window. I could only fix it by clearing my local storage.</li>
+			<li>I planned to add the option of merging NGUd and NG+++ into one large super-lategame mod, NGUd+. You can start playing it - just click the NG++ button an extra time. Just don't ex-dilate or the game will crash.</li>
+			<li>NGUd definitely needs optimization (it lags when you buy black hole dimensions, especially when in NGUd+, and the black hole rendering itself is laggy at large sizes). I'll get around to fixing it at some point.</li>
+			<li>NGUd+ needs to be rebalanced - you can't get anywhere near enough TP for the first mastery studies upgrade, even with Secrets on.</li>
+			<li>Some of the loaded files are hidden by the mode selection UI.</li>
+			<li>NG-- flips its shit when you dilate time. It clearly wasn't designed with players actually making it to 13000 theorems in mind, since its massive buffs were created to counteract the dilation effect, and dilation doesn't slow down the game's progress any more. The result is that the player gets a ton of tachyon particles and quickly exceeds the 1e9Qa softcap, which crashes the game.</li>
+			<li>The NG--- Tickspeed Boost autobuyer will always buy up to the number in its Bulk Buy box, even if the maximum can't be afforded, as long as you can buy at least 1 tickspeed boost.</li>
+		</list>
+		<br>
+		<h1 align="center">Prior changes</h1>
+		<list>
+		<li><a href="september-2018.html">September 2018</a></li>
+		<li><a href="august-2018.html">August 2018</a></li>
+		<li><a href="pre-august-2018.html">Pre-August 2018</a></li>
+		<li><a href="base.html">Base game</a></li>
+		</list>
+	</body>
+</html>
