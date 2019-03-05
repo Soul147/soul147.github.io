@@ -1,0 +1,553 @@
+body {
+    background-color: #191919 !important
+}
+.container, .statstab, b, input {
+    font-family:'Inconsolata', monospace !important
+}
+#container div {
+    color: #e5e5e5
+}
+#container button, .popup button {
+    font-family:'Inconsolata', monospace !important;
+    background-color: #191919;
+    color: #e5e5e5;
+    border-color: #0072e5;
+    border-radius: 0px !important
+}
+#container button:hover {
+    background-color: #0072e5;
+    color: #191919;
+}
+#footer {
+    display: none
+}
+.achievementlocked {
+    background-color: #727272 !important;
+    border-color: #720000 !important;
+    border-radius: 0px !important
+}
+.achievementunlocked {
+    background-color: #00e500 !important;
+    border-color: #007200 !important;
+    border-radius: 0px !important
+}
+.completedrow {
+    background-color: #007200 !important
+}
+.achievementhidden {
+    background-color: #727272 !important;
+    border-color: #191919 !important;
+    border-radius: 0px !important
+}
+#progress {
+    bottom: 5px !important;
+    background-color: #191919 !important;
+    border-radius: 0px !important
+}
+#progressbar {
+    background-color: #00e500 !important;
+    border-radius: 0px !important
+}
+#progresspercent {
+    font-family:'Inconsolata', monospace !important;
+    color: #191919 !important;
+    border-radius: 0px !important
+}
+#coinAmount {
+    color: #0072e5 !important
+}
+.storebtn, .completedchallengesbtn, .pc4completed {
+    border-color: #00e500 !important;
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-radius: 0px !important
+}
+.storebtn:hover {
+    background-color: #00e500 !important;
+    color: #191919 !important
+}
+.unavailablebtn, .infinistorebtnlocked, .newdimlocked, .milestonerewardlocked, .eternityupbtnlocked, .eternityttbtnlocked, .lockedchallengesbtn, .dilationupglocked, .dilationupgrebuyablelocked, .nanofieldrewardlocked {
+    border-color: #e50000 !important;
+    color: #e5e5e5 !important
+}
+.unavailablebtn:hover, .infinistorebtnlocked:hover, .newdimlocked:hover, .infinistorebtnbought:hover, .onchallengebtn:hover, .completedchallengesbtn:hover, .milestonerewardlocked:hover, .milestonereward:hover, .timestudylocked:hover, .eternityupbtnlocked:hover, .eternityttbtnlocked:hover, .eternitychallengestudylocked:hover, .lockedchallengesbtn:hover, .dilationupglocked:hover, .dilationupgbought:hover, .dilationupgrebuyablelocked:hover, .dilationupgrebuyablebought:hover, .upgbought:hover, .nanofieldrewardlocked:hover {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important
+}
+.popup {
+    font-family:'Inconsolata', monospace !important;
+	background-color: #191919;
+	color: #e5e5e5;
+	border: 2px solid #0072e5;
+	border-radius: 0px
+}
+strong { color: #0072e5 }
+.floatingText {
+    color: #00e500 !important
+}
+#galaxybtn, #galaxy .infinistorebtn1, #galaxy .infinistorebtn2, #galaxy .infinistorebtn3, #sacrificebtn {
+    border-color: #2d5be5 !important
+}
+#galaxybtn:hover, #galaxy .infinistorebtn1:hover, #galaxy .infinistorebtn2:hover, #galaxy .infinistorebtn3:hover, #sacrificebtn:hover {
+    background-color: #2d5be5 !important
+}
+#galaxyPoints {
+    color: #e5e5e5 !important
+}
+.GPAmount {
+    color: #2d5be5 !important
+}
+#vanillaGalaxyPoints { display: none }
+.challengediv {
+    background-color: #191919 !important;
+    font-family:'Inconsolata', monospace !important;
+    border-color: #0072e5 !important;
+    border-radius: 0px !important
+}
+.challengesbtn {
+    border-color: #009900 !important
+}
+.challengesbtn:hover {
+    background-color: #009900 !important
+}
+.onchallengebtn {
+    background-color: #191919;
+    color: #e5e5e5 !important;
+    border-color: #e5e500 !important
+}
+#infinityPoints1 {
+    color: #e5e5e5 !important
+}
+#vanillaInfinityPoints { display: none }
+#bigcrunch, #infinitybtn, #pastinfs, #postInfinityButton, #idtabbtn button, .newdim, #infinitydimensions td:nth-child(4) .storebtn, #replicantichance.storebtn, #replicantiinterval.storebtn, #replicantimax.storebtn, #challTabButtons td:nth-child(2) button, #infchallengesbtn, .respecbtn {
+    border-color: #e2bd00 !important
+}
+#bigcrunch:hover, #infinitybtn:hover, #pastinfs:hover, #postInfinityButton:hover, #idtabbtn button:hover, .newdim:hover, #infinitydimensions td:nth-child(4) .storebtn:hover, #replicantichance.storebtn:hover, #replicantiinterval.storebtn:hover, #replicantimax.storebtn:hover, #challTabButtons td:nth-child(2) button:hover, #infchallengesbtn:hover, .respecbtn:hover {
+    background-color: #e2bd00 !important
+}
+.IPAmount1, .IPAmount2, #infPowAmount, #infDimMultAmount, #infDimEffectPower, #replicantiamount, #replicantimult {
+    color: #e2bd00 !important
+}
+.infinistorebtn1, .infinistorebtn3 {
+    border-color: #e2bd00 !important
+}
+.infinistorebtn2, .infinistorebtn4 {
+    border-color: #ccaa00 !important
+}
+.infinistorebtn1:hover, .infinistorebtn3:hover {
+    background-color: #e2bd00 !important
+}
+.infinistorebtn2:hover, .infinistorebtn4:hover {
+    background-color: #ccaa00 !important
+}
+.infinistorebtnbought, .dilationupgbought, .dilationupgrebuyablebought, .upgbought {
+    border-color: #00e500 !important
+}
+.autoBuyerDiv {
+    border-color: #727272;
+    border-radius: 0px
+}
+#singularitytabbtn, #singularityunlock.storebtn, #sacrificeIP.storebtn, #blackHoleTabbtn button, #blackholeunlock.storebtn, #blackholediv table .storebtn, #replicantstabbtn button, #replicantReset.storebtn, #edtabbtn button { border: 2px solid #333333 !important }
+#singularitytabbtn:hover, #singularityunlock.storebtn:hover, #sacrificeIP.storebtn:hover, #blackHoleTabbtn button:hover, #blackholeunlock.storebtn:hover, #blackholediv table .storebtn:hover, #replicantstabbtn button:hover, #replicantReset.storebtn:hover, #edtabbtn button:hover { background-color: #333333 !important }
+#singularityPower, #darkMatter, #darkMatterPerSecond, #darkMatterDT, #nextDiscounts, #darkMatterMult, #blackholePowAmount, #DilMultAmount, #InfAndReplMultAmount, #replicantAmount, #workerReplAmount, #babyReplAmount, #workerProgress, #hatchProgress, #growupProgress, #replicantAmountED, #normalReplicantsNanofield { color: #333333 !important }
+.infchallengediv {
+    background-color: #191919 !important;
+    font-family:'Inconsolata', monospace !important;
+    border-color: #e2bd00 !important;
+    border-radius: 0px !important
+}
+#eternitybtn, #eternitystorebtn, #pasteternities, #tdtabbtn button, #timedimensions td:nth-child(4) .storebtn, .eternityupbtn, .milestonereward, .timestudy, .eternityttbtn, #eterctabbtn {
+    border-color: #7100e2 !important;
+    animation: none
+}
+#eternitybtn:hover, #eternitystorebtn:hover, #pasteternities:hover, #tdtabbtn button:hover, #timedimensions td:nth-child(4) .storebtn:hover, .timestudy:hover, .eternityttbtn:hover, #eterctabbtn:hover {
+    background-color: #7100e2 !important
+}
+#TTbuttons {
+    font-family:'Inconsolata', monospace !important
+}
+#theorembuybackground {
+    background-color: #e5e5e5 !important;
+    border-color: #191919 !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important
+}
+#TTbuttons button {
+    font-family:'Inconsolata', monospace !important;
+    border-radius: 0px
+}
+#timestudies #footer, #masterystudies #footer {
+    display:block;
+    visibility:hidden
+}
+.timetheorembtnlocked {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #e50000 !important
+}
+.timetheorembtn {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #7100e2 !important
+}
+.timetheorembtn:hover {
+    background-color: #7100e2 !important;
+    color: #191919 !important
+}
+.EPAmount2, #timeShardAmount, #tickThreshold {
+    color: #7100e2 !important
+}
+.timestudylocked, .timestudy, .eternitychallengestudylocked, .eternitychallengestudy {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important
+}
+.timestudylocked, .eternitychallengestudylocked {
+    border-color: #e50000 !important
+}
+.timestudybought, .eternityupbtnbought, .eternitychallengestudybought {
+    background-color: #7100e2 !important;
+    color: #191919 !important;
+    border-color: #191919 !important
+}
+.timestudy.normaldimstudy {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #0072e5 !important;
+    animation: none
+}
+.timestudy.normaldimstudy:hover, .timestudybought.normaldimstudy {
+    background-color: #0072e5 !important;
+    color: #191919 !important;
+}
+.timestudy.infdimstudy {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #e2bd00 !important;
+    animation: none
+}
+.timestudy.infdimstudy:hover, .timestudybought.infdimstudy {
+    background-color: #e2bd00 !important;
+    color: #191919 !important;
+}
+.timestudy.timedimstudy {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #7100e2 !important;
+    animation: none
+}
+.timestudy.timedimstudy:hover, .timestudybought.timedimstudy {
+    background-color: #7100e2 !important;
+    color: #191919 !important;
+}
+.timestudy.activestudy {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #990000 !important;
+    animation: none
+}
+.timestudy.activestudy:hover, .timestudybought.activestudy {
+    background-color: #990000 !important;
+    color: #191919 !important;
+}
+.timestudy.passivestudy {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #7200e5 !important;
+    animation: none
+}
+.timestudy.passivestudy:hover, .timestudybought.passivestudy {
+    background-color: #7200e5 !important;
+    color: #191919 !important;
+}
+.timestudy.idlestudy {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #0072e5 !important;
+    animation: none
+}
+.timestudy.idlestudy:hover, .timestudybought.idlestudy {
+    background-color: #0072e5 !important;
+    color: #191919 !important;
+}
+.eternitychallengestudy {
+    border-color: #724c99 !important;
+    animation: none
+}
+.eternitychallengestudy:hover, .eternitychallengestudybought {
+    background-color: #724c99 !important;
+    color: #191919 !important
+}
+.eterchallengediv {
+    background-color: #191919 !important;
+    font-family:'Inconsolata', monospace !important;
+    border-color: #7100e2 !important;
+    border-radius: 0px !important
+}
+.timestudy.darkstudy {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #4c0099 !important;
+    animation: none
+}
+.timestudy.darkstudy:hover {
+    background-color: #4c0099 !important;
+    color: #191919 !important;
+    border-color: #4c0099 !important
+}
+.timestudybought.darkstudy {
+    background-color: #4c0099 !important;
+    color: #191919 !important;
+    border-color: #191919 !important
+}
+.timestudy.lightstudy {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #ac72e5 !important;
+    animation: none
+}
+.timestudy.lightstudy:hover {
+    background-color: #ac72e5 !important;
+    color: #191919 !important;
+    border-color: #ac72e5 !important
+}
+.timestudybought.lightstudy {
+    background-color: #ac72e5 !important;
+    color: #191919 !important;
+    border-color: #191919 !important
+}
+#tachyonParticleAmount, #dilatedTimeAmount, #dilatedTimePerSecond, #exDilationBenefit {
+    color: #72e572 !important
+}
+#galaxyThreshold, #dilatedGalaxies {
+    color: #0072e5 !important
+}
+#dilationTabbtn button, .dilationbtn, .dilationupg, .dilationupgrebuyable {
+    background-color: #191919 !important;
+    color: #e5e5e5 !important;
+    border-color: #72e572 !important;
+    animation: none
+}
+#dilationTabbtn button:hover, .dilationbtn:hover, .dilationupg:hover, .dilationupgrebuyable:hover {
+    background-color: #72e572 !important;
+    color: #191919 !important;
+    animation: none
+}
+#timestudies .dilationupgbought {
+    background-color: #72e572 !important;
+    color: #191919 !important;
+    border-color: #191919 !important
+}
+#blackholediv .eternityupbtn { border: 2px solid #333333 !important }
+#blackholediv .eternityupbtn:hover { background-color: #333333 !important }
+#reversedilation.dilationupg, #xdrow .dilationupgrebuyable { border-color: #16e528 !important }
+#reversedilation.dilationupg:hover, #xdrow .dilationupgrebuyable:hover  { background-color: #16e528 !important }
+#exDilationAmount { color:  #16e528 !important }
+#dilstudy6.dilationupg, #mdtabbtn .secondarytabbtn, #metadimensions .storebtn, #dil14.dilationupg, #dil15.dilationupg, #dil16.dilationupg, #dil17.dilationupg, #masteryportal.dilationupg, #masterystudyunlock button, #masterystudies .dilationupg {
+    border-color: #00e5e5 !important;
+    animation: none
+}
+#dilstudy6.dilationupg:hover, #mdtabbtn .secondarytabbtn:hover, #metadimensions .storebtn:hover, #dil13.dilationupg:hover, #dil14.dilationupg:hover, #dil15.dilationupg:hover, #dil16.dilationupg:hover, #masteryportal.dilationupg:hover, #masterystudyunlock button:hover, #masterystudies .dilationupg:hover {
+    background-color: #00e5e5 !important;
+    animation: none
+}
+#dilstudy6.dilationupgbought, #dil14.dilationupgbought, #dil15.dilationupgbought, #dil16.dilationupgbought, #dil17.dilationupgbought, #masterystudies .dilationupgbought {
+	background-color: #00e5e5 !important;
+    color: #191919 !important;
+	border-color: #191919 !important
+}
+#metaAntimatterAmount, #metaAntimatterBest, #metaAntimatterPower, #metaAntimatterEffect {
+    color: #00e5e5 !important
+}
+#quantum.storebtn, .quantumbtn, #pastquantums, #speedrunsbtn button, #dilstudy8.dilationupg, #qctabbtn, #dilstudy9.dilationupg, #pccompletionsbtn {
+    border-color: #009900 !important
+}
+#quantum.storebtn:hover, .quantumbtn:hover, #pastquantums:hover, #speedrunsbtn button:hover, #dilstudy8.dilationupg:hover, #dilstudy8.dilationupgbought, #qctabbtn:hover, #dilstudy9.dilationupg:hover, #dilstudy9.dilationupgbought, #pccompletionsbtn:hover {
+    background-color: #009900 !important
+}
+#progressbar.quantumProgress {
+	background-color: #009900 !important
+}
+.QKAmount, #gatheredQuarks, #normalReplGatherRate, #workerReplGatherRate, #babyReplGatherRate, #gatherRate, .empQuarks, #quarksNanofield, #quarkLoss { color: #009900 !important }
+.red { color: #e50000 }
+.green, #quarkTranslation, #quarkCharge, #quarkChargeRate { color: #00e500 }
+.blue { color: #0000e5 }
+.gluonupgrade.rg, .gluonupgrade.gb, .gluonupgrade.br {
+	background-color: #191919 !important;
+	box-shadow: none !important;
+	color: #e5e5e5 !important
+}
+.gluonupgrade.rg:hover, .gluonupgrade.gb:hover, .gluonupgrade.br:hover {
+	box-shadow: none !important;
+	color: #191919 !important
+}
+.gluonupgradebought.rg, .gluonupgradebought.gb, .gluonupgradebought.br {
+	border: 2px solid #191919 !important;
+	color: #191919 !important
+}
+#dilstudy7.dilationupg, #electronstabbtn button, #electrons .storebtn { 
+	border: 2px solid #d2e500 !important;
+	animation: none
+}
+#dilstudy7.dilationupg:hover, #electronstabbtn button:hover, #dilstudy7.dilationupgbought, #electrons .storebtn:hover { background-color: #d2e500 !important }
+#electronsAmount, #electronsTranslation { color: #d2e500 !important }
+#electronsEffect { color: #00e500 !important }
+.quantumchallengediv {
+    background-color: #191919 !important;
+    font-family:'Inconsolata', monospace !important;
+    border-color: #009900 !important;
+    border-radius: 0px !important
+}
+.pc1completed {
+    background-color: #191919 !important;
+    border-color: #009900 !important;
+    color: #e5e5e5 !important;
+    border-radius: 0px !important
+}
+.pc2completed {
+    background-color: #191919 !important;
+    border-color: #7100e2 !important;
+    color: #e5e5e5 !important;
+    border-radius: 0px !important
+}
+.pc3completed {
+    background-color: #191919 !important;
+    border-color: #e2bd00 !important;
+    color: #e5e5e5 !important;
+    border-radius: 0px !important
+}
+#dilstudy10.dilationupg, #dilstudy11.dilationupg { border: 2px solid #333333 !important }
+#dilstudy10.dilationupg:hover, #dilstudy10.dilationupgbought, #dilstudy11.dilationupg:hover, #dilstudy11.dilationupgbought { background-color: #333333 !important }
+#quantumFoodAmount, #quantumFoodAmountED { color: #b7e5b7 !important }
+#buyQuantumFood.storebtn, #buyMaxQuantumFood.storebtn, #feedNormal.storebtn, #feedBaby.storebtn, #breakLimit.storebtn, #emperordimensions .storebtn, #buyQuantumFoodED .storebtn, #buyMaxQuantumFoodED .storebtn { border: 2px solid #b7e5b7 !important }
+#buyQuantumFood.storebtn:hover, #buyMaxQuantumFood.storebtn:hover, #feedNormal.storebtn:hover, #feedBaby.storebtn:hover, #breakLimit.storebtn:hover, #emperordimensions .storebtn:hover, #buyQuantumFoodED .storebtn:hover, #buyMaxQuantumFoodED .storebtn:hover { background-color: #b7e5b7 !important }
+#eggonAmount, #eggonRate { color: #e5dab7 !important }
+#reduceHatchSpeed.storebtn { border: 2px solid #e5dab7 !important }
+#reduceHatchSpeed.storebtn:hover { background-color: #e5dab7 !important }
+#dilstudy12.dilationupg, #nanofieldtabbtn button { border: 2px solid #999999 !important }
+#produceQuarkCharge, .nanofieldreward { 
+	background-color: #191919 !important;
+	border: 1px solid #999999 !important;
+	text-shadow: none;
+	animation: none
+}
+#dilstudy12.dilationupg:hover, #dilstudy12.dilationupgbought, #nanofieldtabbtn button:hover, #produceQuarkCharge:hover {
+	background-color: #999999 !important;
+	color: #191919;
+	text-shadow: none
+}
+#quarkEnergy, #quarkEnergyRate, #quarkPowerThreshold { color: #72e500 !important }
+#quarkPower, #rewards { color: #ace572 !important }
+#quarkAntienergy, #quarkAntienergyRate, #quarkChargeProductionCap { color: #4c0099 !important }
+.nanofieldreward:hover { 
+	color: #e5e5e5 !important;
+	text-shadow: none
+}
+.notifyjs-bootstrap-info {
+    background-color: #0072e5;
+    font-family:'Inconsolata', monospace;
+    border: 2px #004C99 solid;
+    border-radius: 0px
+}
+.notifyjs-bootstrap-success {
+    background-color: #00e500;
+    font-family:'Inconsolata', monospace;
+    border: 2px #009900 solid;
+    border-radius: 0px
+}
+.notifyjs-bootstrap-warn {
+    background-color: #e5e500;
+    font-family:'Inconsolata', monospace;
+    border: 2px #999900 solid;
+    border-radius: 0px
+}
+.notifyjs-bootstrap-error {
+    background-color: #e50000;
+    font-family:'Inconsolata', monospace;
+    border: 2px #990000 solid;
+    border-radius: 0px
+}
+
+@keyframes rg {
+	0% {color: #e50000}
+	25% {color: #e5e500}
+	50% {color: #00e500}
+	75% {color: #e5e500}
+	100% {color: #e50000}
+}
+@keyframes gb {
+	0% {color: #00e500}
+	25% {color: #00e5e5}
+	50% {color: #0000e5}
+	75% {color: #00e5e5}
+	100% {color: #00e500}
+}
+@keyframes br {
+	0% {color: #0000e5}
+	25% {color: #e500e5}
+	50% {color: #e50000}
+	75% {color: #e500e5}
+	100% {color: #0000e5}
+}
+@keyframes rgupg {
+	0% {border: 2px solid #e50000}
+	25% {border: 2px solid #e5e500}
+	50% {border: 2px solid #00e500}
+	75% {border: 2px solid #e5e500}
+	100% {border: 2px solid #e50000}
+}
+@keyframes gbupg {
+	0% {border: 2px solid #00e500}
+	25% {border: 2px solid #00e5e5}
+	50% {border: 2px solid #0000e5}
+	75% {border: 2px solid #00e5e5}
+	100% {border: 2px solid #00e500}
+}
+@keyframes brupg {
+	0% {border: 2px solid #0000e5}
+	25% {border: 2px solid #e500e5}
+	50% {border: 2px solid #e50000}
+	75% {border: 2px solid #e500e5}
+	100% {border: 2px solid #0000e5}
+}
+@keyframes rgupghover {
+	0% {background-color: #e50000; border: 2px solid #e50000}
+	25% {background-color: #e5e500; border: 2px solid #e5e500}
+	50% {background-color: #00e500; border: 2px solid #00e500}
+	75% {background-color: #e5e500; border: 2px solid #e5e500}
+	100% {background-color: #e50000; border: 2px solid #e50000}
+}
+@keyframes gbupghover {
+	0% {background-color: #00e500; border: 2px solid #00e500}
+	25% {background-color: #00e5e5; border: 2px solid #00e5e5}
+	50% {background-color: #0000e5; border: 2px solid #0000e5}
+	75% {background-color: #00e5e5; border: 2px solid #00e5e5}
+	100% {background-color: #00e500; border: 2px solid #00e500}
+}
+@keyframes brupghover {
+	0% {background-color: #0000e5; border: 2px solid #0000e5}
+	25% {background-color: #e500e5; border: 2px solid #e500e5}
+	50% {background-color: #e50000; border: 2px solid #e50000}
+	75% {background-color: #e500e5; border: 2px solid #e500e5}
+	100% {background-color: #0000e5; border: 2px solid #0000e5}
+}
+@keyframes rgupgbought {
+	0% {background-color: #e57272}
+	25% {background-color: #e5e572}
+	50% {background-color: #72e572}
+	75% {background-color: #e5e572}
+	100% {background-color: #e57272}
+}
+@keyframes gbupgbought {
+	0% {background-color: #72e572}
+	25% {background-color: #72e5e5}
+	50% {background-color: #7272e5}
+	75% {background-color: #72e5e5}
+	100% {background-color: #72e572}
+}
+@keyframes brupgbought {
+	0% {background-color: #7272e5}
+	25% {background-color: #e572e5}
+	50% {background-color: #e57272}
+	75% {background-color: #e572e5}
+	100% {background-color: #7272e5}
+}
