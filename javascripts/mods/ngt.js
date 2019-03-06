@@ -408,3 +408,6 @@ function unlockNewReplicator() {
 	
 	resetReplicators();
 }
+
+// Hyperstudies
+

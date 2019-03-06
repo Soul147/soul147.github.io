@@ -203,7 +203,6 @@ function hasInfinityMult(tier) {
         }
         let dimMult = player.tickspeedBoosts==undefined?2:1
         if (player.aarexModifications.newGameExpVersion) dimMult *= 10
-        if (player.mods.ngt) dimMult /= 12;
 
         if (player.infinityUpgrades.includes('dimMult')) dimMult *= infUpg12Pow()
         if ((player.currentChallenge == "challenge9" || player.currentChallenge == "postc1")&&!nonrandom) dimMult = Math.pow(10/0.30,Math.random())*0.30

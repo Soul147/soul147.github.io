@@ -18,10 +18,10 @@ function updateQoL(diff) {
 		}
 	}
 
-	// Automatically award EC completions for challenges 1-12 based on EP.
+	// Automatically award EC completions for challenges 1-12 when over 1e1300 EP. (They can all be done by then.)
 
-	if(player.options.qol[2]) if(player.eternities > 0) for(var i = 1; i <= 12; i++) {
-		player.eternityChalls["eterc" + i] = Math.max(Math.min(Math.floor(Math.log(player.eternityPoints.add(1).logarithm + 1)), 5), player.eternityChalls["eterc" + i] || 0)
+	if(player.options.qol[2]) if(player.eternityPoints.gt("1e1300")) for(var i = 1; i <= 12; i++) {
+		player.eternityChalls["eterc" + i] = 5
 		updateEternityChallenges()
 		// Update this shit because it's not automatic for some reason
 		player.dimensionMultDecrease = Math.min(player.dimensionMultDecrease, 3 - player.eternityChalls.eterc6 * 0.2) || 3

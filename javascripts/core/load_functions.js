@@ -1383,7 +1383,7 @@ if (player.version < 5) {
 	if (player.galacticSacrifice) {
 			document.getElementById("galaxy11").innerHTML = "Normal dimensions are "+(player.infinitied>0||getEternitied()!==0||quantumed?"cheaper based on your infinitied stat.<br>Currently: <span id='galspan11'>"+shortenDimensions(galUpgrade11())+"</span>x":"99% cheaper.")+"<br>Cost: 1 GP"
 	} else {
-			document.getElementById("infi21").innerHTML = "Increase the multiplier for buying 10 Dimensions<br>"+(player.mods.ngt?"1.7x -> 2x":(player.aarexModifications.newGameExpVersion?"20x -> 24x":"2x -> 2.2x"))+"<br>Cost: 1 IP"
+			document.getElementById("infi21").innerHTML = "Increase the multiplier for buying 10 Dimensions<br>"+(player.aarexModifications.newGameExpVersion?"20x -> 24x":"2x -> 2.2x")+"<br>Cost: 1 IP"
 			document.getElementById("infi33").innerHTML = "Increase Dimension Boost multiplier<br>2x -> 2.5x<br>Cost: 7 IP"
 	}
 	var resetSkipCosts=[20,40,80]
