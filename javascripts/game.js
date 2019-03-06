@@ -4856,7 +4856,6 @@ function eternity(force, auto) {
             else if (player.aarexModifications.eternityChallRecords[player.eternityChallUnlocked] === undefined) player.aarexModifications.eternityChallRecords[player.eternityChallUnlocked] = player.thisEternity
             else player.aarexModifications.eternityChallRecords[player.eternityChallUnlocked] = Math.min(player.thisEternity, player.aarexModifications.eternityChallRecords[player.eternityChallUnlocked])
             player.etercreq = 0
-            forceRespec = true
             if (Object.keys(player.eternityChalls).length >= 10) {
                 var eterchallscompletedtotal = 0;
                 for (i=1; i<Object.keys(player.eternityChalls).length+1; i++) {
@@ -5548,7 +5547,7 @@ function ECTimesCompleted(name) {
 function canUnlockEC(idx, cost, study, study2) {
     study2 = (study2 !== undefined) ? study2 : 0;
     if (player.eternityChallUnlocked !== 0) return false
-    if ((!player.timestudy.studies.includes(study) && (player.study2 == 0 || !player.timestudy.studies.includes(study2))) || (idx > 10 && player.mods.ngt)) return false
+    if(!player.mods.ngt) if ((!player.timestudy.studies.includes(study) && (player.study2 == 0 || !player.timestudy.studies.includes(study2)))) return false
     if (player.timestudy.theorem < cost) return false
     if (player.etercreq == idx && idx !== 11 && idx !== 12) return true
 
@@ -7091,6 +7090,7 @@ function gameLoop(diff) {
         player.tickspeed = player.tickspeed.times(Decimal.pow(getTickSpeedMultiplier(), player.totalTickGained - oldT))
     } else if (player.timeShards.gt(player.tickThreshold)) {
         let thresholdMult=player.timestudy.studies.includes(171)?1.25:1.33
+        if(player.mods.ngt) thresholdMult=player.timestudy.studies.includes(171)?1.20:1.25
         if (QCIntensity(7)) thresholdMult *= getQCReward(7)
         gain = Math.ceil(new Decimal(player.timeShards).dividedBy(player.tickThreshold).log10() / Math.log10(thresholdMult))
         player.totalTickGained += gain
@@ -7732,6 +7732,8 @@ function gameLoop(diff) {
 			ge("omnitabbtn").style.display = ""
 		}
 		
+		ge("gravdisable").innerHTML = " and gravitons (to time dimensions)"
+		
 		ge("omnibtnFlavor").innerHTML = ngt.omni?"I need to become omnipotent.":"this pitiful universe and its contents are no longer of any significance. I must ascend beyond it and become omnipotent."
 		if(ngt.omni) {
 			ge("omnibtnOPGain").innerHTML = "gain " + shorten(gainedOP()) + " omnipotence points."
@@ -7748,9 +7750,9 @@ function gameLoop(diff) {
 		
 		for(var i = 0; i < 4 + !!player.masterystudies; i++) {
 			ge("om" + i).className = "omnimilestonelocked"
-			ge("omreq" + i).innerHTML = "requirement: " + 5**i + " omnipotence";
+			ge("omreq" + i).innerHTML = "requirement: " + 2**i + " omnipotence";
 		}
-		for(var i = 0; i <= Math.min(Math.log(ngt.omni) / Math.log(5), 4 + !!player.masterystudies); i++) {
+		for(var i = 0; i <= Math.min(Math.log(ngt.omni) / Math.log(2), 4 + !!player.masterystudies); i++) {
 			ge("om" + i).className = "omnimilestone"
 		}
 		
@@ -7780,8 +7782,8 @@ function gameLoop(diff) {
 			ge("od" + i + "cost1").innerHTML = shortenCosts(d.gCost);
 			ge("od" + i + "cost2").innerHTML = shortenCosts(d.opCost);
 			
-			ge("od" + i + "btn1").className = ngt.gravitons.gt(d.gCost) ? "storebtn" : "unavailablebtn";
-			ge("od" + i + "btn2").className = ngt.op.gt(d.opCost) ? "storebtn" : "unavailablebtn";
+			ge("od" + i + "btn1").className = ngt.gravitons.gte(d.gCost) ? "storebtn" : "unavailablebtn";
+			ge("od" + i + "btn2").className = ngt.op.gte(d.opCost) ? "storebtn" : "unavailablebtn";
 		}
 		
 		// replicators (coding this was fucking terrible and I feel sorry for Hevi having to do this himself)
@@ -7830,6 +7832,20 @@ function gameLoop(diff) {
 
 		if (player.achievements.includes("ngt12")) {
 			player.dilation.tachyonParticles = Decimal.max(player.dilation.tachyonParticles, getDilGain(Decimal.pow(10, Math.pow(ngt.bestMoney.logarithm, 0.75)))/10);
+		}
+		
+		// omni-challenges
+		
+		if(!player.masterystudies) ge("octabbtn").style.marginLeft = "-15px";
+		
+		t = {
+			req: [
+				Decimal.pow(Number.MAX_VALUE, 100)
+			]
+		}
+		
+		for(var i = 1; i <= 1; i++) {
+			ge("ocreq" + i).innerHTML = shorten(t.req[i-1]);
 		}
 	}
 

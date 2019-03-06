@@ -5,15 +5,16 @@ function gainedOP() {
 function omnipotenceReset(force) {
 	if(player.eternityPoints.add(gainedEternityPoints()).lt(1e308) && !force) return;
 	
-	keepInf = player.mods.ngt.omni > 5**0
-	keepBreak = player.mods.ngt.omni > 5**1
-	keepEter = player.mods.ngt.omni > 5**2
-	keepStudy = player.mods.ngt.omni > 5**3
-	keepDilation = player.mods.ngt.omni > 5**4
-	keepMastery = player.mods.ngt.omni > 5**5 && player.masterystudies
+	keepInf = player.mods.ngt.omni > 2**0
+	keepBreak = player.mods.ngt.omni > 2**1
+	keepEter = player.mods.ngt.omni > 2**2
+	keepStudy = player.mods.ngt.omni > 2**3
+	keepEterc = player.mods.ngt.omni > 2**4
+	keepDilation = player.mods.ngt.omni > 2**5
+	keepMastery = player.mods.ngt.omni > 2**6 && player.masterystudies
 	
 	if(ngt.thisOmni > 1200) dev.omniAnim(5 - !!player.mods.ngt.omni*4);
-	player.mods.ngt.omni++;
+	if(!force) player.mods.ngt.omni++;
 	player.mods.ngt.op = player.mods.ngt.op.add(gainedOP());
 	
 	if (player.tickspeedBoosts !== undefined) player.tickspeedBoosts = 0
@@ -81,7 +82,7 @@ function omnipotenceReset(force) {
 		autobuyers: player.autobuyers,
 		partInfinityPoint: 0,
 		partInfinitied: 0,
-		break: keepBreak ? player.break : false,
+		break: player.break,
 		costMultipliers: [new Decimal(1e3), new Decimal(1e4), new Decimal(1e5), new Decimal(1e6), new Decimal(1e8), new Decimal(1e10), new Decimal(1e12), new Decimal(1e15)],
 		tickspeedMultiplier: new Decimal(10),
 		chall2Pow: 1,
@@ -252,7 +253,7 @@ function omnipotenceReset(force) {
 			epcost: new Decimal(1),
 			studies: [],
 		},
-		eternityChalls: {},
+		eternityChalls: keepEterc ? player.eternityChalls : {},
 		eternityChallGoal: new Decimal(Number.MAX_VALUE),
 		currentEternityChall: "",
 		eternityChallUnlocked: 0,
@@ -413,7 +414,7 @@ function unlockNewReplicator() {
 
 function startOmniChallenge(p) {
 	if(typeof(list) == Array) player.omniChallenges = p;
-	else player.omniChallenges = p;
+	else player.omniChallenges = [p];
 	omnipotenceReset(true)
 }
 
@@ -422,6 +423,6 @@ function exitOmniChallenge() {
 	omnipotenceReset(true)
 }
 
-function inOmniChallenge(n) {
+function inOC(n) {
 	if(player.omniChallenges.includes(n)) return true;
 }

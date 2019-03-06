@@ -2676,13 +2676,14 @@
             <br>
             <button class="storebtn" style="font-size: 100%; width:200px" onclick="exitChallenge()">Exit Challenge</button><br><br>
             <table class="table" align="center" style="margin: auto; display: none" id="challTabButtons">
-                <tr>
-                    <td><button class="secondarytabbtn" onclick="showChallengesTab('normalchallenges')">Challenges</button></td>
-                    <td><button class="secondarytabbtn" onclick="showChallengesTab('breakchallenges')">Infinity Challenges</button></td>
-                    <td><button id="eterctabbtn" class="secondarytabbtn" onclick="showChallengesTab('eternitychallenges')">Eternity Challenges</button></td>
-                    <td><button id="qctabbtn" class="secondarytabbtn" onclick="showChallengesTab('quantumchallenges')">Quantum Challenges</button></td>
-                </tr>
-            </table>
+				<tr>
+					<td><button class="secondarytabbtn" onclick="showChallengesTab('normalchallenges')">Challenges</button></td>
+					<td><button class="secondarytabbtn" onclick="showChallengesTab('breakchallenges')">Infinity Challenges</button></td>
+					<td><button id="eterctabbtn" class="secondarytabbtn" onclick="showChallengesTab('eternitychallenges')">Eternity Challenges</button></td>
+					<td><button id="qctabbtn" class="secondarytabbtn" onclick="showChallengesTab('quantumchallenges')">Quantum Challenges</button></td>
+					<td><button id="octabbtn" class="secondarytabbtn" onclick="showChallengesTab('omnichallenges')">omni-challenges</button></td>
+				</tr>
+			</table>
             <div id="nextchall"></div>
             <div id="normalchallenges" class="challengeTab">
                 <table class="table" style="margin: 0 auto">
@@ -3276,7 +3277,7 @@
                     <tr>
                         <td>
                             <div class="eterchallengediv" id="eterc11div" style="height: 140px; display: none">
-                                <span>All dimension multipliers are disabled except for the multipliers from Infinity power and dimension boosts (to normal dimensions)</span>
+                                <span>All dimension multipliers are disabled except for the multipliers from Infinity power and dimension boosts (to normal dimensions)<span id = "gravdisable"></span></span>
                                 <br>
                                 <br>
                                 <div class="outer">
@@ -3524,6 +3525,50 @@
                     </tr>
                 </table>
             </div>
+			<div id = "omnichallenges" class = "challengeTab">
+				<table class = "table" style = "margin: 0 auto">
+					<tr>
+						<td>
+							<div class = "omnichallengediv">
+								you can only buy first dimensions.<br>
+								requirement: <span id = "ocreq1"></span><br>
+								<button id = "oc1" class = "challengesbtn" onclick = "startOmniChallenge(1)"></button><br>
+								goal: <span id = "ocgoal1"></span><br>
+								reward: <span id = "ocreward1"></span>
+							</div>
+						</td>
+						<td>
+							<div class = "omnichallengediv">
+								you can only buy first dimensions.<br>
+								requirement: <span id = "ocreq1"></span><br>
+								<button id = "oc1" class = "challengesbtn" onclick = "startOmniChallenge(1)"></button><br>
+								goal: <span id = "ocgoal1"></span><br>
+								reward: <span id = "ocreward1"></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class = "omnichallengediv">
+								you can only buy first dimensions.<br>
+								requirement: <span id = "ocreq1"></span><br>
+								<button id = "oc1" class = "challengesbtn" onclick = "startOmniChallenge(1)"></button><br>
+								goal: <span id = "ocgoal1"></span><br>
+								reward: <span id = "ocreward1"></span>
+							</div>
+						</td>
+						<td>
+							<div class = "omnichallengediv">
+								you can only buy first dimensions.<br>
+								requirement: <span id = "ocreq1"></span><br>
+								<button id = "oc1" class = "challengesbtn" onclick = "startOmniChallenge(1)"></button><br>
+								goal: <span id = "ocgoal1"></span><br>
+								reward: <span id = "ocreward1"></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
             <table id="footer">
                 <tr>
                     <td>
@@ -4549,6 +4594,7 @@
             <table class="table" align="center" style="margin: auto" id="dimTabButtons">
                 <tr>
                     <td><button class="secondarytabbtn" onclick="showOmniTab('omnipotence')">Omnipotence</button></td>
+                    <td><button class="secondarytabbtn" onclick="showOmniTab('omnimilestones')">Milestones</button></td>
                 </tr>
             </table>
 			<br>
@@ -4563,16 +4609,17 @@
 					you have <span id = "op"></span> omnipotence points.
 				</center>
 			</div>
-			<div id = "omnimilestones" style = "position: fixed; right: 0px; bottom: -400px; text-align: center; width: 300px; height: 450px; background-color: black; box-shadow: 0px 0px 25px 25px black; transition: bottom 1s">
+			<div id = "omnimilestones" class = "omnitab">
 				<center style = "font-size: 20px">
-					<div class = "omnibtn" style = "width: 270px; margin-top: 2px" onclick = "b = ge('omnimilestones'); if(b.style.bottom == '-400px') b.style.bottom = '0px'; else b.style.bottom = '-400px'">omnipotence milestones</div><br>
+					<h1>omnipotence milestones</h1>
 					<p style = "font-size: 12px">you've gone omnipotent <span id = "omniTimes"></span> times.</p>
 					<div class = "omnimilestonelocked" id = "om0">keep infinity upgrades<br><span id = "omreq0"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om1">keep post-infinity upgrades<br><span id = "omreq1"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om2">keep eternity upgrades<br><span id = "omreq2"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om3">keep time studies<br><span id = "omreq3"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om4">keep dilation studies<br><span id = "omreq4"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om5">keep mastery studies<br><span id = "omreq5"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om4">keep eternity challenges<br><span id = "omreq4"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om5">keep dilation studies<br><span id = "omreq5"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om6">keep mastery studies<br><span id = "omreq6"></span></div><br>
 				</center>
 			</div>
 		</div>

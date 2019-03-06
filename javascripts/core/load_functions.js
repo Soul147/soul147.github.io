@@ -1592,6 +1592,7 @@ if (player.version < 5) {
 	showInfTab('preinf')
 	showEternityTab('timestudies', true)
 	showQuantumTab('uquarks')
+	showOmniTab('omnipotence')
 	if (!player.options.newsHidden) scrollNextMessage()
 	var detectNGPStart = player.lastUpdate == 1531944153054
 	if (player.aarexModifications.switch) {
@@ -1846,6 +1847,7 @@ function new_game(id) {
 	showChallengesTab('challenges')
 	showEternityTab('timestudies', true)
 	showQuantumTab('uquarks')
+	showOmniTab('omnipotence')
 }
 
 function transformSaveToDecimal() {

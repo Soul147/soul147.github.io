@@ -160,6 +160,24 @@ button {
 	position: relative;
 }
 
+.omnichallengediv {
+	display:table;
+	text-align:center;
+	width: 300px;
+	height: 100px;
+	color: #f00;
+	background: #000;
+	font-weight: bold;
+	font-family: Typewriter;
+	border: 3px solid #f00;
+	border-radius: 10px;
+	font-size: 80%;
+	transition-duration: 0.2s;
+	padding: 2px;
+	margin: 3px 8px;
+	position: relative;
+}
+
 #pairedchallenges .quantumchallengediv { height: 90px }
 
 .completedchallengesbtn {
