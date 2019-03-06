@@ -2,8 +2,8 @@ function gainedOP() {
 	return Decimal.pow(10, player.eternityPoints.plus(gainedEternityPoints()).e/(308)).times(player.mods.ngt.opMult || 1).divide(10).floor();
 }
 
-function omnipotenceReset() {
-	if(player.eternityPoints.add(gainedEternityPoints()).lt(1e308)) return;
+function omnipotenceReset(force) {
+	if(player.eternityPoints.add(gainedEternityPoints()).lt(1e308) && !force) return;
 	
 	keepInf = player.mods.ngt.omni > 5**0
 	keepBreak = player.mods.ngt.omni > 5**1
@@ -409,5 +409,19 @@ function unlockNewReplicator() {
 	resetReplicators();
 }
 
-// Hyperstudies
+// omni-challenges
 
+function startOmniChallenge(p) {
+	if(typeof(list) == Array) player.omniChallenges = p;
+	else player.omniChallenges = p;
+	omnipotenceReset(true)
+}
+
+function exitOmniChallenge() {
+	player.omniChallenges = [];
+	omnipotenceReset(true)
+}
+
+function inOmniChallenge(n) {
+	if(player.omniChallenges.includes(n)) return true;
+}
