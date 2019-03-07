@@ -1,5 +1,5 @@
 function getDimensionBoostPower(next, focusOn) {
-  if (player.currentChallenge == "challenge11" || player.currentChallenge == "challenge16" || player.currentChallenge == "postc1" || player.currentChallenge == "postcngm3_1") return Decimal.fromNumber(1);
+  if (player.currentChallenge == "challenge11" || player.currentChallenge == "challenge16" || player.currentChallenge == "postc1" || player.currentChallenge == "postcngm3_1" || inOC(3)) return Decimal.fromNumber(1);
 
   var ret = 2
   if (!player.galacticSacrifice) {

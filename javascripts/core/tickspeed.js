@@ -1,7 +1,8 @@
 function canBuyTickSpeed() {
   if (player.currentEternityChall == "eterc9") return false
   if (player.galacticSacrifice) if (player.currentChallenge=="challenge14"&&player.tickBoughtThisInf.current>307) return false
-  return canBuyDimension(3);
+  if (inOC(2)) return false;
+  return !!(canBuyDimension(3) + (player.eternities >= 30));
 }
 
 function getGalaxyPower(ng, bi) {
@@ -62,7 +63,7 @@ function getTickSpeedMultiplier() {
 		}
 		return 1;
 	}
-	if (inQC(2)) return 0.89/(player.achievements.includes("r27")&&player.mods.ac?div:1)
+	if (inQC(2) || inOC(3)) return 0.89/(player.achievements.includes("r27")&&player.mods.ac?div:1)
 	let inERS = player.boughtDims != undefined || player.infinityUpgradesRespecced != undefined
 	let galaxies
 	let baseMultiplier

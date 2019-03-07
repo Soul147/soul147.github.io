@@ -364,7 +364,9 @@ function updateNewPlayer(reseted) {
 			gravitons: new Decimal(0),
 			opUpgrades: [], // upgrades bought with OP
 			replicatorsUnlocked: 0,
-			newReplicatorCost: new Decimal(1e10)
+			newReplicatorCost: new Decimal(1e10),
+			oc: [], // omni-challenges completed
+			ocr: [] // omni-challenges currently running
 		}
 		for(var i = 1; i <= 8; i++) {j = i - 1; player.mods.ngt["d" + i] = {amount: new Decimal(0), mult: new Decimal(1), gBought: new Decimal(0), opBought: new Decimal(0), gBaseCost: Decimal.pow(10, j*j*4), gCostMult: Decimal.pow(10, i*i*2), opBaseCost: Decimal.pow(3, j*4), opCostMult: Decimal.pow(3, i*2)}; }
 		for(var i = 1; i <= 8; i++) player.mods.ngt["r" + i] = {amount: new Decimal(0), power: new Decimal(1)}; 
@@ -1062,6 +1064,8 @@ function getGalaxyRequirement(offset=0) {
     if (player.challenges.includes("postc5")) amount -= 1;
     if (player.infinityUpgradesRespecced != undefined) amount -= getInfUpgPow(6)
 
+	if(compOC(2)) amount *= (100 + ngt.t.reward[1]) / 100;
+		
     return amount;
 }
 
@@ -1183,7 +1187,7 @@ function updateDimensions() {
         document.getElementById("secondResetLabel").textContent = ((player.galacticSacrifice || player.boughtDims) ? 'Antimatter ' : player.galaxies < 1400 ? (player.galaxies < getGalaxyCostScalingStart() ? '' : player.galaxies < getRemoteGalaxyScalingStart() ? 'Distant ' : 'Remote ') + 'Antimatter' : 'Dark Matter') + ' Galaxies ('+ getFullExpansion(player.galaxies) + ((totalReplGalaxies + player.dilation.freeGalaxies) > 0 ? ' + ' + getFullExpansion(totalReplGalaxies)  + (player.dilation.freeGalaxies > 0 ? ' + ' + getFullExpansion(Math.floor(player.dilation.freeGalaxies)) : '') : '') +'): requires ' + getFullExpansion(getGalaxyRequirement()) + ' '+DISPLAY_NAMES[player.currentChallenge === 'challenge4' ? 6 : 8]+' Dimensions';
     }
 
-    if (canBuyDimension(3) || player.currentEternityChall == "eterc9") {
+    if (canBuyTickSpeed() || player.currentEternityChall == "eterc9") {
         var tickmult = getTickSpeedMultiplier()
         var ticklabel
         if (Decimal.lt(tickmult,1e-9)) ticklabel = "Divide the tick interval by " + shortenDimensions(Decimal.recip(tickmult))
@@ -2139,7 +2143,7 @@ function updateInfCosts() {
         document.getElementById("ec12unl").innerHTML = "Eternity Challenge 12<span>Requirement: Use only the Time Dimension path<span>Cost: 1 Time Theorem"
 
         if (player.dilation.studies.includes(1)) document.getElementById("dilstudy1").innerHTML = "Unlock time dilation<span>Cost: 5000 Time Theorems"
-        else document.getElementById("dilstudy1").innerHTML = "Unlock time dilation<span>Requirement: 5 EC11 and EC12 completions and 13000 total theorems<span>Cost: 5000 Time Theorems"
+        else document.getElementById("dilstudy1").innerHTML = "Unlock time dilation<span>Requirement: 5 EC11 and EC12 completions and "+(player.mods.ngt?8e5:13000)+" total theorems<span>Cost: 5000 Time Theorems"
     }
     if (document.getElementById("ers_timestudies").style.display == "block" && document.getElementById("eternitystore").style.display == "block") updateERSTTDesc()
 }
@@ -3458,7 +3462,7 @@ function setAchieveTooltip() {
     ie.setAttribute('ach-tooltip', "Get "+shorten(Decimal.pow(10,8e6))+" antimatter in a PC with QC6 & QC8 combination.")
     wasted.setAttribute('ach-tooltip', "Get "+shorten(11e6)+" TT without having generated TTs and respeccing time studies.")
 	christian.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e359223"))+" IP. Reward: A free one-way ticket to Hell.")
-    fuckthis.setAttribute('ach-tooltip', "Reach "+shorten(1e10)+" tachyon particles. Reward: Gain tachyon particles based on best antimatter^^0.75")
+    fuckthis.setAttribute('ach-tooltip', "Reach "+shorten(1e15)+" tachyon particles. Reward: Gain tachyon particles based on best antimatter^^0.75")
     keemstar.setAttribute('ach-tooltip', "Reach "+shorten(Decimal.pow(10, Math.pow(Math.sqrt(player.totalTimePlayed),2)))+" IP. Reward: Additional 1000x multiplier to IP.")
     yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Dimensions cost 10x less.")
 }
@@ -3708,13 +3712,12 @@ function calcSacrificeBoost() {
 }
 
 function calcTotalSacrificeBoost(next) {
-	let ret
-	if (player.sacrificed == 0) ret = new Decimal(1);
+	let ret = new Decimal(1);
 	if (player.challenges.includes("postc2")) {
 		if (player.timestudy.studies.includes(228)) ret = player.sacrificed.pow(0.013).max(1)
 		else if (player.achievements.includes("r97") && player.boughtDims) ret = player.sacrificed.pow(0.012).max(1)
 		else if (player.achievements.includes("r88")) ret = player.sacrificed.pow(0.011).max(1)
-		else ret = player.sacrificed.pow(0.01)
+		else ret = player.sacrificed.pow(0.01).max(1)
 	} else if (player.currentChallenge != "challenge11") {
 		var sacrificePow=2;
 		if (player.achievements.includes("r32")) sacrificePow += player.tickspeedBoosts != undefined ? 2 : 0.2;
@@ -3725,7 +3728,7 @@ function calcTotalSacrificeBoost(next) {
 		ret = player.sacrificed.pow(0.05) //this is actually off but like im not sure how youd make it good. not that it matters.
 	}
 	if (player.boughtDims) ret = ret.pow(1 + Math.log(1 + Math.log(1 + (player.timestudy.ers_studies[1] + (next ? 1 : 0))/ 5)))
-	return ret
+	return ret.max(1)
 }
 
 
@@ -5265,6 +5268,7 @@ function exitChallenge() {
         return
     }
     if (player.masterystudies) if (!inQC(0)) quantum(false, true, 0)
+	if(player.mods.ngt) exitOmniChallenge()
 }
 
 function startChallenge(name) {
@@ -6744,7 +6748,7 @@ setInterval(function() {
 
 	if(player.mods.ngt) {
 		if(player.infinityPoints.gte("1e359223")) giveAchievement("This is a Christian Server")
-		if(player.dilation.tachyonParticles.gte(1e10)) giveAchievement("Dilation was a bad idea")
+		if(player.dilation.tachyonParticles.gte(1e15)) giveAchievement("Dilation was a bad idea")
 		if(player.infinityPoints.gte(Decimal.pow(10, Math.pow(Math.sqrt(player.totalTimePlayed),2)))) giveAchievement("Faster than Keemstar")
 		if(player.mods.ngt.omni > 0) giveAchievement("error")
 	}
@@ -7093,6 +7097,7 @@ function gameLoop(diff) {
         if(player.mods.ngt) thresholdMult=player.timestudy.studies.includes(171)?1.20:1.25
         if (QCIntensity(7)) thresholdMult *= getQCReward(7)
         gain = Math.ceil(new Decimal(player.timeShards).dividedBy(player.tickThreshold).log10() / Math.log10(thresholdMult))
+		if(inOC(2)) gain = 0;
         player.totalTickGained += gain
         player.tickspeed = player.tickspeed.times(Decimal.pow(getTickSpeedMultiplier(), gain))
         player.postC3Reward=Decimal.pow(getPostC3RewardMult(),gain*getEC14Power()).times(player.postC3Reward)
@@ -7708,8 +7713,8 @@ function gameLoop(diff) {
 		studyCosts = [1, 3, 2, 2, 3, 2, 4, 6, 3, 3, 3, 4, 6, 5, 4, 6, 5, 4, 5, 7, 4, 6, 6, 12, 9, 9, 9, 5, 5, 5, 4, 4, 4, 8, 7, 7, 15, 200, 400, 730, 300, 900, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500]
 
 		for(var i = 0; i < studyCosts.length; i++) {
-			studyCosts[i] *= 3;
-			if(i > 45) studyCosts[i] *= 10
+			if(i > 45) studyCosts[i] *= 100
+			else studyCosts[i] *= 3;
 			studyCosts[37] = 0;
 			if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = studyCosts[i];
 		}
@@ -7734,11 +7739,16 @@ function gameLoop(diff) {
 		
 		ge("gravdisable").innerHTML = " and gravitons (to time dimensions)"
 		
-		ge("omnibtnFlavor").innerHTML = ngt.omni?"I need to become omnipotent.":"this pitiful universe and its contents are no longer of any significance. I must ascend beyond it and become omnipotent."
-		if(ngt.omni) {
+		ge("omnibtnFlavor").innerHTML = ocGoalMet(ngt.ocr[0])?"nothing can challenge true omnipotence. I must ascend beyond this insignificant obstacle.":inOC()?"even my infinite power has not overcome this challenge.":ngt.omni?"I need to become omnipotent.":"this pitiful universe and its contents are no longer of any significance. I must ascend beyond it and become omnipotent."
+		if(ngt.omni && !inOC()) {
 			ge("omnibtnOPGain").innerHTML = "gain " + shorten(gainedOP()) + " omnipotence points."
 			ge("omnibtnRate").innerHTML = shorten(ngt.currentOPRate) + " OP/min"
 			ge("omnibtnPeak").innerHTML = "peaked at " + shorten(ngt.bestOPRate) + " OP/min"
+		}
+		else {
+			ge("omnibtnOPGain").innerHTML = ""
+			ge("omnibtnRate").innerHTML = ""
+			ge("omnibtnPeak").innerHTML = ""
 		}
 		ge("op").innerHTML = shorten(ngt.op);
 		ge("gravitons").innerHTML = shortenMoney(ngt.gravitons);
@@ -7822,7 +7832,7 @@ function gameLoop(diff) {
 		// Dilation
 		
 		ge("tpmultpow").innerHTML = "Quadruple"
-		DIL_UPG_COSTS[10] = 1e100
+		DIL_UPG_COSTS[10] = 1e30
 		
 		// Get best antimatter this omnipotence run for calculating tachyon particle gain.
 
@@ -7838,14 +7848,35 @@ function gameLoop(diff) {
 		
 		if(!player.masterystudies) ge("octabbtn").style.marginLeft = "-15px";
 		
-		t = {
+		ngt.t = {
 			req: [
-				Decimal.pow(Number.MAX_VALUE, 100)
+				Decimal.pow(Math.E, 6e9),
+				Decimal.pow(3**3**3, 3e8),
+				Decimal.pow(69420, 1234567890),
+				Decimal.pow(123456789, 987654321),
+				Decimal.pow(Number.MAX_VALUE, 76000000),
+				Decimal.pow(Math.PI, 1e11),
+			],
+			goal: [
+				new Decimal("7.77e777777"),
+				new Decimal("6.66e6666666"),
+				new Decimal("7.77e7900000"),
+				new Decimal("7.77e777777"),
+				new Decimal("7.77e777777"),
+				new Decimal("7.77e777777"),
+			],
+			reward: [
+				Math.max((Math.log10(player.firstBought) - 1) / 50 + 1, 1),
+				Math.min(-Math.log10(-player.tickspeed.logarithm), 0)
 			]
 		}
 		
-		for(var i = 1; i <= 1; i++) {
-			ge("ocreq" + i).innerHTML = shorten(t.req[i-1]);
+		for(var i = 1; i <= 6; i++) {
+			ge("ocreq" + i).innerHTML = shorten(ngt.t.req[i-1]);
+			ge("ocgoal" + i).innerHTML = shorten(ngt.t.goal[i-1]);
+			ge("ocreward" + i).innerHTML = shorten(ngt.t.reward[i-1]);
+			ge("oc" + i).innerHTML = inOC(i) ? "running" : compOC(i) ? "completed" : player.money.lt(ngt.t.req[i-1]) ? "locked" : "start";
+			ge("oc" + i).className = inOC(i) ? "onchallengebtn" : compOC(i) ? "completedchallengesbtn" : player.money.lt(ngt.t.req[i-1]) ? "lockedchallengesbtn" : "challengesbtn";
 		}
 	}
 

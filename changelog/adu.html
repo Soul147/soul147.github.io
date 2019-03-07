@@ -12,12 +12,13 @@
 		<list>
 		<li>Aarex released yet another update, and I need to merge it with this one. Hopefully this stops happening so frequently...</li>
 		<h3>NG↑↑ Updates:</h3>
-			<li>Added omni-dimensions and gravitons.</li>
-			<li>Added replicators.</li>
+			<li>Current expected late-game values are literally Infinity. Don't buy the 5th-8th time dimensions for now, it breaks stuff.</li>
+			<li>Added omni-challenges (WIP).</li>
 			<li>Created system where you need to get more gravitons to unlock new replicators.</li>
 			<li>Fixed the 0x multiplier to infinity dimensions and time dimensions when you have 0 gravitons.</li>
 			<li>Fixed the Infinitex multiplier to omni-dimensions when you have 0 replicators.</li>
 			<li>Fixed a bug that would display omni-dimensions as unbuyable when you had exactly the amount of OP as the cost.</li>
+			<li>Nerfed graviton multiplier exponent ( 7 > 4 ).</li>
 			<li>Nerfed replicator multiplier exponent ( 8 > 3 ).</li>
 			<li>Added 5 omnipotence milestones. They each require 5 times more omni-stat to unlock, and preserve more and more of the early game content, similar to eternity milestones and quantum speedruns.</li>
 			<li>Removed nerf on multiplier per 10 dimensions.</li>
@@ -30,7 +31,7 @@
 			<li>Improved Eternity Upgrade 3's base power ( 2 > 10 ).</li>
 			<li>Tachyon Particle rebuyable upgrade 3 quadruples the TP gain instead of tripling.</li>
 			<li>Time Theorem generation upgrade from time studies cost is increased ( 1e15 > 1e25 ).</li>
-			<li>All time studies before the light-dark splits cost 3 times as much. After that point they cost another 10 times as much (30x total).</li>
+			<li>All time studies before the light-dark splits cost 3 times as much. After that point they cost 100 times as much.</li>
 			<li>Hyper-study tree coming soon...</li>
 		<h3>Other updates:</h3>
 			<li>QoL completes all ECs at 1e1300 EP instead of completing them gradually, because it was way too overpowered.
@@ -48,6 +49,8 @@
 			<li>Started the Arrow Notation project, a series of mods that get you farther and farther into the late game.</li>
 			<li>Added NG^ as the first mod of the Arrow Notation set. (It's not under NG+ anymore.)</li>
 			<li>Added 4 new achievements for NG↑↑.</li>
+			<li>Added omni-dimensions and gravitons.</li>
+			<li>Added replicators.</li>
 		<h3>Broken stuff:</h3>
 			<li>IT'S TIME FOR BREAK_BREAK_INFINITY.JS <button onclick = "document.getElementById('rant').style.display = ''; this.innerHTML = 'Well, here you go'" style = "opacity: 0">Show my rant about big numbers</button><span id = "rant" style = "display: none"><br><br>(Both break_infinity.js and logarithmica_numerus_lite.js, though they're advertised to be able to store numbers up to a hardcap of 1e1e308, have a softcap at 10^9 quadrillion. At this point the computer doesn't store the numbers precise enough to have any degree of accuracy when dealing with numbers that are orders of magnitude smaller - for example, the multiplier per 10 dimensions being x2 when you have a total multiplier of 1e1e69 will have a negligible effect unless you buy billions of dimensions at the same time and apply all of their multipliers at once instead of individually (which leads to problems of its own). If you don't then it just ignores the multiplication altogether or gets the number wrong by several orders of magnitude. The numbers are just so big at this point that if you multiply them by 10 or 100 or even 1000 it literally does nothing. Either that or it multiplies it by a ridiculously large factor that seems to be completely random and quickly leads to a superexponential loop that crashes my game. Basically, addition itself is broken. This means no Nanofield, no NG+4, and no NG↑↑↑. It sucks. Fortunately I'm working on a solution - a new library to store numbers so big your brain can't comprehend the number of digits in the base-10 representation of the number of digits in the number. The numbers will be stored double-logarithmically, instead of single-logarithmically. The accuracy at low values will be absolutely terrible - it will be even less accurate than logarithmica. (Javascript likes to do this stupid thing where it randomly changes numbers by the tiniest amount, for example, 4 + 1 is usually 5 but is occasionally 4.99999999999 or 5.00000000001. Not really a big deal most of the time unless you require whole numbers for array indexes or something. But 10^10^5 and 10^10^5.00000000001 are very different. That tiny error could multiply a number by 2, randomly, unnoticeably, and for literally no reason. (Again, multiplying by 2 is insignificant at >1e9Qa anyway, but in the early game, especially during an NG-x run, it kind of defeats the purpose.) Essentially, it fucks stuff up.) I have some ideas for workarounds, though, like a combination of break_infinity and logarithmica where the exponent stored by the break_infinity part is a logarithm itself, or something similar. It should theoretically get the job done until 1e1e9Qa. EDIT: Apparently, Aarex is also working on this. Hopefully he finishes it soon.)<br><br></li>
 			<li>The "Autobuyer Autobuyer" option from QoL is completely defunct. Pressing it will just toggle the Replicanti button. (It won't break anything, though.)</li>

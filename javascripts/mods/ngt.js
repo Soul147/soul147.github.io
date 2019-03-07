@@ -3,7 +3,13 @@ function gainedOP() {
 }
 
 function omnipotenceReset(force) {
-	if(player.eternityPoints.add(gainedEternityPoints()).lt(1e308) && !force) return;
+	if(player.eternityPoints.add(gainedEternityPoints()).lt(1e308) && !(force || ocGoalMet(currentOC()))) return;
+	
+	out = inOC() && ocGoalMet(ngt.ocr[0]) && !force
+	if(out && !player.mods.ngt.oc.includes(currentOC())) {
+		player.mods.ngt.oc.push(currentOC())
+		return exitOmniChallenge()
+	}
 	
 	keepInf = player.mods.ngt.omni > 2**0
 	keepBreak = player.mods.ngt.omni > 2**1
@@ -13,7 +19,7 @@ function omnipotenceReset(force) {
 	keepDilation = player.mods.ngt.omni > 2**5
 	keepMastery = player.mods.ngt.omni > 2**6 && player.masterystudies
 	
-	if(ngt.thisOmni > 1200) dev.omniAnim(5 - !!player.mods.ngt.omni*4);
+	if(ngt.thisOmni > 600 || out || force) dev.omniAnim(5 - !!player.mods.ngt.omni*4);
 	if(!force) player.mods.ngt.omni++;
 	player.mods.ngt.op = player.mods.ngt.op.add(gainedOP());
 	
@@ -382,7 +388,7 @@ function updateOmniDimCosts() {
 }
 
 function getGravitonEffect() {
-	return ngt.gravitons.pow(7).max(1);
+	return ngt.gravitons.pow(4).max(1);
 }
 
 function getReplicatorMult() {
@@ -412,17 +418,41 @@ function unlockNewReplicator() {
 
 // omni-challenges
 
-function startOmniChallenge(p) {
-	if(typeof(list) == Array) player.omniChallenges = p;
-	else player.omniChallenges = [p];
+function startOmniChallenge(n) {
+	if(player.money.gte(ngt.t.req[n-1])) setOmniChallenge(n);
+}
+
+function setOmniChallenge(p) {
+	if(typeof(list) == Array) ngt.ocr = p;
+	else ngt.ocr = [p];
 	omnipotenceReset(true)
 }
 
 function exitOmniChallenge() {
-	player.omniChallenges = [];
+	if(!ngt.ocr.length) return;
+	ngt.ocr = [];
 	omnipotenceReset(true)
 }
 
 function inOC(n) {
-	if(player.omniChallenges.includes(n)) return true;
+	if(!player.mods.ngt) return false;
+	if(!n && ngt.ocr.length) return true;
+	if(ngt.ocr.includes(n)) return true;
+	return false;
+}
+
+function compOC(n) {
+	if(!player.mods.ngt) return false;
+	if(ngt.oc.includes(n)) return true;
+	return false;
+}
+
+function currentOC() {
+	return ngt.ocr[0]
+}
+
+function ocGoalMet(n) {
+	if(!inOC()) return false;
+	if(player.money.gte(ngt.t.goal[n-1])) return true;
+	return false;
 }
