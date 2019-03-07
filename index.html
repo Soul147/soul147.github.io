@@ -2524,8 +2524,9 @@
             </div>
             <div id="secretachievements" class="achtab" style="display:none;">
 				<div id = "secret">
-					Secret achievement multiplier on game speed: <span id = "secretachmult"></span>x (1.5 ^ achievements)<br>
-					<button class = "secondarytabbtn" onclick = "player.options.secretachmult = !player.options.secretachmult">Toggle Multiplier</button>
+					Secret achievement multiplier on game speed: <span id = "secretachmult"></span>x (<span id = "secretachbase"></span> ^ achievements)<br>
+					Active <input id = "secretachbtn" type = "checkbox" onclick = "player.options.secretachmult = !player.options.secretachmult"><br>
+					Base <input id = "secretachbaseinput" type = "range" min = "10" max = "20" value = "15" step = "1">
 				</div>
                 <table id="secretachievementtable" style="margin: auto">
                     <tr id="secretAchRow1">

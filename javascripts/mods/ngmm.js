@@ -87,16 +87,20 @@ function buyGalaxyUpgrade(i) {
 }
 
 function reduceDimCosts() {
-	if (player.galacticSacrifice) {
-		let div=1
-		if (player.achievements.includes("r21")) div=10
-		if (player.galacticSacrifice.upgrades.includes(11)) div=galUpgrade11()
-		for (d=1;d<9;d++) {
-			var name = TIER_NAMES[d]
-			player[name+"Cost"] = player[name+"Cost"].div(div)
-		}
-		if (player.achievements.includes('r48')) player.tickSpeedCost = player.tickSpeedCost.div(div)
+	let div=1
+	if(player.mods.ngt) {
+		if(player.achievements.includes("ngt14")) div*=1e6
 	}
+	if (player.galacticSacrifice) {
+		if (player.achievements.includes("r21")) div*=10
+		if (player.galacticSacrifice.upgrades.includes(11)) div*=galUpgrade11()
+	}
+	for (d=1;d<9;d++) {
+		var name = TIER_NAMES[d]
+		player[name+"Cost"] = player[name+"Cost"].div(div)
+	}
+	if (player.achievements.includes('r48') && player.galacticSacrifice) player.tickSpeedCost = player.tickSpeedCost.div(div)
+		
 	if (player.infinityUpgradesRespecced != undefined) {
 		for (d=1;d<9;d++) {
 			var name = TIER_NAMES[d]

@@ -1132,7 +1132,7 @@ function getDilGain(n) {
 }
 
 function getDilTimeGainPerSecond() {
-	let gain = player.dilation.tachyonParticles.pow(GUBought("br3")?1.1:1).times(Math.pow(2, player.dilation.rebuyables[1] * exDilationUpgradeStrength(1)))
+	let gain = player.dilation.tachyonParticles.pow(GUBought("br3")?1.1:1).times(Math.pow(2+!!player.mods.ngt, player.dilation.rebuyables[1] * exDilationUpgradeStrength(1)))
 	if (player.exdilation != undefined) {
 		gain = gain.times(getBlackholePowerEffect())
 		if (player.eternityUpgrades.includes(7)) gain = gain.times(1 + Math.log10(Math.max(1, player.money.log(10))) / 40)
@@ -3464,7 +3464,7 @@ function setAchieveTooltip() {
 	christian.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e359223"))+" IP. Reward: A free one-way ticket to Hell.")
     fuckthis.setAttribute('ach-tooltip', "Reach "+shorten(1e15)+" tachyon particles. Reward: Gain tachyon particles based on best antimatter^^0.75")
     keemstar.setAttribute('ach-tooltip', "Reach "+shorten(Decimal.pow(10, Math.pow(Math.sqrt(player.totalTimePlayed),2)))+" IP. Reward: Additional 1000x multiplier to IP.")
-    yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Dimensions cost 10x less.")
+    yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Dimensions cost 1,000,000x less.")
 }
 
 
@@ -6816,12 +6816,7 @@ function gameLoop(diff) {
     failsafeDilateTime = false
 
 	if(player.mods.secret) {
-		ge("secret").style.display = "block"
-		if(player.options.secretachmult) {
-			diff *= getSecretAchMult();
-			ge("secretachmult").innerHTML = getFullExpansion(getSecretAchMult());
-		}
-		else ge("secretachmult").innerHTML = "1.0"
+		diff = updateSecretMult(diff)
 	}
 	else {
 		ge("secret").style.display = "none"
@@ -7094,7 +7089,6 @@ function gameLoop(diff) {
         player.tickspeed = player.tickspeed.times(Decimal.pow(getTickSpeedMultiplier(), player.totalTickGained - oldT))
     } else if (player.timeShards.gt(player.tickThreshold)) {
         let thresholdMult=player.timestudy.studies.includes(171)?1.25:1.33
-        if(player.mods.ngt) thresholdMult=player.timestudy.studies.includes(171)?1.20:1.25
         if (QCIntensity(7)) thresholdMult *= getQCReward(7)
         gain = Math.ceil(new Decimal(player.timeShards).dividedBy(player.tickThreshold).log10() / Math.log10(thresholdMult))
 		if(inOC(2)) gain = 0;
