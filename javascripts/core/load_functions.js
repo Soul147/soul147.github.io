@@ -2078,11 +2078,9 @@ function transformSaveToDecimal() {
 			d.mult = new Decimal(d.mult);
 			d.gBought = new Decimal(d.gBought);
 			d.gCost = new Decimal(d.gCost);
-			d.gBaseCost = new Decimal(d.gBaseCost);
 			d.gCostMult = new Decimal(d.gCostMult);	
 			d.opBought = new Decimal(d.opBought);
 			d.opCost = new Decimal(d.opCost);
-			d.opBaseCost = new Decimal(d.opBaseCost);
 			d.opCostMult = new Decimal(d.opCostMult);			
 			d.production = new Decimal(d.production);			
 		}

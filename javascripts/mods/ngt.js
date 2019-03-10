@@ -11,13 +11,13 @@ function omnipotenceReset(force) {
 		return exitOmniChallenge()
 	}
 	
-	keepInf = player.mods.ngt.omni > 2**0
-	keepBreak = player.mods.ngt.omni > 2**1
-	keepEter = player.mods.ngt.omni > 2**2
-	keepStudy = player.mods.ngt.omni > 2**3
-	keepEterc = player.mods.ngt.omni > 2**4
-	keepDilation = player.mods.ngt.omni > 2**5
-	keepMastery = player.mods.ngt.omni > 2**6 && player.masterystudies
+	keepInf = player.mods.ngt.omni >= 2**0
+	keepBreak = player.mods.ngt.omni >= 2**1
+	keepEter = player.mods.ngt.omni >= 2**2
+	keepStudy = player.mods.ngt.omni >= 2**3
+	keepEterc = player.mods.ngt.omni >= 2**4
+	keepDilation = player.mods.ngt.omni >= 2**5
+	keepMastery = player.mods.ngt.omni >= 2**6 && player.masterystudies
 	
 	if(ngt.thisOmni > 600 || out || force) dev.omniAnim(5 - !!player.mods.ngt.omni*4);
 	if(!force) player.mods.ngt.omni++;
@@ -353,17 +353,20 @@ function buyOmniDimension(n, useOP) {
 	if(useOP) {
 		if(ngt.op.lt(d.opCost)) return;
 		ngt.op = ngt.op.subtract(d.opCost)
+		d.opCost = d.opCost.multiply(d.opCostMult)
+		d.opCostMult = d.opCostMult.multiply(ngt.opCostInc)
 		d.opBought = d.opBought.add(1);
 	}
 	
 	else {
 		if(ngt.gravitons.lt(d.gCost)) return;
 		ngt.gravitons = ngt.gravitons.subtract(d.gCost)
+		d.gCost = d.gCost.multiply(d.gCostMult)
+		d.gCostMult = d.gCostMult.multiply(ngt.gCostInc)
 		d.gBought = d.gBought.add(1);
 	}
 	
 	d.amount = d.amount.add(1);
-	updateOmniDimCosts();
 	return true;
 }
 
@@ -376,14 +379,11 @@ function buyMaxOmniDimensions() {
 	}
 }
 
-function updateOmniDimCosts() {
+function updateOmniDimMults() {
 	for(var i = 1; i <= 8; i++) {
 		d = ngt["d" + i];
 		// Set multiplier
 		d.mult = ngt.omniPower.pow(Decimal.add(d.gBought, d.opBought)).multiply(getReplicatorMult());
-		// Set cost multiplier
-		d.gCost = d.gBaseCost.multiply(d.gCostMult.pow(d.gBought))
-		d.opCost = d.opBaseCost.multiply(d.opCostMult.pow(d.opBought))
 	}
 }
 
@@ -456,3 +456,67 @@ function ocGoalMet(n) {
 	if(player.money.gte(ngt.t.goal[n-1])) return true;
 	return false;
 }
+
+const opUpgCosts = [
+	10
+]
+
+function buyUpg(n) {
+	if(!affordUpg(n)) return;
+	ngt.op = ngt.op.subtract(opUpgCosts[n]);
+	
+}
+
+function hasUpg(n) {
+	return ngt.opUpgrades.includes(n);
+}
+
+function affordUpg(n) {
+	return ngt.op.gte(opUpgCosts[n])
+}
+
+function getUpgEff(n) {
+	switch(n) {
+		case 0:
+			return Decimal.pow(2, ngt.op.logarithm);
+		case 1:
+			return Decimal.pow(ngt.op.logarithm, 0.1);
+	}
+}
+
+function updateOmniUpgrades() {
+	if(hasUpg(0)) ngt.opMult = ngt.opMult.multiply(getUpgEff(0));
+	ge("ouinfo11").innerHTML = shorten(getUpgEff(0))
+}
+
+var rings = [1, 2, 3, 4] // how many upgrades are in each ring
+var spins = [0, 0, 0, 0] // how far each ring has spun
+var last = 0
+
+function updateOmniSpins() {
+	diff = (Date.now() - last);
+	last = Date.now()
+	for(var i = 0; i < rings.length; i++) {
+		spins[i] += diff / 1e5
+		
+		for(var j = 0; j < rings[i]; j++) {
+			a = i + 1
+			b = j + 1
+			div = ge("ou" + a + b);
+			
+			centerX = innerWidth / 2;
+			centerY = 666;
+			
+			angle = spins[i] + Math.PI * 2 * b / rings[i];
+			
+			offsetX = Math.cos(angle * i) * i * 160
+			offsetY = Math.sin(angle * i) * i * 160
+			
+			div.style.position = "absolute"
+			div.style.left = centerX + offsetX + "px";
+			div.style.top = centerY + offsetY + "px";
+		}
+	}
+}
+
+setInterval(updateOmniSpins, 1)

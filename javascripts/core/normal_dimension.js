@@ -534,5 +534,6 @@ function getDimensionProductionPerSecond(tier) {
 		if (player.masterystudies != undefined) tick = tick.pow(getNanofieldRewardEffect(5))
 		return ret.times(Decimal.pow(10,(player.aarexModifications.newGame3MinusVersion?2:3)-maximum)).times(tick);
 	}
+	if(inOC(4)) ret = ret.pow(0.5);
 	return ret.div(tick.div(1e3));
 }

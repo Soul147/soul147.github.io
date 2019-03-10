@@ -362,13 +362,27 @@ function updateNewPlayer(reseted) {
 			op: new Decimal(0), // omnipotence points
 			omniPower: new Decimal(3), // multiplier per ten dimensions
 			gravitons: new Decimal(0),
+			gCostInc: 100, // cost scaling factor (like dimension cost multiplier decrease)
+			opCostInc: 10,
 			opUpgrades: [], // upgrades bought with OP
 			replicatorsUnlocked: 0,
 			newReplicatorCost: new Decimal(1e10),
 			oc: [], // omni-challenges completed
 			ocr: [] // omni-challenges currently running
 		}
-		for(var i = 1; i <= 8; i++) {j = i - 1; player.mods.ngt["d" + i] = {amount: new Decimal(0), mult: new Decimal(1), gBought: new Decimal(0), opBought: new Decimal(0), gBaseCost: Decimal.pow(10, j*j*4), gCostMult: Decimal.pow(10, i*i*2), opBaseCost: Decimal.pow(3, j*4), opCostMult: Decimal.pow(3, i*2)}; }
+		for(var i = 1; i <= 8; i++) {
+			j = i - 1
+			player.mods.ngt["d" + i] = {
+				amount: new Decimal(0), 
+				mult: new Decimal(1), 
+				gBought: new Decimal(0), 
+				opBought: new Decimal(0), 
+				gCost: Decimal.pow(100, i**3), 
+				gCostMult: new Decimal(i*100), 
+				opCost: Decimal.pow(10, j**2), 
+				opCostMult: new Decimal(i*10)
+			}
+		}
 		for(var i = 1; i <= 8; i++) player.mods.ngt["r" + i] = {amount: new Decimal(0), power: new Decimal(1)}; 
 	}
     if (modesChosen.ngpp && (modesChosen.ngpp < 3 || modesChosen.ngpp == 4)) {
@@ -1555,6 +1569,9 @@ function updateDimensions() {
             } else {
                 document.getElementById("reversedilationdiv").style.display = "none"
             }
+			if (player.mods.ngt) {
+				if (ngt.op.lt(1e100)) ge("enabledilation").innerHTML = "DILATION IS LOCKED<br>reach " + shorten(new Decimal(1e100)) + " omnipotence points to dilate time."
+			}
         }
         var fgm=getFreeGalaxyGainMult()
         document.getElementById('freeGalaxyMult').textContent=fgm==1?"free galaxy":Math.round(fgm*10)/10+" free galaxies"
@@ -2143,7 +2160,7 @@ function updateInfCosts() {
         document.getElementById("ec12unl").innerHTML = "Eternity Challenge 12<span>Requirement: Use only the Time Dimension path<span>Cost: 1 Time Theorem"
 
         if (player.dilation.studies.includes(1)) document.getElementById("dilstudy1").innerHTML = "Unlock time dilation<span>Cost: 5000 Time Theorems"
-        else document.getElementById("dilstudy1").innerHTML = "Unlock time dilation<span>Requirement: 5 EC11 and EC12 completions and "+(player.mods.ngt?8e5:13000)+" total theorems<span>Cost: 5000 Time Theorems"
+        else document.getElementById("dilstudy1").innerHTML = "Unlock time dilation<span>Requirement: 5 EC11 and EC12 completions and 13000 total theorems<span>Cost: 5000 Time Theorems"
     }
     if (document.getElementById("ers_timestudies").style.display == "block" && document.getElementById("eternitystore").style.display == "block") updateERSTTDesc()
 }
@@ -6814,7 +6831,9 @@ function gameLoop(diff) {
     player.thisEternity += diff
     if (player.mods.ngt) player.mods.ngt.thisOmni += diff
     failsafeDilateTime = false
-
+	
+	rootDiff = diff
+	
 	if(player.mods.secret) {
 		diff = updateSecretMult(diff)
 	}
@@ -7707,7 +7726,7 @@ function gameLoop(diff) {
 		studyCosts = [1, 3, 2, 2, 3, 2, 4, 6, 3, 3, 3, 4, 6, 5, 4, 6, 5, 4, 5, 7, 4, 6, 6, 12, 9, 9, 9, 5, 5, 5, 4, 4, 4, 8, 7, 7, 15, 200, 400, 730, 300, 900, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500]
 
 		for(var i = 0; i < studyCosts.length; i++) {
-			if(i > 45) studyCosts[i] *= 100
+			if(i > 45) studyCosts[i] *= 1e5
 			else studyCosts[i] *= 3;
 			studyCosts[37] = 0;
 			if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = studyCosts[i];
@@ -7748,6 +7767,8 @@ function gameLoop(diff) {
 		ge("gravitons").innerHTML = shortenMoney(ngt.gravitons);
 		ge("gravitonEffect").innerHTML = shortenMoney(getGravitonEffect());
 		
+		updateOmniUpgrades()
+		
 		// Update omnipotence milestones
 		
 		ge("omniTimes").innerHTML = getFullExpansion(ngt.omni)
@@ -7764,9 +7785,9 @@ function gameLoop(diff) {
 		
 		// this unfucks the eighth dimensions, otherwise they break the game
 		
-		ngt["d9"] = {amount: new Decimal(0)}
+		ngt["d9"] = {amount: new Decimal(0)} // hOlY ShIT thE NiNTh diMenSIoN eXIstS
 		
-		updateOmniDimCosts()
+		updateOmniDimMults()
 		
 		for(var i = 1; i <= 8; i++) {
 			d = ngt["d" + i];
@@ -7826,7 +7847,7 @@ function gameLoop(diff) {
 		// Dilation
 		
 		ge("tpmultpow").innerHTML = "Quadruple"
-		DIL_UPG_COSTS[10] = 1e30
+		DIL_UPG_COSTS[10] = 1e100
 		
 		// Get best antimatter this omnipotence run for calculating tachyon particle gain.
 

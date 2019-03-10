@@ -1533,6 +1533,11 @@ button {
     background: white;
 }
 
+.dilationupgrebuyable:hover {
+    color: #64ddad;
+    background: white;
+}
+
 @keyframes glow {
     20% { text-shadow: 0 0 10px green; }
     100% { text-shadow: 0 0 10px white; }
@@ -2021,6 +2026,63 @@ br {
     font-weight: bold;
     font-family: Typewriter;
 	transition-duration: 0.2s
+}
+
+.omniupg {
+	background: #f00 !important;
+	border: 1px solid #4c0000;
+	border-radius: 4px;
+    width: 160px;
+    height: 80px;
+	color: #000;
+	text-shadow: 0px 0px 1px #4c0000, 0px 0px 2px #4c0000, 0px 0px 3px #4c0000;
+    font-weight: bold;
+    font-family: Typewriter;
+	animation: omnianimation 2s infinite;
+	position: absolute;
+	transition: background 0.2s, color 0.2s;
+	transform: translate(-50%, -50%)
+}
+
+.omniupgbought {
+	background: black !important;
+	border: 1px solid #4c0000;
+	border-radius: 4px;
+    width: 160px;
+    height: 80px;
+	color: #720000;
+	text-shadow: 0px 0px 1px #4c0000, 0px 0px 2px #4c0000, 0px 0px 3px #4c0000;
+    font-weight: bold;
+    font-family: Typewriter;
+	animation: omnianimation 2s infinite;
+	position: absolute;
+	transition: background 0.2s, color 0.2s;
+	transform: translate(-50%, -50%)
+}
+
+.omniupglocked {
+	background: black !important;
+	border: 1px solid #4c4c4c;
+	border-radius: 4px;
+    width: 160px;
+    height: 80px;
+	color: #727272;
+	text-shadow: 0px 0px 1px #4c4c4c, 0px 0px 2px #4c4c4c, 0px 0px 3px #4c4c4c;
+    font-weight: bold;
+    font-family: Typewriter;
+	animation: omnianimationgray 8s infinite;
+	position: absolute;
+	transition: background 0.2s, color 0.2s;
+	transform: translate(-50%, -50%)
+}
+
+.omniupglocked:hover {
+    color: #1D1D1D;
+    background: #660000 !important;
+}
+
+.omniupg:hover {
+    color: #f00;
 }
 
 .omnimilestone {
