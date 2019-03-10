@@ -982,7 +982,7 @@
                     <td id="tdtabbtn"><button class="secondarytabbtn" onclick="showDimTab('timedimensions')">Time Dimensions</button></td>
                     <td id="mdtabbtn"><button class="secondarytabbtn" onclick="showDimTab('metadimensions')">Meta Dimensions</button></td>
                     <td id="edtabbtn"><button class="secondarytabbtn" onclick="showDimTab('emperordimensions')">Emperor Dimensions</button></td>
-                    <td id="edtabbtn"><button class="secondarytabbtn" onclick="showDimTab('omnidimensions')">omni-dimensions</button></td>
+                    <td id="odtabbtn"><button class="secondarytabbtn" onclick="showDimTab('omnidimensions')">omni-dimensions</button></td>
                     <td id="prodtabbtn"><button class="secondarytabbtn" onclick="showDimTab('production')">Production</button></td>
                 </tr>
             </table>
@@ -4389,16 +4389,16 @@
         </div>
 		<div class = "inftab" id = "replicators" style = "align: left">
 			<br>
-			<p>you have <span id = "r1amount" class = "ramount"></span> tier I replicators. <span id = "r1growth" class = "ramount"></span></p>
-			<p>you have <span id = "r2amount" class = "ramount"></span> tier II replicators. <span id = "r2growth" class = "ramount"></span></p>
-			<p>you have <span id = "r3amount" class = "ramount"></span> tier III replicators. <span id = "r3growth" class = "ramount"></span></p>
-			<p>you have <span id = "r4amount" class = "ramount"></span> tier IV replicators. <span id = "r4growth" class = "ramount"></span></p>
-			<p>you have <span id = "r5amount" class = "ramount"></span> tier V replicators. <span id = "r5growth" class = "ramount"></span></p>
-			<p>you have <span id = "r6amount" class = "ramount"></span> tier VI replicators. <span id = "r6growth" class = "ramount"></span></p>
-			<p>you have <span id = "r7amount" class = "ramount"></span> tier VII replicators. <span id = "r7growth" class = "ramount"></span></p>
-			<p>you have <span id = "r8amount" class = "ramount"></span> tier VIII replicators. <span id = "r8growth" class = "ramount"></span></p>
+			<p id = "r1">you have <span id = "r1amount" class = "ramount"></span> tier I replicators. <span id = "r1growth" class = "ramount"></span></p>
+			<p id = "r2">you have <span id = "r2amount" class = "ramount"></span> tier II replicators. <span id = "r2growth" class = "ramount"></span></p>
+			<p id = "r3">you have <span id = "r3amount" class = "ramount"></span> tier III replicators. <span id = "r3growth" class = "ramount"></span></p>
+			<p id = "r4">you have <span id = "r4amount" class = "ramount"></span> tier IV replicators. <span id = "r4growth" class = "ramount"></span></p>
+			<p id = "r5">you have <span id = "r5amount" class = "ramount"></span> tier V replicators. <span id = "r5growth" class = "ramount"></span></p>
+			<p id = "r6">you have <span id = "r6amount" class = "ramount"></span> tier VI replicators. <span id = "r6growth" class = "ramount"></span></p>
+			<p id = "r7">you have <span id = "r7amount" class = "ramount"></span> tier VII replicators. <span id = "r7growth" class = "ramount"></span></p>
+			<p id = "r8">you have <span id = "r8amount" class = "ramount"></span> tier VIII replicators. <span id = "r8growth" class = "ramount"></span></p>
 			<p style="font-size: 16px">translated to <span id="rmult" class = "ramount" style="font-size:32px; color: black">0</span>x multiplier on all omni-dimensions</p>
-			<p>(product of log(log(amount)) ^ 8)</p>
+			<p>(product of log(log(amount)) ^ <span id = "replicatorpower">3</span>)</p>
 			<br>
 			<button class="storebtn" id="newReplicator" style="width: 220px; height: 60px; font-size: 11px" onclick='unlockNewReplicator()'></button>
 		</div>
@@ -4629,17 +4629,20 @@
 					</div>
 					<br>
 					you have <span id = "op"></span> omnipotence points.<br>
-					<div style = "position: absolute; left: 50%; top: 666px; transform: translate(-50%, -50%); opacity: 0.5; background-color: #333; width: 666px; height: 666px; border-radius: 10000px"></div>
+					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 1280px; height: 1280px; border-radius: 10000px"></div>
+					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 960px; height: 960px; border-radius: 10000px"></div>
+					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 640px; height: 640px; border-radius: 10000px"></div>
+					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 320px; height: 320px; border-radius: 10000px"></div>
 					<div class = "omniupgbought" id = "ou11">multiply OP gain by 2 for every order of magnitude of current OP<br>currently: <span id = "ouinfo11"></span>x<br>cost: <span id = "oucost11"></span> OP</div>
-					<div class = "omniupg" id = "ou21">omni-dimensions get a multiplier based on unspent OP<br>currently: <span id = "ouinfo11"></span>x<br>cost: <span id = "oucost11"></span> OP</div>
-					<div class = "omniupglocked" id = "ou22"></div>
-					<div class = "omniupglocked" id = "ou31"></div>
-					<div class = "omniupglocked" id = "ou32"></div>
-					<div class = "omniupglocked" id = "ou33"></div>
-					<div class = "omniupglocked" id = "ou41"></div>
-					<div class = "omniupglocked" id = "ou42"></div>
-					<div class = "omniupglocked" id = "ou43"></div>
-					<div class = "omniupglocked" id = "ou44"></div>
+					<div class = "omniupg" id = "ou21">dimension boost scaling is decreased by 2<br>currently: <span id = "ouinfo21"></span><br>cost: <span id = "oucost21"></span> OP</div>
+					<div class = "omniupglocked" id = "ou22">galaxy cost scaling is decreased by 8<br>currently: <span id = "ouinfo22"></span><br>cost: <span id = "oucost22"></span> OP</div>
+					<div class = "omniupglocked" id = "ou31">omni-dimensions get a multiplier based on unspent OP<br>currently: <span id = "ouinfo31"></span>x<br>cost: <span id = "oucost31"></span> OP</div>
+					<div class = "omniupglocked" id = "ou32">replicators are faster based on infinities<br>currently: <span id = "ouinfo32"></span>x<br>cost: <span id = "oucost32"></span> OP</div>
+					<div class = "omniupglocked" id = "ou33">gravitons are more effective based on their amount<br>currently: ^<span id = "ouinfo33"></span><br>cost: <span id = "oucost33"></span> OP</div>
+					<div class = "omniupglocked" id = "ou41">cost: <span id = "oucost41"></span> OP</div>
+					<div class = "omniupglocked" id = "ou42">cost: <span id = "oucost42"></span> OP</div>
+					<div class = "omniupglocked" id = "ou43">cost: <span id = "oucost43"></span> OP</div>
+					<div class = "omniupglocked" id = "ou44">cost: <span id = "oucost44"></span> OP</div>
 				</center>
 			</div>
 			<div id = "omnimilestones" class = "omnitab">

@@ -1642,6 +1642,7 @@ if (player.version < 5) {
 			closeToolTip()
 			showNextModeMessage()
 	} else if (player.aarexModifications.popUpId!=1) showNextModeMessage()
+	if(player.mods.secret) ge("secretachbaseinput").value = player.options.secretachbase * 10
 }
 
 function checkNGM(imported) {

@@ -226,7 +226,7 @@ function formatValue(notation, value, places, placesUnder1000, noInf) {
             var matissa = value / Math.pow(10, Math.floor(Math.log10(value)));
             var power = Math.floor(Math.log10(value));
         }
-        if ((notation === "Mixed scientific" && power >= player.options.mixed || 33) || notation === "Scientific") {
+        if ((notation === "Mixed scientific" && power >= (player.options.mixed || 33)) || notation === "Scientific") {
             if (player.options.scientific !== undefined && player.options.scientific.significantDigits !== undefined) places=player.options.scientific.significantDigits-1
             matissa = matissa.toFixed(places)
             if (matissa >= 10) {
@@ -364,7 +364,7 @@ function formatValue(notation, value, places, placesUnder1000, noInf) {
             else if (power > 3e11+2) return getShortAbbreviation(power) + "s";
             else return matissa + " " + getAbbreviation(power);
         } else if (notation === "Mixed engineering") {
-            if (power <= player.options.mixed || 33) return matissa + " " + FormatList[(power - (power % 3)) / 3];
+            if (power <= 33) return matissa + " " + FormatList[(power - (power % 3)) / 3];
             else return (matissa + "e" + pow);
         } else if (notation === "Engineering") {
             return (matissa + "e" + pow);

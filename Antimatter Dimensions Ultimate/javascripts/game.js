@@ -1090,6 +1090,7 @@ function getGalaxyCostIncrease() {
 	if (player.galacticSacrifice) if (player.galacticSacrifice.upgrades.includes(22)) ret = 30
 	if (player.currentChallenge == "challenge4") ret = 90
 	if (player.infinityUpgrades.includes("galCost")) ret -= 5
+	if (player.mods.ngt) if(hasUpg(2)) ret -= 8
 	return ret;
 }
 
@@ -6148,11 +6149,12 @@ function startEternityChallenge(name, startgoal, goalIncrease) {
 
 var failsafeDilateTime = false
 function startDilatedEternity(auto) {
+	if (player.mods.ngt) if(!ngt.canDilate) return;
 	if (failsafeDilateTime) return
     if (!player.dilation.studies.includes(1)) return
 	failsafeDilateTime = true
     var onActive = player.dilation.active
-    if (!onActive && player.aarexModifications.dilationConf && !auto) if (!confirm("Dilating time will start a new eternity, and all of your Dimension/Infinity Dimension/Time Dimension multiplier's exponents and tickspeed multiplier's exponent will be reduced to ^ 0.75. If you can eternity while dilated, you'll be rewarded with tachyon particles based on your antimatter and tachyon particles.")) return
+    if (!onActive && player.aarexModifications.dilationConf && !auto) if (!confirm("Dilating time will start a new eternity, and all of your Dimension/Infinity Dimension/Time Dimension multiplier's exponents and tickspeed multiplier's exponent will be reduced to ^ 0.75. If you can eternity while dilated, you'll be rewarded with tachyon particles based on your antimatter and current tachyon particles.")) return
     clearInterval(gameLoopIntervalId);
     giveAchievement("I told you already, time is relative")
     if (player.masterystudies) {
@@ -7746,9 +7748,7 @@ function gameLoop(diff) {
 		if(!ngt.bestOPRate) ngt.bestOPRate = new Decimal(0);
 		if(ngt.bestOPRate.lt(ngt.currentOPRate)) ngt.bestOPRate = ngt.currentOPRate;
 		
-		if(gainedOP().gte(1) || ngt.omni) {
-			ge("omnitabbtn").style.display = ""
-		}
+		ge("omnitabbtn").style.display = (gainedOP().gte(1) || ngt.omni) ? "" : "none"
 		
 		ge("gravdisable").innerHTML = " and gravitons (to time dimensions)"
 		
@@ -7783,6 +7783,12 @@ function gameLoop(diff) {
 		
 		// omni-dimensions
 		
+		ge("odtabbtn").style.display = ngt.omni ? "" : "none"
+		for(var i = 1; i <= 8; i++) {
+			ge("omniRow" + i).style.display = (i == 1 || ngt["d" + (i-1)].amount.gt(0)) ? "" : "none"
+			ge("od" + i + "btn1").style.display = ngt["d" + i].opBought.gt(0) ? "" : "none"
+		}
+		
 		// this unfucks the eighth dimensions, otherwise they break the game
 		
 		ngt["d9"] = {amount: new Decimal(0)} // hOlY ShIT thE NiNTh diMenSIoN eXIstS
@@ -7812,6 +7818,15 @@ function gameLoop(diff) {
 		}
 		
 		// replicators (coding this was fucking terrible and I feel sorry for Hevi having to do this himself)
+		
+		ge("replicatorstabbtn").style.display = (ngt.replicatorsUnlocked || ngt.gravitons.gte(1e10)) ? "" : "none"
+		for(var i = 1; i <= 8; i++) {
+			ge("r" + i).style.display = ngt.replicatorsUnlocked >= i ? "" : "none"
+		}
+		
+		// update powers
+		
+		updateReplicatorPowers()
 		
 		l = {}
 		

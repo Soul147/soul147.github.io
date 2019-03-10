@@ -384,10 +384,12 @@ function updateOmniDimMults() {
 		d = ngt["d" + i];
 		// Set multiplier
 		d.mult = ngt.omniPower.pow(Decimal.add(d.gBought, d.opBought)).multiply(getReplicatorMult());
+		if(hasUpg(3)) d.mult = d.mult.multiply(getUpgEff(3))
 	}
 }
 
 function getGravitonEffect() {
+	if(hasUpg(5)) return ngt.gravitons.pow(getUpgEff(5)).max(1)
 	return ngt.gravitons.pow(4).max(1);
 }
 
@@ -415,6 +417,110 @@ function unlockNewReplicator() {
 	
 	resetReplicators();
 }
+
+function updateReplicatorPowers() {
+	for(var i = 1; i <= 8; i++) {
+		r = ngt["r" + i]
+		
+		r.power = new Decimal(1);
+		if(hasUpg(4)) r.power = r.power.multiply(getUpgEff(4))
+	}
+}
+
+// OP upgrades
+
+const opUpgCosts = [
+	10,
+	1e8, 1e9,
+	5e11, 5e11, 5e11,
+	1e18, 1e100,
+	1e100,
+	1e100,
+]
+
+function buyUpg(n) {
+	if(!affordUpg(n)) return;
+	ngt.op = ngt.op.subtract(opUpgCosts[n]);
+	ngt.opUpgrades.push(n);
+	return true;
+}
+
+function hasUpg(n) {
+	if(!player.mods.ngt) return;
+	return ngt.opUpgrades.includes(n);
+}
+
+function affordUpg(n) {
+	if(!player.mods.ngt) return;
+	return ngt.op.gte(opUpgCosts[n])
+}
+
+function getUpgEff(n) {
+	switch(n) {
+		case 0:
+			return Decimal.pow(2, ngt.op.logarithm).max(1);
+		case 3:
+			return Decimal.pow(ngt.op.logarithm, 0.1).multiply(8).max(1);
+		case 4:
+			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
+		case 5:
+			return Math.max(Math.log10(ngt.gravitons.logarithm+1),0)/4+4
+	}
+}
+
+function updateOmniUpgrades() {
+	ngt.opMult = new Decimal(1);
+	if(hasUpg(0)) ngt.opMult = ngt.opMult.multiply(getUpgEff(0));
+	ge("ouinfo11").innerHTML = shorten(getUpgEff(0))
+	ge("ouinfo21").innerHTML = getFullExpansion(getDimboostCostIncrease())
+	ge("ouinfo22").innerHTML = getFullExpansion(getGalaxyCostIncrease())
+	ge("ouinfo31").innerHTML = shorten(getUpgEff(3))
+	ge("ouinfo32").innerHTML = shorten(getUpgEff(4))
+	ge("ouinfo33").innerHTML = getUpgEff(5).toFixed(5)
+}
+
+var rings = [1, 2, 3, 4] // how many upgrades are in each ring
+var spins = [0, 0, 0, 0] // how far each ring has spun
+var last = 0
+
+function updateOmniSpins() {
+	diff = (Date.now() - last);
+	last = Date.now()
+	for(var i = 0; i < rings.length; i++) {
+		spins[i] += diff / 1e5
+		
+		for(var j = 0; j < rings[i]; j++) {
+			// Get actual ID of upgrade from ring position
+			id = j;
+			for(var k = 0; k < i; k++) id += rings[k];
+			
+			a = i + 1
+			b = j + 1
+			div = ge("ou" + a + b);
+			
+			centerX = innerWidth / 2 - 10;
+			centerY = 900;
+			
+			angle = spins[i] + Math.PI * 2 * b / rings[i];
+			
+			offsetX = Math.cos(angle * i) * i * 160
+			offsetY = Math.sin(angle * i) * i * 160
+			
+			div.style.position = "absolute"
+			div.style.left = centerX + offsetX + "px";
+			div.style.top = centerY + offsetY + "px";
+			
+			ge("oucost" + a + b).innerHTML = shortenCosts(opUpgCosts[id])
+			div.className = hasUpg(id) ? "omniupgbought" : affordUpg(id) ? "omniupg" : "omniupglocked"
+			div.upgID = id;
+			div.onclick = function() {
+				buyUpg(this.upgID);
+			}
+		}
+	}
+}
+
+setTimeout(function() {setInterval(updateOmniSpins, 1)}, 1000)
 
 // omni-challenges
 
@@ -456,67 +562,3 @@ function ocGoalMet(n) {
 	if(player.money.gte(ngt.t.goal[n-1])) return true;
 	return false;
 }
-
-const opUpgCosts = [
-	10
-]
-
-function buyUpg(n) {
-	if(!affordUpg(n)) return;
-	ngt.op = ngt.op.subtract(opUpgCosts[n]);
-	
-}
-
-function hasUpg(n) {
-	return ngt.opUpgrades.includes(n);
-}
-
-function affordUpg(n) {
-	return ngt.op.gte(opUpgCosts[n])
-}
-
-function getUpgEff(n) {
-	switch(n) {
-		case 0:
-			return Decimal.pow(2, ngt.op.logarithm);
-		case 1:
-			return Decimal.pow(ngt.op.logarithm, 0.1);
-	}
-}
-
-function updateOmniUpgrades() {
-	if(hasUpg(0)) ngt.opMult = ngt.opMult.multiply(getUpgEff(0));
-	ge("ouinfo11").innerHTML = shorten(getUpgEff(0))
-}
-
-var rings = [1, 2, 3, 4] // how many upgrades are in each ring
-var spins = [0, 0, 0, 0] // how far each ring has spun
-var last = 0
-
-function updateOmniSpins() {
-	diff = (Date.now() - last);
-	last = Date.now()
-	for(var i = 0; i < rings.length; i++) {
-		spins[i] += diff / 1e5
-		
-		for(var j = 0; j < rings[i]; j++) {
-			a = i + 1
-			b = j + 1
-			div = ge("ou" + a + b);
-			
-			centerX = innerWidth / 2;
-			centerY = 666;
-			
-			angle = spins[i] + Math.PI * 2 * b / rings[i];
-			
-			offsetX = Math.cos(angle * i) * i * 160
-			offsetY = Math.sin(angle * i) * i * 160
-			
-			div.style.position = "absolute"
-			div.style.left = centerX + offsetX + "px";
-			div.style.top = centerY + offsetY + "px";
-		}
-	}
-}
-
-setInterval(updateOmniSpins, 1)

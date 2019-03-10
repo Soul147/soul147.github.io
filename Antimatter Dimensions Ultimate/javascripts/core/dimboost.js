@@ -361,6 +361,7 @@ function getDimboostCostIncrease () {
 	} else {
 		if (player.timestudy.studies.includes(211)) ret -= 5
 		if (player.timestudy.studies.includes(222)) ret -= 2
+		if (player.mods.ngt) if(hasUpg(1)) ret -= 2
 		if (player.masterystudies) if (player.masterystudies.includes("t261")) ret -= 1
 		if (player.currentChallenge == "challenge4") ret += 5
 		if (player.boughtDims&&player.achievements.includes('r101')) ret -= Math.min(8, Math.pow(player.eternityPoints.max(1).log(10), .25))
