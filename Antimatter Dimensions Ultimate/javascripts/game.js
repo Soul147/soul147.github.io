@@ -7719,6 +7719,12 @@ function gameLoop(diff) {
 
     if (document.getElementById("loadmenu").style.display == "block") changeSaveDesc(metaSave.current, savePlacement)
 
+	// Fix this stupid bug
+	
+	for(var i = 0; i < studyCosts.length; i++) {
+		if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = studyCosts[i];
+	}
+		
 	if(player.mods.ngt) {
 		ngt = player.mods.ngt || {};
 		player.mods.ngt = ngt;
