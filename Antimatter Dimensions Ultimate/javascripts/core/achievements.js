@@ -262,6 +262,11 @@ function giveAchievement(name) {
         player.autoIP = player.autoIP.times(4);
         if (player.autoCrunchMode == "amount" && player.autobuyers[11].priority != undefined) player.autobuyers[11].priority = Decimal.times(player.autobuyers[11].priority, 4);
     }
+	if (name == "Faster than Keemstar") {
+        player.infMult = player.infMult.times(1000);
+        player.autoIP = player.autoIP.times(1000);
+        if (player.autoCrunchMode == "amount" && player.autobuyers[11].priority != undefined) player.autobuyers[11].priority = Decimal.times(player.autobuyers[11].priority, 1000);
+    }
     if (name == "The swarm" && player.boughtDims) document.getElementById('replicantigalaxypowerdiv').style.display=""
     if (name == "GAS GAS GAS") {
         document.getElementById('epmultauto').style.display=""

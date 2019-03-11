@@ -7773,11 +7773,12 @@ function gameLoop(diff) {
 		
 		ge("omniTimes").innerHTML = getFullExpansion(ngt.omni)
 		
-		for(var i = 0; i < 4 + !!player.masterystudies; i++) {
+		b = 3
+		for(var i = 0; i < 6 + !!player.masterystudies; i++) {
 			ge("om" + i).className = "omnimilestonelocked"
-			ge("omreq" + i).innerHTML = "requirement: " + 2**i + " omnipotence";
+			ge("omreq" + i).innerHTML = "requirement: " + b**i + " omnipotence";
 		}
-		for(var i = 0; i <= Math.min(Math.log(ngt.omni) / Math.log(2), 4 + !!player.masterystudies); i++) {
+		for(var i = 0; i <= Math.min(Math.log(ngt.omni) / Math.log(b), 6 + !!player.masterystudies); i++) {
 			ge("om" + i).className = "omnimilestone"
 		}
 		

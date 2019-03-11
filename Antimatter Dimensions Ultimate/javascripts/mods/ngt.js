@@ -11,13 +11,14 @@ function omnipotenceReset(force) {
 		return exitOmniChallenge()
 	}
 	
-	keepInf = player.mods.ngt.omni >= 2**0
-	keepBreak = player.mods.ngt.omni >= 2**1
-	keepEter = player.mods.ngt.omni >= 2**2
-	keepStudy = player.mods.ngt.omni >= 2**3
-	keepEterc = player.mods.ngt.omni >= 2**4
-	keepDilation = player.mods.ngt.omni >= 2**5
-	keepMastery = player.mods.ngt.omni >= 2**6 && player.masterystudies
+	b = 3
+	keepInf = player.mods.ngt.omni >= b**0
+	keepBreak = player.mods.ngt.omni >= b**1
+	keepEter = player.mods.ngt.omni >= b**2
+	keepStudy = player.mods.ngt.omni >= b**3
+	keepEterc = player.mods.ngt.omni >= b**4
+	keepDilation = player.mods.ngt.omni >= b**5
+	keepMastery = player.mods.ngt.omni >= b**6 && player.masterystudies
 	
 	if(ngt.thisOmni > 600 || out || force) dev.omniAnim(5 - !!player.mods.ngt.omni*4);
 	if(!force) player.mods.ngt.omni++;
