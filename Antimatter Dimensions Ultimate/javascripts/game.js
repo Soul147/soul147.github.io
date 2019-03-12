@@ -1137,8 +1137,9 @@ function getDilPower() {
 }
 
 function getDilExp() {
-    if (player.dilation.rebuyables[4]) return 1.5 + player.dilation.rebuyables[4] * .25
-    else return 1.5
+	base = 1.5/(1+!!player.mods.ngt)
+    if (player.dilation.rebuyables[4]) return base + player.dilation.rebuyables[4] * .25
+    else return base
 }
 
 function getDilGain(n) {
@@ -1165,6 +1166,7 @@ function getDilTimeGainPerSecond() {
 	if (player.dilation.upgrades.includes('ngpp6')) gain = gain.times(getDil17Bonus())
 	if (GUBought("br2")) gain = gain.times(Decimal.pow(2.2, Math.pow(calcTotalSacrificeBoost().max(1).log10()/1e6, 0.25)))
 	gain = gain.times(colorBoosts.b)
+	if(player.mods.ngt) gain = gain.times(1000)
 	return gain;
 }
 
@@ -1571,7 +1573,7 @@ function updateDimensions() {
                 document.getElementById("reversedilationdiv").style.display = "none"
             }
 			if (player.mods.ngt) {
-				if (ngt.op.lt(1e100)) ge("enabledilation").innerHTML = "DILATION IS LOCKED<br>reach " + shorten(new Decimal(1e100)) + " omnipotence points to dilate time."
+				if (!ngt.canDilate) ge("enabledilation").innerHTML = "DILATION IS LOCKED<br>reach " + shorten(new Decimal(1e100)) + " omnipotence points to dilate time."
 			}
         }
         var fgm=getFreeGalaxyGainMult()
@@ -3480,7 +3482,7 @@ function setAchieveTooltip() {
     ie.setAttribute('ach-tooltip', "Get "+shorten(Decimal.pow(10,8e6))+" antimatter in a PC with QC6 & QC8 combination.")
     wasted.setAttribute('ach-tooltip', "Get "+shorten(11e6)+" TT without having generated TTs and respeccing time studies.")
 	christian.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e359223"))+" IP. Reward: A free one-way ticket to Hell.")
-    fuckthis.setAttribute('ach-tooltip', "Reach "+shorten(1e15)+" tachyon particles. Reward: Gain tachyon particles based on best antimatter^^0.75")
+    fuckthis.setAttribute('ach-tooltip', "Reach "+shorten(3.33e33)+" tachyon particles. Reward: Gain tachyon particles based on best antimatter^^0.75")
     keemstar.setAttribute('ach-tooltip', "Reach "+shorten(Decimal.pow(10, Math.pow(Math.sqrt(player.totalTimePlayed),2)))+" IP. Reward: Additional 1000x multiplier to IP.")
     yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Dimensions cost 1,000,000x less.")
 }
@@ -6767,7 +6769,7 @@ setInterval(function() {
 
 	if(player.mods.ngt) {
 		if(player.infinityPoints.gte("1e359223")) giveAchievement("This is a Christian Server")
-		if(player.dilation.tachyonParticles.gte(1e15)) giveAchievement("Dilation was a bad idea")
+		if(player.dilation.tachyonParticles.gte(3.33e33)) giveAchievement("Dilation was a bad idea")
 		if(player.infinityPoints.gte(Decimal.pow(10, Math.pow(Math.sqrt(player.totalTimePlayed),2)))) giveAchievement("Faster than Keemstar")
 		if(player.mods.ngt.omni > 0) giveAchievement("error")
 	}
@@ -7871,6 +7873,8 @@ function gameLoop(diff) {
 		
 		// Dilation
 		
+		if(ngt.op.gte(1e100)) ngt.canDilate = true;
+		
 		ge("tpmultpow").innerHTML = "Quadruple"
 		DIL_UPG_COSTS[10] = 1e100
 		
@@ -7898,7 +7902,7 @@ function gameLoop(diff) {
 				Decimal.pow(Math.PI, 1e11),
 			],
 			goal: [
-				new Decimal("7.77e777777"),
+				new Decimal("1e16666666"),
 				new Decimal("6.66e6666666"),
 				new Decimal("7.77e7900000"),
 				new Decimal("7.77e777777"),
