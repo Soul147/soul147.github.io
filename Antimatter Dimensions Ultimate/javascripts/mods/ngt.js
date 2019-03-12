@@ -463,7 +463,7 @@ function getUpgEff(n) {
 		case 0:
 			return Decimal.pow(2, ngt.op.logarithm).max(1);
 		case 3:
-			return Decimal.pow(ngt.op.logarithm, 0.1).multiply(8).max(1);
+			return Decimal.pow(ngt.op.logarithm, 1.5).multiply(8).max(1);
 		case 4:
 			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
 		case 5:

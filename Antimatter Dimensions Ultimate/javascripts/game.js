@@ -2290,7 +2290,6 @@ function replicantiGalaxy() {
 	if (player.replicanti.amount.lt(getReplicantiLimit())||player.replicanti.galaxies==maxGal) return
 	player.replicanti.galaxies=Math.min((player.galaxyMaxBulk||player.options.qol[8])?1/0:player.replicanti.galaxies+1,maxGal)
 	if(!player.options.qol[8]) player.replicanti.amount=Decimal.div(player.achievements.includes("r126")?player.replicanti.amount:1,Number.MAX_VALUE).max(1)
-	player.galaxies-=1
 	if(!player.options.qol[8]) {
 		player.galaxies-=1
 		galaxyReset()
