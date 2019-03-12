@@ -7719,7 +7719,11 @@ function gameLoop(diff) {
 
     if (document.getElementById("loadmenu").style.display == "block") changeSaveDesc(metaSave.current, savePlacement)
 
+	ge("mp10d").innerHTML = getFullExpansion(getDimensionPowerMultiplier());
+		
 	// Fix this stupid bug
+	
+	studyCosts = [1, 3, 2, 2, 3, 2, 4, 6, 3, 3, 3, 4, 6, 5, 4, 6, 5, 4, 5, 7, 4, 6, 6, 12, 9, 9, 9, 5, 5, 5, 4, 4, 4, 8, 7, 7, 15, 200, 400, 730, 300, 900, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500]
 	
 	for(var i = 0; i < studyCosts.length; i++) {
 		if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = studyCosts[i];
@@ -7731,8 +7735,6 @@ function gameLoop(diff) {
 	
 		// Super expensive studies
 	
-		studyCosts = [1, 3, 2, 2, 3, 2, 4, 6, 3, 3, 3, 4, 6, 5, 4, 6, 5, 4, 5, 7, 4, 6, 6, 12, 9, 9, 9, 5, 5, 5, 4, 4, 4, 8, 7, 7, 15, 200, 400, 730, 300, 900, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500]
-
 		for(var i = 0; i < studyCosts.length; i++) {
 			if(i > 45) studyCosts[i] *= 1e5
 			else studyCosts[i] *= 3;
@@ -7774,6 +7776,7 @@ function gameLoop(diff) {
 		ge("gravitonEffect").innerHTML = shortenMoney(getGravitonEffect());
 		
 		updateOmniUpgrades()
+		ge("replicatorpower").innerHTML = hasUpg(8) ? getUpgEff(8).toFixed(4) : 3
 		
 		// Update omnipotence milestones
 		

@@ -207,6 +207,7 @@ function hasInfinityMult(tier) {
         if (player.aarexModifications.newGameExpVersion) dimMult *= 10
 
         if (player.infinityUpgrades.includes('dimMult')) dimMult *= infUpg12Pow()
+        if (hasUpg(6)) dimMult *= getUpgEff(6)
         if ((player.currentChallenge == "challenge9" || player.currentChallenge == "postc1")&&!nonrandom) dimMult = Math.pow(10/0.30,Math.random())*0.30
     
         if (player.achievements.includes("r58")) dimMult = player.galacticSacrifice?Math.pow(dimMult,1.0666):dimMult*1.01;

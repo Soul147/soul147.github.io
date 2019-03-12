@@ -149,6 +149,7 @@ const allAchievements = {
   ngt12 : "Dilation was a bad idea",
   ngt13 : "Faster than Keemstar",
   ngt14 : "error",
+  ngt15 : "IT CAN'T EVER BE ENOUGH",
   s11 : "The first one's always free",
   s12 : "Just in case",
   s13 : "It pays to have respect",

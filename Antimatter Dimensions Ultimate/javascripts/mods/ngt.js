@@ -22,7 +22,7 @@ function omnipotenceReset(force) {
 	
 	if(ngt.thisOmni > 600 || out || force) dev.omniAnim(5 - !!player.mods.ngt.omni*4);
 	if(!force) player.mods.ngt.omni++;
-	player.mods.ngt.op = player.mods.ngt.op.add(gainedOP());
+	if(!force) player.mods.ngt.op = player.mods.ngt.op.add(gainedOP());
 	
 	if (player.tickspeedBoosts !== undefined) player.tickspeedBoosts = 0
 	if (player.achievements.includes("r104")) player.infinityPoints = new Decimal(2e25);
@@ -386,6 +386,8 @@ function updateOmniDimMults() {
 		// Set multiplier
 		d.mult = ngt.omniPower.pow(Decimal.add(d.gBought, d.opBought)).multiply(getReplicatorMult());
 		if(hasUpg(3)) d.mult = d.mult.multiply(getUpgEff(3))
+		if(hasUpg(7)) d.mult = d.mult.multiply(getUpgEff(7))
+		if(hasUpg(9)) d.mult = d.mult.multiply(getUpgEff(9))
 	}
 }
 
@@ -399,6 +401,8 @@ function getReplicatorMult() {
 	for(var i = 1; i <= 8; i++) {
 		ret = ret.multiply(Math.log10(Math.max(ngt["r"+i].amount.logarithm,0)+1)+1)
 	}
+	
+	if(hasUpg(8)) return ret.pow(getUpgEff(8)).max(1);
 	return ret.pow(3).max(1);
 }
 
@@ -434,9 +438,7 @@ const opUpgCosts = [
 	10,
 	1e8, 1e9,
 	5e11, 5e11, 5e11,
-	1e18, 1e100,
-	1e100,
-	1e100,
+	1e18, 1e20, 1e80, 1e95,
 ]
 
 function buyUpg(n) {
@@ -465,7 +467,15 @@ function getUpgEff(n) {
 		case 4:
 			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
 		case 5:
-			return Math.max(Math.log10(ngt.gravitons.logarithm+1),0)/4+4
+			return Math.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0)/4+4
+		case 6:
+			return Decimal.pow(10, Math.pow(player.galaxies, 0.2)).max(1);
+		case 7:
+			return Decimal.pow(10,Math.log(player.resets+1)).max(1);
+		case 8:
+			return Math.max(Math.log10(Math.max(player.totalTickGained,1)),0)/6+3
+		case 9:
+			return Decimal.pow(1+Math.log(1-player.tickspeed.logarithm), 5).max(1)
 	}
 }
 
@@ -477,7 +487,11 @@ function updateOmniUpgrades() {
 	ge("ouinfo22").innerHTML = getFullExpansion(getGalaxyCostIncrease())
 	ge("ouinfo31").innerHTML = shorten(getUpgEff(3))
 	ge("ouinfo32").innerHTML = shorten(getUpgEff(4))
-	ge("ouinfo33").innerHTML = getUpgEff(5).toFixed(5)
+	ge("ouinfo33").innerHTML = getUpgEff(5).toFixed(4)
+	ge("ouinfo41").innerHTML = shorten(getUpgEff(6))
+	ge("ouinfo42").innerHTML = shorten(getUpgEff(7))
+	ge("ouinfo43").innerHTML = getUpgEff(8).toFixed(4)
+	ge("ouinfo44").innerHTML = shorten(getUpgEff(9))
 }
 
 var rings = [1, 2, 3, 4] // how many upgrades are in each ring
