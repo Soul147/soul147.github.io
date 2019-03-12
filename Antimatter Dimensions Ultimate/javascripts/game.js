@@ -6302,7 +6302,7 @@ function updateDilationUpgradeCosts() {
 
 function gainDilationGalaxies() {
 	if (player.dilation.nextThreshold.lte(player.dilation.dilatedTime)) {
-		let thresholdMult = inQC(5) ? Math.pow(10, 2.8) : 1.35 + 3.65 * Math.pow(0.8, player.dilation.rebuyables[2] * exDilationUpgradeStrength(2))
+		let thresholdMult = inQC(5) ? Math.pow(10, 2.8) : 1.35 + 3.65 * Math.pow(0.8, player.dilation.rebuyables[2] * exDilationUpgradeStrength(2) / (1+!!player.mods.ngt))
 		if (player.exdilation != undefined) thresholdMult -= .1 * exDilationUpgradeStrength(2)
 		let galaxyMult = getFreeGalaxyGainMult()
 		let thresholdGalaxies = player.dilation.freeGalaxies / galaxyMult
@@ -7881,6 +7881,9 @@ function gameLoop(diff) {
 
 		if(player.money.gt(ngt.bestMoney) || !ngt.bestMoney) {
 			ngt.bestMoney = player.money;
+		}
+		if(typeof(ngt.bestMoney) == "string") {
+			ngt.bestMoney = new Decimal(ngt.bestMoney);
 		}
 
 		if (player.achievements.includes("ngt12")) {

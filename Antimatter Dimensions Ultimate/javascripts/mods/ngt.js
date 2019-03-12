@@ -463,7 +463,7 @@ function getUpgEff(n) {
 		case 0:
 			return Decimal.pow(2, ngt.op.logarithm).max(1);
 		case 3:
-			return Decimal.pow(ngt.op.logarithm, 1.5).multiply(8).max(1);
+			return Decimal.pow(ngt.op.logarithm, 2).multiply(8).max(1);
 		case 4:
 			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
 		case 5:
@@ -473,7 +473,7 @@ function getUpgEff(n) {
 		case 7:
 			return Decimal.pow(10,Math.log(player.resets+1)).max(1);
 		case 8:
-			return Math.max(Math.log10(Math.max(player.totalTickGained,1)),0)/6+3
+			return Math.max(Math.log10(Math.max(player.totalTickGained,1)),0)/3+3
 		case 9:
 			return Decimal.pow(1+Math.log(1-player.tickspeed.logarithm), 5).max(1)
 	}
