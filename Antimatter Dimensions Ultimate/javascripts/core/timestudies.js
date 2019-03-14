@@ -147,6 +147,9 @@ function buyTimeStudy(name, check, quickBuy) {
 }
 
 function buyDilationStudy(name, cost) {
+	if (name > 1 && name < 6 && player.mods.ngt) {
+		cost = cost**7
+	}
     if (player.timestudy.theorem >= cost && !player.dilation.studies.includes(name) && (player.dilation.studies.includes(name-1)||name<2)) {
         if (name < 2) {
             if (ECTimesCompleted("eterc11")+ECTimesCompleted("eterc12")<10||getTotalTT(player)<13000) return

@@ -380,14 +380,18 @@ function buyMaxOmniDimensions() {
 	}
 }
 
-function updateOmniDimMults() {
+function updateOmniDimMults(reset) {
 	for(var i = 1; i <= 8; i++) {
 		d = ngt["d" + i];
 		// Set multiplier
-		d.mult = ngt.omniPower.pow(Decimal.add(d.gBought, d.opBought)).multiply(getReplicatorMult());
-		if(hasUpg(3)) d.mult = d.mult.multiply(getUpgEff(3))
-		if(hasUpg(7)) d.mult = d.mult.multiply(getUpgEff(7))
-		if(hasUpg(9)) d.mult = d.mult.multiply(getUpgEff(9))
+		mult = ngt.omniPower.pow(Decimal.add(d.gBought, d.opBought)).multiply(getReplicatorMult());
+		if(hasUpg(3)) mult = mult.multiply(getUpgEff(3))
+		if(hasUpg(7)) mult = mult.multiply(getUpgEff(7))
+		if(hasUpg(9)) mult = mult.multiply(getUpgEff(9))
+		if(compOC(3)) mult = mult.multiply(ngt.t.reward[2])
+		
+		if(reset) d.mult = mult;
+		d.mult = Decimal.max(d.mult, mult)
 	}
 }
 

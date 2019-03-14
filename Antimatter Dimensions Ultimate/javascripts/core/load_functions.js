@@ -1337,7 +1337,7 @@ if (player.version < 5) {
 	if (player.options.chart.dips) document.getElementById("chartDipsOnOff").checked = true
 	else document.getElementById("chartDipsOnOff").checked = false
  
-	if (player.options.theme == "Dark" || player.options.theme == "Dark Metro") {
+	if (player.options.theme == "Dark" || player.options.theme == "Dark Metro" || player.options.theme == "Void") {
 		Chart.defaults.global.defaultFontColor = '#888';
 		normalDimChart.data.datasets[0].borderColor = '#888'
 	} else {

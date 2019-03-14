@@ -291,7 +291,7 @@ function updateAchievements() {
 			var shown = player.mods.ngt;
 			rowid = "ngt" + (i - 18)
 		}
-		else if (i>14&&i<18) {
+		else if (i>14&&i<19) {
 			var shown=!(!player.masterystudies)
 			rowid="ng3p"+(i-14)
 		} else if (i>13) {

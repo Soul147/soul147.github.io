@@ -44,6 +44,7 @@ function getGalaxyPowerEff(ng, bi) {
 		if (player.masterystudies != undefined) if (player.galaxies >= 1e4) exp *= 6 - player.galaxies / 2e3
 		eff *= Math.pow(1+ng/1000, exp)
 	}
+	if(compOC(2)) eff *= 1+ngt.t.reward[1]/100;
 	eff *= colorBoosts.r
 	if (GUBought("rg2")) eff *= Math.pow(player.dilation.freeGalaxies/5e3+1,0.25)
 	if (GUBought("rg4")) eff *= 1.5

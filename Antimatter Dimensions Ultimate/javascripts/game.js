@@ -1077,8 +1077,6 @@ function getGalaxyRequirement(offset=0) {
     if (player.infinityUpgrades.includes("resetBoost")) amount -= 9;
     if (player.challenges.includes("postc5")) amount -= 1;
     if (player.infinityUpgradesRespecced != undefined) amount -= getInfUpgPow(6)
-
-	if(compOC(2)) amount *= (100 + ngt.t.reward[1]) / 100;
 		
     return amount;
 }
@@ -2290,10 +2288,8 @@ function replicantiGalaxy() {
 	if (player.replicanti.amount.lt(getReplicantiLimit())||player.replicanti.galaxies==maxGal) return
 	player.replicanti.galaxies=Math.min((player.galaxyMaxBulk||player.options.qol[8])?1/0:player.replicanti.galaxies+1,maxGal)
 	if(!player.options.qol[8]) player.replicanti.amount=Decimal.div(player.achievements.includes("r126")?player.replicanti.amount:1,Number.MAX_VALUE).max(1)
-	if(!player.options.qol[8]) {
-		player.galaxies-=1
-		galaxyReset()
-	}
+	player.galaxies-=1
+	galaxyReset()
 }
 
 function updateExtraReplGalaxies() {
@@ -6770,7 +6766,8 @@ setInterval(function() {
 		if(player.infinityPoints.gte("1e359223")) giveAchievement("This is a Christian Server")
 		if(player.dilation.tachyonParticles.gte(3.33e33)) giveAchievement("Dilation was a bad idea")
 		if(player.infinityPoints.gte(Decimal.pow(10, Math.pow(Math.sqrt(player.totalTimePlayed),2)))) giveAchievement("Faster than Keemstar")
-		if(player.mods.ngt.omni > 0) giveAchievement("error")
+		if(ngt.omni > 0) giveAchievement("error")
+		if(ngt.r1.amount.gt(player.totalmoney)) giveAchievement("IT CAN'T EVER BE ENOUGH")
 	}
 
 	setAchieveTooltip()
@@ -7707,7 +7704,7 @@ function gameLoop(diff) {
     if (player.dilation.upgrades.includes(10)) {
 		player.timestudy.theorem += parseFloat(getPassiveTTGen().times(diff/10).toString())
         if ((document.getElementById("timestudies").style.display != "none" || document.getElementById("ers_timestudies").style.display != "none" || document.getElementById("masterystudies").style.display != "none") && document.getElementById("eternitystore").style.display != "none") {
-            document.getElementById("timetheorems").innerHTML = "You have <span style='display:inline' class=\"TheoremAmount\">"+(player.timestudy.theorem>99999?shortenMoney(player.timestudy.theorem):getFullExpansion(Math.floor(player.timestudy.theorem)))+"</span> Time Theorem"+ (player.timestudy.theorem == 1 ? "." : "s.")
+            document.getElementById("timetheorems").innerHTML = "You have <span style='display:inline' class=\"TheoremAmount\">"+(player.timestudy.theorem>999999?shortenMoney(player.timestudy.theorem):getFullExpansion(Math.floor(player.timestudy.theorem)))+"</span> Time Theorem"+ (player.timestudy.theorem == 1 ? "." : "s.")
             if (document.getElementById("timestudies").style.display != "none") updateTimeStudyButtons()
             else updateMasteryStudyButtons()
         }
@@ -7719,15 +7716,23 @@ function gameLoop(diff) {
     document.getElementById("infinityPoints2").innerHTML = "You have <span class=\"IPAmount2\">"+shortenDimensions(player.infinityPoints)+"</span> Infinity points."
 
     if (document.getElementById("loadmenu").style.display == "block") changeSaveDesc(metaSave.current, savePlacement)
-
+		
 	ge("mp10d").innerHTML = getFullExpansion(getDimensionPowerMultiplier());
+	if(player.aarexModifications.newGamePlusPlusVersion) {
+		ge("etertodt").innerHTML = shorten(getEternitied()**0.1)
+		ge("dttoeter").innerHTML = shorten(player.dilation.dilatedTime.pow(0.1))
+	}
+		
+	// Hide stuff from NG^^ that shouldn't be there
+	ge("odtabbtn").style.display = "none"
+	ge("octabbtn").style.display = "none"
 		
 	// Fix this stupid bug
 	
 	studyCosts = [1, 3, 2, 2, 3, 2, 4, 6, 3, 3, 3, 4, 6, 5, 4, 6, 5, 4, 5, 7, 4, 6, 6, 12, 9, 9, 9, 5, 5, 5, 4, 4, 4, 8, 7, 7, 15, 200, 400, 730, 300, 900, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500]
 	
 	for(var i = 0; i < studyCosts.length; i++) {
-		if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = studyCosts[i];
+		if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
 	}
 		
 	if(player.mods.ngt) {
@@ -7736,12 +7741,21 @@ function gameLoop(diff) {
 	
 		// Super expensive studies
 	
+		superStudies = 0;
+		player.timestudy.studies.forEach(function(study) {if(study > 220) superStudies++});
+	
 		for(var i = 0; i < studyCosts.length; i++) {
-			if(i > 45) studyCosts[i] *= 1e5
+			if(i > 45) studyCosts[i] *= 500*superStudies+500;
 			else studyCosts[i] *= 3;
 			studyCosts[37] = 0;
-			if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = studyCosts[i];
+			if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
 		}
+		
+		i = 7
+		ge("td5unl").innerHTML = shorten(1e6**i)
+		ge("td6unl").innerHTML = shorten(1e7**i)
+		ge("td7unl").innerHTML = shorten(1e8**i)
+		ge("td8unl").innerHTML = shorten(1e9**i)
 		
 		if(ngt.omni <= 0) {
 			ge("ngtlockedstudies").style.display = "none"
@@ -7892,28 +7906,31 @@ function gameLoop(diff) {
 		
 		// omni-challenges
 		
+		if(player.money.gte(Decimal.pow(Math.E, 6e9))) ngt.unlockedOC = true;
+		if(ngt.unlockedOC) ge("octabbtn").style.display = ""
 		if(!player.masterystudies) ge("octabbtn").style.marginLeft = "-15px";
 		
 		ngt.t = {
 			req: [
 				Decimal.pow(Math.E, 6e9),
 				Decimal.pow(3**3**3, 3e8),
-				Decimal.pow(69420, 1234567890),
-				Decimal.pow(123456789, 987654321),
 				Decimal.pow(Number.MAX_VALUE, 76000000),
 				Decimal.pow(Math.PI, 1e11),
+				Decimal.pow(69420, 1234567890),
+				Decimal.pow(123456789, 987654321),
 			],
 			goal: [
 				new Decimal("1e16666666"),
-				new Decimal("6.66e6666666"),
-				new Decimal("7.77e7900000"),
+				new Decimal("1e30000000"),
+				new Decimal("1e42069000"),
 				new Decimal("7.77e777777"),
 				new Decimal("7.77e777777"),
 				new Decimal("7.77e777777"),
 			],
 			reward: [
-				Math.max((Math.log10(player.firstBought) - 1) / 50 + 1, 1),
-				Math.min(-Math.log10(-player.tickspeed.logarithm), 0)
+				Math.max((Math.log10(player.firstBought) - 1) / 40 + 1, 1),
+				Math.max(Math.log10(Math.max(-player.tickspeed.logarithm, 0)), 0),
+				Decimal.max(player.dilation.tachyonParticles.logarithm, 0).pow(69),
 			]
 		}
 		

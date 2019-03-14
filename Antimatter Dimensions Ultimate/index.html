@@ -313,14 +313,14 @@
                 </table>
                 <table class="table" id="studytable">
                     <tr>
-                        <td><button class="timestudylocked" id="dilstudy2" onclick="buyDilationStudy(2, 1e6)">Unlock the 5th Time Dimension<span>Cost: 1,000,000 Time Theorems</button></td>
-                        <td><button class="timestudylocked" id="dilstudy3" onclick="buyDilationStudy(3, 1e7)">Unlock the 6th Time Dimension<span>Cost: 10,000,000 Time Theorems</button></td>
+                        <td><button class="timestudylocked" id="dilstudy2" onclick="buyDilationStudy(2, 1e6)">Unlock the 5th Time Dimension<span>Cost: <t id = "td5unl">1,000,000</t> Time Theorems</button></td>
+                        <td><button class="timestudylocked" id="dilstudy3" onclick="buyDilationStudy(3, 1e7)">Unlock the 6th Time Dimension<span>Cost: <t id = "td6unl">10,000,000</t> Time Theorems</button></td>
                     </tr>
                 </table>
                 <table class="table" id="studytable">
                     <tr>
-                        <td><button class="timestudylocked" id="dilstudy4" onclick="buyDilationStudy(4, 1e8)">Unlock the 7th Time Dimension<span>Cost: 100,000,000 Time Theorems</button></td>
-                        <td><button class="timestudylocked" id="dilstudy5" onclick="buyDilationStudy(5, 1e9)">Unlock the 8th Time Dimension<span>Cost: 1,000,000,000 Time Theorems</button></td>
+                        <td><button class="timestudylocked" id="dilstudy4" onclick="buyDilationStudy(4, 1e8)">Unlock the 7th Time Dimension<span>Cost: <t id = "td7unl">100,000,000</t> Time Theorems</button></td>
+                        <td><button class="timestudylocked" id="dilstudy5" onclick="buyDilationStudy(5, 1e9)">Unlock the 8th Time Dimension<span>Cost: <t id = "td8unl">1,000,000,000</t> Time Theorems</button></td>
                     </tr>
                 </table>
                 <table class="table" id="studytable">
@@ -849,7 +849,7 @@
                             <button class="timestudy" id="dil9" onclick="buyDilationUpgrade(9)">Reduce the dilation penalty. (^ 1.05 after reduction)<br><span id="dil9cost"></span></button>
                         </td>
                         <td id="n3">
-                            <button class="timestudy" id="dil13" onclick="buyDilationUpgrade(13)">Eternities and dilated time power up each other.<br><span id="dil13cost"></span></button>
+                            <button class="timestudy" id="dil13" onclick="buyDilationUpgrade(13)">Eternities and dilated time power up each other.<br><span id = "etertodt"></span>x to dilated time<br><span id = "dttoeter"></span>x to eternities<br><span id="dil13cost"></span></button>
                         </td>
                     </tr>
                     <tr id="mddilupg">
@@ -3549,7 +3549,7 @@
 								requirement: <span id = "ocreq2"></span><br><br>
 								<button id = "oc2" class = "challengesbtn" onclick = "startOmniChallenge(2)"></button><br><br>
 								goal: <span id = "ocgoal2"></span><br>
-								reward: galaxy cost is decreased based on tickspeed<br>currently: <span id = "ocreward2"></span>%
+								reward: galaxies are more powerful based on tickspeed<br>currently: <span id = "ocreward2"></span>%
 							</div>
 						</td>
 					</tr>
@@ -3560,7 +3560,7 @@
 								requirement: <span id = "ocreq3"></span><br><br>
 								<button id = "oc3" class = "challengesbtn" onclick = "startOmniChallenge(3)"></button><br><br>
 								goal: <span id = "ocgoal3"></span><br>
-								reward: <span id = "ocreward3"></span>
+								reward: tachyon particles boost omni-dimensions<br>currently: x<span id = "ocreward3"></span>
 							</div>
 						</td>
 						<td>
@@ -4626,6 +4626,10 @@
 			<br>
 			<div id = "omnipotence" class = "omnitab">
 				<center>
+					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 1280px; height: 1280px; border-radius: 10000px; z-index: -69420;"></div>
+					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 960px; height: 960px; border-radius: 10000px; z-index: -69420;"></div>
+					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 640px; height: 640px; border-radius: 10000px; z-index: -69420;"></div>
+					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 320px; height: 320px; border-radius: 10000px; z-index: -69420;"></div>
 					<div id = "omnibtn" class = "omnibtn" onclick = "omnipotenceReset()" style = "align: center; padding-top: 2px">
 						<div id="omnibtnFlavor" class="hideEmpty">commit yeet everything</div>
 						<div id="omnibtnOPGain" class="hideEmpty"></div>
@@ -4634,10 +4638,6 @@
 					</div>
 					<br>
 					you have <span id = "op"></span> omnipotence points.<br>
-					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 1280px; height: 1280px; border-radius: 10000px"></div>
-					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 960px; height: 960px; border-radius: 10000px"></div>
-					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 640px; height: 640px; border-radius: 10000px"></div>
-					<div style = "position: absolute; left: 50%; top: 900px; transform: translate(-50%, -50%); opacity: 0.1; background-color: #333; width: 320px; height: 320px; border-radius: 10000px"></div>
 					<div class = "omniupgbought" id = "ou11">multiply OP gain by 2 for every order of magnitude of current OP<br>currently: <span id = "ouinfo11"></span>x<br>cost: <span id = "oucost11"></span> OP</div>
 					<div class = "omniupg" id = "ou21">dimension boost scaling is decreased by 2<br>currently: <span id = "ouinfo21"></span><br>cost: <span id = "oucost21"></span> OP</div>
 					<div class = "omniupglocked" id = "ou22">galaxy cost scaling is decreased by 8<br>currently: <span id = "ouinfo22"></span><br>cost: <span id = "oucost22"></span> OP</div>
