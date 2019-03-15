@@ -64,7 +64,7 @@ function updateQoL(diff) {
 
 	// Update buttons.
 
-	for(var n = 0; n < player.options.qol.length; n++) ge("qolBtn"+n).innerHTML=player.options.qol[n]?"ON":"OFF"
+	for(var n = 0; n < 9; n++) ge("qolBtn"+n).innerHTML=player.options.qol[n]?"ON":"OFF"
 }
 
 function toggleQolOption(n) {

@@ -378,7 +378,7 @@ function updateNewPlayer(reseted) {
 				gBought: new Decimal(0), 
 				opBought: new Decimal(0), 
 				gCost: Decimal.pow(100, i**3), 
-				gCostMult: new Decimal(i*100), 
+				gCostMult: new Decimal(i*10), 
 				opCost: Decimal.pow(10, j**2), 
 				opCostMult: new Decimal(i*10)
 			}
@@ -1116,6 +1116,7 @@ function updateWorstChallengeBonus() {
 		}
 	}
 	worstChallengeBonus = Decimal.max(Math.pow(3000 / actualWorst,player.galacticSacrifice?2:1), 1);
+	if(player.mods.ngt) worstChallengeBonus = worstChallengeBonus.pow(10)
 }
 
 function sacrificeConf() {
@@ -1508,7 +1509,7 @@ function updateDimensions() {
             if (player.timestudy.studies.includes(31)) document.getElementById("postinfi12").innerHTML = "Power up all dimensions based on amount infinitied <br>Currently: "+shortenMoney(Math.pow((Math.log10(getInfinitied()+1)*10).toFixed(2), !!player.mods.ngt*6+4))+"x<br>Cost: "+shortenCosts(1e5)+" IP"
             document.getElementById("postinfi41").innerHTML = "Makes galaxies "+(player.galacticSacrifice?7:5)+"0% stronger <br>Cost: "+shortenCosts(5e11)+" IP"
             if (player.mods.ngt) document.getElementById("postinfi41").innerHTML = "Makes galaxies 69% stronger <br>Cost: "+shortenCosts(5e11)+" IP"
-            document.getElementById("postinfi32").innerHTML = "Power up all dimensions based on slowest challenge run<br>Currently: "+worstChallengeBonus.toFixed(2)+"x<br>Cost: "+shortenCosts(1e7)+" IP"
+            document.getElementById("postinfi32").innerHTML = "Power up all dimensions based on slowest challenge run<br>Currently: "+getFullExpansion(worstChallengeBonus)+"x<br>Cost: "+shortenCosts(1e7)+" IP"
 
             document.getElementById("postinfi13").innerHTML = "You passively generate Infinitied stat based on your fastest infinity.<br>1 Infinity every "+timeDisplay(player.bestInfinityTime*5)+ " <br>Cost: "+shortenCosts(20e6)+" IP"
             document.getElementById("postinfi23").innerHTML = "Option to bulk buy Dimension"+(player.tickspeedBoosts==undefined?"":" and Tickspeed")+" Boosts <br>Cost: "+shortenCosts(player.galacticSacrifice?5e6:5e9)+" IP"
@@ -1571,7 +1572,7 @@ function updateDimensions() {
                 document.getElementById("reversedilationdiv").style.display = "none"
             }
 			if (player.mods.ngt) {
-				if (!ngt.canDilate) ge("enabledilation").innerHTML = "DILATION IS LOCKED<br>reach " + shorten(new Decimal(1e100)) + " omnipotence points to dilate time."
+				if (!ngt.canDilate) ge("enabledilation").innerHTML = "DILATION IS LOCKED<br>reach " + shorten(new Decimal("1e1000")) + " omnipotence points to dilate time."
 			}
         }
         var fgm=getFreeGalaxyGainMult()
@@ -2109,7 +2110,7 @@ function updateInfCosts() {
     }
 
     if (document.getElementById("timestudies").style.display == "block" && document.getElementById("eternitystore").style.display == "block") {
-        document.getElementById("11desc").textContent = "Currently: "+shortenMoney(Decimal.dividedBy(1,player.tickspeed.dividedBy(1000).pow(0.005).times(0.95).plus(player.tickspeed.dividedBy(1000).pow(0.0003).times(0.05)).max(Decimal.fromMantissaExponent(1, -2500)).pow(player.aarexModifications.newGameExpVersion?0.25:1)))+"x"
+        document.getElementById("11desc").textContent = "Currently: "+shortenMoney(getTS11Effect())+"x"
         document.getElementById("31desc").textContent = !!player.mods.ngt*6+4
         document.getElementById("32desc").textContent = "You gain "+getFullExpansion(Math.pow(Math.max(player.resets,1),!!player.mods.ngt+1), 1)+"x more infinitied stat (based on dimension boosts)"
         document.getElementById("51desc").textContent = "You gain "+shortenCosts(player.aarexModifications.newGameExpVersion?1e30:1e15)+"x more IP"
@@ -6649,7 +6650,15 @@ setInterval(function() {
     if (player.infinityPoints.gte(new Decimal("1e22000")) && checkEmpty) giveAchievement("What do I have to do to get rid of you")
     if (player.replicanti.galaxies >= 180*player.galaxies && player.galaxies > 0) giveAchievement("Popular music")
     if (getEternitied() >= 1e12) giveAchievement("The cap is a million, not a trillion")
-    if (player.eternityPoints.gte(Number.MAX_VALUE)) giveAchievement("But I wanted another prestige layer...")
+    if (player.eternityPoints.gte(Number.MAX_VALUE)) {
+		if(player.mods.ngt && !player.achievements.includes("r127")) {
+			$.notify("Well, you got one.");
+			showTab("omnitab")
+			showOmniTab("omnipotence")
+		}
+		giveAchievement("But I wanted another prestige layer...")
+		if(player.mods.ngt) if(!ngt.omni) player.eternityPoints = new Decimal(Number.MAX_VALUE);
+	}
     if (player.eternityPoints.gte("1e40000")) giveAchievement("In the grim darkness of the far endgame")
     if (player.eternityPoints.gte("9e99999999")) giveAchievement("This achievement doesn't exist 3")
     if (player.infinityPoints.gte(1e100) && player.firstAmount.equals(0) && player.infinitied == 0 && player.resets <= 4 && player.galaxies <= 1 && player.replicanti.galaxies == 0) giveAchievement("Like feasting on a behind")
@@ -7134,7 +7143,7 @@ function gameLoop(diff) {
 
             var currentIPmin = gainedInfinityPoints().dividedBy(player.thisInfinityTime/600)
             if (currentIPmin.gt(IPminpeak)) IPminpeak = currentIPmin
-            document.getElementById("postInfinityButton").innerHTML = "<b>"+(IPminpeak.gt("1e30000003") && (player.options.theme != "Aarex's Modifications" || player.options.notation=="Morse code" || player.options.notation=='Spazzy') ? "Gain " : "Big Crunch for ")+shortenDimensions(gainedInfinityPoints())+" Infinity points.</b>" + (IPminpeak.gt("1e100000") && (player.options.theme != "Aarex's Modifications" || player.options.notation=="Morse code" || player.options.notation=='Spazzy') ? ("<br>+" + getFullExpansion(getInfinitiedGain()) + " infinities") : "<br>"+shortenDimensions(currentIPmin) + " IP/min"+"<br>Peaked at "+shortenDimensions(IPminpeak)+" IP/min")
+            document.getElementById("postInfinityButton").innerHTML = "<b>"+(IPminpeak.gt("1e30000003") && (player.options.theme != "Aarex's Modifications" || player.options.notation=="Morse code" || player.options.notation=='Spazzy') ? "Gain " : "Big Crunch for ")+shortenDimensions(gainedInfinityPoints())+" Infinity points.</b>" + (IPminpeak.gt("1e3080") && (player.options.theme != "Aarex's Modifications" || player.options.notation=="Morse code" || player.options.notation=='Spazzy') ? ("<br>+" + getFullExpansion(getInfinitiedGain()) + " infinities") : "<br>"+shortenDimensions(currentIPmin) + " IP/min"+"<br>Peaked at "+shortenDimensions(IPminpeak)+" IP/min")
         }
     }
 
@@ -7886,7 +7895,7 @@ function gameLoop(diff) {
 		
 		// Dilation
 		
-		if(ngt.op.gte(1e100)) ngt.canDilate = true;
+		if(ngt.op.gte("1e1000")) ngt.canDilate = true;
 		
 		ge("tpmultpow").innerHTML = "Quadruple"
 		DIL_UPG_COSTS[10] = 1e100
@@ -7941,6 +7950,14 @@ function gameLoop(diff) {
 			ge("oc" + i).innerHTML = inOC(i) ? "running" : compOC(i) ? "completed" : player.money.lt(ngt.t.req[i-1]) ? "locked" : "start";
 			ge("oc" + i).className = inOC(i) ? "onchallengebtn" : compOC(i) ? "completedchallengesbtn" : player.money.lt(ngt.t.req[i-1]) ? "lockedchallengesbtn" : "challengesbtn";
 		}
+		
+		// Omnipotence statistics
+		
+		stats = ""
+		
+		if(ngt.omni) stats += "you have gone omnipotent " + ngt.omni + " times."
+		
+		ge("omniStatistics").innerHTML = stats;
 	}
 
     player.lastUpdate = thisUpdate;

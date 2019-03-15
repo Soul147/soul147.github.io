@@ -4,6 +4,7 @@ function ge(e) {
 	return document.getElementById(e)
 }
 
+var resetOmniDims = false
 var inflationCheck = false
 var notifyId = 0
 function onLoad(noOffline) {
@@ -1606,7 +1607,7 @@ if (player.version < 5) {
 					simulateTime(diff/1000)
 			}
 	} else player.lastUpdate = new Date().getTime()
-	if (detectNGPStart || player.totalTimePlayed < 1 || inflationCheck || forceToQuantumAndRemove) {
+	if (detectNGPStart || player.totalTimePlayed < 1 || inflationCheck || forceToQuantumAndRemove || resetOmniDims) {
 			ngModeMessages=[]
 		if (player.mods.qol) ngModeMessages.push("Welcome to the Quality of Life mod, made by Sigma. I describe myself as an \"efficient\" person, others call me lazy. If you're anything like me, this mod is for you. It automates basically everything, and removes some of the annoying grinds like the first 100 eternities.")
 			if (player.mods.secret) ngModeMessages.push("Welcome to the Secrets mod, made by Sigma. This mod adds a multiplier to the speed of the entire game based on secret achievements completed.")
@@ -1637,6 +1638,9 @@ if (player.version < 5) {
 					player.timestudy.theorem = 0
 					player.dilation.bestTP = new Decimal(0)
 					document.getElementById('bestTP').textContent = "Your best ever Tachyon particles was 0."
+			}
+			if (resetOmniDims) {
+				ngModeMessages = ["Due to balancing changes, your omni-dimensions will be reset, but the graviton cost scales by a lot less now, so it won't take too long to get back to where you were. Have a nice day. :)"]
 			}
 			inflationCheck = false
 			closeToolTip()
@@ -2093,6 +2097,35 @@ function transformSaveToDecimal() {
 			r.power = new Decimal(r.power)
 			r.interval = new Decimal(r.interval)
 		}
+		
+		var ver = ngt.version || 0;
+		
+		function updateToVersion(v, f) {
+			if(ver < v) {
+				ver = v;
+				f();
+				return true;
+			}
+		} 
+		
+		updateToVersion(1.0, function() {
+			for(var i = 1; i <= 8; i++) {
+				j = i - 1
+				player.mods.ngt["d" + i] = {
+					amount: new Decimal(0), 
+					mult: new Decimal(1), 
+					gBought: new Decimal(0), 
+					opBought: new Decimal(0), 
+					gCost: Decimal.pow(100, i**3), 
+					gCostMult: new Decimal(i*10), 
+					opCost: Decimal.pow(10, j**2), 
+					opCostMult: new Decimal(i*10)
+				}
+			}
+			if(ngt.gravitons.gt(0)) resetOmniDims = true;
+		});
+		
+		ngt.version = ver;
 	}
 }
 

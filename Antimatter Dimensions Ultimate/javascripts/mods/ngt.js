@@ -3,6 +3,11 @@ function gainedOP() {
 }
 
 function omnipotenceReset(force) {
+	if(!ngt.omni) setTimeout(function() {
+		$("#dimensionsbtn").notify("New Dimension Unlocked", "success");
+		$("#eternitystorebtn").notify("New Time Studies Unlocked", "success");
+	}, 10000);
+	
 	if(player.eternityPoints.add(gainedEternityPoints()).lt(1e308) && !(force || ocGoalMet(currentOC()))) return;
 	
 	out = inOC() && ocGoalMet(ngt.ocr[0]) && !force
@@ -518,7 +523,9 @@ function updateOmniSpins() {
 			div = ge("ou" + a + b);
 			
 			centerX = innerWidth / 2 - 10;
-			centerY = 900;
+			centerY = 1000;
+			
+			if(!ngt.omni) centerY = -69420;
 			
 			angle = spins[i] + Math.PI * 2 * b / rings[i];
 			
