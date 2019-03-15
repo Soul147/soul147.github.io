@@ -39,7 +39,7 @@ function softReset(bulk) {
       if (player.currentEternityChall=='eterc13') return
       var power = player[TIER_NAMES[tier] + 'Pow']
       var temp = getDimensionBoostPower()
-      if (player.dbPower === undefined || isNaN(break_infinity_js ? player.dbPower : player.dbPower.logarithm)) player.dbPower = temp
+      if (player.dbPower === undefined || isNaN((decimal_mode == 0) ? player.dbPower : player.dbPower.logarithm)) player.dbPower = temp
       for (tier = 1; tier < 9; tier++) player[TIER_NAMES[tier] + 'Pow'] = player[TIER_NAMES[tier] + 'Pow'].div(player.dbPower.pow(Math.max(oldResets + 1 - tier, 0))).times(temp.pow(Math.max(player.resets + 1 - tier, 0)))
       player.dbPower = temp
       return

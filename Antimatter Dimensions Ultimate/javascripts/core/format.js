@@ -221,7 +221,7 @@ function formatValue(notation, value, places, placesUnder1000, noInf) {
         }
         if (value instanceof Decimal) {
            var power = value.e
-           var matissa = value.mantissa
+           var matissa = value.mantissa || value.m
         } else {
             var matissa = value / Math.pow(10, Math.floor(Math.log10(value)));
             var power = Math.floor(Math.log10(value));
@@ -592,7 +592,7 @@ let iroha_invert = function (x) {return '世' + x}
 let iroha_special = 'いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせアイウエオカキクケコ';
 
 function iroha (n, depth) {
-  if (!break_infinity_js) if (n instanceof Decimal) n = n.toString()
+  if (decimal_mode==1) if (n instanceof Decimal) n = n.toString()
   n = new Decimal_BI(n);
   if (isNaN(n.e)) {
     return '今';
@@ -624,7 +624,7 @@ function iroha (n, depth) {
 function getFullExpansion(num, decimal) {
 	if (num === null) return "NaN"
 	if (isNaN(num)) return "NaN"
-	if (!break_infinity_js && typeof(num) != "number") if (isNaN(num.logarithm)) return "NaN"
+	if (decimal_mode==1 && typeof(num) != "number") if (isNaN(num.logarithm)) return "NaN"
 	if (num > 1e12) return shorten(num)
 	if (player.options.notation === "Greek" || player.options.notation === "Morse code" || player.options.notation === "Symbols" || player.options.notation === "Lines" || player.options.notation === "Simplified Written") return convTo(player.options.notation, num)
 	if(decimal) return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

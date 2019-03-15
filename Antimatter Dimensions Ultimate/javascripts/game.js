@@ -14,7 +14,7 @@ var failureCount = 0;
 var implosionCheck = 0;
 var TIER_NAMES = [ null, "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eight" ];
 var DISPLAY_NAMES = [ null, "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth" ];
-var break_infinity_js
+var decimal_mode
 var forceHardReset = false;
 var player
 var metaSave = null
@@ -336,7 +336,7 @@ function updateNewPlayer(reseted) {
             hideProductionTab: false,
             eternityChallRecords: {},
             popUpId: 0,
-            breakInfinity: false
+            decimalMode: 0,
         },
 		mods: {
 			secret: modesChosen.secret,
@@ -1599,6 +1599,7 @@ function updateCosts() {
 	for (var i=1; i<9; i++) {
 		var cost = player[TIER_NAMES[i] + "Cost"]
 		document.getElementById(TIER_NAMES[i]).textContent = 'Cost: ' + shortenPreInfCosts(cost)
+		
 		document.getElementById(TIER_NAMES[i] + "Max").textContent = 'Until 10, Cost: ' + shortenPreInfCosts(cost.times(10 - dimBought(i)));
 
 		document.getElementById("infMax"+i).textContent = "Cost: " + shortenInfDimCosts(player["infinityDimension"+i].cost) + " IP"
@@ -4203,7 +4204,7 @@ function updatePriorities() {
     player.autobuyers[9].priority = parseInt(document.getElementById("priority10").value)
     player.autobuyers[10].priority = parseInt(document.getElementById("priority11").value)
     const infValue = fromValue(document.getElementById("priority12").value)
-    if (!isNaN(break_infinity_js ? infValue : infValue.logarithm)) player.autobuyers[11].priority = infValue
+    if (!isNaN(decimal_mode==0 ? infValue : infValue.logarithm)) player.autobuyers[11].priority = infValue
     else if (player.autoCrunchMode=="replicanti"&&document.getElementById("priority12").value.toLowerCase()=="max") player.autobuyers[11].priority = document.getElementById("priority12").value
     if (getEternitied() < 10 && !player.autobuyers[9].bulkBought) {
         var bulk = Math.floor(Math.max(parseFloat(document.getElementById("bulkDimboost").value), 1))
@@ -4213,10 +4214,10 @@ function updatePriorities() {
     player.autobuyers[9].bulk = (isNaN(bulk)) ? 1 : bulk
     player.overXGalaxies = parseInt(document.getElementById("overGalaxies").value)
     const sacValue = fromValue(document.getElementById("prioritySac").value)
-    if (!isNaN(break_infinity_js ? sacValue : sacValue.logarithm)) player.autoSacrifice.priority = Decimal.max(sacValue, 1.01)
+    if (!isNaN(decimal_mode==0 ? sacValue : sacValue.logarithm)) player.autoSacrifice.priority = Decimal.max(sacValue, 1.01)
     if (player.galacticSacrifice) {
         const galSacValue = fromValue(document.getElementById("priority14").value)
-        if (!isNaN(break_infinity_js ? galSacValue : galSacValue.logarithm)) player.autobuyers[12].priority = galSacValue
+        if (!isNaN(decimal_mode ? galSacValue : galSacValue.logarithm)) player.autobuyers[12].priority = galSacValue
     }
     if (player.autobuyers[13]!=undefined) {
         player.autobuyers[13].priority = parseInt(document.getElementById("priority15").value)
@@ -4225,11 +4226,11 @@ function updatePriorities() {
     }
     player.autobuyers[10].bulk = parseFloat(document.getElementById("bulkgalaxy").value)
     const eterValue = fromValue(document.getElementById("priority13").value)
-    if (!isNaN(break_infinity_js ? eterValue : eterValue.logarithm)) player.eternityBuyer.limit = eterValue
+    if (!isNaN(decimal_mode==0 ? eterValue : eterValue.logarithm)) player.eternityBuyer.limit = eterValue
     if (player.masterystudies) {
         player.eternityBuyer.dilationPerAmount = Math.max(parseInt(document.getElementById("prioritydil").value),2)
         const quantumValue = fromValue(document.getElementById("priorityquantum").value)
-        if (!isNaN(break_infinity_js ? quantumValue : quantumValue.logarithm) && player.quantum.autobuyer) player.quantum.autobuyer.limit = quantumValue
+        if (!isNaN(decimal_mode==0 ? quantumValue : quantumValue.logarithm) && player.quantum.autobuyer) player.quantum.autobuyer.limit = quantumValue
         if (player.eternityBuyer.isOn&&player.eternityBuyer.dilationMode&&player.eternityBuyer.statBeforeDilation>=player.eternityBuyer.dilationPerAmount) {
             startDilatedEternity(true)
             return
@@ -6933,12 +6934,12 @@ function gameLoop(diff) {
             player.totalmoney = player.totalmoney.plus(getDimensionProductionPerSecond(1).times(diff/10))
             if (player.totalmoney.gt("1e9000000000000000")) {
                   document.getElementById("decimalMode").style.display = "none"
-                  if (break_infinity_js) {
+                  if (decimal_mode==0) {
                       player.money = tempm
                       player.totalmoney = temptm
                       clearInterval(gameLoopIntervalId)
                       alert("You have reached the limit of break_infinity.js and you will be forced to switch to logarithmica_numerus.js and soft reset right now.")
-                      player.aarexModifications.breakInfinity = !player.aarexModifications.breakInfinity
+                      player.aarexModifications.decimalMode++
                       player.aarexModifications.switch = true
                       save_game(true)
                       document.location.reload(true)
@@ -8628,8 +8629,14 @@ function updatePowers() {
 setInterval(updatePowers, 100)
 
 function switchDecimalMode() {
-	if (confirm('This option switch the Decimal library to '+(player.aarexModifications.breakInfinity?'logarithmica_numerus_lite':'break_infinity.min')+'.js. Are you sure you want to do that?')) {
-		player.aarexModifications.breakInfinity = !player.aarexModifications.breakInfinity
+	selectedDecimalMode++;
+	if(selectedDecimalMode > 1) selectedDecimalMode = 0; // change the 1 to a 2 when break_eternity works
+	document.getElementById("decimalMode").textContent = "Decimal mode: "+(selectedDecimalMode==0?"Slow but accurate":selectedDecimalMode==1?"Fast but inaccurate":"Large but inaccurate")
+}
+
+function applyDecimalMode() {
+	if (confirm('This option switch the Decimal library to '+(selectedDecimalMode==0?"break_infinity.min":selectedDecimalMode==1?"logarithmica_numerus":"break_eternity")+'.js. Are you sure you want to do that?')) {
+		player.aarexModifications.decimalMode = selectedDecimalMode;
 		save_game(true)
 		document.location.reload(true)
 	}

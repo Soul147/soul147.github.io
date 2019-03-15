@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.Decimal = factory());
+  (global = global || self, global.Decimal_BE = factory());
 }(this, function () { 'use strict';
 
   var padEnd = function (string, maxLength, fillString) {
@@ -73,18 +73,18 @@
   }();
 
   var D = function D(value) {
-    return Decimal.fromValue_noAlloc(value);
+    return Decimal_BE.fromValue_noAlloc(value);
   };
 
   var FC = function FC(sign, layer, mag) {
-    return Decimal.fromComponents(sign, layer, mag);
+    return Decimal_BE.fromComponents(sign, layer, mag);
   };
 
   var FC_NN = function FC_NN(sign, layer, mag) {
-    return Decimal.fromComponents_noNormalize(sign, layer, mag);
+    return Decimal_BE.fromComponents_noNormalize(sign, layer, mag);
   };
   
-  var decimalPlaces = function decimalPlaces(value, places) {
+  var Decimal_BEPlaces = function Decimal_BEPlaces(value, places) {
     var len = places + 1;
     var numDigits = Math.ceil(Math.log10(Math.abs(value)));
     var rounded = Math.round(value * Math.pow(10, len - numDigits)) * Math.pow(10, numDigits - len);
@@ -131,18 +131,18 @@
     return Math.exp(l)/scal1;
   };
   
-  var Decimal =
+  var Decimal_BE =
   /** @class */
   function () {
   
-    function Decimal(value) {
+    function Decimal_BE(value) {
       
       this.sign = Number.NaN;
       this.layer = Number.NaN;
       this.mag = Number.NaN;
 
-      if (value instanceof Decimal) {
-        this.fromDecimal(value);
+      if (value instanceof Decimal_BE) {
+        this.fromDecimal_BE(value);
       } else if (typeof value === "number") {
         this.fromNumber(value);
       } else if (typeof value === "string") {
@@ -154,7 +154,7 @@
       }
     }
 
-    Object.defineProperty(Decimal.prototype, "m", {
+    Object.defineProperty(Decimal_BE.prototype, "m", {
       get: function get() {
         if (this.sign === 0)
         {
@@ -180,7 +180,7 @@
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(Decimal.prototype, "e", {
+    Object.defineProperty(Decimal_BE.prototype, "e", {
       get: function get() {
         if (this.sign === 0)
         {
@@ -206,7 +206,7 @@
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(Decimal.prototype, "s", {
+    Object.defineProperty(Decimal_BE.prototype, "s", {
       get: function get() {
         return this.sign;
       },
@@ -225,291 +225,291 @@
       configurable: true
     });
 
-    Decimal.fromComponents = function (sign, layer, mag) {
-      return new Decimal().fromComponents(sign, layer, mag);
+    Decimal_BE.fromComponents = function (sign, layer, mag) {
+      return new Decimal_BE().fromComponents(sign, layer, mag);
     };
 
-    Decimal.fromComponents_noNormalize = function (sign, layer, mag) {
-      return new Decimal().fromComponents_noNormalize(sign, layer, mag);
+    Decimal_BE.fromComponents_noNormalize = function (sign, layer, mag) {
+      return new Decimal_BE().fromComponents_noNormalize(sign, layer, mag);
     };
     
-    Decimal.fromDecimal = function (value) {
-      return new Decimal().fromDecimal(value);
+    Decimal_BE.fromDecimal_BE = function (value) {
+      return new Decimal_BE().fromDecimal_BE(value);
     };
 
-    Decimal.fromNumber = function (value) {
-      return new Decimal().fromNumber(value);
+    Decimal_BE.fromNumber = function (value) {
+      return new Decimal_BE().fromNumber(value);
     };
 
-    Decimal.fromString = function (value) {
-      return new Decimal().fromString(value);
+    Decimal_BE.fromString = function (value) {
+      return new Decimal_BE().fromString(value);
     };
 
-    Decimal.fromValue = function (value) {
-      return new Decimal().fromValue(value);
+    Decimal_BE.fromValue = function (value) {
+      return new Decimal_BE().fromValue(value);
     };
 
-    Decimal.fromValue_noAlloc = function (value) {
-      return value instanceof Decimal ? value : new Decimal(value);
+    Decimal_BE.fromValue_noAlloc = function (value) {
+      return value instanceof Decimal_BE ? value : new Decimal_BE(value);
     };
     
-    Decimal.abs = function (value) {
+    Decimal_BE.abs = function (value) {
       return D(value).abs();
     };
 
-    Decimal.neg = function (value) {
+    Decimal_BE.neg = function (value) {
       return D(value).neg();
     };
 
-    Decimal.negate = function (value) {
+    Decimal_BE.negate = function (value) {
       return D(value).neg();
     };
 
-    Decimal.negated = function (value) {
+    Decimal_BE.negated = function (value) {
       return D(value).neg();
     };
 
-    Decimal.sign = function (value) {
+    Decimal_BE.sign = function (value) {
       return D(value).sign();
     };
 
-    Decimal.sgn = function (value) {
+    Decimal_BE.sgn = function (value) {
       return D(value).sign();
     };
 
-    Decimal.round = function (value) {
+    Decimal_BE.round = function (value) {
       return D(value).round();
     };
 
-    Decimal.floor = function (value) {
+    Decimal_BE.floor = function (value) {
       return D(value).floor();
     };
 
-    Decimal.ceil = function (value) {
+    Decimal_BE.ceil = function (value) {
       return D(value).ceil();
     };
 
-    Decimal.trunc = function (value) {
+    Decimal_BE.trunc = function (value) {
       return D(value).trunc();
     };
 
-    Decimal.add = function (value, other) {
+    Decimal_BE.add = function (value, other) {
       return D(value).add(other);
     };
 
-    Decimal.plus = function (value, other) {
+    Decimal_BE.plus = function (value, other) {
       return D(value).add(other);
     };
 
-    Decimal.sub = function (value, other) {
+    Decimal_BE.sub = function (value, other) {
       return D(value).sub(other);
     };
 
-    Decimal.subtract = function (value, other) {
+    Decimal_BE.subtract = function (value, other) {
       return D(value).sub(other);
     };
 
-    Decimal.minus = function (value, other) {
+    Decimal_BE.minus = function (value, other) {
       return D(value).sub(other);
     };
 
-    Decimal.mul = function (value, other) {
+    Decimal_BE.mul = function (value, other) {
       return D(value).mul(other);
     };
 
-    Decimal.multiply = function (value, other) {
+    Decimal_BE.multiply = function (value, other) {
       return D(value).mul(other);
     };
 
-    Decimal.times = function (value, other) {
+    Decimal_BE.times = function (value, other) {
       return D(value).mul(other);
     };
 
-    Decimal.div = function (value, other) {
+    Decimal_BE.div = function (value, other) {
       return D(value).div(other);
     };
 
-    Decimal.divide = function (value, other) {
+    Decimal_BE.divide = function (value, other) {
       return D(value).div(other);
     };
 
-    Decimal.recip = function (value) {
+    Decimal_BE.recip = function (value) {
       return D(value).recip();
     };
 
-    Decimal.reciprocal = function (value) {
+    Decimal_BE.reciprocal = function (value) {
       return D(value).recip();
     };
 
-    Decimal.reciprocate = function (value) {
+    Decimal_BE.reciprocate = function (value) {
       return D(value).reciprocate();
     };
 
-    Decimal.cmp = function (value, other) {
+    Decimal_BE.cmp = function (value, other) {
       return D(value).cmp(other);
     };
 
-	Decimal.cmpabs = function (value, other) {
+	Decimal_BE.cmpabs = function (value, other) {
       return D(value).cmpabs(other);
     };
 	
-    Decimal.compare = function (value, other) {
+    Decimal_BE.compare = function (value, other) {
       return D(value).cmp(other);
     };
 
-    Decimal.eq = function (value, other) {
+    Decimal_BE.eq = function (value, other) {
       return D(value).eq(other);
     };
 
-    Decimal.equals = function (value, other) {
+    Decimal_BE.equals = function (value, other) {
       return D(value).eq(other);
     };
 
-    Decimal.neq = function (value, other) {
+    Decimal_BE.neq = function (value, other) {
       return D(value).neq(other);
     };
 
-    Decimal.notEquals = function (value, other) {
+    Decimal_BE.notEquals = function (value, other) {
       return D(value).notEquals(other);
     };
 
-    Decimal.lt = function (value, other) {
+    Decimal_BE.lt = function (value, other) {
       return D(value).lt(other);
     };
 
-    Decimal.lte = function (value, other) {
+    Decimal_BE.lte = function (value, other) {
       return D(value).lte(other);
     };
 
-    Decimal.gt = function (value, other) {
+    Decimal_BE.gt = function (value, other) {
       return D(value).gt(other);
     };
 
-    Decimal.gte = function (value, other) {
+    Decimal_BE.gte = function (value, other) {
       return D(value).gte(other);
     };
 
-    Decimal.max = function (value, other) {
+    Decimal_BE.max = function (value, other) {
       return D(value).max(other);
     };
     
-    Decimal.min = function (value, other) {
+    Decimal_BE.min = function (value, other) {
       return D(value).min(other);
     };
 
-    Decimal.minabs = function (value, other) {
+    Decimal_BE.minabs = function (value, other) {
       return D(value).minabs(other);
     };
 	
-    Decimal.maxabs = function (value, other) {
+    Decimal_BE.maxabs = function (value, other) {
       return D(value).maxabs(other);
     };
 
-    Decimal.cmp_tolerance = function (value, other, tolerance) {
+    Decimal_BE.cmp_tolerance = function (value, other, tolerance) {
       return D(value).cmp_tolerance(other, tolerance);
     };
 
-    Decimal.compare_tolerance = function (value, other, tolerance) {
+    Decimal_BE.compare_tolerance = function (value, other, tolerance) {
       return D(value).cmp_tolerance(other, tolerance);
     };
 
-    Decimal.eq_tolerance = function (value, other, tolerance) {
+    Decimal_BE.eq_tolerance = function (value, other, tolerance) {
       return D(value).eq_tolerance(other, tolerance);
     };
 
-    Decimal.equals_tolerance = function (value, other, tolerance) {
+    Decimal_BE.equals_tolerance = function (value, other, tolerance) {
       return D(value).eq_tolerance(other, tolerance);
     };
 
-    Decimal.neq_tolerance = function (value, other, tolerance) {
+    Decimal_BE.neq_tolerance = function (value, other, tolerance) {
       return D(value).neq_tolerance(other, tolerance);
     };
 
-    Decimal.notEquals_tolerance = function (value, other, tolerance) {
+    Decimal_BE.notEquals_tolerance = function (value, other, tolerance) {
       return D(value).notEquals_tolerance(other, tolerance);
     };
 
-    Decimal.lt_tolerance = function (value, other, tolerance) {
+    Decimal_BE.lt_tolerance = function (value, other, tolerance) {
       return D(value).lt_tolerance(other, tolerance);
     };
 
-    Decimal.lte_tolerance = function (value, other, tolerance) {
+    Decimal_BE.lte_tolerance = function (value, other, tolerance) {
       return D(value).lte_tolerance(other, tolerance);
     };
 
-    Decimal.gt_tolerance = function (value, other, tolerance) {
+    Decimal_BE.gt_tolerance = function (value, other, tolerance) {
       return D(value).gt_tolerance(other, tolerance);
     };
 
-    Decimal.gte_tolerance = function (value, other, tolerance) {
+    Decimal_BE.gte_tolerance = function (value, other, tolerance) {
       return D(value).gte_tolerance(other, tolerance);
     };
 
-    Decimal.log10 = function (value) {
+    Decimal_BE.log10 = function (value) {
       return D(value).log10();
     };
 
-    Decimal.log = function (value, base) {
+    Decimal_BE.log = function (value, base) {
       return D(value).log(base);
     };
 
-    Decimal.log2 = function (value) {
+    Decimal_BE.log2 = function (value) {
       return D(value).log2();
     };
 
-    Decimal.ln = function (value) {
+    Decimal_BE.ln = function (value) {
       return D(value).ln();
     };
 
-    Decimal.logarithm = function (value, base) {
+    Decimal_BE.logarithm = function (value, base) {
       return D(value).logarithm(base);
     };
 
-    Decimal.pow10 = function (value) {
+    Decimal_BE.pow10 = function (value) {
       return D(value).powbase10();
     };
 
-    Decimal.pow = function (value, other) {
+    Decimal_BE.pow = function (value, other) {
       return D(value).pow(other);
     };
     
-    Decimal.root = function (value, other) {
+    Decimal_BE.root = function (value, other) {
       return D(value).root(other);
     };
     
-    Decimal.factorial = function (value, other) {
+    Decimal_BE.factorial = function (value, other) {
       return D(value).factorial();
     };
     
-    Decimal.gamma = function (value, other) {
+    Decimal_BE.gamma = function (value, other) {
       return D(value).gamma();
     };
 
-    Decimal.exp = function (value) {
+    Decimal_BE.exp = function (value) {
       return D(value).exp();
     };
 
-    Decimal.sqr = function (value) {
+    Decimal_BE.sqr = function (value) {
       return D(value).sqr();
     };
 
-    Decimal.sqrt = function (value) {
+    Decimal_BE.sqrt = function (value) {
       return D(value).sqrt();
     };
 
-    Decimal.cube = function (value) {
+    Decimal_BE.cube = function (value) {
       return D(value).cube();
     };
 
-    Decimal.cbrt = function (value) {
+    Decimal_BE.cbrt = function (value) {
       return D(value).cbrt();
     };
     
-    Decimal.tetrate = function (value, height = 2, payload = FC_NN(1, 0, 1)) {
+    Decimal_BE.tetrate = function (value, height = 2, payload = FC_NN(1, 0, 1)) {
       return D(value).tetrate(height, payload);
     }
     
-    Decimal.pentate = function (value, height = 2, payload = FC_NN(1, 0, 1)) {
+    Decimal_BE.pentate = function (value, height = 2, payload = FC_NN(1, 0, 1)) {
       return D(value).pentate(height, payload);
     }
     
@@ -521,7 +521,7 @@
      */
 
 
-    Decimal.affordGeometricSeries = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
+    Decimal_BE.affordGeometricSeries = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
       return this.affordGeometricSeries_core(D(resourcesAvailable), D(priceStart), D(priceRatio), currentOwned);
     };
     /**
@@ -530,7 +530,7 @@
      */
 
 
-    Decimal.sumGeometricSeries = function (numItems, priceStart, priceRatio, currentOwned) {
+    Decimal_BE.sumGeometricSeries = function (numItems, priceStart, priceRatio, currentOwned) {
       return this.sumGeometricSeries_core(numItems, D(priceStart), D(priceRatio), currentOwned);
     };
     /**
@@ -540,7 +540,7 @@
      */
 
 
-    Decimal.affordArithmeticSeries = function (resourcesAvailable, priceStart, priceAdd, currentOwned) {
+    Decimal_BE.affordArithmeticSeries = function (resourcesAvailable, priceStart, priceAdd, currentOwned) {
       return this.affordArithmeticSeries_core(D(resourcesAvailable), D(priceStart), D(priceAdd), D(currentOwned));
     };
     /**
@@ -550,7 +550,7 @@
      */
 
 
-    Decimal.sumArithmeticSeries = function (numItems, priceStart, priceAdd, currentOwned) {
+    Decimal_BE.sumArithmeticSeries = function (numItems, priceStart, priceAdd, currentOwned) {
       return this.sumArithmeticSeries_core(D(numItems), D(priceStart), D(priceAdd), D(currentOwned));
     };
     /**
@@ -561,11 +561,11 @@
      */
 
 
-    Decimal.efficiencyOfPurchase = function (cost, currentRpS, deltaRpS) {
+    Decimal_BE.efficiencyOfPurchase = function (cost, currentRpS, deltaRpS) {
       return this.efficiencyOfPurchase_core(D(cost), D(currentRpS), D(deltaRpS));
     };
 
-    Decimal.randomDecimalForTesting = function (maxLayers) {
+    Decimal_BE.randomDecimal_BEForTesting = function (maxLayers) {
       // NOTE: This doesn't follow any kind of sane random distribution, so use this for testing purposes only.
       //5% of the time, return 0
       if (Math.random() * 20 < 1) {
@@ -591,16 +591,16 @@
       return FC(randomsign, layer, randommag);
     };
 
-    Decimal.affordGeometricSeries_core = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
+    Decimal_BE.affordGeometricSeries_core = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
       var actualStart = priceStart.mul(priceRatio.pow(currentOwned));
-      return Decimal.floor(resourcesAvailable.div(actualStart).mul(priceRatio.sub(1)).add(1).log10().div(priceRatio.log10()));
+      return Decimal_BE.floor(resourcesAvailable.div(actualStart).mul(priceRatio.sub(1)).add(1).log10().div(priceRatio.log10()));
     };
 
-    Decimal.sumGeometricSeries_core = function (numItems, priceStart, priceRatio, currentOwned) {
-      return priceStart.mul(priceRatio.pow(currentOwned)).mul(Decimal.sub(1, priceRatio.pow(numItems))).div(Decimal.sub(1, priceRatio));
+    Decimal_BE.sumGeometricSeries_core = function (numItems, priceStart, priceRatio, currentOwned) {
+      return priceStart.mul(priceRatio.pow(currentOwned)).mul(Decimal_BE.sub(1, priceRatio.pow(numItems))).div(Decimal_BE.sub(1, priceRatio));
     };
 
-    Decimal.affordArithmeticSeries_core = function (resourcesAvailable, priceStart, priceAdd, currentOwned) {
+    Decimal_BE.affordArithmeticSeries_core = function (resourcesAvailable, priceStart, priceAdd, currentOwned) {
       // n = (-(a-d/2) + sqrt((a-d/2)^2+2dS))/d
       // where a is actualStart, d is priceAdd and S is resourcesAvailable
       // then floor it and you're done!
@@ -610,17 +610,17 @@
       return b.neg().add(b2.add(priceAdd.mul(resourcesAvailable).mul(2)).sqrt()).div(priceAdd).floor();
     };
 
-    Decimal.sumArithmeticSeries_core = function (numItems, priceStart, priceAdd, currentOwned) {
+    Decimal_BE.sumArithmeticSeries_core = function (numItems, priceStart, priceAdd, currentOwned) {
       var actualStart = priceStart.add(currentOwned.mul(priceAdd)); // (n/2)*(2*a+(n-1)*d)
 
       return numItems.div(2).mul(actualStart.mul(2).plus(numItems.sub(1).mul(priceAdd)));
     };
 
-    Decimal.efficiencyOfPurchase_core = function (cost, currentRpS, deltaRpS) {
+    Decimal_BE.efficiencyOfPurchase_core = function (cost, currentRpS, deltaRpS) {
       return cost.div(currentRpS).add(cost.div(deltaRpS));
     };
     
-    Decimal.prototype.normalize = function () {
+    Decimal_BE.prototype.normalize = function () {
       /*
       PSEUDOCODE:
       Make anything that is partially 0 (sign is 0 or mag and layer is 0) fully 0.
@@ -633,7 +633,7 @@
       Any 0 is totally zero (0, 0, 0).
       Anything layer 0 has mag >= 0.
       Anything layer 1 or higher has mag >= 15.954 and < 9e15.
-      We will assume in calculations that all Decimals are either erroneous or satisfy these criteria. (Otherwise: Garbage in, garbage out.)
+      We will assume in calculations that all Decimal_BEs are either erroneous or satisfy these criteria. (Otherwise: Garbage in, garbage out.)
       */
       if (this.sign === 0 || (this.mag === 0 && this.layer === 0))
       {
@@ -671,7 +671,7 @@
       return this;
     };
 
-    Decimal.prototype.fromComponents = function (sign, layer, mag) {
+    Decimal_BE.prototype.fromComponents = function (sign, layer, mag) {
       this.sign = sign;
       this.layer = layer;
       this.mag = mag;
@@ -680,21 +680,21 @@
       return this;
     };
 
-    Decimal.prototype.fromComponents_noNormalize = function (sign, layer, mag) {
+    Decimal_BE.prototype.fromComponents_noNormalize = function (sign, layer, mag) {
       this.sign = sign;
       this.layer = layer;
       this.mag = mag;
       return this;
     };
 
-    Decimal.prototype.fromDecimal = function (value) {
+    Decimal_BE.prototype.fromDecimal_BE = function (value) {
       this.sign = value.sign;
       this.layer = value.layer;
       this.mag = value.mag;
       return this;
     };
 
-    Decimal.prototype.fromNumber = function (value) {
+    Decimal_BE.prototype.fromNumber = function (value) {
       this.mag = Math.abs(value);
       this.sign = Math.sign(value);
       this.layer = 0;
@@ -703,11 +703,11 @@
     };
 
     var IGNORE_COMMAS = true;
-    var COMMAS_ARE_DECIMAL_POINTS = false;
+    var COMMAS_ARE_Decimal_BE_POINTS = false;
     
-    Decimal.prototype.fromString = function (value) {
+    Decimal_BE.prototype.fromString = function (value) {
       if (IGNORE_COMMAS) { value = value.replace(",", ""); }
-      else if (COMMAS_ARE_DECIMAL_POINTS) { value = value.replace(",", "."); }
+      else if (COMMAS_ARE_Decimal_BE_POINTS) { value = value.replace(",", "."); }
     
       //Handle x^^^y format.
       var pentationparts = value.split("^^^");
@@ -724,7 +724,7 @@
         }
         if (isFinite(base) && isFinite(height))
         {
-          var result = Decimal.pentate(base, height, payload);
+          var result = Decimal_BE.pentate(base, height, payload);
           this.sign = result.sign;
           this.layer = result.layer;
           this.mag = result.mag;
@@ -746,7 +746,7 @@
         }
         if (isFinite(base) && isFinite(height))
         {
-          var result = Decimal.tetrate(base, height, payload);
+          var result = Decimal_BE.tetrate(base, height, payload);
           this.sign = result.sign;
           this.layer = result.layer;
           this.mag = result.mag;
@@ -766,7 +766,7 @@
         if (!isFinite(payload)) { payload = 1; }
         if (isFinite(base) && isFinite(height))
         {
-          var result = Decimal.tetrate(base, height, payload);
+          var result = Decimal_BE.tetrate(base, height, payload);
           this.sign = result.sign;
           this.layer = result.layer;
           this.mag = result.mag;
@@ -840,7 +840,7 @@
         this.layer = ecount;
         if (ecount === 2)
         {
-          var result = Decimal.mul(FC(1, 2, exponent), D(mantissa));
+          var result = Decimal_BE.mul(FC(1, 2, exponent), D(mantissa));
           this.sign = result.sign;
           this.layer = result.layer;
           this.mag = result.mag;
@@ -857,9 +857,9 @@
       return this;
     };
 
-    Decimal.prototype.fromValue = function (value) {
-      if (value instanceof Decimal) {
-        return this.fromDecimal(value);
+    Decimal_BE.prototype.fromValue = function (value) {
+      if (value instanceof Decimal_BE) {
+        return this.fromDecimal_BE(value);
       }
 
       if (typeof value === "number") {
@@ -876,7 +876,7 @@
       return this;
     };
 
-    Decimal.prototype.toNumber = function () {
+    Decimal_BE.prototype.toNumber = function () {
       if (this.layer === 0)
       {
         return this.sign*this.mag;
@@ -885,13 +885,13 @@
       {
         return this.sign*Math.pow(10, this.mag);
       }
-      else //overflow for any normalized Decimal
+      else //overflow for any normalized Decimal_BE
       {
         return Number.POSITIVE_INFINITY;
       }
     };
     
-    Decimal.prototype.mantissaWithDecimalPlaces = function (places) {
+    Decimal_BE.prototype.mantissaWithDecimal_BEPlaces = function (places) {
       // https://stackoverflow.com/a/37425022
       if (isNaN(this.m)) {
         return Number.NaN;
@@ -901,10 +901,10 @@
         return 0;
       }
 
-      return decimalPlaces(this.m, places);
+      return Decimal_BEPlaces(this.m, places);
     };
     
-    Decimal.prototype.magnitudeWithDecimalPlaces = function (places) {
+    Decimal_BE.prototype.magnitudeWithDecimal_BEPlaces = function (places) {
       // https://stackoverflow.com/a/37425022
       if (isNaN(this.mag)) {
         return Number.NaN;
@@ -914,10 +914,10 @@
         return 0;
       }
 
-      return decimalPlaces(this.mag, places);
+      return Decimal_BEPlaces(this.mag, places);
     };
     
-    Decimal.prototype.toString = function () {
+    Decimal_BE.prototype.toString = function () {
       if (this.layer === 0)
       {
         if (this.mag < 1e21 && this.mag > 1e-7)
@@ -944,23 +944,23 @@
       }
     };
     
-    Decimal.prototype.toExponential = function (places) {
+    Decimal_BE.prototype.toExponential = function (places) {
       if (this.layer === 0)
       {
         return (this.sign*this.mag).toExponential(places);
       }
-      return this.toStringWithDecimalPlaces(places);
+      return this.toStringWithDecimal_BEPlaces(places);
     };
     
-    Decimal.prototype.toFixed = function (places) {
+    Decimal_BE.prototype.toFixed = function (places) {
       if (this.layer === 0)
       {
         return (this.sign*this.mag).toFixed(places);
       }
-      return this.toStringWithDecimalPlaces(places);
+      return this.toStringWithDecimal_BEPlaces(places);
     };
     
-    Decimal.prototype.toPrecision = function (places) {
+    Decimal_BE.prototype.toPrecision = function (places) {
       if (this.e <= -7) {
         return this.toExponential(places - 1);
       }
@@ -972,66 +972,66 @@
       return this.toExponential(places - 1);
     };
     
-    Decimal.prototype.valueOf = function () {
+    Decimal_BE.prototype.valueOf = function () {
       return this.toString();
     };
 
-    Decimal.prototype.toJSON = function () {
+    Decimal_BE.prototype.toJSON = function () {
       return this.toString();
     };
     
-    Decimal.prototype.toStringWithDecimalPlaces = function (places) {
+    Decimal_BE.prototype.toStringWithDecimal_BEPlaces = function (places) {
       if (this.layer === 0)
       {
         if (this.mag < 1e21 & this.mag > 1e-7)
         {
           return (this.sign*this.mag).toFixed(places);
         }
-        return decimalPlaces(this.m, places) + "e" + decimalPlaces(this.e, places);
+        return Decimal_BEPlaces(this.m, places) + "e" + Decimal_BEPlaces(this.e, places);
       }
       else if (this.layer === 1)
       {
-        return decimalPlaces(this.m, places) + "e" + decimalPlaces(this.e, places);
+        return Decimal_BEPlaces(this.m, places) + "e" + Decimal_BEPlaces(this.e, places);
       }
       else
       {
         //layer 2+
         if (this.layer <= MAX_ES_IN_A_ROW)
         {
-          return "e".repeat(this.layer, places) + decimalPlaces(this.mag, places);
+          return "e".repeat(this.layer, places) + Decimal_BEPlaces(this.mag, places);
         }
         else
         {
-          return "(e^" + this.layer + ")" + decimalPlaces(this.mag, places);
+          return "(e^" + this.layer + ")" + Decimal_BEPlaces(this.mag, places);
         }
       }
     };
     
-    Decimal.prototype.abs = function () {
+    Decimal_BE.prototype.abs = function () {
       return FC_NN(this.sign === 0 ? 0 : 1, this.layer, this.mag);
     };
 
-    Decimal.prototype.neg = function () {
+    Decimal_BE.prototype.neg = function () {
       return FC_NN(-this.sign, this.layer, this.mag);
     };
 
-    Decimal.prototype.negate = function () {
+    Decimal_BE.prototype.negate = function () {
       return this.neg();
     };
 
-    Decimal.prototype.negated = function () {
+    Decimal_BE.prototype.negated = function () {
       return this.neg();
     };
 
-    Decimal.prototype.sign = function () {
+    Decimal_BE.prototype.sign = function () {
       return this.sign;
     };
 
-    Decimal.prototype.sgn = function () {
+    Decimal_BE.prototype.sgn = function () {
       return this.sign;
     };
     
-    Decimal.prototype.round = function () {
+    Decimal_BE.prototype.round = function () {
       if (this.layer === 0)
       {
         return FC(this.sign, 0, Math.round(this.sign*this.mag));
@@ -1039,7 +1039,7 @@
       return this;
     };
 
-    Decimal.prototype.floor = function () {
+    Decimal_BE.prototype.floor = function () {
       if (this.layer === 0)
       {
         return FC(this.sign, 0, Math.floor(this.sign*this.mag));
@@ -1047,7 +1047,7 @@
       return this;
     };
 
-    Decimal.prototype.ceil = function () {
+    Decimal_BE.prototype.ceil = function () {
       if (this.layer === 0)
       {
         return FC(this.sign, 0, this.Math.ceil(this.sign*this.mag));
@@ -1055,7 +1055,7 @@
       return this;
     };
 
-    Decimal.prototype.trunc = function () {
+    Decimal_BE.prototype.trunc = function () {
       if (this.layer === 0)
       {
         return FC(this.sign, 0, Math.trunc(this.sign*this.mag));
@@ -1063,22 +1063,22 @@
       return this;
     };
 
-    Decimal.prototype.add = function (value) {
-      var decimal = D(value);
+    Decimal_BE.prototype.add = function (value) {
+      var Decimal_BE = D(value);
       //Special case - Adding a number to its negation produces 0, no matter how large.
-      if (this.sign == -(decimal.sign) && this.layer == decimal.layer && this.mag == decimal.mag) { return FC_NN(0, 0, 0); }
+      if (this.sign == -(Decimal_BE.sign) && this.layer == Decimal_BE.layer && this.mag == Decimal_BE.mag) { return FC_NN(0, 0, 0); }
       
       var a;
       var b;
       
-      if (Decimal.cmpabs(this, decimal) > 0)
+      if (Decimal_BE.cmpabs(this, Decimal_BE) > 0)
       {
         a = this;
-        b = decimal;
+        b = Decimal_BE;
       }
       else
       {
-        a = decimal;
+        a = Decimal_BE;
         b = this;
       }
       
@@ -1118,39 +1118,39 @@
       throw Error("Bad arguments to add: " + this + ", " + value);
     };
 
-    Decimal.prototype.plus = function (value) {
+    Decimal_BE.prototype.plus = function (value) {
       return this.add(value);
     };
 
-    Decimal.prototype.sub = function (value) {
+    Decimal_BE.prototype.sub = function (value) {
       return this.add(D(value).neg());
     };
 
-    Decimal.prototype.subtract = function (value) {
+    Decimal_BE.prototype.subtract = function (value) {
       return this.sub(value);
     };
 
-    Decimal.prototype.minus = function (value) {
+    Decimal_BE.prototype.minus = function (value) {
       return this.sub(value);
     };
 
-    Decimal.prototype.mul = function (value) {
-      var decimal = D(value);
+    Decimal_BE.prototype.mul = function (value) {
+      var Decimal_BE = D(value);
       
       //Special case - if one of the numbers is 0, return 0.
-      if (this.sign == 0 || decimal.sign == 0) { return FC_NN(0, 0, 0); }
+      if (this.sign == 0 || Decimal_BE.sign == 0) { return FC_NN(0, 0, 0); }
             
       var a;
       var b;
       
-      if (Decimal.cmpabs(this, decimal) > 0)
+      if (Decimal_BE.cmpabs(this, Decimal_BE) > 0)
       {
         a = this;
-        b = decimal;
+        b = Decimal_BE;
       }
       else
       {
-        a = decimal;
+        a = Decimal_BE;
         b = this;
       }
       
@@ -1200,19 +1200,19 @@
       throw Error("Bad arguments to mul: " + this + ", " + value);
     };
 
-    Decimal.prototype.multiply = function (value) {
+    Decimal_BE.prototype.multiply = function (value) {
       return this.mul(value);
     };
 
-    Decimal.prototype.times = function (value) {
+    Decimal_BE.prototype.times = function (value) {
       return this.mul(value);
     };
 
-    Decimal.prototype.div = function (value) {
-      var decimal = D(value);
+    Decimal_BE.prototype.div = function (value) {
+      var Decimal_BE = D(value);
       
       var a = this;
-      var b = decimal;
+      var b = Decimal_BE;
       
       //Special case - Dividing a number by its own magnitude yields +/- 1, no matter how large.
       if (a.layer == b.layer && a.mag == b.mag) { return FC_NN(a.sign*b.sign, 0, 1); }
@@ -1286,19 +1286,19 @@
       throw Error("Bad arguments to div: " + this + ", " + value);
     };
 
-    Decimal.prototype.divide = function (value) {
+    Decimal_BE.prototype.divide = function (value) {
       return this.div(value);
     };
 
-    Decimal.prototype.divideBy = function (value) {
+    Decimal_BE.prototype.divideBy = function (value) {
       return this.div(value);
     };
 
-    Decimal.prototype.dividedBy = function (value) {
+    Decimal_BE.prototype.dividedBy = function (value) {
       return this.div(value);
     };
 
-    Decimal.prototype.recip = function () {
+    Decimal_BE.prototype.recip = function () {
       if (this.layer == 0)
       {
         return FC(this.sign, 0, 1/this.mag);
@@ -1313,102 +1313,102 @@
       }
     };
 
-    Decimal.prototype.reciprocal = function () {
+    Decimal_BE.prototype.reciprocal = function () {
       return this.recip();
     };
 
-    Decimal.prototype.reciprocate = function () {
+    Decimal_BE.prototype.reciprocate = function () {
       return this.recip();
     };
     
     /**
      * -1 for less than value, 0 for equals value, 1 for greater than value
      */
-    Decimal.prototype.cmp = function (value) {
-      var decimal = D(value);
-      if (this.sign > decimal.sign) { return 1; }
-      if (this.sign < decimal.sign) { return -1; }
-      if (this.layer > decimal.layer) { return 1; }
-      if (this.layer < decimal.layer) { return -1; }
-      if (this.mag > decimal.mag) { return 1; }
-      if (this.mag < decimal.mag) { return -1; }
+    Decimal_BE.prototype.cmp = function (value) {
+      var Decimal_BE = D(value);
+      if (this.sign > Decimal_BE.sign) { return 1; }
+      if (this.sign < Decimal_BE.sign) { return -1; }
+      if (this.layer > Decimal_BE.layer) { return 1; }
+      if (this.layer < Decimal_BE.layer) { return -1; }
+      if (this.mag > Decimal_BE.mag) { return 1; }
+      if (this.mag < Decimal_BE.mag) { return -1; }
       return 0;
     };
 	
-	Decimal.prototype.cmpabs = function (value) {
-      var decimal = D(value);
-      if (this.layer > decimal.layer) { return 1; }
-      if (this.layer < decimal.layer) { return -1; }
-      if (this.mag > decimal.mag) { return 1; }
-      if (this.mag < decimal.mag) { return -1; }
+	Decimal_BE.prototype.cmpabs = function (value) {
+      var Decimal_BE = D(value);
+      if (this.layer > Decimal_BE.layer) { return 1; }
+      if (this.layer < Decimal_BE.layer) { return -1; }
+      if (this.mag > Decimal_BE.mag) { return 1; }
+      if (this.mag < Decimal_BE.mag) { return -1; }
       return 0;
     };
 
-    Decimal.prototype.compare = function (value) {
+    Decimal_BE.prototype.compare = function (value) {
       return this.cmp(value);
     };
 
-    Decimal.prototype.eq = function (value) {
-      var decimal = D(value);
-      return this.sign === decimal.sign && this.layer === decimal.layer && this.mag === decimal.mag;
+    Decimal_BE.prototype.eq = function (value) {
+      var Decimal_BE = D(value);
+      return this.sign === Decimal_BE.sign && this.layer === Decimal_BE.layer && this.mag === Decimal_BE.mag;
     };
 
-    Decimal.prototype.equals = function (value) {
+    Decimal_BE.prototype.equals = function (value) {
       return this.eq(value);
     };
 
-    Decimal.prototype.neq = function (value) {
+    Decimal_BE.prototype.neq = function (value) {
       return !this.eq(value);
     };
 
-    Decimal.prototype.notEquals = function (value) {
+    Decimal_BE.prototype.notEquals = function (value) {
       return this.neq(value);
     };
 
-    Decimal.prototype.lt = function (value) {
-      var decimal = D(value);
+    Decimal_BE.prototype.lt = function (value) {
+      var Decimal_BE = D(value);
       return this.cmp(value) == -1;
     };
 
-    Decimal.prototype.lte = function (value) {
+    Decimal_BE.prototype.lte = function (value) {
       return !this.gt(value);
     };
 
-    Decimal.prototype.gt = function (value) {
-      var decimal = D(value);
+    Decimal_BE.prototype.gt = function (value) {
+      var Decimal_BE = D(value);
       return this.cmp(value) == 1;
     };
 
-    Decimal.prototype.gte = function (value) {
+    Decimal_BE.prototype.gte = function (value) {
       return !this.lt(value);
     };
 
-    Decimal.prototype.max = function (value) {
-      var decimal = D(value);
-      return this.lt(decimal) ? decimal : this;
+    Decimal_BE.prototype.max = function (value) {
+      var Decimal_BE = D(value);
+      return this.lt(Decimal_BE) ? Decimal_BE : this;
     };
 
-    Decimal.prototype.min = function (value) {
-      var decimal = D(value);
-      return this.gt(decimal) ? decimal : this;
+    Decimal_BE.prototype.min = function (value) {
+      var Decimal_BE = D(value);
+      return this.gt(Decimal_BE) ? Decimal_BE : this;
     };
 	
-	Decimal.prototype.maxabs = function (value) {
-      var decimal = D(value);
-      return this.cmpabs(decimal) < 0 ? decimal : this;
+	Decimal_BE.prototype.maxabs = function (value) {
+      var Decimal_BE = D(value);
+      return this.cmpabs(Decimal_BE) < 0 ? Decimal_BE : this;
     };
 
-    Decimal.prototype.minabs = function (value) {
-      var decimal = D(value);
-      return this.cmpabs(decimal) > 0 ? decimal : this;
+    Decimal_BE.prototype.minabs = function (value) {
+      var Decimal_BE = D(value);
+      return this.cmpabs(Decimal_BE) > 0 ? Decimal_BE : this;
     };
 
-    Decimal.prototype.cmp_tolerance = function (value, tolerance) {
-      var decimal = D(value);
-      return this.eq_tolerance(decimal, tolerance) ? 0 : this.cmp(decimal);
+    Decimal_BE.prototype.cmp_tolerance = function (value, tolerance) {
+      var Decimal_BE = D(value);
+      return this.eq_tolerance(Decimal_BE, tolerance) ? 0 : this.cmp(Decimal_BE);
     };
 
-    Decimal.prototype.compare_tolerance = function (value, tolerance) {
+    Decimal_BE.prototype.compare_tolerance = function (value, tolerance) {
       return this.cmp_tolerance(value, tolerance);
     };
     
@@ -1417,52 +1417,52 @@
      * For example, if you put in 1e-9, then any number closer to the
      * larger number than (larger number)*1e-9 will be considered equal.
      */
-    Decimal.prototype.eq_tolerance = function (value, tolerance) {
-      var decimal = D(value); // https://stackoverflow.com/a/33024979
+    Decimal_BE.prototype.eq_tolerance = function (value, tolerance) {
+      var Decimal_BE = D(value); // https://stackoverflow.com/a/33024979
       //Numbers that are too far away are never close.
-      if (this.sign != decimal.sign) { return false; }
-      if (Math.abs(this.layer - decimal.layer) > 1) { return false; }
+      if (this.sign != Decimal_BE.sign) { return false; }
+      if (Math.abs(this.layer - Decimal_BE.layer) > 1) { return false; }
       // return abs(a-b) <= tolerance * max(abs(a), abs(b))
       var magA = this.mag;
-      var magB = decimal.mag;
-      if (this.layer > decimal.layer) { magB = Math.log10(magB); }
-      if (this.layer < decimal.layer) { magA = Math.log10(magA); }
+      var magB = Decimal_BE.mag;
+      if (this.layer > Decimal_BE.layer) { magB = Math.log10(magB); }
+      if (this.layer < Decimal_BE.layer) { magA = Math.log10(magA); }
       return Math.abs(magA-magB) <= tolerance*Math.max(Math.abs(magA), Math.abs(magB));
     };
 
-    Decimal.prototype.equals_tolerance = function (value, tolerance) {
+    Decimal_BE.prototype.equals_tolerance = function (value, tolerance) {
       return this.eq_tolerance(value, tolerance);
     };
 
-    Decimal.prototype.neq_tolerance = function (value, tolerance) {
+    Decimal_BE.prototype.neq_tolerance = function (value, tolerance) {
       return !this.eq_tolerance(value, tolerance);
     };
 
-    Decimal.prototype.notEquals_tolerance = function (value, tolerance) {
+    Decimal_BE.prototype.notEquals_tolerance = function (value, tolerance) {
       return this.neq_tolerance(value, tolerance);
     };
 
-    Decimal.prototype.lt_tolerance = function (value, tolerance) {
-      var decimal = D(value);
-      return !this.eq_tolerance(decimal, tolerance) && this.lt(decimal);
+    Decimal_BE.prototype.lt_tolerance = function (value, tolerance) {
+      var Decimal_BE = D(value);
+      return !this.eq_tolerance(Decimal_BE, tolerance) && this.lt(Decimal_BE);
     };
 
-    Decimal.prototype.lte_tolerance = function (value, tolerance) {
-      var decimal = D(value);
-      return this.eq_tolerance(decimal, tolerance) || this.lt(decimal);
+    Decimal_BE.prototype.lte_tolerance = function (value, tolerance) {
+      var Decimal_BE = D(value);
+      return this.eq_tolerance(Decimal_BE, tolerance) || this.lt(Decimal_BE);
     };
 
-    Decimal.prototype.gt_tolerance = function (value, tolerance) {
-      var decimal = D(value);
-      return !this.eq_tolerance(decimal, tolerance) && this.gt(decimal);
+    Decimal_BE.prototype.gt_tolerance = function (value, tolerance) {
+      var Decimal_BE = D(value);
+      return !this.eq_tolerance(Decimal_BE, tolerance) && this.gt(Decimal_BE);
     };
 
-    Decimal.prototype.gte_tolerance = function (value, tolerance) {
-      var decimal = D(value);
-      return this.eq_tolerance(decimal, tolerance) || this.gt(decimal);
+    Decimal_BE.prototype.gte_tolerance = function (value, tolerance) {
+      var Decimal_BE = D(value);
+      return this.eq_tolerance(Decimal_BE, tolerance) || this.gt(Decimal_BE);
     };
 
-    Decimal.prototype.abslog10 = function () {
+    Decimal_BE.prototype.abslog10 = function () {
       if (this.sign === 0)
       {
         throw Error("abslog10(0) is undefined");
@@ -1477,7 +1477,7 @@
       }
     };
 
-    Decimal.prototype.log10 = function () {
+    Decimal_BE.prototype.log10 = function () {
       if (this.sign <= 0)
       {
         throw Error("log10 is undefined for numbers <= 0");
@@ -1492,7 +1492,7 @@
       }
     };
 
-    Decimal.prototype.log = function (base) {
+    Decimal_BE.prototype.log = function (base) {
       base = D(base);
       if (this.sign <= 0)
       {
@@ -1511,10 +1511,10 @@
         return FC_NN(this.sign, 0, Math.log(this.mag)/Math.log(base.mag));
       }
       
-      return Decimal.div(this.log10(), base.log10());
+      return Decimal_BE.div(this.log10(), base.log10());
     };
 
-    Decimal.prototype.log2 = function () {
+    Decimal_BE.prototype.log2 = function () {
       if (this.sign <= 0)
       {
         throw Error("ln is undefined for numbers <= 0");
@@ -1537,7 +1537,7 @@
       }
     };
 
-    Decimal.prototype.ln = function () {
+    Decimal_BE.prototype.ln = function () {
       if (this.sign <= 0)
       {
         throw Error("ln is undefined for numbers <= 0");
@@ -1560,14 +1560,14 @@
       }
     };
 
-    Decimal.prototype.logarithm = function (base) {
+    Decimal_BE.prototype.logarithm = function (base) {
       return this.log(base);
     };
 
-    Decimal.prototype.pow = function (value) {
-      var decimal = D(value);
+    Decimal_BE.prototype.pow = function (value) {
+      var Decimal_BE = D(value);
       var a = this;
-      var b = decimal;
+      var b = Decimal_BE;
       
       //TODO: Going to worry about negative numbers later and assume stuff is positive for now.
       
@@ -1610,7 +1610,7 @@
       
       if (a.layer === 2 && b.layer <= 2)
       {
-        var result = Decimal.mul(FC_NN(a.sign, 1, a.mag), FC_NN(b.sign, b.layer, b.mag));
+        var result = Decimal_BE.mul(FC_NN(a.sign, 1, a.mag), FC_NN(b.sign, b.layer, b.mag));
         result.layer += 1;
         return result;
       }
@@ -1623,7 +1623,7 @@
       else
       {
         //mul of increasingly higher layer (eventually turns into max).
-        var result = Decimal.mul(FC_NN(a.sign, a.layer-1, a.mag), FC_NN(b.sign, b.layer, b.mag));
+        var result = Decimal_BE.mul(FC_NN(a.sign, a.layer-1, a.mag), FC_NN(b.sign, b.layer, b.mag));
         result.layer += 1;
         return result;
       }
@@ -1631,7 +1631,7 @@
       throw Error("Bad arguments to pow: " + this + ", " + value);
     };
     
-    Decimal.prototype.powbase10 = function () {
+    Decimal_BE.prototype.powbase10 = function () {
       if (this.sign === 0)
       {
         return FC_NN(1, 0, 1);
@@ -1655,14 +1655,14 @@
       }
     }
 
-    Decimal.prototype.pow_base = function (value) {
+    Decimal_BE.prototype.pow_base = function (value) {
       return D(value).pow(this);
     };
     
-    Decimal.prototype.root = function (value) {
-      var decimal = D(value);
+    Decimal_BE.prototype.root = function (value) {
+      var Decimal_BE = D(value);
       var a = this;
-      var b = decimal;
+      var b = Decimal_BE;
       
       //TODO: Going to worry about negative numbers later and assume stuff is positive for now.
       
@@ -1701,7 +1701,7 @@
 
       if (a.layer === 2 && b.layer <= 2)
       {
-        var result = Decimal.div(FC_NN(a.sign, 1, a.mag), FC_NN(b.sign, b.layer, b.mag));
+        var result = Decimal_BE.div(FC_NN(a.sign, 1, a.mag), FC_NN(b.sign, b.layer, b.mag));
         result.layer += 1;
         result.normalize();
         return result;
@@ -1715,7 +1715,7 @@
       else
       {
         //div of increasingly higher layer.
-        var result = Decimal.div(FC_NN(a.sign, a.layer-1, a.mag), FC_NN(b.sign, b.layer, b.mag));
+        var result = Decimal_BE.div(FC_NN(a.sign, a.layer-1, a.mag), FC_NN(b.sign, b.layer, b.mag));
         result.layer += 1;
         result.normalize();
         return result;
@@ -1724,22 +1724,22 @@
       throw Error("Bad arguments to root: " + this + ", " + value);
     }
 
-    Decimal.prototype.factorial = function () {
+    Decimal_BE.prototype.factorial = function () {
       if (this.layer === 0)
       {
         return this.add(1).gamma();
       }
       else if (this.layer === 1)
       {
-        return Decimal.exp(Decimal.mul(this, Decimal.ln(this).sub(1)));
+        return Decimal_BE.exp(Decimal_BE.mul(this, Decimal_BE.ln(this).sub(1)));
       }
       else
       {
-        return Decimal.exp(this);
+        return Decimal_BE.exp(this);
       }
     };
     
-    Decimal.prototype.gamma = function () {
+    Decimal_BE.prototype.gamma = function () {
       if (this.layer === 0)
       {
         if (this.lt(FC_NN(1, 0, 24)))
@@ -1758,7 +1758,7 @@
         var l2 = l+adj;
         if (l2 === l)
         {
-          return Decimal.exp(l);
+          return Decimal_BE.exp(l);
         }
         
         l = l2;
@@ -1768,7 +1768,7 @@
         l2 = l-adj;
         if (l2 === l)
         {
-          return Decimal.exp(l);
+          return Decimal_BE.exp(l);
         }
         
         l = l2;
@@ -1780,50 +1780,50 @@
         lm = 1680*np;
         lt = 1/lm;
         l = l-lt;
-        return Decimal.exp(l);
+        return Decimal_BE.exp(l);
       }
       else if (this.layer === 1)
       {
-        return Decimal.exp(Decimal.mul(this, Decimal.ln(this).sub(1)));
+        return Decimal_BE.exp(Decimal_BE.mul(this, Decimal_BE.ln(this).sub(1)));
       }
       else
       {
-        return Decimal.exp(this);
+        return Decimal_BE.exp(this);
       }
     };
 
-    Decimal.prototype.exp = function () {
+    Decimal_BE.prototype.exp = function () {
       if (this.layer === 0 && this.mag <= 709.7) { return FC(1, 0, Math.exp(this.mag)); }
       else if (this.layer === 0) { return FC(1, 1, Math.log10(Math.E)*this.mag); }
       else if (this.layer === 1) { return FC(1, 2, Math.log10(0.4342944819032518)+this.mag); }
       else { return FC(this.sign, this.layer+1, this.mag); }
     };
 
-    Decimal.prototype.sqr = function () {
+    Decimal_BE.prototype.sqr = function () {
       return this.pow(2);
     };
 
-    Decimal.prototype.sqrt = function () {
+    Decimal_BE.prototype.sqrt = function () {
       if (this.layer == 0) { return D(Math.sqrt(this.sign*this.mag)); }
       else if (this.layer == 1) { return FC(1, 2, Math.log10(this.mag)-0.3010299956639812); }
       else
       {
-        var result = Decimal.div(FC_NN(this.sign, this.layer-1, this.mag), FC_NN(1, 0, 2));
+        var result = Decimal_BE.div(FC_NN(this.sign, this.layer-1, this.mag), FC_NN(1, 0, 2));
         result.layer += 1;
         result.normalize();
         return result;
       }
     };
 
-    Decimal.prototype.cube = function () {
+    Decimal_BE.prototype.cube = function () {
       return this.pow(3);
     };
 
-    Decimal.prototype.cbrt = function () {
+    Decimal_BE.prototype.cbrt = function () {
       return this.pow(1/3);
     };
     
-    Decimal.prototype.tetrate = function(height = 2, payload = FC_NN(1, 0, 1)) {
+    Decimal_BE.prototype.tetrate = function(height = 2, payload = FC_NN(1, 0, 1)) {
       payload = D(payload);
       var oldheight = height;
       height = Math.trunc(height);
@@ -1831,7 +1831,7 @@
       if (fracheight != 0)
       {
         ++height;
-        payload = Decimal.pow(fracheight, payload);
+        payload = Decimal_BE.pow(fracheight, payload);
       }
       
       //special case: if height is 0, return 1
@@ -1852,7 +1852,7 @@
       return payload;
     }
     
-    Decimal.prototype.pentate = function(height = 2, payload = FC_NN(1, 0, 1)) {
+    Decimal_BE.prototype.pentate = function(height = 2, payload = FC_NN(1, 0, 1)) {
       payload = D(payload);
       height = Math.trunc(height);
       
@@ -1871,68 +1871,68 @@
     }
     
     // trig functions!
-    Decimal.prototype.sin = function () {
+    Decimal_BE.prototype.sin = function () {
       if (this.layer === 0) { return D(Math.sin(this.sign*this.mag)); }
       return FC_NN(0, 0, 0);
     };
 
-    Decimal.prototype.cos = function () {
+    Decimal_BE.prototype.cos = function () {
       if (this.layer === 0) { return D(Math.cos(this.sign*this.mag)); }
       return FC_NN(0, 0, 0);
     };
 
-    Decimal.prototype.tan = function () {
+    Decimal_BE.prototype.tan = function () {
       if (this.layer === 0) { return D(Math.tan(this.sign*this.mag)); }
       return FC_NN(0, 0, 0);
     };
 
-    Decimal.prototype.asin = function () {
+    Decimal_BE.prototype.asin = function () {
       if (this.layer === 0) { return D(Math.asin(this.sign*this.mag)); }
       return FC_NN(Number.NaN, Number.NaN, Number.NaN);
     };
 
-    Decimal.prototype.acos = function () {
+    Decimal_BE.prototype.acos = function () {
       if (this.layer === 0) { return D(Math.acos(this.sign*this.mag)); }
       return FC_NN(Number.NaN, Number.NaN, Number.NaN);
     };
 
-    Decimal.prototype.atan = function () {
+    Decimal_BE.prototype.atan = function () {
       if (this.layer === 0) { return D(Math.atan(this.sign*this.mag)); }
       return D(Math.atan(this.sign*1.8e308));
     };
 
-    Decimal.prototype.sinh = function () {
+    Decimal_BE.prototype.sinh = function () {
       return this.exp().sub(this.negate().exp()).div(2);
     };
 
-    Decimal.prototype.cosh = function () {
+    Decimal_BE.prototype.cosh = function () {
       return this.exp().add(this.negate().exp()).div(2);
     };
 
-    Decimal.prototype.tanh = function () {
+    Decimal_BE.prototype.tanh = function () {
       return this.sinh().div(this.cosh());
     };
 
-    Decimal.prototype.asinh = function () {
-      return Decimal.ln(this.add(this.sqr().add(1).sqrt()));
+    Decimal_BE.prototype.asinh = function () {
+      return Decimal_BE.ln(this.add(this.sqr().add(1).sqrt()));
     };
 
-    Decimal.prototype.acosh = function () {
-      return Decimal.ln(this.add(this.sqr().sub(1).sqrt()));
+    Decimal_BE.prototype.acosh = function () {
+      return Decimal_BE.ln(this.add(this.sqr().sub(1).sqrt()));
     };
 
-    Decimal.prototype.atanh = function () {
+    Decimal_BE.prototype.atanh = function () {
       if (this.abs().gte(1)) {
         return FC_NN(Number.NaN, Number.NaN, Number.NaN);
       }
 
-      return Decimal.ln(this.add(1).div(D(1).sub(this))).div(2);
+      return Decimal_BE.ln(this.add(1).div(D(1).sub(this))).div(2);
     };
     
     /**
      * Joke function from Realm Grinder
      */
-    Decimal.prototype.ascensionPenalty = function (ascensions) {
+    Decimal_BE.prototype.ascensionPenalty = function (ascensions) {
       if (ascensions === 0) {
         return this;
       }
@@ -1943,29 +1943,29 @@
     /**
      * Joke function from Cookie Clicker. It's 'egg'
      */
-    Decimal.prototype.egg = function () {
+    Decimal_BE.prototype.egg = function () {
       return this.add(9);
     };
     
-    Decimal.prototype.lessThanOrEqualTo = function (other) {
+    Decimal_BE.prototype.lessThanOrEqualTo = function (other) {
       return this.cmp(other) < 1;
     };
 
-    Decimal.prototype.lessThan = function (other) {
+    Decimal_BE.prototype.lessThan = function (other) {
       return this.cmp(other) < 0;
     };
 
-    Decimal.prototype.greaterThanOrEqualTo = function (other) {
+    Decimal_BE.prototype.greaterThanOrEqualTo = function (other) {
       return this.cmp(other) > -1;
     };
 
-    Decimal.prototype.greaterThan = function (other) {
+    Decimal_BE.prototype.greaterThan = function (other) {
       return this.cmp(other) > 0;
     };
 
-    return Decimal;
+    return Decimal_BE;
   }();
 
-  return Decimal;
+  return Decimal_BE;
 
 }));
