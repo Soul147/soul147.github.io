@@ -1365,7 +1365,7 @@ if (player.version < 5) {
 
 	document.getElementsByClassName("hideInMorse").display = player.options.notation == "Morse code" ? "none" : ""
 
-	document.getElementById("decimalMode").textContent = "Decimal mode: "+(break_infinity_js?"Slow but accurate":"Fast but inaccurate")
+	document.getElementById("decimalMode").textContent = "Decimal mode: "+(break_infinity_js==0?"Slow but accurate":break_infinity_js==1?"Fast but inaccurate":"Large but inaccurate")
 	document.getElementById("decimalMode").style.display = Decimal.gt(player.totalmoney,"1e9000000000000000") ? "none" : ""
 	document.getElementById("hideProductionTab").textContent = (player.aarexModifications.hideProductionTab?"Show":"Hide")+" production tab"
 	document.getElementById("hideRepresentation").textContent=(player.aarexModifications.hideRepresentation?"Show":"Hide")+" antimatter representation"
