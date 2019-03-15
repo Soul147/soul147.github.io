@@ -1133,7 +1133,7 @@ function maxAllID() {
 
 function hideMaxIDButton(onLoad=false) {
 	if (!onLoad) if (!player.masterystudies) return
-	var hide=true
+	var hide=false
 	if (player.masterystudies&&player.currentEterChall!="eterc8") {
 		hide=false
 		if (player.eternities>17) {

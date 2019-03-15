@@ -357,6 +357,7 @@ function updateNewPlayer(reseted) {
     }
 	if (modesChosen.arrows >= 2) {
 		player.mods.ngt = {
+			version: 1.0,
 			omni: 0, // times gone omnipotent stat
 			thisOmni: 0, // time this run
 			op: new Decimal(0), // omnipotence points
