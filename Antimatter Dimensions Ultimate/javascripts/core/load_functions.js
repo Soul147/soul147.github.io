@@ -378,10 +378,10 @@ if (player.version < 5) {
 		
 	if (player.aarexModifications === undefined) {
 			player.aarexModifications = {
-					decimalMode: 0
+					breakInfinity: false
 			}
 	}
-	if (decimal_mode!=player.aarexModifications.decimalMode) {
+	if (break_infinity_js!=player.aarexModifications.breakInfinity) {
 			save_game(true)
 			document.location.reload(true)
 			return
@@ -1364,9 +1364,8 @@ if (player.version < 5) {
 	if (!player.options.hotkeys) document.getElementById("hotkeys").textContent = "Enable hotkeys"
 
 	document.getElementsByClassName("hideInMorse").display = player.options.notation == "Morse code" ? "none" : ""
-	
-	window.selectedDecimalMode = player.aarexModifications.decimalMode;
-	document.getElementById("decimalMode").textContent = "Decimal mode: "+(player.aarexModifications.decimalMode==0?"Slow but accurate":player.aarexModifications.decimalMode==1?"Fast but inaccurate":"Large but inaccurate")
+
+	document.getElementById("decimalMode").textContent = "Decimal mode: "+(break_infinity_js?"Slow but accurate":"Fast but inaccurate")
 	document.getElementById("decimalMode").style.display = Decimal.gt(player.totalmoney,"1e9000000000000000") ? "none" : ""
 	document.getElementById("hideProductionTab").textContent = (player.aarexModifications.hideProductionTab?"Show":"Hide")+" production tab"
 	document.getElementById("hideRepresentation").textContent=(player.aarexModifications.hideRepresentation?"Show":"Hide")+" antimatter representation"
@@ -1668,10 +1667,9 @@ function load_game(noOffline) {
 	if (dimensionSave!=null) player=dimensionSave
 	savePlacement=1
 	while (metaSave.saveOrder[savePlacement-1]!=metaSave.current) savePlacement++
-	if (decimal_mode==null) {
-		if (player.aarexModifications) decimal_mode=player.aarexModifications.decimalMode
-		if (decimal_mode == 0) Decimal = Decimal_BI
-		// if (decimal_mode == 2) Decimal = Decimal_BE // THIS IS VERY BROKEN RIGHT NOW
+	if (break_infinity_js==null) {
+		if (player.aarexModifications) break_infinity_js=player.aarexModifications.breakInfinity
+		if (break_infinity_js) Decimal = Decimal_BI
 		initCost = [null, new Decimal(10), new Decimal(1e2), new Decimal(1e4), new Decimal(1e6), new Decimal(1e9), new Decimal(1e13), new Decimal(1e18), new Decimal(1e24)]
 		costMults = [null, new Decimal(1e3), new Decimal(1e4), new Decimal(1e5), new Decimal(1e6), new Decimal(1e8), new Decimal(1e10), new Decimal(1e12), new Decimal(1e15)]
 		nextAt = {postc1:new Decimal("1e2000"),postc1_ngmm:new Decimal("1e3000"),postc2:new Decimal("1e5000"),postc3:new Decimal("1e12000"),postc4:new Decimal("1e14000"),postc5:new Decimal("1e18000"),postc6:new Decimal("1e20000"),postc7:new Decimal("1e23000"),postc8:new Decimal("1e28000"),postcngmm_1:new Decimal("1e750"),postcngmm_1_ngm3:new Decimal("1e1100"),postcngmm_2:new Decimal("1e1350"),postcngmm_3:new Decimal("1e2000"),postcngm3_1:new Decimal("1e1520"),postcngm3_2:new Decimal("1e1770")}
@@ -1746,7 +1744,7 @@ function rename_save(id) {
 			hideProductionTab: true,
 			eternityChallRecords: {},
 			popUpId: 0,
-			decimalMode: 0
+			breakInfinity: false
 				}
 		temp_save.aarexModifications.save_name = save_name
 	}
@@ -2162,7 +2160,7 @@ function loadAutoBuyerSettings() {
 	if (player.masterystudies) {
 			document.getElementById("prioritydil").value = player.eternityBuyer.dilationPerAmount
 			if (player.quantum) if (player.quantum.autobuyer) {
-					if (isNaN(decimal_mode==0 ? player.quantum.autobuyer.limit : player.quantum.autobuyer.limit.logarithm)) player.quantum.autobuyer.limit = new Decimal(1)
+					if (isNaN(break_infinity_js ? player.quantum.autobuyer.limit : player.quantum.autobuyer.limit.logarithm)) player.quantum.autobuyer.limit = new Decimal(1)
 					document.getElementById("priorityquantum").value = player.quantum.autobuyer.mode == "amount" || player.quantum.autobuyer.mode == "relative" ? formatValue("Scientific", player.quantum.autobuyer.limit, 2, 0) : player.quantum.autobuyer.limit
 			}
 	}

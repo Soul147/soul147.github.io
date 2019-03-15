@@ -69,7 +69,7 @@ function maxTheorems() {
 		player.timestudy.theorem += gainTT
 		player.timestudy.totalTheorem += gainTT
 		player.eternityPoints = player.eternityPoints.sub(Decimal.pow(2, gainTT).sub(1).times(player.timestudy.epcost))
-		if (decimal_mode==1 && isNaN(player.eternityPoints.logarithm)) player.eternityPoints = new Decimal(0)
+		if (!break_infinity_js && isNaN(player.eternityPoints.logarithm)) player.eternityPoints = new Decimal(0)
 		player.timestudy.epcost = player.timestudy.epcost.times(Decimal.pow(2, gainTT))
 	}
 	updateTheoremButtons()

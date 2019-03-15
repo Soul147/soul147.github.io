@@ -274,7 +274,7 @@ function hasInfinityMult(tier) {
     
 	function getAmount(tier) {
 		let ret = player[TIER_NAMES[tier]+"Amount"].toNumber()
-		if (decimal_mode==1) ret = Math.round(ret)
+		if (!break_infinity_js) ret = Math.round(ret)
 		return ret
 	}
     function dimBought(tier) {

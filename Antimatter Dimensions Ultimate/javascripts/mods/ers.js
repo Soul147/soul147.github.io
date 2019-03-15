@@ -47,6 +47,6 @@ function setReplicantiNewGalaxyStrength() {
 
 function setReplicantiNewLimit() {
 	var value=fromValue(document.getElementById("replLimit").value)
-	if (!isNaN(decimal_mode==0 ? value : value.logarithm)) player.replicanti.newLimit=value
+	if (!isNaN(break_infinity_js ? value : value.logarithm)) player.replicanti.newLimit=value
 	document.getElementById("galStrength").value=Math.log10(new Decimal(player.replicanti.newLimit).log(2))/Math.log10(2)/10
 }

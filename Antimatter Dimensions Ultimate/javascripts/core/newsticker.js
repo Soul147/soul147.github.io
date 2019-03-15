@@ -157,7 +157,7 @@ newsArray = [//always true
 //Aarex's Modifications
 ["A brave man tried NG- and NG-- modes at the same time, but he will be dead before he would complete this mode.", 'player.achievements.includes("r22") && player.aarexModifications.newGameMinusVersion && player.galacticSacrifice', "am1"],
 ["You would be dead if you started writing down your antimatter amount", 'player.achievements.includes("r22") && player.money.gt(Decimal.pow(10, 3 * 86400 * 365.2425 * 79.3 / 10))', "am2"],
-["If you just broke the game, the psychic helper wants you to reset the game.", 'player.achievements.includes("r22") && isNaN(decimal_mode==0 ? player.money.logarithm : player.money)', "am3"],
+["If you just broke the game, the psychic helper wants you to reset the game.", 'player.achievements.includes("r22") && isNaN(break_infinity_js ? player.money.logarithm : player.money)', "am3"],
 ["I wish I would create NG+++ while dan-simon is currently updating NG++ every day.", 'player.achievements.includes("r22") && player.meta', "am4"],
 ["I failed to big crunch for sacrificing my galaxies only.", 'player.achievements.includes("r22") && player.galacticSacrifice', "am5"],
 ["Did you just do 4 modes at once? Impossible!", 'player.achievements.includes("r22") && player.aarexModifications.newGameMinusVersion && player.galacticSacrifice && player.aarexModifications.newGamePlusVersion && player.meta', "am6"],
