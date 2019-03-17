@@ -2965,7 +2965,7 @@ function changeSaveDesc(saveId, placement) {
 		var originalCommas=player.options.commas
 		if (!isSaveCurrent) {
 			player.break=temp.achievements.includes("r51");
-			player.options.notation=temp.options.notation
+			player.options.notation=temp.options.notation;
 			player.options.commas=temp.options.commas
 		}
 		var isSaveQuantumed=temp.quantum?temp.quantum.times>0:false
