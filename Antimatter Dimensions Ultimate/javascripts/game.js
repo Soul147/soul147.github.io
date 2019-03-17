@@ -2136,7 +2136,7 @@ function updateInfCosts() {
         document.getElementById("161desc").textContent = shortenCosts(Decimal.pow(ts16Xbase,56))+"x multiplier on all normal dimensions"
         document.getElementById("162desc").textContent = shortenCosts(ts16Xbase)+"x multiplier on all Infinity dimensions"
         document.getElementById("192desc").textContent = "You can get beyond "+shortenMoney(Number.MAX_VALUE)+" replicantis, but the interval is increased the more you have"
-        document.getElementById("193desc").textContent = "Currently: "+shortenMoney(Decimal.pow(1.03, getEternitied()).min("1e13000"))+"x"
+        document.getElementById("193desc").textContent = "Currently: "+shortenMoney(Decimal.pow(1.03+!!player.mods.ngt*0.07, getEternitied()).min(Decimal.pow("1e13000", 1+!!player.mods.ngt*9)))+"x"
         document.getElementById("212desc").textContent = "Currently: "+((Math.pow(player.timeShards.max(2).log2(), 0.005)-1)*100).toFixed(2)+"%"
         document.getElementById("214desc").textContent = "Currently: "+shortenMoney(((calcTotalSacrificeBoost().pow(8)).min("1e46000").times(calcTotalSacrificeBoost().pow(1.1)).div(calcTotalSacrificeBoost())).max(1).min(new Decimal("1e125000")))+"x"
         document.getElementById("metaCost").textContent = shortenCosts(1e24);
@@ -7750,6 +7750,9 @@ function gameLoop(diff) {
     if (player.infinitiedBank > 5000000000) giveAchievement("No ethical consumption");
 		
 	// Hide stuff from NG^^ that shouldn't be there
+	ge("autochallenge1").style.display = "none";
+	ge("autochallenge2").style.display = "none";
+	ge("omnitabbtn").style.display = "none";
 	ge("odtabbtn").style.display = "none"
 	ge("octabbtn").style.display = "none"
 		
@@ -7772,6 +7775,7 @@ function gameLoop(diff) {
 	
 		for(var i = 0; i < studyCosts.length; i++) {
 			if(i > 45) studyCosts[i] *= 500*superStudies+500;
+			else if(i > 41) studyCosts[i] *= 20
 			else studyCosts[i] *= 3;
 			studyCosts[37] = 0;
 			if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
@@ -7787,6 +7791,21 @@ function gameLoop(diff) {
 			ge("ngtlockedstudies").style.display = "none"
 		}
 		else ge("ngtlockedstudies").style.display = "block"
+		
+		// Auto-complete eternity challenges
+		
+		ge("autochallenge1").style.display = "";
+		ge("autochallenge2").style.display = "";
+		ge("studyCostChallenges1").innerHTML = shorten(new Decimal(Number.MAX_VALUE))
+		ge("studyCostChallenges2").innerHTML = shorten(new Decimal(Number.MAX_VALUE).pow(10))
+		
+		sumFirst10 = 0
+		for(var i = 1; i <= 10; i++) sumFirst10 += player.eternityChalls["eterc" + i] || 0;
+		sumFirst12 = 0
+		for(var i = 1; i <= 12; i++) sumFirst12 += player.eternityChalls["eterc" + i] || 0;
+		
+		ge("autochallenge1").className = sumFirst10 == 50 ? "eternitychallengestudybought" : player.eternityPoints.gte(Number.MAX_VALUE) ? "eternitychallengestudy" : "eternitychallengestudylocked"
+		ge("autochallenge2").className = sumFirst12 == 60 ? "eternitychallengestudybought" : player.eternityPoints.gte(Decimal.pow(Number.MAX_VALUE, 10)) ? "eternitychallengestudy" : "eternitychallengestudylocked"
 		
 		updateTimeStudyButtons()
 		drawStudyTree()

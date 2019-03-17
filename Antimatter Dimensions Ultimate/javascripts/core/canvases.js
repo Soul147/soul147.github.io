@@ -227,6 +227,10 @@ function drawStudyTree() {
     drawTreeBranch("ec2unl", "181")
     drawTreeBranch("ec3unl", "181")
 	drawTreeBranch("181", "ec10unl")
+	if(player.mods.ngt) {
+		drawTreeBranch("181", "autochallenge1")
+		drawTreeBranch("181", "autochallenge2")
+	}
 	if((player.mods.ngt && player.mods.ngt.omni) || !player.mods.ngt) {
 		drawTreeBranch("ec10unl", "191")
 		drawTreeBranch("ec10unl", "192")

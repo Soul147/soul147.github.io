@@ -1,3 +1,10 @@
+// Complete all ECs up to a certain point
+
+function completeEC(n, a) {
+	for(var i = 1; i <= n; i++) player.eternityChalls["eterc" + i] = Math.max(player.eternityChalls["eterc" + i] || 0, a || 5)
+	updateEternityChallenges();
+}
+
 function gainedOP() {
 	return Decimal.pow(10, player.eternityPoints.plus(gainedEternityPoints()).e/(308)).times(player.mods.ngt.opMult || 1).divide(10).floor();
 }
@@ -9,7 +16,9 @@ function omniMilestoneReq(n) {
 }
 
 function omniMilestoneReached(n) {
-	return player.mods.ngt.op.gte(omniMilestoneReq(n))
+	ret = player.mods.ngt.op.gte(omniMilestoneReq(n)) || player.mods.ngt.milestonesReached > n;
+	if(ret) player.mods.ngt.milestonesReached = Math.max(player.mods.ngt.milestonesReached || 0, n)
+	return ret;
 }
 
 function omnipotenceReset(force, auto) {
@@ -260,7 +269,7 @@ function omnipotenceReset(force, auto) {
 			galaxybuyer: player.replicanti.galaxybuyer,
 			auto: player.replicanti.auto
 		},
-		timestudy: omniMilestoneReached(4) ? player.timestudy : {
+		timestudy: omniMilestoneReached(3) ? player.timestudy : {
 			theorem: 0,
 			amcost: new Decimal("1e20000"),
 			ipcost: new Decimal(1),
@@ -447,7 +456,7 @@ function updateReplicatorPowers() {
 
 const opUpgCosts = [
 	10,
-	1e8, 1e9,
+	1e4, 1e9,
 	5e11, 5e11, 5e11,
 	1e18, 1e20, 1e80, 1e95,
 ]
