@@ -357,19 +357,23 @@ function updateNewPlayer(reseted) {
     }
 	if (modesChosen.arrows >= 2) {
 		player.mods.ngt = {
-			version: 1.0,
+			version: 1.1,
 			omni: 0, // times gone omnipotent stat
 			thisOmni: 0, // time this run
+			lastRun: new Decimal(0), // OP gained during previous run
 			op: new Decimal(0), // omnipotence points
 			omniPower: new Decimal(3), // multiplier per ten dimensions
 			gravitons: new Decimal(0),
-			gCostInc: 100, // cost scaling factor (like dimension cost multiplier decrease)
+			gCostInc: 10, // cost scaling factor (like dimension cost multiplier decrease)
 			opCostInc: 10,
 			opUpgrades: [], // upgrades bought with OP
 			replicatorsUnlocked: 0,
 			newReplicatorCost: new Decimal(1e10),
 			oc: [], // omni-challenges completed
-			ocr: [] // omni-challenges currently running
+			ocr: [], // omni-challenges currently running
+			autobuyer: {
+				
+			}
 		}
 		for(var i = 1; i <= 8; i++) {
 			j = i - 1
@@ -2949,7 +2953,8 @@ function changeSaveDesc(saveId, placement) {
 			if (temp.aarexModifications.newGameMinusVersion) message+="NG-, "
 			if (temp.galacticSacrifice) message+="NG--"+(temp.tickspeedBoosts!=undefined?"-":"")+", "
 			if (temp.boughtDims) message+="Eternity Respecced, "
-			if (temp.aarexModifications.newGameExpVersion) message+="NG^, "
+			if (temp.mods.ngt) message+="NG↑↑, "
+			else if (temp.aarexModifications.newGameExpVersion) message+="NG^, "
 			if (temp.exdilation!=undefined) message+="NG Update, "
 			if (temp.meta) message+="NG++"+(temp.masterystudies?"+":"")+", "+(temp.aarexModifications.newGamePlusVersion?"":"No NG+ features, ")
 			else if (temp.aarexModifications.newGamePlusVersion) message+="NG+, "
@@ -3220,7 +3225,7 @@ document.getElementById("reset").onclick = function () {
 };
 
 function breakInfinity() {
-	if (player.autobuyers[11]%1 === 0 || player.autobuyers[11].interval>100) return false
+	if ((player.autobuyers[11]%1 === 0 || player.autobuyers[11].interval>100) && !player.mods.ngt) return false
 	if (player.break && !player.currentChallenge.includes("post")) {
 		player.break = false
 		document.getElementById("break").textContent = "BREAK INFINITY"
@@ -3481,7 +3486,7 @@ function setAchieveTooltip() {
 	christian.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e359223"))+" IP. Reward: A free one-way ticket to Hell.")
     fuckthis.setAttribute('ach-tooltip', "Reach "+shorten(3.33e33)+" tachyon particles. Reward: Gain tachyon particles based on best antimatter^^0.75")
     keemstar.setAttribute('ach-tooltip', "Reach "+shorten(Decimal.pow(10, Math.pow(Math.sqrt(player.totalTimePlayed),2)))+" IP. Reward: Additional 1000x multiplier to IP.")
-    yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Dimensions cost 1,000,000x less.")
+    yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Start with 100 eternities and dimensions cost 1,000,000x less.")
 }
 
 
@@ -3990,7 +3995,7 @@ function updateAutobuyers() {
         maxedAutobuy++;
     }
 
-    if (player.autobuyers[11].interval <= 100) {
+    if (player.autobuyers[11].interval <= 100 || player.mods.ngt) {
         document.getElementById("buyerBtnInf").style.display = "none"
         document.getElementById("postinftable").style.display = "inline-block"
         document.getElementById("breaktable").style.display = "inline-block"
@@ -4064,6 +4069,9 @@ function updateAutobuyers() {
         player.autobuyers[13].isOn = document.getElementById("15ison").checked
     }
     player.eternityBuyer.isOn = document.getElementById("eternityison").checked
+	if(player.mods.ngt) {
+		ngt.autobuyer.enabled = document.getElementById("omnipotenceison").checked
+	}
     if (player.masterystudies) {
 		player.eternityBuyer.dilationMode = document.getElementById("dilatedeternityison").checked
         player.eternityBuyer.dilationPerAmount = Math.max(parseInt(document.getElementById("prioritydil").value),2)
@@ -4235,6 +4243,10 @@ function updatePriorities() {
             return
         }
     }
+	if(player.mods.ngt) {
+        const omniValue = fromValue(document.getElementById("priorityomnipotence").value)
+        if (!isNaN(break_infinity_js ? omniValue : omniValue.logarithm)) player.mods.ngt.autobuyer.limit = omniValue
+	}
 
     priorityOrder()
 }
@@ -4249,6 +4261,7 @@ function updateCheckBoxes() {
     if (player.autoSacrifice.isOn) document.getElementById("13ison").checked = "true"
     else document.getElementById("13ison").checked = ""
     document.getElementById("eternityison").checked = player.eternityBuyer.isOn
+    if(player.mods.ngt) document.getElementById("omnipotenceison").checked = ngt.autobuyer.enabled
     if (player.masterystudies) {
          document.getElementById("dilatedeternityison").checked = player.eternityBuyer.dilationMode
          if (player.quantum) if (player.quantum.autobuyer) document.getElementById("quantumison").checked = player.quantum.autobuyer.enabled
@@ -4890,7 +4903,6 @@ function eternity(force, auto) {
             if (!player.challenges[i].includes("post") && getEternitied() > 1) temp.push(player.challenges[i])
         }
         player.infinitiedBank += gainBankedInf()
-        if (player.infinitiedBank > 5000000000) giveAchievement("No ethical consumption");
         if (player.dilation.active && (!force || player.infinityPoints.gte(Number.MAX_VALUE))) {
             if (player.dilation.tachyonParticles.lt(getDilGain())) {
                 player.dilation.tachyonParticles = new Decimal(getDilGain())
@@ -7732,6 +7744,10 @@ function gameLoop(diff) {
 		ge("etertodt").innerHTML = shorten(getEternitied()**0.1)
 		ge("dttoeter").innerHTML = shorten(player.dilation.dilatedTime.pow(0.1))
 	}
+	
+	// Put this here to fix another bug
+	
+    if (player.infinitiedBank > 5000000000) giveAchievement("No ethical consumption");
 		
 	// Hide stuff from NG^^ that shouldn't be there
 	ge("odtabbtn").style.display = "none"
@@ -7779,7 +7795,10 @@ function gameLoop(diff) {
 		
 		ngt.currentOPRate = gainedOP().divide(ngt.thisOmni / 600)
 		if(!ngt.bestOPRate) ngt.bestOPRate = new Decimal(0);
-		if(ngt.bestOPRate.lt(ngt.currentOPRate)) ngt.bestOPRate = ngt.currentOPRate;
+		if(ngt.bestOPRate.lt(ngt.currentOPRate)) {
+			ngt.bestOPRate = ngt.currentOPRate;
+			ngt.bestOPTime = ngt.thisOmni;
+		}
 		
 		ge("omnitabbtn").style.display = (gainedOP().gte(1) || ngt.omni) ? "" : "none"
 		
@@ -7796,7 +7815,16 @@ function gameLoop(diff) {
 			ge("omnibtnRate").innerHTML = ""
 			ge("omnibtnPeak").innerHTML = ""
 		}
-		ge("op").innerHTML = shorten(ngt.op);
+		
+		// Update all listings of omnipotence points
+		
+		list = document.getElementsByClassName("op");
+		
+		for(var i = 0; i < list.length; i++) {
+			list[i].innerHTML = shorten(ngt.op);			
+		}
+		
+		
 		ge("gravitons").innerHTML = shortenMoney(ngt.gravitons);
 		ge("gravitonEffect").innerHTML = shortenMoney(getGravitonEffect());
 		
@@ -7807,13 +7835,11 @@ function gameLoop(diff) {
 		
 		ge("omniTimes").innerHTML = getFullExpansion(ngt.omni)
 		
-		b = 3
-		for(var i = 0; i < 6 + !!player.masterystudies; i++) {
+		for(var i = 0; i < 8 + !!player.masterystudies; i++) {
+			ge("om" + i).style.display = ""
 			ge("om" + i).className = "omnimilestonelocked"
-			ge("omreq" + i).innerHTML = "requirement: " + b**i + " omnipotence";
-		}
-		for(var i = 0; i <= Math.min(Math.log(ngt.omni) / Math.log(b), 6 + !!player.masterystudies); i++) {
-			ge("om" + i).className = "omnimilestone"
+			if(omniMilestoneReached(i)) ge("om" + i).className = "omnimilestone"
+			ge("omreq" + i).innerHTML = "requirement: " + shortenCosts(omniMilestoneReq(i)) + " omnipotence points";
 		}
 		
 		// omni-dimensions
@@ -8083,6 +8109,17 @@ function maxBuyGalaxies(manual) {
 
 var timer = 0
 function autoBuyerTick() {
+	if (player.mods.ngt) if (ngt.autobuyer.enabled) {
+		if (ngt.autobuyer.mode == "amount") {
+            if (gainedOP().gte(Decimal.round(ngt.autobuyer.limit))) omnipotenceReset(false, true)
+        } else if (ngt.autobuyer.mode == "relative") {
+            if (gainedOP().gte(Decimal.round(ngt.autobuyer.limit).times(ngt.lastRun))) omnipotenceReset(false, true)
+        } else if (ngt.autobuyer.mode == "time") {
+            if (ngt.thisOmni / 10 >= new Decimal(ngt.autobuyer.limit).toNumber()) omnipotenceReset(false, true)
+        } else if (ngt.autobuyer.mode == "peak") {
+            if (ngt.thisOmni - ngt.bestOPTime >= new Decimal(ngt.autobuyer.limit).toNumber()) omnipotenceReset(false, true)
+        }
+	}
 
     if (player.masterystudies) if (speedrunMilestonesReached>22&&player.quantum.autobuyer.enabled) {
         if (player.quantum.autobuyer.mode == "amount") {

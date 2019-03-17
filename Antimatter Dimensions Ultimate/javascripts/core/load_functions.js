@@ -1346,7 +1346,7 @@ if (player.version < 5) {
 		normalDimChart.data.datasets[0].borderColor = '#000'
 	}
 
-	document.getElementById("infmultbuyer").style.display = getEternitied()>0||player.masterystudies?"inline-block":"none"
+	document.getElementById("infmultbuyer").style.display = "inline-block"
 	if (getEternitied() < 30) {
 		document.getElementById("secondRow").style.display = "none";
 		document.getElementById("thirdRow").style.display = "none";
@@ -1612,7 +1612,8 @@ if (player.version < 5) {
 		if (player.mods.qol) ngModeMessages.push("Welcome to the Quality of Life mod, made by Sigma. I describe myself as an \"efficient\" person, others call me lazy. If you're anything like me, this mod is for you. It automates basically everything, and removes some of the annoying grinds like the first 100 eternities.")
 			if (player.mods.secret) ngModeMessages.push("Welcome to the Secrets mod, made by Sigma. This mod adds a multiplier to the speed of the entire game based on secret achievements completed.")
 			if (player.mods.ac) ngModeMessages.push("Welcome to the Achievements+ mod, made by Sigma. This mod adds many new achievement rewards and an improved achievement bonus, making the achievements a more important part of the game.")
-			if (player.aarexModifications.newGameExpVersion) ngModeMessages.push("Welcome to NG^ mode, made by Naruyoko! This mode adds way many buffs that this mode may be broken!")
+			if (player.mods.ngt) ngModeMessages.push("Welcome to NG↑↑, an end-game mod made by Sigma. This mod adds a new layer of prestige, Omnipotence, as well as new dimensions and mechanics. It also includes features from NG^.")
+			else if (player.aarexModifications.newGameExpVersion) ngModeMessages.push("Welcome to NG^ mode, made by Naruyoko! This mode adds way many buffs that this mode may be broken!")
 			if (player.exdilation!=undefined) ngModeMessages.push("Welcome to NG Update mode, another dan-simon's end-game mod! In this mode, there is the black hole and ex-dilation.")
 			if (player.meta) {
 					if (!player.aarexModifications.newGamePlusVersion) ngModeMessages.push("WARNING! You are disabling NG+ features on NG++! Standard NG++ have all of NG++ features and I recommend you to create a new save with NG+ and NG++ modes on.")
@@ -2075,6 +2076,7 @@ function transformSaveToDecimal() {
 		ngt.bestOPRate = new Decimal(ngt.bestOPRate);
 		ngt.omniPower = new Decimal(ngt.omniPower);
 		ngt.newReplicatorCost = new Decimal(ngt.newReplicatorCost);
+		if(ngt.autobuyer) ngt.autobuyer.limit = new Decimal(ngt.autobuyer.limit);
 		
 		for(var i = 1; i <= 8; i++) {
 			d = ngt["d" + i]
@@ -2125,6 +2127,14 @@ function transformSaveToDecimal() {
 			if(ngt.gravitons.gt(0)) resetOmniDims = true;
 		});
 		
+		updateToVersion(1.1, function() {
+			ngt.autobuyer = {
+				enabled: false,
+				limit: new Decimal(0),
+				mode: "amount",
+			}
+		});
+		
 		ngt.version = ver;
 	}
 }
@@ -2147,6 +2157,7 @@ function loadAutoBuyerSettings() {
 	document.getElementById("prioritySac").value = player.autoSacrifice.priority
 	document.getElementById("bulkgalaxy").value = player.autobuyers[10].bulk
 	document.getElementById("priority13").value = formatValue("Scientific", player.eternityBuyer.limit, 2, 0)
+	if (player.mods.ngt) document.getElementById("priorityomnipotence").value = formatValue("Scientific", player.mods.ngt.autobuyer.limit, 2, 0)
 	if (player.autobuyers[12] !== undefined) document.getElementById("priority14").value = formatValue("Scientific", new Decimal(player.autobuyers[12].priority), 2, 0)
 	if (player.autobuyers[13] !== undefined) {
 			document.getElementById("priority15").value = player.autobuyers[13].priority

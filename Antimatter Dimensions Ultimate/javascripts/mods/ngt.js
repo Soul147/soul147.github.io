@@ -2,7 +2,17 @@ function gainedOP() {
 	return Decimal.pow(10, player.eternityPoints.plus(gainedEternityPoints()).e/(308)).times(player.mods.ngt.opMult || 1).divide(10).floor();
 }
 
-function omnipotenceReset(force) {
+const omReqList = ["10", "100", "1e5", "1e10", "1e20", "1e33", "1e50", "1e10000", "1e1000000"]
+
+function omniMilestoneReq(n) {
+	return new Decimal(omReqList[n])
+}
+
+function omniMilestoneReached(n) {
+	return player.mods.ngt.op.gte(omniMilestoneReq(n))
+}
+
+function omnipotenceReset(force, auto) {
 	if(!ngt.omni) setTimeout(function() {
 		$("#dimensionsbtn").notify("New Dimension Unlocked", "success");
 		$("#eternitystorebtn").notify("New Time Studies Unlocked", "success");
@@ -16,18 +26,10 @@ function omnipotenceReset(force) {
 		return exitOmniChallenge()
 	}
 	
-	b = 3
-	keepInf = player.mods.ngt.omni >= b**0
-	keepBreak = player.mods.ngt.omni >= b**1
-	keepEter = player.mods.ngt.omni >= b**2
-	keepStudy = player.mods.ngt.omni >= b**3
-	keepEterc = player.mods.ngt.omni >= b**4
-	keepDilation = player.mods.ngt.omni >= b**5
-	keepMastery = player.mods.ngt.omni >= b**6 && player.masterystudies
-	
-	if(ngt.thisOmni > 600 || out || force) dev.omniAnim(5 - !!player.mods.ngt.omni*4);
+	if((ngt.thisOmni > 600 || out || force) && !auto) dev.omniAnim(5 - !!player.mods.ngt.omni*4);
 	if(!force) player.mods.ngt.omni++;
 	if(!force) player.mods.ngt.op = player.mods.ngt.op.add(gainedOP());
+	if(!force) player.mods.ngt.lastRun = gainedOP();
 	
 	if (player.tickspeedBoosts !== undefined) player.tickspeedBoosts = 0
 	if (player.achievements.includes("r104")) player.infinityPoints = new Decimal(2e25);
@@ -74,18 +76,18 @@ function omnipotenceReset(force) {
 		achievements: player.achievements,
 		challenges: [],
 		currentChallenge: "",
-		infinityUpgrades: keepInf ? player.infinityUpgrades : [],
+		infinityUpgrades: omniMilestoneReached(0) ? player.infinityUpgrades : [],
 		setsUnlocked: player.setsUnlocked,
 		infinityPoints: player.infinityPoints,
 		infinitied: 0,
-		infinitiedBank: player.infinitiedBank,
+		infinitiedBank: omniMilestoneReached(4) ? player.infinitiedBank + player.infinitied * 0.05 : 0,
 		totalTimePlayed: player.totalTimePlayed,
 		bestInfinityTime: 9999999999,
 		thisInfinityTime: 0,
-		resets: keepInf ? 4 : 0,
+		resets: omniMilestoneReached(0) ? 4 : 0,
 		dbPower: player.dbPower,
 		tickspeedBoosts: player.tickspeedBoosts,
-		galaxies: keepInf ? 1 : 0,
+		galaxies: omniMilestoneReached(0) ? 1 : 0,
 		galacticSacrifice: resetGalacticSacrifice(),
 		totalmoney: player.totalmoney,
 		interval: null,
@@ -108,12 +110,12 @@ function omnipotenceReset(force) {
 		lastTenEternities: [[600*60*24*31, new Decimal(0)], [600*60*24*31, new Decimal(0)], [600*60*24*31, new Decimal(0)], [600*60*24*31, new Decimal(0)], [600*60*24*31, new Decimal(0)], [600*60*24*31, new Decimal(0)], [600*60*24*31, new Decimal(0)], [600*60*24*31, new Decimal(0)], [600*60*24*31, new Decimal(0)], [600*60*24*31, new Decimal(0)]],
 		infMult: new Decimal(1),
 		infMultCost: new Decimal(10),
-		tickSpeedMultDecrease: keepBreak ? player.tickSpeedMultDecrease : GUBought("gb4") ? 1.25 : 10,
-		tickSpeedMultDecreaseCost: keepBreak ? player.tickSpeedMultDecreaseCost : 3e6,
-		dimensionMultDecrease: keepBreak ? player.dimensionMultDecrease : 10,
-		dimensionMultDecreaseCost: keepBreak ? player.dimensionMultDecreaseCost : 1e8,
-		extraDimPowerIncrease: keepBreak ? player.extraDimPowerIncrease : 0,
-		dimPowerIncreaseCost: keepBreak ? player.dimPowerIncreaseCost : 1e3,
+		tickSpeedMultDecrease: omniMilestoneReached(1) ? player.tickSpeedMultDecrease : GUBought("gb4") ? 1.25 : 10,
+		tickSpeedMultDecreaseCost: omniMilestoneReached(1) ? player.tickSpeedMultDecreaseCost : 3e6,
+		dimensionMultDecrease: omniMilestoneReached(1) ? player.dimensionMultDecrease : 10,
+		dimensionMultDecreaseCost: omniMilestoneReached(1) ? player.dimensionMultDecreaseCost : 1e8,
+		extraDimPowerIncrease: omniMilestoneReached(1) ? player.extraDimPowerIncrease : 0,
+		dimPowerIncreaseCost: omniMilestoneReached(1) ? player.dimPowerIncreaseCost : 1e3,
 		version: player.version,
 		postC4Tier: 1,
 		postC8Mult: new Decimal(1),
@@ -124,11 +126,11 @@ function omnipotenceReset(force) {
 		postC4Tier: 0,
 		postC3Reward: new Decimal(1),
 		eternityPoints: new Decimal(0),
-		eternities: player.eternities * 0.05,
-		eternitiesBank: (player.eternitiesBank || 0) + player.eternities * 0.05,
+		eternities: 100,
+		eternitiesBank: omniMilestoneReached(6) ? (player.eternitiesBank || 0) + player.eternities * 0.05 : 0,
 		thisEternity: 0,
 		bestEternity: player.bestEternity,
-		eternityUpgrades: keepEter ? player.eternityUpgrades : [],
+		eternityUpgrades: omniMilestoneReached(2) ? player.eternityUpgrades : [],
 		epmult: new Decimal(1),
 		epmultCost: new Decimal(500),
 		infDimensionsUnlocked: [false, false, false, false, false, false, false, false],
@@ -241,8 +243,8 @@ function omnipotenceReset(force) {
 			power: new Decimal(1),
 			bought: 0
 		},
-		offlineProd: keepBreak ? player.offlineProd : 0,
-		offlineProdCost: keepBreak ? player.offlineProdCost : 1e7,
+		offlineProd: omniMilestoneReached(1) ? player.offlineProd : 0,
+		offlineProdCost: omniMilestoneReached(1) ? player.offlineProdCost : 1e7,
 		challengeTarget: 0,
 		autoSacrifice: player.autoSacrifice,
 		replicanti: {
@@ -258,14 +260,14 @@ function omnipotenceReset(force) {
 			galaxybuyer: player.replicanti.galaxybuyer,
 			auto: player.replicanti.auto
 		},
-		timestudy: keepStudy ? player.timestudy : {
+		timestudy: omniMilestoneReached(4) ? player.timestudy : {
 			theorem: 0,
 			amcost: new Decimal("1e20000"),
 			ipcost: new Decimal(1),
 			epcost: new Decimal(1),
 			studies: [],
 		},
-		eternityChalls: keepEterc ? player.eternityChalls : {},
+		eternityChalls: omniMilestoneReached(5) ? player.eternityChalls : {},
 		eternityChallGoal: new Decimal(Number.MAX_VALUE),
 		currentEternityChall: "",
 		eternityChallUnlocked: 0,
@@ -284,7 +286,7 @@ function omnipotenceReset(force) {
 		dimlife: true,
 		dead: true,
 		dilation: {
-			studies: keepDilation ? player.dilation.studies : [],
+			studies: omniMilestoneReached(7) ? player.dilation.studies : [],
 			active: false,
 			tachyonParticles: player.achievements.includes("ng3p37") ? player.dilation.bestTP.sqrt() : new Decimal(0),
 			dilatedTime: new Decimal(0),
@@ -292,7 +294,7 @@ function omnipotenceReset(force) {
 			bestTP: player.dilation.bestTP,
 			nextThreshold: new Decimal(1000),
 			freeGalaxies: 0,
-			upgrades: keepDilation ? player.dilation.upgrades : [],
+			upgrades: omniMilestoneReached(7) ? player.dilation.upgrades : [],
 			rebuyables: {
 				1: 0,
 				2: 0,
@@ -303,7 +305,7 @@ function omnipotenceReset(force) {
 		why: player.why,
 		options: player.options,
 		meta: player.meta,
-		masterystudies: player.masterystudies ? (keepMastery ? player.masterystudies : []) : undefined,
+		masterystudies: player.masterystudies ? (omniMilestoneReached(8) ? player.masterystudies : []) : undefined,
 		autoEterOptions: player.autoEterOptions,
 		galaxyMaxBulk: player.galaxyMaxBulk,
 		quantum: player.quantum ? player.quantum : undefined,
@@ -587,4 +589,30 @@ function ocGoalMet(n) {
 	if(!inOC()) return false;
 	if(player.money.gte(ngt.t.goal[n-1])) return true;
 	return false;
+}
+
+// Omnipotence Autobuyer
+
+function updateAutoOmniMode() {
+	if (ngt.autobuyer.mode == "amount") {
+		document.getElementById("toggleautoquantummode").textContent = "Auto omnipotence mode: amount"
+		document.getElementById("autoquantumtext").textContent = "Amount of QK to wait until reset:"
+	} else if (ngt.autobuyer.mode == "relative") {
+		document.getElementById("toggleautoquantummode").textContent = "Auto omnipotence mode: X times last run"
+		document.getElementById("autoquantumtext").textContent = "X times last omnipotence:"
+	} else if (ngt.autobuyer.mode == "time") {
+		document.getElementById("toggleautoquantummode").textContent = "Auto omnipotence mode: time"
+		document.getElementById("autoquantumtext").textContent = "Seconds between runs:"
+	} else if (ngt.autobuyer.mode == "peak") {
+		document.getElementById("toggleautoquantummode").textContent = "Auto omnipotence mode: peak"
+		document.getElementById("autoquantumtext").textContent = "Seconds to wait after latest peak gain:"
+	}
+}
+
+function toggleAutoOmniMode() {
+	if (ngt.autobuyer.mode == "amount") ngt.autobuyer.mode = "relative"
+	else if (ngt.autobuyer.mode == "relative") ngt.autobuyer.mode = "time"
+	else if (ngt.autobuyer.mode == "time") ngt.autobuyer.mode = "peak"
+	else ngt.autobuyer.mode = "amount"
+	updateAutoOmniMode()
 }

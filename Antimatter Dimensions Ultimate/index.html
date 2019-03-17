@@ -1553,6 +1553,7 @@
                 <button id='breakLimitED' class='storebtn' style='width: 280px; height: 60px' onclick='breakLimit()'></button><br><br><br>
             </div>
             <div id="omnidimensions" class="dimtab">
+				<p>you have <span class = "op"></span> omnipotence points.</p>
 				<p>you have <span id = "gravitons"></span> gravitons. translated to x<span id = "gravitonEffect"></span> multiplier on all time dimensions</p>
 				<div>you are getting <span id = "gravitonRate"></span> gravitons per second.</div>
 				<button id="maxOmniDimensions" class="storebtn" style="font-size: 12px" onclick="buyMaxOmniDimensions()">max all</Button>
@@ -1867,7 +1868,7 @@
                     <div id="thisSacrifice"></div>
                     <br>
                 </div>
-				<div id = "omniStatistics"></div>
+				<div id = "omniStatistics"></div><br>
                 <div id="totalTime">You have played for </div>
                 <div id="infoScale"></div>
             </div>
@@ -3797,9 +3798,17 @@
 				<button class="storebtn" id="maxallautobuyers" style="font-size: 100%; width: 150px; height: 40px;margin: 3px" onclick="for(var i = 0; i < 12; i++) while(buyAutobuyer(i));">Max all autobuyers</button>
                 <button class="storebtn" id="toggleautoetermode" style="font-size: 100%; width: 150px; height: 40px;margin: 3px; display: none" onclick="toggleAutoEterMode()">Auto eternity mode: amount</button>
                 <button class="storebtn" id="toggleautoquantummode" style="font-size: 100%; width: 150px; height: 40px;margin: 3px; display: none" onclick="toggleAutoQuantumMode()"></button>
+                <button class="storebtn" id="toggleautoomnimode" style="font-size: 100%; width: 150px; height: 40px;margin: 3px; display: none" onclick="toggleAutoOmniMode()">Auto omnipotence mode: amount</button>
                 <br>
                 <tr>
-                <td></td>
+                <td id="autoBuyerEter"><div class="autoBuyerDiv" style="display:block">
+                    <div>Automatic Omnipotence</div>
+                    <div><span id='omnilimittext'>Amount of OP to wait until reset:</span>
+                    <input type="text" onchange="updatePriorities()" id="priorityomnipotence"></input></div>
+                    <br>
+                    <span style="font-size: 80%">Is active</span>
+                    <input type="checkbox" onchange="updateAutobuyers()" id="omnipotenceison"></input>
+                </div></td>
                 <td id="autoBuyerEter"><div class="autoBuyerDiv" style="display:block">
                     <div>Automatic Eternity</div>
                     <div><span id='eterlimittext'>Amount of EP to wait until reset:</span>
@@ -4637,7 +4646,7 @@
 						<div id="omnibtnPeak" class="hideEmpty"></div>
 					</div>
 					<br>
-					you have <span id = "op"></span> omnipotence points.<br>
+					<p>you have <span class = "op"></span> omnipotence points.</p>
 					<div class = "omniupgbought" id = "ou11">multiply OP gain by 2 for every order of magnitude of current OP<br>currently: <span id = "ouinfo11"></span>x<br>cost: <span id = "oucost11"></span> OP</div>
 					<div class = "omniupg" id = "ou21">dimension boost scaling is decreased by 2<br>currently: <span id = "ouinfo21"></span><br>cost: <span id = "oucost21"></span> OP</div>
 					<div class = "omniupglocked" id = "ou22">galaxy cost scaling is decreased by 8<br>currently: <span id = "ouinfo22"></span><br>cost: <span id = "oucost22"></span> OP</div>
@@ -4654,13 +4663,16 @@
 				<center style = "font-size: 20px">
 					<h1>omnipotence milestones</h1>
 					<p style = "font-size: 12px">you've gone omnipotent <span id = "omniTimes"></span> times.</p>
+					<p>you have <span class = "op"></span> omnipotence points.</p>
 					<div class = "omnimilestonelocked" id = "om0">keep infinity upgrades<br><span id = "omreq0"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om1">keep post-infinity upgrades<br><span id = "omreq1"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om2">keep eternity upgrades<br><span id = "omreq2"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om3">keep time studies<br><span id = "omreq3"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om4">keep eternity challenges<br><span id = "omreq4"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om5">keep dilation studies<br><span id = "omreq5"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om6">keep mastery studies<br><span id = "omreq6"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om5">keep banked infinities<br><span id = "omreq4"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om4">keep eternity challenges<br><span id = "omreq5"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om6">keep 5% of eternities<br><span id = "omreq6"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om7">keep dilation studies<br><span id = "omreq7"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om8" style = "display: none">keep mastery studies<br><span id = "omreq8"></span></div><br>
 				</center>
 			</div>
 		</div>

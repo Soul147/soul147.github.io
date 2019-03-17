@@ -191,7 +191,7 @@ function buyMaxTimeDimension(tier) {
 }
 
 function getTS11Effect() {
-	return Decimal.dividedBy(1,player.tickspeed.dividedBy(1000).pow(0.005).times(0.95).plus(player.tickspeed.dividedBy(1000).pow(0.0003).times(0.05)).max(Decimal.fromMantissaExponent(1, -2500)).pow(player.mods.ngt?2:player.aarexModifications.newGameExpVersion?0.25:1));
+	return Decimal.dividedBy(1,player.tickspeed.dividedBy(1000).pow(0.005).times(0.95).plus(player.tickspeed.dividedBy(1000).pow(0.0003).times(0.05)).max(Decimal.fromMantissaExponent(1, -2500)).pow(player.mods.ngt?1.5:player.aarexModifications.newGameExpVersion?0.25:1));
 }
 
 function buyMaxTimeDimensions() {
