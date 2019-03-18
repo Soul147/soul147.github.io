@@ -1,7 +1,7 @@
 //time dimensions
 
 function getTimeDimensionPower(tier) {
-  if (player.currentEternityChall == "eterc11") return new Decimal(1)
+  if (player.currentEternityChall == "eterc11") return new Decimal(player.mods.ngt?getGravitonEffect():1)
   var dim = player["timeDimension"+tier]
   var ret = dim.power.pow(player.boughtDims?1:2)
   ret = ret.times(kongAllDimMult)
@@ -65,7 +65,7 @@ function getTimeDimensionPower(tier) {
 function getTimeDimensionProduction(tier) {
   if (player.currentEternityChall == "eterc1" || player.currentEternityChall == "eterc10" || inQC(8)) return new Decimal(0)
   var dim = player["timeDimension"+tier]
-  if (player.currentEternityChall == "eterc11") return dim.amount
+  if (player.currentEternityChall == "eterc11") return dim.amount.multiply(player.mods.ngt?getGravitonEffect():1)
   var ret = dim.amount
   if (inQC(4) && tier == 1) ret = ret.plus(player.timeDimension2.amount.floor())
   ret = ret.times(getTimeDimensionPower(tier))

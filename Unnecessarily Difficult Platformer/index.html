@@ -1,0 +1,303 @@
+<body>
+
+<canvas id = "canvas"></canvas>
+
+</body>
+
+<script>
+
+// Collision function (totally not pirated)
+
+function cc(shapeA, shapeB, passthrough) {
+	// get the vectors to check against
+	var vX = (shapeA.x + (shapeA.width / 2)) - (shapeB.x + (shapeB.width / 2)),
+	vY = (shapeA.y + (shapeA.height / 2)) - (shapeB.y + (shapeB.height / 2)),
+	// add the half widths and half heights of the objects
+	hWidths = (shapeA.width / 2) + (shapeB.width / 2),
+	hHeights = (shapeA.height / 2) + (shapeB.height / 2),
+	colDir = null
+		
+	// if the x and y vector are less than the half width or half height, they we must be inside the object, causing a collision
+	
+	if (Math.abs(vX) < hWidths && Math.abs(vY) < hHeights) {		 // figures out on which side we are colliding (top, bottom, left, or right)
+		var oX = hWidths - Math.abs(vX), oY = hHeights - Math.abs(vY)
+		if (oX >= oY) {
+			if (vY > 0) {
+				colDir = "t"
+				if(!passthrough) shapeA.y += oY
+			} else {
+				colDir = "b"
+				if(!passthrough) shapeA.y -= oY
+			}
+		} else {
+			if (vX > 0) {
+				colDir = "l"
+				if(!passthrough) shapeA.x += oX
+			} else {
+				colDir = "r"
+				if(!passthrough) shapeA.x -= oX
+			}
+		}
+	}
+	return colDir
+}
+
+// Basic setup
+
+width = 32*20
+height = 32*15
+
+gravity = 0.5
+friction = 0.9
+
+// Rendering setup
+
+canvas = document.getElementById("canvas")
+ctx = canvas.getContext("2d")
+
+canvas.width = width
+canvas.height = height
+
+// The player
+
+player = {
+	x: 0,
+	y: 0,
+	width: 24,
+	height: 24,
+	xVel: 0,
+	yVel: 0,
+	walkAccel: 0.4,
+	runAccel: 0.5,
+	walkSpeed: 5,
+	runSpeed: 10,
+	jumpPower: 8,
+	jumpHeight: 80,
+	maxJumpHeight: 80,
+	
+	moveLeft: function() {
+		if(player.walljump == "r") return;
+		player.walking = true
+		if(player.checkSpeed()) player.xVel -= player.running ? player.runAccel : player.walkAccel
+	},
+	moveRight: function() {
+		if(player.walljump == "l") return;
+		player.walking = true
+		if(player.checkSpeed()) player.xVel += player.running ? player.runAccel : player.walkAccel
+	},
+	jump: function() {
+		if(!player.onGround && !player.jumping) return
+		if(player.onGround) {
+			player.yVel -= player.jumpPower * (1 + Math.abs(player.xVel / 30))
+			if(!player.standing) {
+				if(player.walljump == "l") {
+					f=1+(keys[39]||0)
+					player.xVel += player.jumpPower*f
+				}
+				if(player.walljump == "r") {
+					f=1+(keys[37]||0)
+					player.xVel -= player.jumpPower*f
+				}
+			}
+		}
+		player.jumpHeight--
+		player.jumping = true
+		if(player.jumpHeight <= 0) player.jumping = false
+	},
+	land: function() {
+		player.jumping = false
+		player.onGround = true
+		player.yVel = Math.min(player.yVel, 0)
+		player.jumpHeight = player.maxJumpHeight
+		keys[38] = false // have to press jump again
+	},
+	checkSpeed: function() {
+		maxSpeed = player.running ? player.runSpeed : player.walkSpeed
+		if(Math.abs(player.xVel) > maxSpeed) return false;
+		return true;
+	},
+	
+	reset: function() {
+		player.x = 0
+		player.y = 0
+		player.xVel = 0
+		player.yVel = 0
+	}
+}
+
+camera = {
+	x: 0,
+	y: 0
+}
+
+// Event handling
+
+keys = []
+
+addEventListener("keydown", function(e) {
+	c = e.keyCode
+	
+	if(c == 82) {
+		player.reset()
+	}
+	
+	if(c == 38) {
+		if(player.holdingJump) return;
+		player.holdingJump = true;
+	}
+	
+	keys[c] = true
+})
+
+addEventListener("keyup", function(e) {
+	c = e.keyCode
+	
+	if(c == 38) player.holdingJump = false;
+	
+	keys[c] = false
+})
+
+// Object-spawning functions
+
+objects = []
+
+function Wall(x, y, w, h) {
+	o = {
+		id: "wall",
+		x: x*32,
+		y: y*32,
+		width: w*32,
+		height: h*32,
+		color: "black",
+		solid: true,
+		stationary: true
+	}
+	
+	objects.push(o)
+}
+
+function Spike(x, y, w, h) {
+	o = {
+		id: "spike",
+		x: x*32,
+		y: y*32,
+		width: 32,
+		height: 32,
+		color: "gray",
+		solid: true,
+		stationary: true,
+		deadly: true
+	}
+	
+	objects.push(o)
+}
+
+// Add objects
+
+//for(var i = 0; i < 250; i++) Wall(i, Math.floor(Math.random() * 50), Math.ceil(Math.random() * (1000 - i) / 100), Math.ceil(Math.random() * (1000 - i) / 100))
+//for(var i = 0; i < 250; i++) Spike(i, Math.floor(Math.random() * 50), Math.ceil(Math.random() * (1000 - i) / 100))
+
+Wall(0, 2, 50, 1)
+for(var i = 10; i < 50; i += 3) Spike(i, 1)
+for(var i = 10; i < 50; i += 1) Spike(i, -3)
+
+// Update function
+
+function update() {
+	requestAnimationFrame(update)
+	
+	// Update player
+	
+	player.walking = false
+	
+	if(keys[32]) player.running = true; else player.running = false;
+	if(keys[37]) player.moveLeft()
+	if(keys[39]) player.moveRight()
+	if(keys[38]) player.jump(); else player.jumping = false
+	if(keys[40]) player.walljump = ""
+	
+	if(player.onGround) {
+		if(!player.walking) player.xVel *= friction
+	}
+	else player.xVel *= friction + (1 - friction) / 2
+	if(!player.jumping) {
+		player.yVel += gravity
+	}
+	else player.yVel += gravity/2
+	
+	if(player.walljump == "l") player.xVel--;
+	if(player.walljump == "r") player.xVel++;
+	
+	player.x += player.xVel
+	player.y += player.yVel
+	
+	player.onGround = false
+	player.standing = false
+	player.walljump = ""
+	
+	// Update objects
+	
+	objects.forEach(function(o) {
+		if(o.solid) {
+			// Check player collisions
+			
+			c = cc(player, o)
+			
+			if(c && o.deadly) player.reset()
+			
+			if(c == "t") {
+				player.jumping = false
+				player.yVel = 0
+			}
+			if(c == "l") {
+				player.xVel = Math.max(player.xVel, 0)
+				player.land()
+				player.walljump = "l"
+			}
+			if(c == "r") {
+				player.xVel = Math.min(player.xVel, 0)
+				player.land()
+				player.walljump = "r"
+			}
+			if(c == "b") {
+				player.standing = true
+				player.land()
+			}
+		
+			objects.forEach(function(p) {
+				// Don't collide with itself
+				
+				if(o == p) return
+				if(p.stationary) return
+				
+				cc(o, p)
+			})
+		}
+	})
+	
+	if(player.standing) player.walljump = ""
+	
+	// Move camera
+	
+	xDiff = player.x - camera.x
+	yDiff = player.y - camera.y
+	
+	camera.x += xDiff / 5
+	camera.y += yDiff / 5
+	
+	// Draw stuff
+	
+	ctx.clearRect(0, 0, width, height)
+	
+	ctx.fillStyle = player.walljump == "" > 0 ? "red" : "blue"
+	ctx.fillRect(player.x - camera.x + width / 2, player.y - camera.y + height / 2, player.width, player.height)
+	
+	objects.forEach(function(o) {
+		ctx.fillStyle = o.color
+		ctx.fillRect(o.x - camera.x + width / 2, o.y - camera.y + height / 2, o.width, o.height)
+	})
+}
+
+update()
+
+</script>
