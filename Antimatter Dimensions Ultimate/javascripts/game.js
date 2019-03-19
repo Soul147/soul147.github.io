@@ -1726,8 +1726,7 @@ function updateEternityChallenges() {
 		var property = "eterc"+ec 
 		var ecdata = player.eternityChalls[property]
 		if (ecdata) locked = false
-		if(!show) document.getElementById(property+"div").style.display=ecdata?"inline-block":"none"
-		else document.getElementById(property+"div").style.display="inline-block"
+		document.getElementById(property+"div").style.display=ecdata?"inline-block":"none"
 		document.getElementById(property).textContent=ecdata>4?"Completed":"Locked"
 		document.getElementById(property).className=ecdata>4?"completedchallengesbtn":"lockedchallengesbtn"
 	}
@@ -7855,7 +7854,7 @@ function gameLoop(diff) {
 		ge("gravitonEffect").innerHTML = shortenMoney(getGravitonEffect());
 		
 		updateOmniUpgrades()
-		ge("replicatorpower").innerHTML = hasUpg(8) ? getUpgEff(8).toFixed(4) : 3
+		ge("replicatorpower").innerHTML = hasUpg(9) ? getUpgEff(9).toFixed(4) : 3
 		
 		// Update omnipotence milestones
 		
@@ -8557,6 +8556,10 @@ window.addEventListener('keydown', function(event) {
     if ((controlDown && shiftDown && (event.keyCode == 67 || event.keyCode == 73 || event.keyCode == 74)) || event.keyCode == 123) {
         giveAchievement("Stop right there criminal scum!")
     }
+	if (controlDown && event.keyCode == 83) {
+		save_game();
+		event.preventDefault();
+	}
 }, false);
 
 window.addEventListener('keyup', function(event) {

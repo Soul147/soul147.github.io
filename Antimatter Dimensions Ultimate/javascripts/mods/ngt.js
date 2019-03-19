@@ -458,7 +458,7 @@ function updateReplicatorPowers() {
 const opUpgCosts = [
 	10,
 	1e4, 1e20,
-	1e25, 1e45, 5e11, 1e18, 1e20, 1e80, 1e95, 1e100
+	1e30, 1e45, 5e11, 1e18, 1e20, 1e80, 1e95, 1e100
 ]
 
 function buyUpg(n) {
