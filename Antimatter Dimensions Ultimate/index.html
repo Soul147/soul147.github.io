@@ -1804,7 +1804,8 @@
                         <td><div><button onclick="toggleQolOption(8)" class="storebtn" style="color:black; width: 200px; height: 55px; font-size: 12px" ach-tooltip="Timestudy 131 doesn't disable galaxy autobuyer. Always creates the maximum number of RGs possible and doesn't apply galaxy reset to dimensions.">Nullify replicanti sacrifice: <span id = "qolBtn8"></span></button></div></td>
                     </tr>
                     <tr>                        
-						<td><div><button onclick="toggleQolOption(8)" class="storebtn" style="color:black; width: 200px; height: 55px; font-size: 12px" ach-tooltip="Start with infinity broken, and automatically upgrade and efficiently set up autobuyers. You must be almost as lazy as me.">Autobuyer Autobuyer: <span id = "qolBtn9"></span></button></div></td>
+						<td><div><button onclick="toggleQolOption(9)" class="storebtn" style="color:black; width: 200px; height: 55px; font-size: 12px" ach-tooltip="You gain 1% of OP gained on Eternity each second. ">Automatic OP Gain: <span id = "qolBtn9"></span></button></div></td>
+						<td><div><button onclick="toggleQolOption(10)" class="storebtn" style="color:black; width: 200px; height: 55px; font-size: 12px" ach-tooltip="Start with infinity broken, and automatically upgrade and efficiently set up autobuyers. You must be almost as lazy as me.">Autobuyer Autobuyer: <span id = "qolBtn10"></span></button></div></td>
                     </tr>
                 </table>
             </div>
@@ -4655,13 +4656,14 @@
 					<div class = "omniupgbought" id = "ou11">multiply OP gain by 2 for every order of magnitude of current OP<br>currently: <span id = "ouinfo11"></span>x<br>cost: <span id = "oucost11"></span> OP</div>
 					<div class = "omniupg" id = "ou21">dimension boost scaling is decreased by 2<br>currently: <span id = "ouinfo21"></span><br>cost: <span id = "oucost21"></span> OP</div>
 					<div class = "omniupglocked" id = "ou22">galaxy cost scaling is decreased by 8<br>currently: <span id = "ouinfo22"></span><br>cost: <span id = "oucost22"></span> OP</div>
-					<div class = "omniupglocked" id = "ou31">omni-dimensions get a multiplier based on unspent OP<br>currently: <span id = "ouinfo31"></span>x<br>cost: <span id = "oucost31"></span> OP</div>
-					<div class = "omniupglocked" id = "ou32">replicators are faster based on infinities<br>currently: <span id = "ouinfo32"></span>x<br>cost: <span id = "oucost32"></span> OP</div>
-					<div class = "omniupglocked" id = "ou33">gravitons are more effective based on their amount<br>currently: ^<span id = "ouinfo33"></span><br>cost: <span id = "oucost33"></span> OP</div>
-					<div class = "omniupglocked" id = "ou41">multiplier per 10 dimensions is stronger based on galaxies<br>currently: x<span id = "ouinfo41"></span><br>cost: <span id = "oucost41"></span> OP</div>
-					<div class = "omniupglocked" id = "ou42">dimension boosts affect omni-dimensions at reduced rate<br>currently: x<span id = "ouinfo42"></span><br>cost: <span id = "oucost42"></span> OP</div>
-					<div class = "omniupglocked" id = "ou43">free tickspeed upgrades boost replicator effect at reduced rate<br>currently: ^<span id = "ouinfo43"></span><br>cost: <span id = "oucost43"></span> OP</div>
-					<div class = "omniupglocked" id = "ou44">omni-dimensions are affected by tickspeed at greatly reduced rate<br>currently: x<span id = "ouinfo44"></span><br>cost: <span id = "oucost44"></span> OP</div>
+					<div class = "omniupglocked" id = "ou31">omni-dimensions are boosted by achievements completed<br>currently: <span id = "ouinfo31"></span>x<br>cost: <span id = "oucost31"></span> OP</div>
+					<div class = "omniupglocked" id = "ou32">omni-dimensions get a multiplier based on unspent OP<br>currently: <span id = "ouinfo32"></span>x<br>cost: <span id = "oucost32"></span> OP</div>
+					<div class = "omniupglocked" id = "ou33">replicators are faster based on infinities<br>currently: <span id = "ouinfo33"></span>x<br>cost: <span id = "oucost33"></span> OP</div>
+					<div class = "omniupglocked" id = "ou34">gravitons are more effective based on their amount<br>currently: ^<span id = "ouinfo34"></span><br>cost: <span id = "oucost34"></span> OP</div>
+					<div class = "omniupglocked" id = "ou35">multiplier per 10 dimensions is stronger based on galaxies<br>currently: x<span id = "ouinfo35"></span><br>cost: <span id = "oucost35"></span> OP</div>
+					<div class = "omniupglocked" id = "ou36">dimension boosts affect omni-dimensions at reduced rate<br>currently: x<span id = "ouinfo36"></span><br>cost: <span id = "oucost36"></span> OP</div>
+					<div class = "omniupglocked" id = "ou37">free tickspeed upgrades boost replicator effect at reduced rate<br>currently: ^<span id = "ouinfo37"></span><br>cost: <span id = "oucost37"></span> OP</div>
+					<div class = "omniupglocked" id = "ou38">omni-dimensions are affected by tickspeed at greatly reduced rate<br>currently: x<span id = "ouinfo38"></span><br>cost: <span id = "oucost38"></span> OP</div>
 				</center>
 			</div>
 			<div id = "omnimilestones" class = "omnitab">
@@ -4673,8 +4675,8 @@
 					<div class = "omnimilestonelocked" id = "om1">keep post-infinity upgrades<br><span id = "omreq1"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om2">keep eternity upgrades<br><span id = "omreq2"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om3">keep time studies<br><span id = "omreq3"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om5">keep banked infinities<br><span id = "omreq4"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om4">keep eternity challenges<br><span id = "omreq5"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om4">keep banked infinities<br><span id = "omreq4"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om5">keep eternity challenges<br><span id = "omreq5"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om6">keep 5% of eternities<br><span id = "omreq6"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om7">keep dilation studies<br><span id = "omreq7"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om8" style = "display: none">keep mastery studies<br><span id = "omreq8"></span></div><br>

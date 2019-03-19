@@ -306,9 +306,9 @@ function updateAchievements() {
 			var n = 0
 			var achNum = i * 10
 			for (var l=0; l<8; l++) {
-				if (achNum > 183) break
 				achNum += 1;
 				var realAchNum=achNum
+				console.log(achNum)
 				if (player.boughtDims) {
 					if (realAchNum==35) realAchNum=22
 					else if (realAchNum==76) realAchNum=35
@@ -326,6 +326,7 @@ function updateAchievements() {
 				var name=allAchievements[achId]
 				if (player.achievements.includes(achId)) {
 					n++
+					console.log(name)
 					if(ge(name)) ge(name).className = "achievementunlocked"
 				} else {
 					if(ge(name)) ge(name).className = "achievementlocked"
@@ -361,7 +362,7 @@ function updateAchievements() {
 		}
 	}
 
-	player.achPow = Decimal.pow(player.aarexModifications.newGameMinusMinusVersion ? 5 : 1.5, amount)
+	player.achPow = Math.floor(Math.pow(player.galacticSacrifice ? 5 : 1.5, amount) * 100) / 100
 	
 	document.getElementById("achmultlabel").textContent = "Current achievement multiplier on each Dimension: " + getFullExpansion(player.achPow, true) + "x"
 }

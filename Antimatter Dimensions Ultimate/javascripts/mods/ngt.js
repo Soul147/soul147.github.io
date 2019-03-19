@@ -402,8 +402,9 @@ function updateOmniDimMults(reset) {
 		// Set multiplier
 		mult = ngt.omniPower.pow(Decimal.add(d.gBought, d.opBought)).multiply(getReplicatorMult());
 		if(hasUpg(3)) mult = mult.multiply(getUpgEff(3))
-		if(hasUpg(7)) mult = mult.multiply(getUpgEff(7))
-		if(hasUpg(9)) mult = mult.multiply(getUpgEff(9))
+		if(hasUpg(4)) mult = mult.multiply(getUpgEff(4))
+		if(hasUpg(8)) mult = mult.multiply(getUpgEff(8))
+		if(hasUpg(10)) mult = mult.multiply(getUpgEff(10))
 		if(compOC(3)) mult = mult.multiply(ngt.t.reward[2])
 		
 		if(reset) d.mult = mult;
@@ -448,7 +449,7 @@ function updateReplicatorPowers() {
 		r = ngt["r" + i]
 		
 		r.power = new Decimal(1);
-		if(hasUpg(4)) r.power = r.power.multiply(getUpgEff(4))
+		if(hasUpg(5)) r.power = r.power.multiply(getUpgEff(5))
 	}
 }
 
@@ -456,13 +457,13 @@ function updateReplicatorPowers() {
 
 const opUpgCosts = [
 	10,
-	1e4, 1e9,
-	5e11, 5e11, 5e11,
-	1e18, 1e20, 1e80, 1e95,
+	1e4, 1e20,
+	1e25, 1e45, 5e11, 1e18, 1e20, 1e80, 1e95, 1e100
 ]
 
 function buyUpg(n) {
 	if(!affordUpg(n)) return;
+	if(ngt.opUpgrades.includes(n)) return;
 	ngt.op = ngt.op.subtract(opUpgCosts[n]);
 	ngt.opUpgrades.push(n);
 	return true;
@@ -483,18 +484,20 @@ function getUpgEff(n) {
 		case 0:
 			return Decimal.pow(2, ngt.op.logarithm).max(1);
 		case 3:
-			return Decimal.pow(ngt.op.logarithm, 2).multiply(8).max(1);
+			return 1.1**(player.achievements.length+1)
 		case 4:
-			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
+			return Decimal.pow(ngt.op.logarithm, 3).multiply(8).max(1);
 		case 5:
-			return Math.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0)/4+4
+			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
 		case 6:
-			return Decimal.pow(10, Math.pow(player.galaxies, 0.2)).max(1);
+			return Math.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0)/4+4
 		case 7:
-			return Decimal.pow(10,Math.log(player.resets+1)).max(1);
+			return Decimal.pow(10, Math.pow(player.galaxies, 0.2)).max(1);
 		case 8:
-			return Math.max(Math.log10(Math.max(player.totalTickGained,1)),0)/3+3
+			return Decimal.pow(10,Math.log(player.resets+1)).max(1);
 		case 9:
+			return Math.max(Math.log10(Math.max(player.totalTickGained,1)),0)/3+3
+		case 10:
 			return Decimal.pow(1+Math.log(1-player.tickspeed.logarithm), 5).max(1)
 	}
 }
@@ -507,22 +510,23 @@ function updateOmniUpgrades() {
 	ge("ouinfo22").innerHTML = getFullExpansion(getGalaxyCostIncrease())
 	ge("ouinfo31").innerHTML = shorten(getUpgEff(3))
 	ge("ouinfo32").innerHTML = shorten(getUpgEff(4))
-	ge("ouinfo33").innerHTML = getUpgEff(5).toFixed(4)
-	ge("ouinfo41").innerHTML = shorten(getUpgEff(6))
-	ge("ouinfo42").innerHTML = shorten(getUpgEff(7))
-	ge("ouinfo43").innerHTML = getUpgEff(8).toFixed(4)
-	ge("ouinfo44").innerHTML = shorten(getUpgEff(9))
+	ge("ouinfo33").innerHTML = shorten(getUpgEff(5))
+	ge("ouinfo34").innerHTML = getUpgEff(6).toFixed(4)
+	ge("ouinfo35").innerHTML = shorten(getUpgEff(7))
+	ge("ouinfo36").innerHTML = shorten(getUpgEff(8))
+	ge("ouinfo37").innerHTML = getUpgEff(9).toFixed(4)
+	ge("ouinfo38").innerHTML = shorten(getUpgEff(10))
 }
 
-var rings = [1, 2, 3, 4] // how many upgrades are in each ring
-var spins = [0, 0, 0, 0] // how far each ring has spun
+var rings = [1, 2, 8] // how many upgrades are in each ring
+var spins = [0, 0, 0] // how far each ring has spun
 var last = 0
 
 function updateOmniSpins() {
 	diff = (Date.now() - last);
 	last = Date.now()
 	for(var i = 0; i < rings.length; i++) {
-		spins[i] += diff / 1e5
+		spins[i] += diff * i / 1e5
 		
 		for(var j = 0; j < rings[i]; j++) {
 			// Get actual ID of upgrade from ring position
@@ -538,10 +542,10 @@ function updateOmniSpins() {
 			
 			if(!ngt.omni) centerY = -69420;
 			
-			angle = spins[i] + Math.PI * 2 * b / rings[i];
+			angle = spins[i] + Math.PI * 2 * j / rings[i]
 			
-			offsetX = Math.cos(angle * i) * i * 160
-			offsetY = Math.sin(angle * i) * i * 160
+			offsetX = Math.cos(angle) * i * 160
+			offsetY = Math.sin(angle) * i * 160
 			
 			div.style.position = "absolute"
 			div.style.left = centerX + offsetX + "px";

@@ -60,11 +60,17 @@ function updateQoL(diff) {
 
 	// Max RGs is in game.js
 
+	// Automatically gain OP. 
+
+	if(player.mods.ngt && player.options.qol[9]) if(gainedOP().gt(1000)) {
+		player.mods.ngt.op = player.mods.ngt.op.add(gainedOP().divide(1000).multiply(diff/10));
+	}
+
 	// Autobuy autobuyers.
 
 	// Update buttons.
 
-	for(var n = 0; n < 9; n++) ge("qolBtn"+n).innerHTML=player.options.qol[n]?"ON":"OFF"
+	for(var n = 0; n <= 10; n++) ge("qolBtn"+n).innerHTML=player.options.qol[n]?"ON":"OFF"
 }
 
 function toggleQolOption(n) {

@@ -3994,14 +3994,21 @@ function updateAutobuyers() {
         document.getElementById("toggleBtnTickSpeed").style.display = "inline-block"
         maxedAutobuy++;
     }
-
-    if (player.autobuyers[11].interval <= 100 || player.mods.ngt) {
-        document.getElementById("buyerBtnInf").style.display = "none"
-        document.getElementById("postinftable").style.display = "inline-block"
-        document.getElementById("breaktable").style.display = "inline-block"
-        document.getElementById("abletobreak").style.display = "none"
+	
+	if(player.mods.ngt) {
+		document.getElementById("postinftable").style.display = "inline-block"
+		document.getElementById("breaktable").style.display = "inline-block"
+		document.getElementById("abletobreak").style.display = "none"
 		document.getElementById("break").style.display = "inline-block"
-        maxedAutobuy++;
+	}
+    if (player.autobuyers[11].interval <= 100) {
+        document.getElementById("buyerBtnInf").style.display = "none"
+		document.getElementById("postinftable").style.display = "inline-block"
+		document.getElementById("breaktable").style.display = "inline-block"
+		document.getElementById("abletobreak").style.display = "none"
+		document.getElementById("break").style.display = "inline-block"
+		
+		maxedAutobuy++;
     } else {
         document.getElementById("postinftable").style.display = "none"
         document.getElementById("breaktable").style.display = "none"
@@ -7797,7 +7804,7 @@ function gameLoop(diff) {
 		ge("autochallenge1").style.display = "";
 		ge("autochallenge2").style.display = "";
 		ge("studyCostChallenges1").innerHTML = shorten(new Decimal(Number.MAX_VALUE))
-		ge("studyCostChallenges2").innerHTML = shorten(new Decimal(Number.MAX_VALUE).pow(10))
+		ge("studyCostChallenges2").innerHTML = shorten(new Decimal(Number.MAX_VALUE).pow(4))
 		
 		sumFirst10 = 0
 		for(var i = 1; i <= 10; i++) sumFirst10 += player.eternityChalls["eterc" + i] || 0;
@@ -7805,7 +7812,7 @@ function gameLoop(diff) {
 		for(var i = 1; i <= 12; i++) sumFirst12 += player.eternityChalls["eterc" + i] || 0;
 		
 		ge("autochallenge1").className = sumFirst10 == 50 ? "eternitychallengestudybought" : player.eternityPoints.gte(Number.MAX_VALUE) ? "eternitychallengestudy" : "eternitychallengestudylocked"
-		ge("autochallenge2").className = sumFirst12 == 60 ? "eternitychallengestudybought" : player.eternityPoints.gte(Decimal.pow(Number.MAX_VALUE, 10)) ? "eternitychallengestudy" : "eternitychallengestudylocked"
+		ge("autochallenge2").className = sumFirst12 == 60 ? "eternitychallengestudybought" : player.eternityPoints.gte(Decimal.pow(Number.MAX_VALUE, 4)) ? "eternitychallengestudy" : "eternitychallengestudylocked"
 		
 		updateTimeStudyButtons()
 		drawStudyTree()
