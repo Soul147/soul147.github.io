@@ -308,7 +308,6 @@ function updateAchievements() {
 			for (var l=0; l<8; l++) {
 				achNum += 1;
 				var realAchNum=achNum
-				console.log(achNum)
 				if (player.boughtDims) {
 					if (realAchNum==35) realAchNum=22
 					else if (realAchNum==76) realAchNum=35
@@ -326,7 +325,6 @@ function updateAchievements() {
 				var name=allAchievements[achId]
 				if (player.achievements.includes(achId)) {
 					n++
-					console.log(name)
 					if(ge(name)) ge(name).className = "achievementunlocked"
 				} else {
 					if(ge(name)) ge(name).className = "achievementlocked"

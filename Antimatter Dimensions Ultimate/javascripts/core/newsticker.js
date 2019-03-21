@@ -197,6 +197,9 @@ newsArray = [//always true
 ["\"Hey, how are you?\"   \"Oh, me? Well, my tattered psyche is held together only by the flimsiest pretense of civility and I'm one quantum of additional stress away from causing serious bodily harm to myself and others.\"", "!player.options.jesus", "x4"],
 ["Arguing with Christians is like playing chess with a pigeon, no matter how good I am at chess, the pigeon is just going to knock over the pieces, crap on the board, and strut around like it's victorious.", true, "x6"],
 ["🤔", true, "x7"],
+["I really need to stop raising things to the power of 1e4 instead of 4.", true, "x8"],
+["Waffle: @Soul Destroyer Gravitons aren't working in EC11. me: yeah, I know. Waffle: They're supposed to! me: yeah, I know.", true, "x9"],
+["there won't be a NG↑↑↑↑, mostly because I don't know the word for that operation... also because I'm out of ideas.", true, "x10"],
 // Quotes from the discord
 ["<a href = 'https://discord.gg/mN8gc3R'>https://discord.gg/mN8gc3R</a>", true, "invite"],
 ["I'm gonna say the N word!        THAT’S RACIST YOU CAN'T SAY THE N WORD!!!!        Mrs. Obama, I’ve done it, I’ve stopped racism.        Thank you Skipper. Now I am free to roam this earth.        Not if I have anything to say about it, and I do!! I’m gonna say the N word!!!        MRS. OBAMA GET DOWN!        NNNIIIIGGGGAAAAA        Mrs. Obama where are you, are you ok?        She is no longer with us Skipper, and with her death I am finally free to say the N word whenever I want.        Not if I have anything to say about it Trump, and I do. Prepare for my Civil Rights Beam.        *Beam sound effect        *Epic guitar solo        *Screams        Skipper my son, you wouldn’t let me die, would you?        Shut up cracker.        Hey Kowalski who’s that guy in front of us rising out of the water?        It is I, Barack Obama.        Mr. Obama? What are you doing here?        I have come to exact my revenge on you penguins for allowing my wife to die at the hands of Donald Trump.        But Mr. Obama we’ve done everything we could!        I’ve already made up my mind.        Mr. Obama don’t do it! This won’t bring Michelle back!        NNNIIIIGGGAAAAAA        *Screams        *Plane crash        *Explosion        Skippers Log... number 32. Barack Obama has struck us out of the sky by saying the N word.        It just doesn’t make sense, Skipper. Obama would never say the N word.        I don’t understand it either Kowalski, but some things you just got to live with. Unless! Donald Trump! I should have known it was you!!        Skipper, my son. I see you have discovered my master plan. Now that I have taken over Obama's body, I have free reign to say the N word whenever and however I please.        So, what you're saying is that you are inside of another man.    Why yes, I suppose you can say that.        But Mr. Trump. Wouldn’t that make you        GAY?!        NO, THIS CAN'T BE!        NNNNNNNNNNOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!        Well boys we did it, racism is no more.        Hello Skipper.        Mr. Obama what are you doing here?        I came to thank you for your great service to this country.        No Thanks necessary Mr. Obama.        As a token of my gratitude, I’d like to give you the N word pass.        Mr. Obama it is an honor to call you        MY NIGGA.        And as to you old friend.", true, "qd1"],
@@ -217,6 +220,15 @@ newsArray = [//always true
 ["\"Yo what the fuck is this?\" - Arbiter", true, "qd16"],
 ["\"Bisexual is just diet gay.\" - Hex", true, "qd17"],
 ["\"I don’t want anything in my poo-poo hole\" - p l a n t", true, "qd18"],
+["\"uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh... this is a new one\" - me", true, "qd19"],
+["\"Noonoonononno... That's not fucking okay\" - Waffle", true, "qd20"],
+["\"Yes. There will be a lot of bugs in NG^^.\" - Aarex", true, "qd21"],
+["\"see #unintended_behavior for explanation of how I am exceedingly stupid\" - me", true, "qd21"],
+["\"Oh cool, tickspeed of NaN / Infinity\" - Dec", true, "qd21"],
+["\"never mind I broke something again\" - me", true, "qd22"],
+["\"nope, still broken\" - me", "player.newsArray.includes('qd22')", "qd23"],
+["\"oh heck\" - me", true, "qd24"],
+["\"as you can see I'm not very good at this\" - me", true, "qd25"],
 /*NEXT ID: am36*/];}
 
 document.addEventListener("visibilitychange", function() {if (!document.hidden) {scrollNextMessage();}}, false);
@@ -227,13 +239,18 @@ function scrollNextMessage() {
   if (player.options.newsHidden) return false
   var s = document.getElementById('news');
   updateNewsArray();
-  //select a message at random
+  // select an unread message, if not, select a message at random
 
   try {
-    do {nextMsgIndex = Math.floor(Math.random() * newsArray.length)} while (!eval(newsArray[nextMsgIndex][1]))
-  } catch(e) {
-      console.log("Newsarray doesn't work at idx " + nextMsgIndex)
+    do {nextMsgIndex = Math.floor(Math.random() * newsArrayUnread.length)} while (!eval(newsArrayUnread[nextMsgIndex][1]))
+  } catch(f) {
+      try {
+		do {nextMsgIndex = Math.floor(Math.random() * newsArray.length)} while (!eval(newsArray[nextMsgIndex][1]))
+	  } catch(e) {
+		  console.log("Newsarray doesn't work at idx " + nextMsgIndex)
+	  }
   }
+  
 
   scrollTimeouts.forEach(function(v) {clearTimeout(v);});
   scrollTimeouts = [];

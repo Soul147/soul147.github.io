@@ -356,39 +356,7 @@ function updateNewPlayer(reseted) {
         player.aarexModifications.newGamePlusVersion = 1
     }
 	if (modesChosen.arrows >= 2) {
-		player.mods.ngt = {
-			version: 1.1,
-			omni: 0, // times gone omnipotent stat
-			thisOmni: 0, // time this run
-			lastRun: new Decimal(0), // OP gained during previous run
-			op: new Decimal(0), // omnipotence points
-			omniPower: new Decimal(3), // multiplier per ten dimensions
-			gravitons: new Decimal(0),
-			gCostInc: 10, // cost scaling factor (like dimension cost multiplier decrease)
-			opCostInc: 10,
-			opUpgrades: [], // upgrades bought with OP
-			replicatorsUnlocked: 0,
-			newReplicatorCost: new Decimal(1e10),
-			oc: [], // omni-challenges completed
-			ocr: [], // omni-challenges currently running
-			autobuyer: {
-				
-			}
-		}
-		for(var i = 1; i <= 8; i++) {
-			j = i - 1
-			player.mods.ngt["d" + i] = {
-				amount: new Decimal(0), 
-				mult: new Decimal(1), 
-				gBought: new Decimal(0), 
-				opBought: new Decimal(0), 
-				gCost: Decimal.pow(100, i**3), 
-				gCostMult: new Decimal(i*10), 
-				opCost: Decimal.pow(10, j**2), 
-				opCostMult: new Decimal(i*10)
-			}
-		}
-		for(var i = 1; i <= 8; i++) player.mods.ngt["r" + i] = {amount: new Decimal(0), power: new Decimal(1)}; 
+		resetNGT(true)
 	}
     if (modesChosen.ngpp && (modesChosen.ngpp < 3 || modesChosen.ngpp == 4)) {
         player.aarexModifications.newGamePlusPlusVersion = 2.90142
@@ -7872,7 +7840,6 @@ function gameLoop(diff) {
 		ge("odtabbtn").style.display = ngt.omni ? "" : "none"
 		for(var i = 1; i <= 8; i++) {
 			ge("omniRow" + i).style.display = (i == 1 || ngt["d" + (i-1)].amount.gt(0)) ? "" : "none"
-			ge("od" + i + "btn1").style.display = ngt["d" + i].opBought.gt(0) ? "" : "none"
 		}
 		
 		// this unfucks the eighth dimensions, otherwise they break the game

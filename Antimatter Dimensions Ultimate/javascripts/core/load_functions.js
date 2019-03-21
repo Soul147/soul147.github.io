@@ -1640,8 +1640,13 @@ if (player.version < 5) {
 					player.dilation.bestTP = new Decimal(0)
 					document.getElementById('bestTP').textContent = "Your best ever Tachyon particles was 0."
 			}
-			if (resetOmniDims) {
-				ngModeMessages = ["Due to balancing changes, your omni-dimensions will be reset, but the graviton cost scales by a lot less now, so it won't take too long to get back to where you were. Have a nice day. :)"]
+			switch (resetOmniDims) {
+				case 1:
+					ngModeMessages = ["Due to balancing changes, your omni-dimensions will be reset, but the graviton cost scales by a lot less now, so it won't take too long to get back to where you were. Have a nice day. :)"]
+					break;
+				case 2:
+					ngModeMessages = ["Due to balancing changes, your omni-dimensions will be reset, but the starting costs have been lowered significantly. Have a nice day. :)"]
+					break;
 			}
 			inflationCheck = false
 			closeToolTip()
@@ -2133,6 +2138,11 @@ function transformSaveToDecimal() {
 				limit: new Decimal(0),
 				mode: "amount",
 			}
+		});
+		
+		updateToVersion(1.2, function() {
+			resetNGT()
+			resetOmniDims = 2;
 		});
 		
 		ngt.version = ver;

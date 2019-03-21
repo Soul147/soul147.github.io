@@ -1,3 +1,41 @@
+// Initialize NGT stuff
+
+function resetNGT(hardReset) {
+	if(hardReset) player.mods.ngt = {
+		version: 1.2,
+		omni: 0, // times gone omnipotent stat
+		thisOmni: 0, // time this run
+		lastRun: new Decimal(0), // OP gained during previous run
+		op: new Decimal(0), // omnipotence points
+		omniPower: new Decimal(3), // multiplier per ten dimensions
+		gravitons: new Decimal(0),
+		gCostInc: 10, // cost scaling factor (like dimension cost multiplier decrease)
+		opCostInc: 10,
+		opUpgrades: [], // upgrades bought with OP
+		replicatorsUnlocked: 0,
+		newReplicatorCost: new Decimal(1e10),
+		oc: [], // omni-challenges completed
+		ocr: [], // omni-challenges currently running
+		autobuyer: {
+			
+		}
+	}
+	for(var i = 1; i <= 8; i++) {
+		j = i - 1
+		player.mods.ngt["d" + i] = {
+			amount: new Decimal(0), 
+			mult: new Decimal(1), 
+			gBought: new Decimal(0), 
+			opBought: new Decimal(0), 
+			gCost: Decimal.pow(100, j**Math.E), 
+			gCostMult: new Decimal(i*10), 
+			opCost: Decimal.pow(10, j**Math.E), 
+			opCostMult: new Decimal(i*10)
+		}
+	}
+	for(var i = 1; i <= 8; i++) player.mods.ngt["r" + i] = {amount: new Decimal(0), power: new Decimal(1)}; 
+}
+
 // Complete all ECs up to a certain point
 
 function completeEC(n, a) {
