@@ -2,9 +2,20 @@
 
 <canvas id = "canvas"></canvas>
 
+<button id = "playbtn" onclick = "toggle()">Play</button>
+
+<footer>
+	<button onclick = "setSelectedObject('Wall')">Wall</button>
+	<button onclick = "setSelectedObject('Spike')">Spike</button>
+</footer>
+
 </body>
 
 <script>
+
+function ge(e) {
+	return document.getElementById(e)
+}
 
 // Collision function (totally not pirated)
 
@@ -46,7 +57,6 @@ function cc(shapeA, shapeB, passthrough) {
 
 width = 32*20
 height = 32*15
-
 gravity = 0.5
 friction = 0.9
 
@@ -54,7 +64,6 @@ friction = 0.9
 
 canvas = document.getElementById("canvas")
 ctx = canvas.getContext("2d")
-
 canvas.width = width
 canvas.height = height
 
@@ -124,7 +133,6 @@ player = {
 		player.yVel = 0
 	}
 }
-
 camera = {
 	x: 0,
 	y: 0
@@ -133,6 +141,7 @@ camera = {
 // Event handling
 
 keys = []
+mouse = {}
 
 addEventListener("keydown", function(e) {
 	c = e.keyCode
@@ -148,7 +157,6 @@ addEventListener("keydown", function(e) {
 	
 	keys[c] = true
 })
-
 addEventListener("keyup", function(e) {
 	c = e.keyCode
 	
@@ -157,26 +165,46 @@ addEventListener("keyup", function(e) {
 	keys[c] = false
 })
 
+addEventListener("mousemove", function(e) {
+	mouse.x = e.clientX;
+	mouse.y = e.clientY;
+	mouse.gameX = Math.floor((mouse.x + camera.x - width / 2) / 32);
+	mouse.gameY = Math.floor((mouse.y + camera.y - height / 2) / 32);
+})
+
+window.oncontextmenu = function(e) {
+	addObject(selectedObject, mouse.gameX, mouse.gameY)
+	return false;
+}
+
 // Object-spawning functions
 
-objects = []
+selectedObject = "Wall"
 
-function Wall(x, y, w, h) {
+function setSelectedObject(object) {
+	selectedObject = object;
+	return true;
+}
+
+function addObject(object, x, y) {
+	window["object" + object](x, y)
+}
+
+function objectWall(x, y) {
 	o = {
 		id: "wall",
 		x: x*32,
 		y: y*32,
-		width: w*32,
-		height: h*32,
+		width: 32,
+		height: 32,
 		color: "black",
 		solid: true,
 		stationary: true
 	}
 	
-	objects.push(o)
+	currentLevel.objects.push(o)
 }
-
-function Spike(x, y, w, h) {
+function objectSpike(x, y, w, h) {
 	o = {
 		id: "spike",
 		x: x*32,
@@ -189,114 +217,150 @@ function Spike(x, y, w, h) {
 		deadly: true
 	}
 	
-	objects.push(o)
+	currentLevel.objects.push(o)
 }
 
 // Add objects
 
-//for(var i = 0; i < 250; i++) Wall(i, Math.floor(Math.random() * 50), Math.ceil(Math.random() * (1000 - i) / 100), Math.ceil(Math.random() * (1000 - i) / 100))
-//for(var i = 0; i < 250; i++) Spike(i, Math.floor(Math.random() * 50), Math.ceil(Math.random() * (1000 - i) / 100))
+editing = true
 
-Wall(0, 2, 50, 1)
-for(var i = 10; i < 50; i += 3) Spike(i, 1)
-for(var i = 10; i < 50; i += 1) Spike(i, -3)
+function toggle() {
+	editing = !editing
+}
+
+// Level management
+
+function Level() {
+	this.objects = []
+}
+
+levels = []
+currentLevel = new Level()
+levelID = 0
+
+function saveLevel() {
+	levels[levelID] = currentLevel
+}
+
+function loadLevel() {
+	currentLevel = levels[levelID]
+}
 
 // Update function
 
 function update() {
 	requestAnimationFrame(update)
 	
-	// Update player
+	// Level playing
 	
-	player.walking = false
+	if(editing) {
 	
-	if(keys[32]) player.running = true; else player.running = false;
-	if(keys[37]) player.moveLeft()
-	if(keys[39]) player.moveRight()
-	if(keys[38]) player.jump(); else player.jumping = false
-	if(keys[40]) player.walljump = ""
-	
-	if(player.onGround) {
-		if(!player.walking) player.xVel *= friction
 	}
-	else player.xVel *= friction + (1 - friction) / 2
-	if(!player.jumping) {
-		player.yVel += gravity
-	}
-	else player.yVel += gravity/2
-	
-	if(player.walljump == "l") player.xVel--;
-	if(player.walljump == "r") player.xVel++;
-	
-	player.x += player.xVel
-	player.y += player.yVel
-	
-	player.onGround = false
-	player.standing = false
-	player.walljump = ""
-	
-	// Update objects
-	
-	objects.forEach(function(o) {
-		if(o.solid) {
-			// Check player collisions
-			
-			c = cc(player, o)
-			
-			if(c && o.deadly) player.reset()
-			
-			if(c == "t") {
-				player.jumping = false
-				player.yVel = 0
-			}
-			if(c == "l") {
-				player.xVel = Math.max(player.xVel, 0)
-				player.land()
-				player.walljump = "l"
-			}
-			if(c == "r") {
-				player.xVel = Math.min(player.xVel, 0)
-				player.land()
-				player.walljump = "r"
-			}
-			if(c == "b") {
-				player.standing = true
-				player.land()
-			}
+	else {
+		// Update player
 		
-			objects.forEach(function(p) {
-				// Don't collide with itself
-				
-				if(o == p) return
-				if(p.stationary) return
-				
-				cc(o, p)
-			})
+		player.walking = false
+		
+		if(keys[32]) player.running = true; else player.running = false;
+		if(keys[37]) player.moveLeft()
+		if(keys[39]) player.moveRight()
+		if(keys[38]) player.jump(); else player.jumping = false
+		if(keys[40]) player.walljump = ""
+		
+		if(player.onGround) {
+			if(!player.walking) player.xVel *= friction
 		}
-	})
-	
-	if(player.standing) player.walljump = ""
-	
-	// Move camera
-	
-	xDiff = player.x - camera.x
-	yDiff = player.y - camera.y
-	
-	camera.x += xDiff / 5
-	camera.y += yDiff / 5
-	
+		else player.xVel *= friction + (1 - friction) / 2
+		if(!player.jumping) {
+			player.yVel += gravity
+		}
+		else player.yVel += gravity/2
+		
+		if(player.walljump == "l") player.xVel--;
+		if(player.walljump == "r") player.xVel++;
+		
+		player.x += player.xVel
+		player.y += player.yVel
+		
+		player.onGround = false
+		player.standing = false
+		player.walljump = ""
+		
+		// Update objects
+		
+		currentLevel.objects.forEach(function(o) {
+			if(o.solid) {
+				// Check player collisions
+				
+				c = cc(player, o)
+				
+				if(c && o.deadly) player.reset()
+				
+				if(c == "t") {
+					player.jumping = false
+					player.yVel = 0
+				}
+				if(c == "l") {
+					player.xVel = Math.max(player.xVel, 0)
+					player.land()
+					player.walljump = "l"
+				}
+				if(c == "r") {
+					player.xVel = Math.min(player.xVel, 0)
+					player.land()
+					player.walljump = "r"
+				}
+				if(c == "b") {
+					player.standing = true
+					player.land()
+				}
+			
+				currentLevel.objects.forEach(function(p) {
+					// Don't collide with itself
+					
+					if(o == p) return
+					if(p.stationary) return
+					
+					cc(o, p)
+				})
+			}
+		})
+		
+		if(player.standing) player.walljump = ""
+		
+		// Move camera
+		
+		xDiff = player.x - camera.x
+		yDiff = player.y - camera.y
+		
+		camera.x += xDiff / 5
+		camera.y += yDiff / 5
+	}
+		
 	// Draw stuff
 	
 	ctx.clearRect(0, 0, width, height)
 	
-	ctx.fillStyle = player.walljump == "" > 0 ? "red" : "blue"
+	ctx.fillStyle = player.walljump == "" ? "red" : "blue"
 	ctx.fillRect(player.x - camera.x + width / 2, player.y - camera.y + height / 2, player.width, player.height)
 	
-	objects.forEach(function(o) {
+	currentLevel.objects.forEach(function(o) {
 		ctx.fillStyle = o.color
 		ctx.fillRect(o.x - camera.x + width / 2, o.y - camera.y + height / 2, o.width, o.height)
 	})
+	
+	// Update UI
+	
+	ge("playbtn").innerHTML = editing ? "Play" : "Edit"
+	
+	// Save Game
+	
+	saveLevel()
+	localStorage.levelSave = JSON.stringify(levels)
 }
+
+levels = JSON.parse(localStorage.levelSave)
+loadLevel()
 
 update()
 
