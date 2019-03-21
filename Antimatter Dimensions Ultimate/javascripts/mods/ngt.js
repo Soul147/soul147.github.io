@@ -413,7 +413,7 @@ function updateOmniDimMults(reset) {
 }
 
 function getGravitonEffect() {
-	if(hasUpg(5)) return ngt.gravitons.pow(getUpgEff(5)).max(1)
+	if(hasUpg(6)) return ngt.gravitons.pow(getUpgEff(6)).max(1)
 	return ngt.gravitons.pow(4).max(1);
 }
 
@@ -458,7 +458,7 @@ function updateReplicatorPowers() {
 const opUpgCosts = [
 	10,
 	1e4, 1e20,
-	1e30, 1e45, 5e11, 1e18, 1e20, 1e80, 1e95, 1e100
+	1e30, 1e40, 5e11, 1e18, 1e20, 1e80, 1e95, 1e100
 ]
 
 function buyUpg(n) {
@@ -486,7 +486,7 @@ function getUpgEff(n) {
 		case 3:
 			return 1.1**(player.achievements.length+1)
 		case 4:
-			return Decimal.pow(ngt.op.logarithm, 3).multiply(8).max(1);
+			return Decimal.pow(ngt.op.logarithm, 1.5).max(1);
 		case 5:
 			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
 		case 6:
