@@ -423,7 +423,7 @@ function getReplicatorMult() {
 		ret = ret.multiply(Math.log10(Math.max(ngt["r"+i].amount.logarithm,0)+1)+1)
 	}
 	
-	if(hasUpg(8)) return ret.pow(getUpgEff(8)).max(1);
+	if(hasUpg(9)) return ret.pow(getUpgEff(9)).max(1);
 	return ret.pow(3).max(1);
 }
 
