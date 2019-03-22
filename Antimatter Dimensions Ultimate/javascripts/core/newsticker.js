@@ -1,7 +1,7 @@
 var newsArray;
 
 function updateNewsArray() {
-newsArray = [/* //always true
+newsArray = [//always true
 ["The cookie is a lie.", true, "a1"], ["Antimatter cookies have been confirmed to not exist, whoever claims that, stop.", true, "a4"], ["Antimatter ghosts do not exist. Just like matter ghosts. They don't have any matter, for that matter.", true, "a2"],
 ["Nuclear power plants have been abandoned in favor of antimatter power.", true, "a3"],
 ["Antimatter prices have drastically dropped due to newfound abundance.", true, "a5"], ["In the news today, humans make an antimatter animal sacrifice to the antimatter god.", true, "a6"], ["You made one antimatter! Whatever that means.", true, "a7"],
@@ -188,7 +188,7 @@ newsArray = [/* //always true
 ["News ticker has declared dead! Provides no purpose.", "player.achievements.includes('r22')", "am32"],
 ['"My save broke!" ~ New player who played a challenge in late-game.', "player.achievements.includes('r22')", "am33"],
 ["That's how NG+++ works!", "player.achievements.includes('r22')", "am34"],
-["var add ad + gamebreakingcontent ngplusthree", "player.achievements.includes('r22')", "am35"],*/
+["var add ad + gamebreakingcontent ngplusthree", "player.achievements.includes('r22')", "am35"],
 // Actually useful information, occasionally
 ["Click on the button that says \"Cost: 10\" next to the text that reads \"First Dimension x1.0 0 (0) (%0.00/s)\". Once you've done that, just hold M to win.", "player.money.eq(10)", "i1"],
 // AD Ultimate
