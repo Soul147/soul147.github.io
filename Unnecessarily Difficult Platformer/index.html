@@ -162,6 +162,8 @@ addEventListener("keyup", function(e) {
 	
 	if(c == 38) player.holdingJump = false;
 	
+	if(e.ctrlKey && c == 90) currentLevel.objects.pop();
+	
 	keys[c] = false
 })
 
@@ -359,9 +361,11 @@ function update() {
 	localStorage.levelSave = JSON.stringify(levels)
 }
 
-levels = JSON.parse(localStorage.levelSave)
-loadLevel()
-
+if(localStorage.levelSave) {
+	levels = JSON.parse(localStorage.levelSave)
+	loadLevel()
+}
+	
 update()
 
 </script>

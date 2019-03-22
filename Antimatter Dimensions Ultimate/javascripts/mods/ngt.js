@@ -561,6 +561,8 @@ var spins = [0, 0, 0] // how far each ring has spun
 var last = 0
 
 function updateOmniSpins() {
+	if(!player.mods.ngt) return;
+	
 	diff = (Date.now() - last);
 	last = Date.now()
 	for(var i = 0; i < rings.length; i++) {

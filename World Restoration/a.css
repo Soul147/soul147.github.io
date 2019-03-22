@@ -1,0 +1,155 @@
+@font-face {
+    font-family: Typewriter;
+    src: url('MonospaceTypewriter.ttf');
+}
+
+body, button {
+	font-family: Typewriter !important;
+}
+
+.before {
+	color: #000000;
+    background: #ABB5E6;
+	font-weight: bold;
+    border: 2px solid #8488C4;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	cursor: pointer;
+}
+
+.before:hover {
+    color: #FFF;
+    background: #8488C4;
+}
+
+.normal {
+	color: #FFFFFF;
+	background: #63CC00;
+	font-weight: bold;
+	border: 2px solid #59B200;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	cursor: pointer;
+}
+
+.normal:hover {
+	color: #000000;
+	background: #59B200;
+}
+
+.cosmos {
+	color: #FFFFE5;
+	background: #040041;
+	border: 2px solid #04004A;
+	font-weight: bold;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	cursor: pointer;
+}
+
+.cosmos:hover {
+	color: #FEFDFD;
+	background: #3500DA;
+}
+
+.unima {
+	color: #000000;
+	background: #FFFFFF;
+	border: 2px solid #7F7F7F;
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	cursor: pointer;
+}
+
+.unima:hover {
+	background: #CCCCCC;
+	color: #FFFFFF;
+}
+
+.box {
+	background: linear-gradient(#432EFE, #DAAFFE);
+	border: 2px solid transparent;
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	animation: box 4s linear infinite
+}
+
+.box:hover {
+	border-color: rgba(255,255,255,0.85);
+	box-shadow: inset 0px 0px 12px 0px #ffffff;
+	cursor: pointer
+}
+
+@keyframes box { 
+	0%{
+		color: #0E0072;
+		text-shadow: 0px 0px 3px #0E0072, 0px 0px 6px #ffffff;
+	}
+	50% {
+		color: #2B188C;
+		text-shadow: 0px 0px 6px #2B188C, 0px 0px 6px #ffffff;
+	}
+	100%{
+		color: #0E0072;
+		text-shadow: 0px 0px 3px #0E0072, 0px 0px 6px #ffffff;
+	}
+}
+
+.again {
+	color: #8F00BF;
+	text-shadow: 0 0 1px #7900B2, 0 0 2px #8B00CC, 0 0 3px #9C00E5;
+	background: radial-gradient(closest-side,#D400FF 0,#E900FF 33%,#FF00FF 100%);
+	border: 2px solid #FF0CFF;
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	cursor: pointer;
+}
+
+.again:hover {
+	color: #C366FF;
+	text-shadow: 0 0 1px #7900B2, 0 0 2px #8B00CC, 0 0 3px #9C00E5;
+	background: radial-gradient(closest-side,#D400FF 0,#E900FF 33%,#FF00FF 100%);
+	border: 2px solid #FF0CFF;
+}
+
+.repeat {
+	color: #FFFFFF;
+	text-shadow: 0px 0px 3px #FFFFD6, 0px 0px 3px #FFFF9E;
+	background: linear-gradient(#270084,#6000AF 50%,#1900D3 100%);
+	border: 2px solid #00007F;
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	cursor: pointer;
+}
+
+.repeat:hover {
+	color: #FFFFE0;
+	text-shadow: 0px 0px 3px #FDAFFF, 0px 0px 3px #CD4FFF
+}
+
+.sight {
+	color: #000000;
+	text-shadow: 0px 0px 3px #FFBF00;
+	background: linear-gradient(#FF6A00, transparent 50%, #FF6A00 100%), radial-gradient(circle, #FFAA00, #FFD400 50%, #FFFF00 100%);
+	border: 2px solid transparent;
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	transition-duration: 0.2s
+}
+
+.sight:hover {
+	color: #ffffff;
+	text-shadow: 0px 0px 3px #FFFF00;
+	cursor: pointer
+}
+
+}
