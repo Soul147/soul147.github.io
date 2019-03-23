@@ -1687,8 +1687,6 @@ function checkICID(name) {
 }
 
 function updateEternityChallenges() {
-	var show = player.eternityPoints.gt("1e308") || player.quantum
-
 	var locked = true
 	for (ec=1;ec<15;ec++) {
 		var property = "eterc"+ec 
@@ -1706,7 +1704,7 @@ function updateEternityChallenges() {
 		document.getElementById(property).textContent=onchallenge?"Running":"Start"
 		document.getElementById(property).className=onchallenge?"onchallengebtn":"challengesbtn"
 	}
-	if(!show) document.getElementById("eterctabbtn").style.display = locked?"none":"inline-block"
+	document.getElementById("eterctabbtn").style.display = locked?"none":"inline-block"
 }
 
 
@@ -7718,6 +7716,11 @@ function gameLoop(diff) {
 		ge("etertodt").innerHTML = shorten(getEternitied()**0.1)
 		ge("dttoeter").innerHTML = shorten(player.dilation.dilatedTime.pow(0.1))
 	}
+	
+	
+	// Update this shit because it's not automatic for some reason
+	if(player.eternityChalls.eterc6) player.dimensionMultDecrease = Math.min(player.dimensionMultDecrease, 3 - player.eternityChalls.eterc6 * 0.2) || 3
+	if(player.eternityChalls.eterc11) player.tickSpeedMultDecrease = Math.min(player.tickSpeedMultDecrease, 2 - player.eternityChalls.eterc11 * 0.07) || 2
 	
 	// Put this here to fix another bug
 	

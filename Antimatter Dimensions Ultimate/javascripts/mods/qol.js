@@ -23,9 +23,6 @@ function updateQoL(diff) {
 	if(player.options.qol[2]) if(player.eternityPoints.gt("1e1300")) for(var i = 1; i <= 12; i++) {
 		player.eternityChalls["eterc" + i] = 5
 		updateEternityChallenges()
-		// Update this shit because it's not automatic for some reason
-		player.dimensionMultDecrease = Math.min(player.dimensionMultDecrease, 3 - player.eternityChalls.eterc6 * 0.2) || 3
-		player.tickSpeedMultDecrease = Math.min(player.tickSpeedMultDecrease, 2 - player.eternityChalls.eterc11 * 0.07) || 2
 	}
 
 	// Autobuy TDs.

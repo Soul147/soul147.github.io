@@ -22,7 +22,7 @@ function toggleBrakeAtFlake() {
 }
 
 function getEmpoweredCakeEffect() {
-	return game.empoweredCakes.multiply(1e6).pow(0.5).max(1)
+	return game.empoweredCakes.pow(0.5).multiply(1e6).max(1)
 }
 
 game.ncaUpgradeCosts = {0: "10", 1: "100"}
