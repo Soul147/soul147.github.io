@@ -1,5 +1,10 @@
 function gainedKeys() {
-	return game.forks.divide(1e3).pow(1/2).multiply(game.keyMultiplier);
+	return game.forks.divide(1e3).pow(1/2).multiply(getKeyMultiplier());
+}
+
+function getKeyMultiplier() {
+	if(game.brake) return new Decimal(1)
+	return game.keyMultiplier
 }
 
 function newEpisode() {
@@ -31,6 +36,7 @@ function getNEUpgradeEffect(u) {
 }
 
 function buyKeyMultiplier() {
+	if(game.brake) return;
 	if(game.keys.lt(game.keyMultiplierCost)) return;
 	game.keys = game.keys.subtract(game.keyMultiplierCost);
 	game.keyMultiplier = game.keyMultiplier.multiply(1.05);

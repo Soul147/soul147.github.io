@@ -644,12 +644,8 @@ shortenInfDimCosts = function (money) {
 	return formatValue(game.options.notation, money, ECTimesCompleted("eterc12")?2:0, 0);
 };
 
-shortenDimensions = function (money) {
-  return formatValue(game.options.notation, money, 2, 0);
-};
-
 shortenMoney = function (money) {
-  return formatValue(game.options.notation, money, 2, 1);
+  return formatValue(game.options.notation, money, 2, 0);
 };
 
 
