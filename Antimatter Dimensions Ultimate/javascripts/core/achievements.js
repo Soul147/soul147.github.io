@@ -360,7 +360,7 @@ function updateAchievements() {
 		}
 	}
 
-	player.achPow = Math.floor(Math.pow(player.galacticSacrifice ? 5 : 1.5, amount) * 100) / 100
+	player.achPow = Decimal.floor(Math.pow(player.galacticSacrifice ? 5 : 1.5, amount) * 100).divide(100)
 	
 	document.getElementById("achmultlabel").textContent = "Current achievement multiplier on each Dimension: " + getFullExpansion(player.achPow, true) + "x"
 }
