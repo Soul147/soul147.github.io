@@ -4,7 +4,7 @@ function gainedCakes() {
 }
 
 function getECReq() {
-	return game.empoweredCakes.multiply(game.cakeMultiplier2).pow(2.5).multiply(1e6); // god I hope that's it
+	return game.empoweredCakes.divide(game.cakeMultiplier2).pow(2.5).multiply(1e6); // god I hope that's it
 }
 
 function newCakeAtStake(force) {
