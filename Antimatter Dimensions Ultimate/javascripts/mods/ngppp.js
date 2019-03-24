@@ -1169,7 +1169,7 @@ function updateBankedEter(updateHtml=true) {
 	if (player.achievements.includes("ng3p15")||player.mods.ngt) bankedEterGain=player.eternities/5
 	bankedEterGain=Math.floor(bankedEterGain)
 	if (updateHtml) {
-		setAndMaybeShow("bankedEterGain",bankedEterGain>0,'"You will gain "+getFullExpansion(bankedEterGain)+" banked eternities on next quantum."')
+		setAndMaybeShow("bankedEterGain",bankedEterGain>0,'"You will gain "+getFullExpansion(bankedEterGain)+" banked eternities next "+(player.mods.ngt?"omnipotence":"quantum")+"."')
 		setAndMaybeShow("eternitiedBank",player.eternitiesBank,'"You have "+getFullExpansion(player.eternitiesBank)+" banked eternities."')
 	}
 }

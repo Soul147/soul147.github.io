@@ -273,6 +273,7 @@ function updateNewPlayer(reseted) {
         autoTime: 1e300,
         infMultBuyer: false,
         autoCrunchMode: "amount",
+        autoEterMode: "amount",
         respec: false,
         eternityBuyer: {
             limit: new Decimal(0),
@@ -360,7 +361,6 @@ function updateNewPlayer(reseted) {
 	}
     if (modesChosen.ngpp && (modesChosen.ngpp < 3 || modesChosen.ngpp == 4)) {
         player.aarexModifications.newGamePlusPlusVersion = 2.90142
-        player.autoEterMode = "amount"
         player.dilation.rebuyables[4] = 0
         player.meta = {resets: 0, antimatter: 10, bestAntimatter: 10}
         for (dim=1;dim<9;dim++) player.meta[dim] = {amount: 0, bought: 0, cost: initCost[dim]}
@@ -1170,7 +1170,7 @@ function updateDimensions() {
 
         var shiftRequirement = getShiftRequirement(0);
         var isShift = player.resets < ((player.currentChallenge == "challenge4" || player.currentChallenge == "postc1") ? 2 : 4)
-        document.getElementById("resetLabel").textContent = 'Dimension ' + (isShift ? "Shift" : player.resets < getSupersonicStart() ? "Boost" : "Supersonic") + ' ('+ getFullExpansion(player.resets) +'): requires ' + getFullExpansion(shiftRequirement.amount) + " " + DISPLAY_NAMES[shiftRequirement.tier] + " Dimensions"
+        document.getElementById("resetLabel").innerHTML = 'Dimension ' + (isShift ? "Shift" : player.resets < getSupersonicStart() ? "Boost" : "Supersonic") + ' ('+ getFullExpansion(player.resets) +'): requires ' + getFullExpansion(shiftRequirement.amount) + " " + DISPLAY_NAMES[shiftRequirement.tier] + " Dimensions (x" + shorten(Decimal.pow(getDimensionBoostPower(), player.resets)) + " on all dimensions)"
         document.getElementById("softReset").textContent = "Reset the game for a " + (isShift ? "new dimension" : "boost")
         var totalReplGalaxies = player.replicanti.galaxies + extraReplGalaxies
         document.getElementById("secondResetLabel").textContent = ((player.galacticSacrifice || player.boughtDims) ? 'Antimatter ' : player.galaxies < 1400 ? (player.galaxies < getGalaxyCostScalingStart() ? '' : player.galaxies < getRemoteGalaxyScalingStart() ? 'Distant ' : 'Remote ') + 'Antimatter' : 'Dark Matter') + ' Galaxies ('+ getFullExpansion(player.galaxies) + ((totalReplGalaxies + player.dilation.freeGalaxies) > 0 ? ' + ' + getFullExpansion(totalReplGalaxies)  + (player.dilation.freeGalaxies > 0 ? ' + ' + getFullExpansion(Math.floor(player.dilation.freeGalaxies)) : '') : '') +'): requires ' + getFullExpansion(getGalaxyRequirement()) + ' '+DISPLAY_NAMES[player.currentChallenge === 'challenge4' ? 6 : 8]+' Dimensions';
@@ -3324,6 +3324,7 @@ function setAchieveTooltip() {
     let infiniteIP = document.getElementById("Can you get infinite IP?")
     let over9000 = document.getElementById("IT'S OVER 9000")
     let dawg = document.getElementById("Yo dawg, I heard you liked infinities...")
+    let blink2 = document.getElementById("Eternities are the new infinity")
     let eatass = document.getElementById("Like feasting on a behind")
     let layer = document.getElementById("But I wanted another prestige layer...")
     let fkoff = document.getElementById("What do I have to do to get rid of you")
@@ -3415,6 +3416,7 @@ function setAchieveTooltip() {
     infiniteIP.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e30008"))+" IP.")
     over9000.setAttribute('ach-tooltip', "Get a total sacrifice multiplier of "+shortenCosts(new Decimal("1e9000"))+". Reward: Sacrifice doesn't reset your dimensions.")
     dawg.setAttribute('ach-tooltip', "Have all your past 10 infinities be at least "+shortenMoney(Number.MAX_VALUE)+" times higher IP than the previous one. Reward: Your antimatter doesn't reset on dimboost/galaxy.")
+    blink2.setAttribute('ach-tooltip', "Eternity in under 200ms. Reward: Eternities more than a minute long give 3,000 Eternitied stat.")
     eatass.setAttribute('ach-tooltip', "Reach "+shortenCosts(1e100)+" IP without any infinities or first dimensions. Reward: IP multiplier based on time spent this infinity.")
     layer.setAttribute('ach-tooltip', "Reach "+shortenMoney(Number.MAX_VALUE)+" EP.")
     fkoff.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e22000"))+" IP without any time studies. Reward: Time dimensions are multiplied by the number of studies you have.")
@@ -5241,7 +5243,7 @@ function challengesCompletedOnEternity() {
 
 function gainEternitiedStat() {
 	if (getEternitied() < 1 && player.achievements.includes("ng3p12")) return 20
-	return player.dilation.upgrades.includes('ngpp2') ? Math.floor(Decimal.pow(player.dilation.dilatedTime, .1).toNumber()) : 1
+	return (player.dilation.upgrades.includes('ngpp2') ? Math.floor(Decimal.pow(player.dilation.dilatedTime, .1).toNumber()) : 1)*(player.achievements.includes("r124") && (player.bestEternity < 2 || player.eternityPoints.gt(1e50)) ? 3000 : 1)
 }
 
 function gainBankedInf() {
@@ -6473,7 +6475,7 @@ setInterval(function() {
     else document.getElementById("togglecrunchmode").style.display = "none"
     if (getEternitied() > 8 || player.autobuyers[10].bulkBought) document.getElementById("galaxybulk").style.display = "inline-block"
     else document.getElementById("galaxybulk").style.display = "none"
-    if (getEternitied() > 99 && player.meta) document.getElementById("toggleautoetermode").style.display = "inline-block"
+    if (getEternitied() > 99) document.getElementById("toggleautoetermode").style.display = "inline-block"
     else document.getElementById("toggleautoetermode").style.display = "none"
 
     document.getElementById("replicantichance").className = (player.infinityPoints.gte(player.replicanti.chanceCost) && player.replicanti.chance < 1) ? "storebtn" : "unavailablebtn"
@@ -7937,22 +7939,22 @@ function gameLoop(diff) {
 		
 		// omni-challenges
 		
-		if(player.money.gte(Decimal.pow(Math.E, 6e9))) ngt.unlockedOC = true;
+		if(ngt.op.gte(1e140)) ngt.unlockedOC = true;
 		if(ngt.unlockedOC) ge("octabbtn").style.display = ""
 		if(!player.masterystudies) ge("octabbtn").style.marginLeft = "-15px";
 		
 		ngt.t = {
 			req: [
-				Decimal.pow(Math.E, 6e9),
-				Decimal.pow(3**3**3, 3e8),
+				new Decimal("1e1750000000"),
+				new Decimal("1e2400000000"),
 				Decimal.pow(Number.MAX_VALUE, 76000000),
 				Decimal.pow(Math.PI, 1e11),
 				Decimal.pow(69420, 1234567890),
 				Decimal.pow(123456789, 987654321),
 			],
 			goal: [
-				new Decimal("1e16666666"),
-				new Decimal("1e30000000"),
+				new Decimal("1e800000"),
+				new Decimal("1e13000000"),
 				new Decimal("1e42069000"),
 				new Decimal("7.77e777777"),
 				new Decimal("7.77e777777"),
@@ -7961,7 +7963,8 @@ function gameLoop(diff) {
 			reward: [
 				Math.max((Math.log10(player.firstBought) - 1) / 40 + 1, 1),
 				Math.max(Math.log10(Math.max(-player.tickspeed.logarithm, 0)), 0),
-				Decimal.max(player.dilation.tachyonParticles.logarithm, 0).pow(69),
+				Decimal.max(player.timeShards.logarithm, 0).pow(0.1),
+				new Decimal(1),
 			]
 		}
 		

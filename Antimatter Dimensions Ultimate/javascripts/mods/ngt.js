@@ -495,8 +495,8 @@ function updateReplicatorPowers() {
 
 const opUpgCosts = [
 	10,
-	1e4, 1e20,
-	1e30, 1e40, 5e11, 1e18, 1e20, 1e80, 1e95, 1e100
+	1e5, 1e10,
+	1e25, 1e30, 1e40, 1e45, 1e106, 1e115, 1e120, 1e130
 ]
 
 function buyUpg(n) {
@@ -530,9 +530,9 @@ function getUpgEff(n) {
 		case 6:
 			return Math.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0)/4+4
 		case 7:
-			return Decimal.pow(10, Math.pow(player.galaxies, 0.2)).max(1);
+			return Decimal.pow(10, Math.pow(player.galaxies, 0.5)).max(1);
 		case 8:
-			return Decimal.pow(10,Math.log(player.resets+1)).max(1);
+			return Decimal.pow(2,Math.log(player.resets+1)).max(1);
 		case 9:
 			return Math.max(Math.log10(Math.max(player.totalTickGained,1)),0)/3+3
 		case 10:

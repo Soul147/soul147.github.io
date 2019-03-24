@@ -55,6 +55,6 @@ function buyCakeMultiplier() {
 function buyCakeMultiplier2() {
 	if(game.cakes.lt(game.cakeMultiplier2Cost)) return;
 	game.cakes = game.cakes.subtract(game.cakeMultiplier2Cost);
-	game.cakeMultiplier2 = game.cakeMultiplier2.multiply(1.1);
+	game.cakeMultiplier2 = game.cakeMultiplier2.multiply(1.5);
 	game.cakeMultiplier2Cost = game.cakeMultiplier2Cost.multiply(25);
 }

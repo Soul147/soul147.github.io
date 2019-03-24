@@ -140,7 +140,7 @@ function drawTreeBranch(num1, num2) {
         } else if (name2 == 123 || name2 == 133 || name2 == 143 || name1 == 143) {
             ctx.strokeStyle="#0080ff";
         } else {
-            ctx.strokeStyle="#000000";
+            ctx.strokeStyle="#111111";
         }
     } else {
         if (name2 == 6 && isDilStudyName && player.options.theme == "Aarex's Modifications") {
@@ -163,7 +163,7 @@ function drawTreeBranch(num1, num2) {
             ctx.strokeStyle="#444";
         }
     }
-    if (num2 == "secretstudy") ctx.strokeStyle="#000000";
+    if (num2 == "secretstudy") ctx.strokeStyle="#111111";
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
