@@ -11,7 +11,7 @@ function newEpisode() {
 	if(gainedKeys().lt(1)) return;
 	game.newEpisode = game.newEpisode.add(1);
 	game.keys = game.keys.add(gainedKeys());
-	reset(1);
+	prestige(0);
 }
 
 game.neUpgradeCosts = {0: "10", 1: "100", 2: "1000"}
@@ -35,10 +35,11 @@ function getNEUpgradeEffect(u) {
 	}
 }
 
-function buyKeyMultiplier() {
+function buyKeyMultiplier(auto) {
 	if(game.brake) return;
-	if(game.keys.lt(game.keyMultiplierCost)) return;
+	if(game.keys.lt(game.keyMultiplierCost.multiply(1+!!auto*9))) return;
 	game.keys = game.keys.subtract(game.keyMultiplierCost);
 	game.keyMultiplier = game.keyMultiplier.multiply(1.05);
 	game.keyMultiplierCost = game.keyMultiplierCost.multiply(1.2);
+	return true;
 }

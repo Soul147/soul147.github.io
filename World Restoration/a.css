@@ -152,4 +152,6 @@ body, button {
 	cursor: pointer
 }
 
+.automaton {
+	padding-right: 50px;
 }
