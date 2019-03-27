@@ -4,12 +4,12 @@
 
 <button id = "playbtn" onclick = "toggle()">Play</button>
 
-<div id = "scoreboard" style = "background-color: black; opacity: 0.5; color: yellow; font-size: 20px; font-family: sans"></div>
+<div id = "scoreboard" style = "background-color: black; opacity: 0.5; color: yellow; font-size: 20px; font-family: sans; width: 300px; height: 150px; position: fixed; right: 50px; top: 50px"></div>
 	
 <footer style = "position: fixed; left: 0; bottom: 0">
 	<button onclick = "setSelectedObject('Wall')">Wall</button>
 	<button onclick = "setSelectedObject('Spike')">Spike</button>
-	<button onclick = "setSelectedObject('Checkpoint')">Spike</button>
+	<button onclick = "setSelectedObject('Checkpoint')">Checkpoint</button>
 </footer>
 
 </body>
@@ -227,6 +227,20 @@ function objectSpike(x, y, w, h) {
 	
 	currentLevel.objects.push(o)
 }
+function objectCheckpoint(x, y, w, h) {
+	o = {
+		id: "checkpoint",
+		x: x*32,
+		y: y*32,
+		width: 32,
+		height: 32,
+		color: "green",
+		stationary: true,
+		spawnpoint: true
+	}
+	
+	currentLevel.objects.push(o)
+}
 
 // Add objects
 
@@ -262,7 +276,8 @@ function update() {
 	// Level playing
 	
 	if(editing) {
-	
+		player.spawnX = 0
+		player.spawnY = 0
 	}
 	else {
 		// Update player
@@ -297,13 +312,18 @@ function update() {
 		// Update objects
 		
 		currentLevel.objects.forEach(function(o) {
-			if(o.solid) {
-				// Check player collisions
+			// Check player collisions
 				
-				c = cc(player, o)
-				
-				if(c && o.deadly) player.reset()
-				
+			c = cc(player, o, o.solid)
+			
+			if(c && o.deadly) player.reset()
+			
+			if(c && o.spawnpoint) {
+				player.spawnX = o.x
+				player.spawnY = o.y
+			}
+			
+			if(c && o.solid) {
 				if(c == "t") {
 					player.jumping = false
 					player.yVel = 0
