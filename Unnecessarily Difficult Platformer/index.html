@@ -4,9 +4,12 @@
 
 <button id = "playbtn" onclick = "toggle()">Play</button>
 
-<footer>
+<div id = "scoreboard" style = "background-color: black; opacity: 0.5; color: yellow; font-size: 20px; font-family: sans"></div>
+	
+<footer style = "position: fixed; left: 0; bottom: 0">
 	<button onclick = "setSelectedObject('Wall')">Wall</button>
 	<button onclick = "setSelectedObject('Spike')">Spike</button>
+	<button onclick = "setSelectedObject('Checkpoint')">Spike</button>
 </footer>
 
 </body>
@@ -60,6 +63,8 @@ height = 32*15
 gravity = 0.5
 friction = 0.9
 
+deaths = 0
+	
 // Rendering setup
 
 canvas = document.getElementById("canvas")
@@ -77,7 +82,7 @@ player = {
 	xVel: 0,
 	yVel: 0,
 	walkAccel: 0.5,
-	runAccel: 0.6,
+	runAccel: 0.5,
 	walkSpeed: 5,
 	runSpeed: 10,
 	jumpPower: 8,
@@ -131,6 +136,7 @@ player = {
 		player.y = 0
 		player.xVel = 0
 		player.yVel = 0
+		deaths++
 	}
 }
 camera = {
@@ -354,6 +360,8 @@ function update() {
 	// Update UI
 	
 	ge("playbtn").innerHTML = editing ? "Play" : "Edit"
+
+	ge("scoreboard").innerHTML = "Deaths: " + deaths
 	
 	// Save Game
 	
