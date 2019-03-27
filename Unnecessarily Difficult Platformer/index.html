@@ -314,7 +314,7 @@ function update() {
 		currentLevel.objects.forEach(function(o) {
 			// Check player collisions
 				
-			c = cc(player, o, o.solid)
+			c = cc(player, o, !o.solid)
 			
 			if(c && o.deadly) player.reset()
 			
