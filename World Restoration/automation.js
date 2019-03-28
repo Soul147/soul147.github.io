@@ -33,9 +33,10 @@ function updateAutomatons(diff) {
 	})
 }
 
-createAutomaton(function() {buyMaxAll()}, "1e3", "keys")
+createAutomaton(function() {buyMaxAll()}, "10", "keys")
 
 createAutomaton(function() {while(buyKeyMultiplier(true));buyNEUpgrade(0);buyNEUpgrade(1);buyNEUpgrade(2)}, "1e6", "keys")
+createAutomaton(function() {newEpisode()}, "1e6", "keys")
 	
 createAutomaton(function() {while(buyCakeMultiplier(true));while(buyCakeMultiplier2(true));buyNCaUpgrade(0);buyNCaUpgrade(1)}, "1e4", "cakes")
 createAutomaton(function() {game.keys = game.keys.add(gainedKeys().multiply(diff/1e5))}, "1e6", "cakes")
