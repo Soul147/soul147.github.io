@@ -132,8 +132,8 @@ player = {
 	},
 	
 	reset: function() {
-		player.x = 0
-		player.y = 0
+		player.x = player.spawnX || 0
+		player.y = player.spawnY || 0
 		player.xVel = 0
 		player.yVel = 0
 		deaths++
