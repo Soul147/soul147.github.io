@@ -12,5 +12,5 @@ function fixSave() {
 }
 
 addEventListener("keydown", function(e) {
-  if(e.keyCode == 27) document.getElementById("devOut").style.display = ""
+  if(e.keyCode == 27) document.getElementById("devOutSpan").style.display = ""
 })
