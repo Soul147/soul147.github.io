@@ -4,6 +4,7 @@ function fixSave() {
   var fixed = save.replace(/NaN/gi, "10")
   var stillToDo = JSON.parse(fixed)
   for (var i=0; i<stillToDo.autobuyers.length; i++) stillToDo.autobuyers[i].isOn = false
+  stillToDo.mods = stillToDo.mods || {}
   
   document.getElementById("fixed").value = btoa(JSON.stringify(stillToDo))
 }
