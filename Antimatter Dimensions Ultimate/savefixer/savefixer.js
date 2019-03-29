@@ -11,6 +11,6 @@ function fixSave() {
   document.getElementById("fixed").value = btoa(JSON.stringify(stillToDo))
 }
 
-window.onkeydown = function(e) {
-  if(e.controlDown && e.keyCode == 27) document.getElementById("devOut").style.display = ""
+addEventListener("keydown", function(e) {
+  if(e.keyCode == 27) document.getElementById("devOut").style.display = ""
 }
