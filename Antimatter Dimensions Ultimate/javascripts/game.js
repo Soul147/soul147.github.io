@@ -6406,6 +6406,11 @@ function setAndMaybeShow(elementName, condition, contents) {
 }
 
 setInterval(function() {
+	if(!player.dilation) player.dilation = {}
+	if(!player.dilation.upgrades) player.dilation.upgrades = []
+	if(!player.autoEterMode) player.autoEterMode = "amount"
+	if(!player.autoEterOptions) player.autoEterOptions = {}
+	
 	if (getDimensionFinalMultiplier(1).gte(new Decimal("1e308")) &&
 		getDimensionFinalMultiplier(2).gte(new Decimal("1e308")) &&
 		getDimensionFinalMultiplier(3).gte(new Decimal("1e308")) &&
@@ -8033,6 +8038,8 @@ function simulateTime(seconds, real) {
 	if (player.timeShards.gt(playerStart.timeShards)) popupString+= ",<br> time shards increased "+shortenMoney(player.timeShards.log10() - (Decimal.max(playerStart.timeShards, 1)).log10())+" orders of magnitude"
 	if (player.blackhole) if (player.blackhole.power.gt(playerStart.blackhole.power)) popupString+= ",<br> black hole power increased "+shortenMoney(player.blackhole.power.log10() - (Decimal.max(playerStart.blackhole.power, 1)).log10())+" orders of magnitude"
 	if (player.meta) if (player.meta.antimatter.gt(playerStart.meta.antimatter)) popupString+= ",<br> meta-antimatter increased "+shortenMoney(player.meta.antimatter.log10() - (Decimal.max(playerStart.meta.antimatter, 1)).log10())+" orders of magnitude"
+	if (player.mods.ngt) if (player.mods.ngt.gravitons.gt(playerStart.mods.ngt.gravitons)) popupString+= ",<br> gravitons increased "+shortenMoney(player.mods.ngt.gravitons.log10() - (Decimal.max(playerStart.ngt.gravitons, 1)).log10())+" orders of magnitude"
+	if (player.mods.ngt) if (player.mods.ngt.r1.gt(playerStart.mods.ngt.r1.amount)) popupString+= ",<br> replicators increased "+shortenMoney(player.ngt.gravitons.log10() - (Decimal.max(playerStart.ngt.r1.amount, 1)).log10())+" orders of magnitude"
 	if (player.infinitied > playerStart.infinitied || player.eternities > playerStart.eternities) popupString+= ","
 	else popupString+= "."
 	if (player.infinitied > playerStart.infinitied) popupString+= "<br>you infinitied "+(player.infinitied-playerStart.infinitied)+" times."

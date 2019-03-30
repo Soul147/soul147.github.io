@@ -377,6 +377,7 @@ function toggleAutoEter(id) {
 }
 
 function doAutoEterTick() {
+	if(!player.autoEterOptions) return;
 	if (player.achievements.includes("ngpp17") || player.timestudy.studies.includes(1011)) {
 		for (d=1;d<9;d++) if (player.autoEterOptions["td"+d]) buyMaxTimeDimension(d)
 	}
