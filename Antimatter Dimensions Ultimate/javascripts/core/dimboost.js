@@ -360,7 +360,7 @@ function getDimboostCostIncrease () {
 		if (player.infinityUpgrades.includes("postinfi50")) ret -= 0.5
 	} else {
 		if (player.timestudy.studies.includes(211)) ret -= 5
-		if (player.timestudy.studies.includes(222)) ret -= 2
+		if (player.timestudy.studies.includes(222)) ret -= 2-!!player.mods.ngt
 		if (player.mods.ngt) if(hasUpg(1)) ret -= 2
 		if (player.masterystudies) if (player.masterystudies.includes("t261")) ret -= 1
 		if (player.currentChallenge == "challenge4") ret += 5

@@ -99,7 +99,7 @@ function getDimensionFinalMultiplier(tier) {
     }
   }
 
-  if (player.dilation.upgrades.includes(6)) multiplier = multiplier.times(player.dilation.dilatedTime.max(1).pow(308))
+  if(player.dilation.upgrades) if (player.dilation.upgrades.includes(6)) multiplier = multiplier.times(player.dilation.dilatedTime.max(1).pow(308))
   if (useHigherNDReplMult) multiplier = multiplier.times(ndReplMult)
   if (player.challenges.includes("postcngmm_1")||player.currentChallenge=="postcngmm_1") multiplier = multiplier.times(timeAndDimMult)
   if (player.galacticSacrifice) {

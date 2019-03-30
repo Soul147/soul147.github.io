@@ -177,6 +177,9 @@ function drawStudyTree() {
     drawTreeBranch("21", "31");
     drawTreeBranch("21", "33");
     drawTreeBranch("22", "32");
+    drawTreeBranch("22", "1001");
+    drawTreeBranch("33", "1011");
+    drawTreeBranch("1001", "1012");
     drawTreeBranch("31", "41");
     drawTreeBranch("32", "42");
     drawTreeBranch("41", "51");
@@ -282,7 +285,7 @@ function drawStudyTree() {
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3;
             ctx.font = "15px Typewriter";
-            if (document.getElementById(all[i]).className.split(" ")[1] !== undefined || all[i] > 220) {
+            if (document.getElementById(all[i]).className.split(" ")[1] !== undefined || all[i] > 220 && all[i] < 1000) {
                 var tempName = document.getElementById(all[i]).className.split(" ")[1];
                 var name;
                 if (all[i] == 222 || all[i] == 223 || all[i] == 226 || all[i] == 227 || all[i] == 232 || all[i] == 233) name = "dark"

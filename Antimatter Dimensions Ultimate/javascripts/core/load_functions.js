@@ -1485,7 +1485,7 @@ if (player.version < 5) {
 	document.getElementById("achRowng3p1").style.display=player.masterystudies==undefined?"none":""
 	document.getElementById("achRowng3p2").style.display=player.masterystudies==undefined?"none":""
 	document.getElementById("metaAntimatterEffectType").textContent=inQC(3)?"multiplier on all Infinity Dimensions":"extra multiplier per dimension boost"
-	for (i=1;i<9;i++) document.getElementById("td"+i+'auto').style.visibility=player.achievements.includes("ngpp17")?"visible":"hidden"
+	for (i=1;i<9;i++) document.getElementById("td"+i+'auto').style.visibility=player.achievements.includes("ngpp17")||player.timestudy.studies.includes(1011)?"visible":"hidden"
 	document.getElementById('togglealltimedims').style.visibility=player.achievements.includes("ngpp17")?"visible":"hidden"
 	document.getElementById('replicantibulkmodetoggle').style.display=player.achievements.includes("ngpp16")?"inline-block":"none"
 	document.getElementById('replicantibulkmodetoggle').textContent="Mode: "+(player.galaxyMaxBulk?"Max":"Singles")

@@ -143,13 +143,17 @@
                         <td><button class="timestudy" id="33" onclick="buyTimeStudy(33)">You keep half of your replicanti galaxies on infinity<span>Cost: <t id = "studyCost3"></t> Time Theorems</button></td>
                         <td><button class="timestudy" id="31" onclick="buyTimeStudy(31)">Powers up bonuses that are based on your infinitied stat (to the power of <t id="31desc">4</t>)<span>Cost: <t id = "studyCost4"></t> Time Theorems</button></td>
                         <td><button class="timestudy" id="32" onclick="buyTimeStudy(32)"><span id="32desc">You gain x1 more infinitied stat (based on dimension boosts)</span>Cost: <t id = "studyCost5"></t> Time Theorems</button></td>
-                        <td style="opacity: 0;"><button class="timestudylocked"></button></td>
+                        <td><button class="timestudy" id="1001" onclick="buyTimeStudy(1001)"><span id="1001desc">You gain x1 more eternitied stat (based on antimatter galaxies)</span>Cost: <t id = "studyCost58"></t> Time Theorems</button></td>
                     </tr>
                 </table>
                 <table class="table" id="studytable">
                     <tr>
+                        <td><button class="timestudy" id="1011" onclick="buyTimeStudy(1011)">Unlock autobuyer for time dimensions.<span>Cost: <t id = "studyCost59"></t> Time Theorems</button></td>
+						<td style="opacity: 0;"><button class="timestudylocked"></button></td>
                         <td><button class="timestudy" id="41" onclick="buyTimeStudy(41)"></button></td>
                         <td><button class="timestudy" id="42" onclick="buyTimeStudy(42)"></button></td>
+						<td style="opacity: 0;"><button class="timestudylocked"></button></td>
+                        <td><button class="timestudy" id="1012" onclick="buyTimeStudy(1012)">Unlock autobuyer for x5 EP upgrades.<span>Cost: <t id = "studyCost60"></t> Time Theorems</button></td>
                     </tr>
                 </table>
                 <br>
@@ -287,7 +291,7 @@
                 <table class="table" id="studytable">
                     <tr class="wideRow">
                         <td><button class="timestudy darkstudy" id="221" onclick="buyTimeStudy(221)">Dimensional boosts affect time dimensions with reduced power.<span>Cost: <t id = "studyCost46"></t> Time Theorems</button></td>
-                        <td><button class="timestudy lightstudy" id="222" onclick="buyTimeStudy(222)">Dimensional boost costs scale by another 2 less.<span>Cost: <t id = "studyCost47"></t> Time Theorems</button></td>
+                        <td><button class="timestudy lightstudy" id="222" onclick="buyTimeStudy(222)">Dimensional boost costs scale by another <t id = "ts222pow">2</t> less.<span>Cost: <t id = "studyCost47"></t> Time Theorems</button></td>
                         <td><button class="timestudy darkstudy" id="223" onclick="buyTimeStudy(223)">Galaxy cost scaling starts 7 galaxies later.<span>Cost: <t id = "studyCost48"></t> Time Theorems</button></td>
                         <td><button class="timestudy lightstudy" id="224" onclick="buyTimeStudy(224)">Galaxy cost scaling starts 1 galaxy later for every 2000 dimensional boosts.<span>Cost: <t id = "studyCost49"></t> Time Theorems</button></td>
                         <td><button class="timestudy darkstudy" id="225" onclick="buyTimeStudy(225)">You gain extra RGs based on how high above infinity your replicanti are.<span>Cost: <t id = "studyCost50"></t> Time Theorems</button></td>
@@ -3567,7 +3571,7 @@
 								requirement: <span id = "ocreq3"></span><br><br>
 								<button id = "oc3" class = "challengesbtn" onclick = "startOmniChallenge(3)"></button><br><br>
 								goal: <span id = "ocgoal3"></span><br>
-								reward: tachyon particles boost omni-dimensions<br>currently: x<span id = "ocreward3"></span>
+								reward: time shards boost omni-dimensions<br>currently: x<span id = "ocreward3"></span>
 							</div>
 						</td>
 						<td>
