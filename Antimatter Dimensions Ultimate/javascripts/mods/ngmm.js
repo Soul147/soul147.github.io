@@ -87,13 +87,13 @@ function buyGalaxyUpgrade(i) {
 }
 
 function reduceDimCosts() {
-	let div=1
+	let div=new Decimal(1)
 	if(player.mods.ngt) {
-		if(player.achievements.includes("ngt14")) div*=1e6
+		if(player.achievements.includes("ngt14")) div=div.multiply(Number.MAX_VALUE)
 	}
 	if (player.galacticSacrifice) {
-		if (player.achievements.includes("r21")) div*=10
-		if (player.galacticSacrifice.upgrades.includes(11)) div*=galUpgrade11()
+		if (player.achievements.includes("r21")) div=div.multiply(10)
+		if (player.galacticSacrifice.upgrades.includes(11)) div=div.multiply(galUpgrade11())
 	}
 	for (d=1;d<9;d++) {
 		var name = TIER_NAMES[d]

@@ -623,8 +623,8 @@ function exitOmniChallenge() {
 
 function inOC(n) {
 	if(!player.mods.ngt) return false;
-	if(!n && ngt.ocr.length) return true;
-	if(ngt.ocr.includes(n)) return true;
+	if(!n && player.mods.ngt.ocr.length) return true;
+	if(player.mods.ngt.ocr.includes(n)) return true;
 	return false;
 }
 

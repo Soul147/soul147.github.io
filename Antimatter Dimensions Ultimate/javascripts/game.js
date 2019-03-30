@@ -979,7 +979,7 @@ function getInfinitiedGain() {
 
 function getEternitied() {
 	let total = player.eternities
-	if (player.eternitiesBank && !inQC(0)) total += player.eternitiesBank
+	if (player.eternitiesBank && !(player.masterystudies && inQC(0)) && !inOC()) total += player.eternitiesBank
 	return total
 }
 
@@ -3216,6 +3216,8 @@ function gainedInfinityPoints(next) {
 	if (player.timestudy.studies.includes(111)) div = 285;
 	else if (player.achievements.includes("r103")) div = 307.8;
 	if (player.galacticSacrifice&&player.tickspeedBoosts==undefined) div -= galIP()
+	if(compOC(5)) div -= 1
+	if(inOC(5)) div *= 1000
 
 	if (player.infinityUpgradesRespecced == undefined) var ret = Decimal.pow(10, player.money.e/div -0.75).times(getIPMult())
 	else var ret = player.money.div(Number.MAX_VALUE).pow(2*(1-Math.log10(2))/Decimal.log10(Number.MAX_VALUE)).times(getIPMult())
@@ -3260,13 +3262,14 @@ function getIPMult() {
 function gainedEternityPoints() {
 	base = 5
 	if(player.mods.ngt) base = 10
-	var ret = Decimal.pow(base, player.infinityPoints.plus(gainedInfinityPoints()).e/(player.achievements.includes("ng3p23")?307.8:308) -0.7).times(player.epmult).times(kongEPMult)
+	var ret = Decimal.pow(base, player.infinityPoints.plus(gainedInfinityPoints()).e/(compOC(6)?300:player.achievements.includes("ng3p23")?307.8:308) -0.7).times(player.epmult).times(kongEPMult)
 	if (player.aarexModifications.newGameExpVersion) ret = ret.times(10)
 	if (player.timestudy.studies.includes(61)) ret = ret.times(player.aarexModifications.newGameExpVersion?100:10)
 	if (player.timestudy.studies.includes(121)) ret = ret.times(((253 - averageEp.dividedBy(player.epmult).dividedBy(10).min(248).max(3))/5)) //x300 if tryhard, ~x60 if not
 	else if (player.timestudy.studies.includes(122)) ret = ret.times(35)
 	else if (player.timestudy.studies.includes(123)) ret = ret.times(Math.sqrt(1.39*player.thisEternity/10))
 
+	if(inOC(6)) return Decimal.floor(ret.log10())
 	return ret.floor()
 }
 
@@ -3454,7 +3457,7 @@ function setAchieveTooltip() {
 	christian.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e359223"))+" IP. Reward: A free one-way ticket to Hell.")
 	fuckthis.setAttribute('ach-tooltip', "Reach "+shorten(3.33e33)+" tachyon particles. Reward: Gain tachyon particles based on best antimatter^^0.75")
 	keemstar.setAttribute('ach-tooltip', "Reach "+shorten(Decimal.pow(10, Math.pow(Math.sqrt(player.totalTimePlayed),2)))+" IP. Reward: Additional 1000x multiplier to IP.")
-	yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Start with 100 eternities and dimensions cost 1,000,000x less.")
+	yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Start with 100 eternities and dimensions cost " + shorten(Number.MAX_VALUE) + "x less.")
 }
 
 
@@ -6338,7 +6341,7 @@ function quickReset() {
 
 function updateInfPower() {
 	document.getElementById("infPowAmount").textContent = shortenMoney(player.infinityPower)
-	if (player.galacticSacrifice) document.getElementById("infPowEffectPower").textContent = shortenMoney(getInfinityPowerEffectPower())
+	if (player.galacticSacrifice||compOC(4)) document.getElementById("infPowEffectPower").textContent = shorten(getInfinityPowerEffectPower())
 	if (player.currentEternityChall == "eterc9") document.getElementById("infDimMultAmount").textContent = shortenMoney((Decimal.pow(Math.max(player.infinityPower.log2(), 1), 4)).max(1))
 	else document.getElementById("infDimMultAmount").textContent = shortenMoney(player.infinityPower.pow(getInfinityPowerEffectPower()))
 	if (player.currentEternityChall == "eterc7") document.getElementById("infPowPerSec").textContent = "You are getting " +shortenDimensions(DimensionProduction(1))+" Seventh Dimensions per second."
@@ -7973,34 +7976,38 @@ function gameLoop(diff) {
 			req: [
 				new Decimal("1e1750000000"),
 				new Decimal("1e2400000000"),
-				Decimal.pow(Number.MAX_VALUE, 76000000),
-				Decimal.pow(Math.PI, 1e11),
-				Decimal.pow(69420, 1234567890),
-				Decimal.pow(123456789, 987654321),
+				new Decimal("1e3333333333"),
+				new Decimal("1e3600000000"),
+				new Decimal("1e3700000000"),
+				new Decimal("1e3750000000"),
 			],
 			goal: [
 				new Decimal("1e800000"),
 				new Decimal("1e13000000"),
-				new Decimal("1e42069000"),
-				new Decimal("7.77e777777"),
-				new Decimal("7.77e777777"),
-				new Decimal("7.77e777777"),
+				new Decimal("1e16000000"),
+				new Decimal("1e18500000"),
+				new Decimal("1e88888888"),
+				new Decimal("1e525000000"),
 			],
 			reward: [
 				Math.max((Math.log10(player.firstBought) - 1) / 40 + 1, 1),
 				Math.max(Math.log10(Math.max(-player.tickspeed.logarithm, 0)), 0),
-				Decimal.max(player.timeShards.logarithm, 0).pow(0.1),
-				new Decimal(1),
+				Decimal.max(player.timeShards.logarithm, 0).pow(0.2).multiply(3).sqrt().max(3),
+				new Decimal(Math.log10(player.galaxies+1)+5.05).max(8),
+				"",
+				"",
 			]
 		}
 		
 		for(var i = 1; i <= 6; i++) {
 			ge("ocreq" + i).innerHTML = shorten(ngt.t.req[i-1]);
 			ge("ocgoal" + i).innerHTML = shorten(ngt.t.goal[i-1]);
-			ge("ocreward" + i).innerHTML = shorten(ngt.t.reward[i-1]);
+			if(typeof(ngt.t.reward[i-1])!=="string") ge("ocreward" + i).innerHTML = shorten(ngt.t.reward[i-1]);
 			ge("oc" + i).innerHTML = inOC(i) ? "running" : compOC(i) ? "completed" : player.money.lt(ngt.t.req[i-1]) ? "locked" : "start";
 			ge("oc" + i).className = inOC(i) ? "onchallengebtn" : compOC(i) ? "completedchallengesbtn" : player.money.lt(ngt.t.req[i-1]) ? "lockedchallengesbtn" : "challengesbtn";
 		}
+		
+		if(compOC(3)) ngt.omniPower = ngt.t.reward[2]
 		
 		// Omnipotence statistics
 		
@@ -8038,8 +8045,8 @@ function simulateTime(seconds, real) {
 	if (player.timeShards.gt(playerStart.timeShards)) popupString+= ",<br> time shards increased "+shortenMoney(player.timeShards.log10() - (Decimal.max(playerStart.timeShards, 1)).log10())+" orders of magnitude"
 	if (player.blackhole) if (player.blackhole.power.gt(playerStart.blackhole.power)) popupString+= ",<br> black hole power increased "+shortenMoney(player.blackhole.power.log10() - (Decimal.max(playerStart.blackhole.power, 1)).log10())+" orders of magnitude"
 	if (player.meta) if (player.meta.antimatter.gt(playerStart.meta.antimatter)) popupString+= ",<br> meta-antimatter increased "+shortenMoney(player.meta.antimatter.log10() - (Decimal.max(playerStart.meta.antimatter, 1)).log10())+" orders of magnitude"
-	if (player.mods.ngt) if (player.mods.ngt.gravitons.gt(playerStart.mods.ngt.gravitons)) popupString+= ",<br> gravitons increased "+shortenMoney(player.mods.ngt.gravitons.log10() - (Decimal.max(playerStart.ngt.gravitons, 1)).log10())+" orders of magnitude"
-	if (player.mods.ngt) if (player.mods.ngt.r1.gt(playerStart.mods.ngt.r1.amount)) popupString+= ",<br> replicators increased "+shortenMoney(player.ngt.gravitons.log10() - (Decimal.max(playerStart.ngt.r1.amount, 1)).log10())+" orders of magnitude"
+	if (player.mods.ngt) if (player.mods.ngt.gravitons.gt(playerStart.mods.ngt.gravitons)) popupString+= ",<br> gravitons increased "+shortenMoney(player.mods.ngt.gravitons.log10() - (Decimal.max(playerStart.mods.ngt.gravitons, 1)).log10())+" orders of magnitude"
+	if (player.mods.ngt) if (player.mods.ngt.r1.amount.gt(playerStart.mods.ngt.r1.amount)) popupString+= ",<br> replicators increased "+shortenMoney(player.mods.ngt.r1.amount.log10() - (Decimal.max(playerStart.mods.ngt.r1.amount, 1)).log10())+" orders of magnitude"
 	if (player.infinitied > playerStart.infinitied || player.eternities > playerStart.eternities) popupString+= ","
 	else popupString+= "."
 	if (player.infinitied > playerStart.infinitied) popupString+= "<br>you infinitied "+(player.infinitied-playerStart.infinitied)+" times."

@@ -229,6 +229,7 @@ function getInfinityPowerEffectPower() {
 		if (player.currentChallenge.includes("postcngm3_2")) return Math.max(Math.pow(player.galaxies + (player.resets + player.tickspeedBoosts) / 24, 0.7), 7)
 		return Math.max(Math.pow(player.galaxies, 0.7), 7)
 	}
+	if(compOC(4)) return new Decimal(player.mods.ngt.t.reward[3])
 	if(player.mods.ngt) return 8
 	return 7
 }
@@ -277,6 +278,7 @@ function getIDReplMult() {
 }
 
 function getEU2Mult() {
+	if(inOC()) return new Decimal(1)
 	if (player.boughtDims) return Decimal.pow(getEternitied(), Math.log(getEternitied()*2+1)/Math.log(4))
 	var cap = Math.min(getEternitied(), 100000)
 	var soft = getEternitied() - cap

@@ -266,6 +266,11 @@ input {
     text-shadow: 0px 0px 7px #ff9800;
 }
 
+#infPowEffectPower {
+    color: #000 !important;
+    text-shadow: 0px 0px 7px #ff9800;
+}
+
 #infDimMultAmount {
     color: #000 !important;
     text-shadow: 0px 0px 7px #ff9800;
