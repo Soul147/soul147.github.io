@@ -359,6 +359,9 @@ function updateNewPlayer(reseted) {
 	if (modesChosen.arrows >= 2) {
 		resetNGT(true)
 	}
+	if (modesChosen.arrows >= 3) {
+		resetNGPT(true)
+	}
 	if (modesChosen.ngpp && (modesChosen.ngpp < 3 || modesChosen.ngpp == 4)) {
 		player.aarexModifications.newGamePlusPlusVersion = 2.90142
 		player.dilation.rebuyables[4] = 0
@@ -2919,7 +2922,8 @@ function changeSaveDesc(saveId, placement) {
 			if (temp.aarexModifications.newGameMinusVersion) message+="NG-, "
 			if (temp.galacticSacrifice) message+="NG--"+(temp.tickspeedBoosts!=undefined?"-":"")+", "
 			if (temp.boughtDims) message+="Eternity Respecced, "
-			if (temp.mods.ngt) message+="NG↑↑, "
+			if (temp.mods.ngpt) message+="NG↑↑↑, "
+			else if (temp.mods.ngt) message+="NG↑↑, "
 			else if (temp.aarexModifications.newGameExpVersion) message+="NG^, "
 			if (temp.exdilation!=undefined) message+="NG Update, "
 			if (temp.meta) message+="NG++"+(temp.masterystudies?"+":"")+", "+(temp.aarexModifications.newGamePlusVersion?"":"No NG+ features, ")
@@ -2934,8 +2938,16 @@ function changeSaveDesc(saveId, placement) {
 			player.options.notation=temp.options.notation;
 			player.options.commas=temp.options.commas
 		}
-		var isSaveQuantumed=temp.quantum?temp.quantum.times>0:false
-		if (isSaveQuantumed) {
+		if(temp.mods.ngt && temp.mods.ngt.op.gt(0)) {
+			message += "omnipotence points: " + shortenDimensions(temp.mods.ngt.op)
+			if(temp.mods.ngt.oc.length > 0) {
+				message += ", omni-challenges completed: " + temp.mods.ngt.oc.length;
+			}
+			else {
+				message += ", omnipotence upgrades: " + temp.mods.ngt.opUpgrades.length;
+			}
+		}
+		else if (isSaveQuantumed = temp.quantum?temp.quantum.times>0:false) {
 			if (!temp.masterystudies) message+="End-game of NG++"
 			else {
 				message+="Quarks: "+shortenDimensions(Decimal.add(temp.quantum.quarks,temp.quantum.usedQuarks.r).add(temp.quantum.usedQuarks.g).add(temp.quantum.usedQuarks.b))
@@ -2995,7 +3007,7 @@ function changeSaveDesc(saveId, placement) {
 function toggle_mode(id) {
 	if(id == "arrows") {
 		modes[id]++
-		if(modes[id] > 2) modes[id] = 0
+		if(modes[id] > 2+!!localStorage.ngtBeaten) modes[id] = 0
 	}
 	else if (id=="ngpp"&&modes[id]===3) modes[id]=4
 	else if (id=="ngpp"&&modes[id]===2) modes[id]=3
@@ -3012,7 +3024,7 @@ function toggle_mode(id) {
 		document.getElementById("ngppBtn").textContent="NG++: OFF"
 	}
 	if(id=="arrows") {
-		ge("arrowsBtn").textContent = "NG↑: " + "Linear (↑⁰)/Exponential (↑)/Tetrational (↑↑)".split("/")[modes.arrows]
+		ge("arrowsBtn").textContent = "NG↑: " + "Linear (↑⁰)/Exponential (↑)/Tetrational (↑↑)/Pentational (↑↑↑)".split("/")[modes.arrows]
 	}
 	if(id=="ac") {
 		ge("acBtn").textContent = "AC++: " + (modes.ac ? "ON" : "OFF")
@@ -7760,6 +7772,8 @@ function gameLoop(diff) {
 	ge("omnitabbtn").style.display = "none";
 	ge("odtabbtn").style.display = "none"
 	ge("octabbtn").style.display = "none"
+	
+	ge("forgetabbtn").style.display = "none"
 		
 	// Fix this stupid bug
 	
@@ -7768,6 +7782,8 @@ function gameLoop(diff) {
 	for(var i = 0; i < studyCosts.length; i++) {
 		if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
 	}
+		
+	// NG^^ stuff
 		
 	if(player.mods.ngt) {
 		ngt = player.mods.ngt || {};
@@ -7948,7 +7964,12 @@ function gameLoop(diff) {
 		
 		// Dilation
 		
-		if(ngt.op.gte("1e1000")) ngt.canDilate = true;
+		if(ngt.op.gte(Number.MAX_VALUE) && !ngt.canDilate) {
+			document.getElementById("welcome").style.display = "flex"
+			document.getElementById("welcomeMessage").innerHTML = "congratulations for getting " + shorten(Number.MAX_VALUE) + " omnipotence points!<br>(took you long enough)<br>you can dilate time now. see how far you can get.<br>this is the end of NG^^ for now, but I'm developing many new things, which will be coming soon.<br>thanks for playing. :)<br><span style = 'font-size: 2px'>check the load menu... you've unlocked something.</span>"
+			ngt.canDilate = true;
+			localStorage.ngtBeaten = true;
+		}
 		
 		ge("tpmultpow").innerHTML = "Quadruple"
 		DIL_UPG_COSTS[10] = 1e100
@@ -8016,6 +8037,16 @@ function gameLoop(diff) {
 		if(ngt.omni) stats += "you have gone omnipotent " + ngt.omni + " times."
 		
 		ge("omniStatistics").innerHTML = stats;
+	}
+	
+	// NG^^^
+	
+	if(player.mods.ngpt) {
+		ngpt = player.mods.ngpt
+		
+		ge("forgetabbtn").style.display = ""
+		
+		updateForge()
 	}
 
 	player.lastUpdate = thisUpdate;

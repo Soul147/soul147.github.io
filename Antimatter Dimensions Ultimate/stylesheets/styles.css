@@ -2422,3 +2422,18 @@ screen and (max-width: 480px) {
     50% {box-shadow: inset 0px 0px 80px 0px #4c4c4c;}
     100% {box-shadow: inset 0px 0px 20px 0px #4c4c4c;}
 }
+
+.forgebtn {
+	border: 2px outset gray;
+	font-weight: bold;
+	color: white !important;
+	background: linear-gradient(135deg, #3c3c3c 0%,#494949 12%,#555555 25%,#373737 39%,#1c1c1c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%)
+}
+
+.forgebtn:hover {
+	background: linear-gradient(135deg, #5c5c5c 0%,#696969 12%,#777777 25%,#575757 39%,#3c3c3c 50%,#222222 51%,#333333 60%,#4b4b4b 76%,#3c3c3c 91%,#333333 100%)
+}
+
+.forgebtn:active {
+	border: 2px inset gray;
+}
