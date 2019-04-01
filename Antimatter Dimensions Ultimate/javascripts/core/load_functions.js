@@ -1612,8 +1612,7 @@ if (player.version < 5) {
 		if (player.mods.qol) ngModeMessages.push("Welcome to the Quality of Life mod, made by Sigma. I describe myself as an \"efficient\" person, others call me lazy. If you're anything like me, this mod is for you. It automates basically everything, and removes some of the annoying grinds like the first 100 eternities.")
 			if (player.mods.secret) ngModeMessages.push("Welcome to the Secrets mod, made by Sigma. This mod adds a multiplier to the speed of the entire game based on secret achievements completed.")
 			if (player.mods.ac) ngModeMessages.push("Welcome to the Achievements+ mod, made by Sigma. This mod adds many new achievement rewards and an improved achievement bonus, making the achievements a more important part of the game.")
-			if (player.mods.ngt) ngModeMessages.push("Welcome to NG↑↑, an end-game mod made by Sigma. This mod adds a new layer of prestige, Omnipotence, as well as new dimensions, mechanics, and challenges. It also includes features from NG^.")
-			if (player.mods.ngpt) ngModeMessages.push("Welcome to NG↑↑↑, an end-game mod made by Sigma. This mod adds a new mechanic, the Forge, used to upgrade various aspects of the game. It also includes features from NG^ and NG↑↑, pushing the end-game even further than before.")
+			if (player.mods.ngt) ngModeMessages.push("Welcome to NG↑↑, an end-game mod made by Sigma. This mod adds a new layer of prestige, Omnipotence, as well as new dimensions and mechanics. It also includes features from NG^.")
 			else if (player.aarexModifications.newGameExpVersion) ngModeMessages.push("Welcome to NG^ mode, made by Naruyoko! This mode adds way many buffs that this mode may be broken!")
 			if (player.exdilation!=undefined) ngModeMessages.push("Welcome to NG Update mode, another dan-simon's end-game mod! In this mode, there is the black hole and ex-dilation.")
 			if (player.meta) {

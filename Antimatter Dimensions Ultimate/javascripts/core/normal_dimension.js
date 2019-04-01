@@ -204,8 +204,7 @@ function hasInfinityMult(tier) {
             return 1
         }
         let dimMult = player.tickspeedBoosts==undefined?2:1
-        if (player.aarexModifications.newGameExpVersion && !player.mods.ngpt) dimMult *= 10
-		if(player.mods.ngpt) dimMult /= 2
+        if (player.aarexModifications.newGameExpVersion) dimMult *= 10
 
         if (player.infinityUpgrades.includes('dimMult')) dimMult *= infUpg12Pow()
         if (hasUpg(7)) dimMult *= getUpgEff(7)
