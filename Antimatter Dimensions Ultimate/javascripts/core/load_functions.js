@@ -6,6 +6,7 @@ function ge(e) {
 
 var resetOmniDims = false
 var inflationCheck = false
+var oof = false
 var notifyId = 0
 function onLoad(noOffline) {
 	happyHalloween=false
@@ -1110,6 +1111,10 @@ if (player.version < 5) {
 					return
 		}
 	}
+	if (!localStorage.oof) {
+		localStorage.oof = oof = true;
+		new_game()
+	}
 	if (player.aarexModifications.newGameMinusMinusVersion < 1.26) {
 			if (player.galacticSacrifice.upgrades.includes(11)) for (d=1;d<8;d++) {
 					var name = TIER_NAMES[d]
@@ -1607,7 +1612,7 @@ if (player.version < 5) {
 					simulateTime(diff/1000)
 			}
 	} else player.lastUpdate = new Date().getTime()
-	if (detectNGPStart || player.totalTimePlayed < 1 || inflationCheck || forceToQuantumAndRemove || resetOmniDims) {
+	if (detectNGPStart || player.totalTimePlayed < 1 || inflationCheck || forceToQuantumAndRemove || resetOmniDims || oof) {
 			ngModeMessages=[]
 		if (player.mods.qol) ngModeMessages.push("Welcome to the Quality of Life mod, made by Sigma. I describe myself as an \"efficient\" person, others call me lazy. If you're anything like me, this mod is for you. It automates basically everything, and removes some of the annoying grinds like the first 100 eternities.")
 			if (player.mods.secret) ngModeMessages.push("Welcome to the Secrets mod, made by Sigma. This mod adds a multiplier to the speed of the entire game based on secret achievements completed.")
@@ -1633,6 +1638,9 @@ if (player.version < 5) {
 					ngModeMessages.push("Welcome to NG+-+-+ mode, created by earthernsence! This mode combines NG--, NG-, and NG+++ features. Good luck!")
 			}
 			if (inflationCheck) ngModeMessages = ["I'm terribly sorry. But your save was appeared that there is an inflation, which it defeats the rule of incremental games. Your save was forced to reset everything."]
+			if (oof) {
+				ngModeMessages = ["I'm terribly sorry. But your save was appeared that there is an inflation, which it defeats the rule of incremental games. Your save was forced to reset everything."]; 
+			}
 			if (forceToQuantumAndRemove) {
 					quantum(false, true, 0)
 					ngModeMessages = ["Due to balancing changes, you are forced to quantum but you will now lose all your time theorems and best TP too."]
