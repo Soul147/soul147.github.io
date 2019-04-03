@@ -278,11 +278,12 @@ function getIDReplMult() {
 }
 
 function getEU2Mult() {
-	if(inOC()) return new Decimal(1)
 	if (player.boughtDims) return Decimal.pow(getEternitied(), Math.log(getEternitied()*2+1)/Math.log(4))
 	var cap = Math.min(getEternitied(), 100000)
 	var soft = getEternitied() - cap
-	return Decimal.pow(cap/200 + 1, Math.log(cap*2+1)/Math.log(4)).times(new Decimal(soft/200 + 1).times(Math.log(soft*2+1)/Math.log(4)).max(1)).max(player.achievements.includes("ngpp15")||player.mods.ngt?Decimal.pow(10, Math.pow(Math.log10(getEternitied()), 4.75)):1)
+	ret = Decimal.pow(cap/200 + 1, Math.log(cap*2+1)/Math.log(4)).times(new Decimal(soft/200 + 1).times(Math.log(soft*2+1)/Math.log(4)).max(1)).max(player.achievements.includes("ngpp15")||player.mods.ngt?Decimal.pow(10, Math.pow(Math.log10(getEternitied()), 4.75)):1)
+	if(inOC()) return ret.pow(1/Number.MAX_VALUE)
+	return ret
 }
 
 function getEU3Mult() {

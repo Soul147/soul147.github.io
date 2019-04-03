@@ -7982,7 +7982,7 @@ function gameLoop(diff) {
 				new Decimal("1e3750000000"),
 			],
 			goal: [
-				new Decimal("1e800000"),
+				new Decimal("1e750000"),
 				new Decimal("1e13000000"),
 				new Decimal("1e16000000"),
 				new Decimal("1e18500000"),
