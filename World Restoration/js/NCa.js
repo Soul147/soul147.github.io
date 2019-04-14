@@ -1,10 +1,14 @@
 function gainedCakes() {
-	if(game.brake) return game.keys.divide(1e6).pow(1/2.5).multiply(game.cakeMultiplier2).floor().subtract(game.empoweredCakes).max(0);
-	return game.keys.divide(1e6).pow(1/2.5).multiply(game.cakeMultiplier).floor();
+	if(game.brake) return game.keys.add(gainedKeys()).divide(1e6).pow(1/2.5).multiply(game.cakeMultiplier2).floor().subtract(game.empoweredCakes).max(0);
+	return game.keys.add(gainedKeys()).divide(1e6).pow(1/2.5).multiply(game.cakeMultiplier).floor();
 }
 
 function getECReq() {
 	return game.empoweredCakes.max(1).divide(game.cakeMultiplier2).pow(2.5).multiply(1e6); // god I hope that's it
+}
+
+function getCakeReduction() {
+	return Decimal.pow(1/0.825, game.cakeReductionUpgrades)
 }
 
 function newCakeAtStake(force) {
@@ -22,7 +26,7 @@ function toggleBrakeAtFlake() {
 }
 
 function getEmpoweredCakeEffect() {
-	return game.empoweredCakes.pow(0.5).multiply(1e6).max(1)
+	return game.empoweredCakes.multiply(1e6).pow(0.5).max(1)
 }
 
 game.ncaUpgradeCosts = {0: "10", 1: "100"}
@@ -39,9 +43,9 @@ function getNCaUpgradeEffect(u) {
 	if(game.brake) return new Decimal(1)
 	switch(u) {
 		case 0:
-			return game.cakes.add(1).log10().divide(Math.log10(15)).add(1).pow(4)
+			return game.cakes.add(1).log10().divide(Math.log10(15)).add(1).pow(6)
 		case 1:
-			return Decimal.pow(1.15, game.totalFRBought.divide(25))
+			return Decimal.pow(1.08, game.totalFRBought.divide(25))
 	}
 }
 
@@ -58,5 +62,13 @@ function buyCakeMultiplier2(auto) {
 	game.cakes = game.cakes.subtract(game.cakeMultiplier2Cost);
 	game.cakeMultiplier2 = game.cakeMultiplier2.multiply(1.5);
 	game.cakeMultiplier2Cost = game.cakeMultiplier2Cost.multiply(25);
+	return true;
+}
+
+function buyCakeReduction(auto) {
+	if(game.cakes.lt(game.cakeReductionCost.multiply(1+!!auto*9))) return;
+	game.cakes = game.cakes.subtract(game.cakeReductionCost);
+	game.cakeReductionUpgrades = game.cakeReductionUpgrades.add(1)
+	game.cakeReductionCost = game.cakeReductionCost.multiply(1.75);
 	return true;
 }
