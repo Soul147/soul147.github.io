@@ -392,7 +392,7 @@ function update() {
 		ge("fr"+i+"m").innerHTML = shorten(fr.mult);
 		ge("fr"+i+"p").innerHTML = shortenMoney(fr.production);
 		ge("fr"+i+"c").innerHTML = shortenMoney(fr.cost.divide(getFRCostReduction()));
-		ge("fr"+i+"b").style.backgroundColor = game.forks.gte(fr.cost.divide(getFRCostReduction()) ? "#0f0" : "#f00"
+		ge("fr"+i+"b").style.backgroundColor = game.forks.gte(fr.cost.divide(getFRCostReduction())) ? "#0f0" : "#f00"
 		
 		ge("fr"+i).style.display = (!game["fr" + (i-1)] || game["fr" + (i-1)].amount.gt(0)) && getUnlockedFR() >= i ? "" : "none"
 	}
