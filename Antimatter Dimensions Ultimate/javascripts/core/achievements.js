@@ -236,6 +236,12 @@ function giveAchievement(name) {
 
     if (player.achievements.includes(allAchievementNums[name])) return false
 
+	var achId = allAchievementNums[name].split("r")[1]
+	var secretAchId = allAchievementNums[name].split("s")[1]
+	
+	var ngtAchId = allAchievementNums[name].split("s")[1]
+	if(ngtAchId != undefined) if(!player.mods.ngt) return
+
     var ngudAchId=allAchievementNums[name].split("ngud")[1]
     if (ngudAchId!=undefined) if (player.exdilation==undefined) return
 
@@ -244,6 +250,8 @@ function giveAchievement(name) {
         ngppAchId=parseInt(ngppAchId)
         if (player.meta==undefined&&(player.exdilation==undefined||(ngppAchId!=13&&ngppAchId!=18))) return
     }
+	
+	var ng3pAchId=allAchievementNums[name].split("ng3p")[1]
 
     if (allAchievementNums[name].split("ng3p")[1]&&!player.masterystudies) return false
 
@@ -254,6 +262,26 @@ function giveAchievement(name) {
         if (r==105||(r!=117&&r>110)) return false
     }
 
+    if(player.mods.ngpt) {
+		value = 1
+		
+		if(achId) {
+			value = Math.floor(parseInt(achId) / 10); // 1 core per row that achievement is in
+		}
+		if(secretAchId) {
+			value = getSecretAchAmount()+1 // 1 core per secret achievement unlocked
+		}
+		if(ngppAchId || ngudAchId) {
+			value = 15 // 15 cores per achievement - these are very late-game
+		}
+		if(ng3pAchId) {
+			value = Math.floor(parseInt(ng3pAchId) / 10) * 5 + 15 // 15 cores plus 5 per row
+		}
+		
+		player.mods.ngpt.forge.cores += value
+		player.mods.ngpt.forge.totalCores += value
+	}
+	
     if (name == "A sound financial decision") localStorage.setItem(btoa("dsAM_asfd"),"")
     else $.notify(name, "success");
     player.achievements.push(allAchievementNums[name]);
