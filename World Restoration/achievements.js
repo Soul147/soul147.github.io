@@ -23,6 +23,10 @@ function Achievement(p){
   this.getCompletion=function (){
     return this.comp;
   }
+  this.update=function (){
+    this.updateCompletion();
+    this.checkbox.checked=this.comp;
+  }
 }
 function createAchievement(name,desc,cond,comp=false){
   var achievement=new Achievement({name:name,desc:desc,cond:cond,comp:comp});
@@ -47,7 +51,7 @@ Achievements.asArray=function (){
   }
   return array;
 }
-Achievemets.getCompletions=function (){
+Achievements.getCompletions=function (){
   var array=[];
   for (var id in Achievements){
     if (!isNaN(+id)) array[+id]=Achievements[id].getCompletion();
@@ -55,5 +59,12 @@ Achievemets.getCompletions=function (){
   return array;
 }
 
+function updateAchievements(){
+  for (var achievement in Achievements.asArray()){
+    achievement.update();
+  }
+}
 
-createAchievement("Test","test",function(){return false;});
+
+createAchievement("Rule 1: The first one is free. <s>No exceptions.</s>","Get 1 FR 1",function(){return game.fr1.amount.gt(0)});
+createAchievement("Period","Start a New Episode",function(){return game.newEpisode.gt(0)});
