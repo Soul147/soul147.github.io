@@ -2,8 +2,6 @@ var Achievements={};
 function Achievement(p){
   this.name=p.name; //achievement name
   this.desc=p.desc; //description
-  this.id=p.id; //achievement id
-  Achievements[p.id]=this; //add to the list
   this.cond=p.cond; //achievement earn condition, put function object.
   this.comp=p.comp; //if completed
   
@@ -26,9 +24,21 @@ function Achievement(p){
     return this.comp;
   }
 }
+function createAchievement(name,desc,cond,comp=false){
+  var achievement=new Achievement({name:name,desc:desc,cond:cond,comp:comp});
+  achievement.id=Achievements.length; //achievement id
+  Achievements[Achievements.length]=achievement; //add to the list
+}
 
 Achievements.getAchievementById=function (id){
   return Achievements[id]||undefined;
+}
+Achievements.getAchievementByName=function (name){
+  for (var id in Achievements){
+    if (!Achievements[id]) continue;
+    if (Achievements[id].name==name) return Achievements[id];
+  }
+  return undefined;
 }
 Achievements.asArray=function (){
   var array=[];
@@ -44,3 +54,6 @@ Achievemets.getCompletions=function (){
   }
   return array;
 }
+
+
+createAchievement("Test","test",function(){return false;});
