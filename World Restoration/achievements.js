@@ -30,8 +30,8 @@ function Achievement(p){
 }
 function createAchievement(name,desc,cond,comp=false){
   var achievement=new Achievement({name:name,desc:desc,cond:cond,comp:comp});
-  achievement.id=Achievements.length; //achievement id
-  Achievements[Achievements.length]=achievement; //add to the list
+  achievement.id=Achievements.asArray().length; //achievement id
+  Achievements[Achievements.asArray().length]=achievement; //add to the list
 }
 
 Achievements.getAchievementById=function (id){
