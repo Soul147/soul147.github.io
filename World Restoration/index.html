@@ -164,11 +164,12 @@
 		I take absolutely zero credit for this game. I just developed <a href = "https://sites.google.com/view/worldrestoration/main-page/main-game" target = "_blank">ItMarki's game concept</a>, using <a href = "https://github.com/Patashu/break_eternity.js" target = "_blank">Patashu's break_eternity.js</a> and formatting code taken from <a href = "https://ivark.github.io" target = "_blank">hevipelle's Antimatter Dimensions</a>.<br>
 		<!-- Dravitar is making his own version of World Restoration, which can be found <a href = "https://dravitar.github.io/World-Restoration/" target = "_blank">here</a>. I would suggest playing that one too, they're basically two different games, each one unique and offering a different experience. -->
 		Number Formatting: <select id="formatSelect" onchange="game.options.notation=document.getElementById(&quot;formatSelect&quot;).value">
-			<option value="Mixed Scientific">Mixed Scientific</option>
+			<option value="Mixed scientific">Mixed Scientific</option>
 			<option value="Scientific">Scientific</option>
 			<option value="Logarithm">Logarithm</option>
 			<option value="Standard">Standard</option>
 			<option value="Letters">Letters</option>
+		</select>
 	</footer>
 </body>
 	
@@ -233,7 +234,10 @@ addEventListener("keydown", function(e) {
 game = {
 	lastUpdate: Date.now(),
 	options: {
-		notation: "Mixed scientific"
+		notation: "Mixed scientific",
+		logarithm: {
+			base: 10
+		}
 	},
 	automatonsActive: []
 }
