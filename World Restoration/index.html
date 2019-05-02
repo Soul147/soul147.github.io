@@ -320,6 +320,22 @@ function load() {
 	
 	automatons.forEach(function(automaton) {automaton.active = game.automatonsActive[automaton.id]})
 	gc("automatonToggle", function(e, i) {e.checked = automatons[i].active})
+	
+	Achievements.forEach(function(achievement) {
+		var table=document.getElementById("achievements").childNodes[0]; //get the table
+		var row=table.insertRow(-1); //append a row to the bottom
+		var cell1=row.insertCell(0); //checkbox will be here
+		var cell2=row.insertCell(1); //name will be here
+		var cell3=row.insertCell(2); //description will be here
+		var checkbox=document.createElement("INPUT");
+		checkbox.class="achievementCompletion";
+		checkbox.type="checkbox";
+		checkbox.readonly=true;
+		checkbox.checked=false;
+		cell2.innerHTML=achievement.name;
+		cell3.innerHTML=achievement.desc;
+		achievement.checkbox=checkbox;
+	})
 }
 
 function transformToDecimal(object) { // It's so much better than hevi's version, because it's recursive and I'm a lazy piece of shit
@@ -408,6 +424,7 @@ function update() {
 	}
 	
 	updateAutomatons(diff);
+	updateAchievements();
 	
 	//if(game.newEpisode.gt(0)) buyMaxAll();
 	//if(game.newCakeAtStake.gt(0)) game.keys = game.keys.add(gainedKeys().multiply(diff/1e5))
