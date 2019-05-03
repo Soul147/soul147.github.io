@@ -74,5 +74,5 @@ createAchievement("Protect the Cake!","Start a New Cake at Stake",function(){ret
 createAchievement("Ten-pronged Fork","Repel 1 Dc forks",function(){return game.forks.gte(1e33)});
 createAchievement("Episodeon","Start 5 K New Episodes",function(){return game.newEpisode.gte(5000)});
 createAchievement("Where You Can Present Yourself","Start a New Contest",function(){return game.newContest.gte(1)});
-createAchievement("Feel the Power...","Get empowored cakes",function(){return game.empoworedCakes.gte(1)});
+createAchievement("Feel the Power...","Get empowored cakes",function(){return game.empoweredCakes.gte(1)});
 createAchievement("Twenty-pronged Fork","Repel 1e63 forks",function(){return game.forks.gte(1e63)});
