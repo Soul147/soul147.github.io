@@ -323,16 +323,16 @@ function load() {
 	gc("automatonToggle", function(e, i) {e.checked = automatons[i].active})
 	
 	Achievements.asArray().forEach(function(achievement) {
-		var table=document.getElementById("achievements").childNodes[0]; //get the table
+		var table=document.getElementById("achievements").childNodes[1]; //get the table
 		var row=table.insertRow(-1); //append a row to the bottom
 		var cell1=row.insertCell(0); //checkbox will be here
 		var cell2=row.insertCell(1); //name will be here
 		var cell3=row.insertCell(2); //description will be here
 		var checkbox=document.createElement("INPUT");
-		checkbox.class="achievementCompletion";
-		checkbox.type="checkbox";
-		checkbox.readonly=true;
-		checkbox.checked=false;
+		checkbox.setAttribute("class","achievemetCompletion");
+		checkbox.setAttribute("type","checkbox");
+		checkbox.setAttribute("disabled","disabled");
+		cell1.appendChild(checkbox);
 		cell2.innerHTML=achievement.name;
 		cell3.innerHTML=achievement.desc;
 		achievement.checkbox=checkbox;
