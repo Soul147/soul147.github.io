@@ -60,8 +60,8 @@ Achievements.getCompletions=function (){
 }
 
 function updateAchievements(){
-  for (var achievement in Achievements.asArray()){
-    achievement.update();
+  for (var id in Achievements.asArray()){
+    Achievements.asArray()[id].update();
   }
 }
 
