@@ -157,12 +157,19 @@
 	</div>
 
 	<div id = "achievements" class = "tab">
-		<div class = "achievement"></div>
+		<table class = "achievement"></table>
 	</div>
 	
 	<footer style = "position: fixed; bottom: 0; left: 0; padding: 10px">
 		I take absolutely zero credit for this game. I just developed <a href = "https://sites.google.com/view/worldrestoration/main-page/main-game" target = "_blank">ItMarki's game concept</a>, using <a href = "https://github.com/Patashu/break_eternity.js" target = "_blank">Patashu's break_eternity.js</a> and formatting code taken from <a href = "https://ivark.github.io" target = "_blank">hevipelle's Antimatter Dimensions</a>.<br>
 		<!-- Dravitar is making his own version of World Restoration, which can be found <a href = "https://dravitar.github.io/World-Restoration/" target = "_blank">here</a>. I would suggest playing that one too, they're basically two different games, each one unique and offering a different experience. -->
+		Number Formatting: <select id="formatSelect" onchange="game.options.notation=document.getElementById(&quot;formatSelect&quot;).value">
+			<option value="Mixed scientific">Mixed Scientific</option>
+			<option value="Scientific">Scientific</option>
+			<option value="Logarithm">Logarithm</option>
+			<option value="Standard">Standard</option>
+			<option value="Letters">Letters</option>
+		</select>
 	</footer>
 </body>
 	
@@ -170,6 +177,7 @@
 
 <script src = "format.js"></script>
 <script src = "automation.js"></script>
+<script src = "achievements.js"></script>
 
 <script>
 
@@ -227,7 +235,10 @@ addEventListener("keydown", function(e) {
 game = {
 	lastUpdate: Date.now(),
 	options: {
-		notation: "Mixed scientific"
+		notation: "Mixed scientific",
+		logarithm: {
+			base: 10
+		}
 	},
 	automatonsActive: []
 }
@@ -310,6 +321,22 @@ function load() {
 	
 	automatons.forEach(function(automaton) {automaton.active = game.automatonsActive[automaton.id]})
 	gc("automatonToggle", function(e, i) {e.checked = automatons[i].active})
+	
+	Achievements.asArray().forEach(function(achievement) {
+		var table=document.getElementById("achievements").childNodes[1]; //get the table
+		var row=table.insertRow(-1); //append a row to the bottom
+		var cell1=row.insertCell(0); //checkbox will be here
+		var cell2=row.insertCell(1); //name will be here
+		var cell3=row.insertCell(2); //description will be here
+		var checkbox=document.createElement("INPUT");
+		checkbox.setAttribute("class","achievemetCompletion");
+		checkbox.setAttribute("type","checkbox");
+		checkbox.setAttribute("disabled","disabled");
+		cell1.appendChild(checkbox);
+		cell2.innerHTML=achievement.name;
+		cell3.innerHTML=achievement.desc;
+		achievement.checkbox=checkbox;
+	})
 }
 
 function transformToDecimal(object) { // It's so much better than hevi's version, because it's recursive and I'm a lazy piece of shit
@@ -398,6 +425,7 @@ function update() {
 	}
 	
 	updateAutomatons(diff);
+	updateAchievements();
 	
 	//if(game.newEpisode.gt(0)) buyMaxAll();
 	//if(game.newCakeAtStake.gt(0)) game.keys = game.keys.add(gainedKeys().multiply(diff/1e5))
