@@ -3463,7 +3463,7 @@ function setAchieveTooltip() {
 	yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Start with 100 eternities and dimensions cost " + shorten(Number.MAX_VALUE) + "x less.")
 	never.setAttribute('ach-tooltip', "Reach a " + shorten(1e20) + "x replicator multiplier. Reward: Your dimensions and tickspeed don't reset when you dimension boost.")
 	rvb.setAttribute('ach-tooltip', "Reach " + shorten(Number.MAX_VALUE) + " OP. Reward: Your dimension boosts don't reset when creating galaxies.")
-	stillhere.setAttribute('ach-tooltip', "Reach " + shorten(new Decimal("1e10000")) + " OP without any time studies while running OC1. Reward: omni-dimensions are multiplied by the number of studies you have.")
+	stillhere.setAttribute('ach-tooltip', "Reach " + shorten(new Decimal("1e10000")) + " IP without any time studies while running OC1. Reward: omni-dimensions are multiplied by the number of studies you have.")
 }
 
 
@@ -8454,6 +8454,7 @@ function showOptionTab(tabName) {
 }
 
 function showOmniTab(tabName) {
+	if(!player.mods.ngt) return;
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
 	var tabs = document.getElementsByClassName('omnitab');
 	var tab;
