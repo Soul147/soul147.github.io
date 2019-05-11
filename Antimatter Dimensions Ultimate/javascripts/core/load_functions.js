@@ -4,6 +4,11 @@ function ge(e) {
 	return document.getElementById(e)
 }
 
+function gn(n, f) {
+	l = document.getElementsByName(n);
+	for(var i = 0; i < l.length; i++) f(l[i], i)
+}
+
 var resetOmniDims = false
 var inflationCheck = false
 var oof = false
@@ -1455,7 +1460,7 @@ if (player.version < 5) {
 	document.getElementById("ic7desc").textContent="You can't get Antimatter Galaxies, but dimensional boost multiplier "+(player.galacticSacrifice?"is cubed":"2.5x -> 10x")
 	document.getElementById("ic7reward").textContent="Reward: Dimensional boost multiplier "+(player.galacticSacrifice?"is squared":"2.5x -> 4x")
 	document.getElementById("replicantitabbtn").style.display=player.infinityUpgradesRespecced?"none":""
-	document.getElementById("41").innerHTML="Each galaxy gives a 1."+(player.aarexModifications.newGameExpVersion?5:2)+"x multiplier on IP gained. <span>Cost: <t id = 'studyCost6'></t> Time Theorems"
+	document.getElementById("41").innerHTML="Each galaxy gives a "+(player.mods.ngt?5:player.aarexModifications.newGameExpVersion?1.5:1.2)+"x multiplier on IP gained. <span>Cost: <t id = 'studyCost6'></t> Time Theorems"
 	document.getElementById("42").innerHTML="Galaxy requirement goes up "+(player.aarexModifications.newGameExpVersion?48:52)+" 8ths instead of 60.<span>Cost: <t id = 'studyCost7'></t> Time Theorems"
 	document.getElementById("61").innerHTML="You gain 10"+(player.aarexModifications.newGameExpVersion?0:"")+"x more EP<span>Cost: <t id = 'studyCost9'></t> Time Theorems"
 	document.getElementById("62").innerHTML="You gain replicanti "+(player.aarexModifications.newGameExpVersion?4:3)+" times faster<span>Cost: <t id = 'studyCost10'></t> Time Theorems"
