@@ -6845,6 +6845,8 @@ function gameLoop(diff) {
 	
 	rootDiff = diff
 	
+	if(player.mods.ngt) ngt = player.mods.ngt;
+	
 	if(player.mods.secret) {
 		diff = updateSecretMult(diff)
 	}
