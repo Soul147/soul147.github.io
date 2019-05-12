@@ -3459,7 +3459,7 @@ function setAchieveTooltip() {
 	wasted.setAttribute('ach-tooltip', "Get "+shorten(11e6)+" TT without having generated TTs and respeccing time studies.")
 	christian.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e359223"))+" IP. Reward: A free one-way ticket to Hell.")
 	// fuckthis.setAttribute('ach-tooltip', "Reach "+shorten(3.33e33)+" tachyon particles. Reward: Gain tachyon particles based on best antimatter^^0.75")
-	keemstar.setAttribute('ach-tooltip', "Reach "+shorten(Decimal.pow(10, player.totalTimePlayed/10))+" EP.")
+	keemstar.setAttribute('ach-tooltip', "Reach "+shorten(Decimal.pow(10, player.totalTimePlayed/100))+" EP.")
 	yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Start with 100 eternities and dimensions cost " + shorten(Number.MAX_VALUE) + "x less.")
 	never.setAttribute('ach-tooltip', "Reach a " + shorten(1e20) + "x replicator multiplier. Reward: Your dimensions and tickspeed don't reset when you dimension boost.")
 	rvb.setAttribute('ach-tooltip', "Reach " + shorten(Number.MAX_VALUE) + " OP. Reward: Your dimension boosts don't reset when creating galaxies.")
@@ -6772,7 +6772,7 @@ setInterval(function() {
 	if(player.mods.ngt) {
 		if(player.infinityPoints.gte("1e359223")) giveAchievement("This is a Christian Server")
 		// if(player.dilation.tachyonParticles.gte(3.33e33)) giveAchievement("Dilation was a bad idea")
-		if(player.eternityPoints.gte(Decimal.pow(10, player.totalTimePlayed/10))) giveAchievement("Faster than Keemstar")
+		if(player.eternityPoints.gte(Decimal.pow(10, player.totalTimePlayed/100))) giveAchievement("Faster than Keemstar")
 		if(ngt.omni > 0) giveAchievement("error")
 		if(getReplicatorMult().gt(1e20)) giveAchievement("IT CAN'T EVER BE ENOUGH")
 		if(ngt.op.gte(Number.MAX_VALUE)) giveAchievement("You ever wonder why we're here?")
