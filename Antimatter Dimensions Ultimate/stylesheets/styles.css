@@ -944,7 +944,6 @@ button {
     font-size: 16px;
     border-radius: 5px;
     text-align: center;
-    transition-duration: 0.1s;
 }
 
 #progresspercent {
@@ -954,6 +953,12 @@ button {
 
 .quantumProgress { background-color: #0a640a !important }
 .quantumProgress #progresspercent { color: #32c832 }
+
+.omniProgress#progressbar { 
+	background: #000000 !important; 
+	color: #ff0000 !important;
+	border: 1px outset #777;
+}
 
 .greedbtn {
     height: 40px;
@@ -2036,6 +2041,7 @@ br {
 
 .omniupg {
 	background: #f00 !important;
+	opacity: 0;
 	border: 1px solid #4c0000;
 	border-radius: 4px;
     width: 160px;
@@ -2046,12 +2052,14 @@ br {
     font-family: Typewriter;
 	animation: omnianimation 2s infinite;
 	position: absolute;
-	transition: background 0.2s, color 0.2s;
-	transform: translate(-50%, -50%)
+	transition: background 0.2s, color 0.2s, opacity 2s;
+	transform: translate(-50%, -50%);
+    vertical-align: top;
 }
 
 .omniupgbought {
 	background: black !important;
+	opacity: 0;
 	border: 1px solid #4c0000;
 	border-radius: 4px;
     width: 160px;
@@ -2062,12 +2070,14 @@ br {
     font-family: Typewriter;
 	animation: omnianimation 2s infinite;
 	position: absolute;
-	transition: background 0.2s, color 0.2s;
-	transform: translate(-50%, -50%)
+	transition: background 0.2s, color 0.2s, opacity 2s;
+	transform: translate(-50%, -50%);
+    vertical-align: top;
 }
 
-.omniupglocked {
+.omniupglocked, .omniupghidden {
 	background: black !important;
+	opacity: 0;
 	border: 1px solid #4c4c4c;
 	border-radius: 4px;
     width: 160px;
@@ -2078,13 +2088,18 @@ br {
     font-family: Typewriter;
 	animation: omnianimationgray 8s infinite;
 	position: absolute;
-	transition: background 0.2s, color 0.2s;
-	transform: translate(-50%, -50%)
+	transition: background 0.2s, color 0.2s, opacity 2s;
+	transform: translate(-50%, -50%);
+    vertical-align: top;
 }
 
-.omniupglocked:hover {
+.omniupglocked:hover, .omniupghidden:hover {
     color: #1D1D1D;
     background: #660000 !important;
+}
+
+.omniupghidden {
+	filter: blur(3px);
 }
 
 .omniupg:hover {

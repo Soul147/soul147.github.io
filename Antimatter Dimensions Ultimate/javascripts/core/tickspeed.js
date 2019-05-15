@@ -40,8 +40,8 @@ function getGalaxyPowerEff(ng, bi) {
 	if (player.achievements.includes("ngpp8") && player.meta != undefined) eff *= 1.001;
 	if (player.timestudy.studies.includes(212)) eff *= Math.min(Math.pow(player.timeShards.max(2).log2(), 0.005), 1.1)
 	if (player.timestudy.studies.includes(232)&&bi) {
-		let exp = 0.2
-		if (player.masterystudies != undefined) if (player.galaxies >= 1e4) exp *= 6 - player.galaxies / 2e3
+		let exp = player.mods.ngt ? 0.02 : 0.2
+		if (player.masterystudies != undefined && !player.mods.ngt) if (player.galaxies >= 1e4) exp *= 6 - player.galaxies / 2e3
 		eff *= Math.pow(1+ng/1000, exp)
 	}
 	if(compOC(2)) eff *= 1+ngt.t.reward[1]/100;
