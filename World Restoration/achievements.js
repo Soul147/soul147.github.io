@@ -25,7 +25,7 @@ function Achievement(p){
   }
   this.update=function (){
     this.updateCompletion();
-    this.checkbox.checked=this.comp;
+    if(this.checkbox) this.checkbox.checked=this.comp;
   }
 }
 function createAchievement(name,desc,cond,comp=false){
@@ -66,7 +66,7 @@ function updateAchievements(){
 }
 
 
-createAchievement("Rule #1: The first one's always free.","Get the first Fork Repellent.",function(){return game.fr1.amount.gte(1)});
+createAchievement("The First One's Always Free","Get the first Fork Repellent.",function(){return game.fr1.amount.gte(1)});
 createAchievement("One of Many","Start a New Episode.",function(){return game.newEpisode.gte(1)});
 createAchievement("Quad Core","Get a fourth tier FR.",function(){return game.fr4.amount.gte(1)});
 createAchievement("Three-pronged Fork","Repel 1 trillion forks.",function(){return game.forks.gte(1e12)});
@@ -81,7 +81,8 @@ createAchievement("Feel the Power","Obtain an empowered cake.",function(){return
 createAchievement("Ten-pronged Fork","Repel 1 decillion forks.",function(){return game.forks.gte(1e33)});
 createAchievement("Why?","Start 69,000 New Cake At Stakes.",function(){return game.newCakeAtStake.gte(5e3)});
 createAchievement("Where You Can Present Yourself","Start a New Contest",function(){return game.newContest.gte(1)});
-createAchievement("Actually, Quantum Mechanics Forbids This","Get a ninth tier FR.",function(){return game.fr9.amount.gte(1)});
+createAchievement("Quantum Mechanics Forbids This","Get a ninth tier FR.",function(){return game.fr9.amount.gte(1)});
 createAchievement("Twenty-pronged Fork","Repel 1 vigintillion forks",function(){return game.forks.gte(1e63)});
 createAchievement("It's Over 9000","Get at least 9001 empowered cakes.",function(){return game.empoweredCakes.gte(9000)});
 createAchievement("A Googol Forks","Repel 10 dutrigintillion forks",function(){return game.forks.gte(1e100)});
+createAchievement("Not Two Googol","Repel 100 quinquasexagintillion forks",function(){return game.forks.gte(1e200)});

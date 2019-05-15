@@ -10,7 +10,8 @@
 		<button onclick = "tab('newcakeatstake')" id = "NCa" style="font-family: Typewriter; font-size: 20px; display: inline-block;" class="normal">New Cake at Stake</button>
 		<button onclick = "tab('newcontest')" id = "NC" style="font-family: Typewriter; font-size: 20px; display: inline-block;" class="normal">New Contest</button>
 		<button onclick = "tab('automation')" id = "AUTO" style="font-family: Typewriter; font-size: 20px; display: inline-block;" class="box">Automation</button>
-		<button onclick = "tab('achievements')" id = "ACHIEVEMENTS" style="font-family: Typewriter; font-size: 20px; display: inline-block;" class="box">Achievements (WIP)</button>
+		<button onclick = "tab('achievements')" id = "ACHIEVEMENTS" style="font-family: Typewriter; font-size: 20px; display: inline-block;" class="box">Achievements</button>
+		<button onclick = "tab('options')" id = "OPTIONS" style="font-family: Typewriter; font-size: 20px; display: inline-block;" class="box">Options</button>
 		<!--<button style="font-family: Typewriter; font-size: 20px; display: inline-block;" class="normal">New Session</button>
 		<button style="font-family: Typewriter; font-size: 20px; display: inline-block;" class="normal">New Season</button>
 		<button style="font-family: Typewriter; font-size: 20px; display: inline-block;" class="normal">New Life</button>
@@ -160,17 +161,31 @@
 		<table class = "achievement"></table>
 	</div>
 	
-	<footer style = "position: fixed; bottom: 0; left: 0; padding: 10px">
-		I take absolutely zero credit for this game. I just developed <a href = "https://sites.google.com/view/worldrestoration/main-page/main-game" target = "_blank">ItMarki's game concept</a>, using <a href = "https://github.com/Patashu/break_eternity.js" target = "_blank">Patashu's break_eternity.js</a> and formatting code taken from <a href = "https://ivark.github.io" target = "_blank">hevipelle's Antimatter Dimensions</a>.<br>
-		<!-- Dravitar is making his own version of World Restoration, which can be found <a href = "https://dravitar.github.io/World-Restoration/" target = "_blank">here</a>. I would suggest playing that one too, they're basically two different games, each one unique and offering a different experience. -->
+	<div id = "options" class = "tab">
 		Number Formatting: <select id="formatSelect" onchange="game.options.notation=document.getElementById(&quot;formatSelect&quot;).value">
 			<option value="Mixed scientific">Mixed Scientific</option>
 			<option value="Scientific">Scientific</option>
+			<option value="Engineering">Engineering</option>
 			<option value="Logarithm">Logarithm</option>
 			<option value="Standard">Standard</option>
 			<option value="Letters">Letters</option>
-		</select>
-	</footer>
+			<option value="Emojis">Cancer</option>
+			<option value="Game percentages">Completion</option>
+		</select><br>
+		<br>
+		<br>
+		<button style = "font-size: 20px" class = "box" onclick = "save()">Manual Save</button><br>
+		<button style = "font-size: 20px" class = "box" onclick = "ge('exportedSave').value = localStorage.wr; ge('exportedSave').select(); document.execCommand('copy'); alert('Save copied to clipboard.')">Export Save</button><br>
+		<button style = "font-size: 20px" class = "box" onclick = "load(prompt('Paste your save here:'))">Import Save</button><br>
+		<input style = "width: 140px" id = "exportedSave"></input><br>
+		<br>
+		<br>
+		I take absolutely zero credit for this game. I just developed <a href = "https://sites.google.com/view/worldrestoration/main-page/main-game" target = "_blank">ItMarki's game concept</a>, using <a href = "https://github.com/Patashu/break_eternity.js" target = "_blank">Patashu's break_eternity.js</a> and formatting code taken from <a href = "https://ivark.github.io" target = "_blank">hevipelle's Antimatter Dimensions</a>.<br>
+		<!-- Dravitar is making his own version of World Restoration, which can be found <a href = "https://dravitar.github.io/World-Restoration/" target = "_blank">here</a>. I would suggest playing that one too, they're basically two different games, each one unique and offering a different experience. -->
+		<br>
+		<br>
+		<button style = "font-size: 20px" class = "sight" onclick = "if(confirm('WARNING: This will reset all of your progress. You will not be able to restore it. Do you really want to reset the game?')) {localStorage.removeItem('wr'); location.reload()}">HARD RESET</button><br>
+	</div>
 </body>
 	
 <script src = "break_eternity.js"></script>
@@ -211,7 +226,7 @@ function tab(t) {
 	ge(t).style.display = ""
 }
 
-tab("automation")
+tab("before")
 
 // Setup repellent HTML
 
@@ -300,9 +315,10 @@ function save() {
 	localStorage.wr = btoa(JSON.stringify(game))
 }
 
-function load() {
-	if(!localStorage.wr) return;
-	game = JSON.parse(atob(localStorage.wr))
+function load(file) {
+	if(!localStorage.wr && !file) return;
+	parsed = file ? JSON.parse(atob(file)) : JSON.parse(atob(localStorage.wr))
+	if(parsed.forks) game = parsed; else return console.error("Error parsing save.")
 	
 	transformToDecimal(game)
 	
@@ -333,6 +349,7 @@ function load() {
 		checkbox.setAttribute("type","checkbox");
 		checkbox.setAttribute("disabled","disabled");
 		cell1.appendChild(checkbox);
+		cell1.style.paddingRight = "0px"
 		cell2.innerHTML=achievement.name;
 		cell3.innerHTML=achievement.desc;
 		achievement.checkbox=checkbox;
@@ -353,6 +370,11 @@ function transformToDecimal(object) { // It's so much better than hevi's version
 <script src = "js/NC.js"></script>
 
 <script>
+
+const ENDGAME = 200
+var ENDGAME_PROGRESS = 0
+var ENDGAME_SPOILER = "Waluigi dies in Endgame, then comes back with the Eternity Gauntlet and kicks Thanos's ass." // I still haven't seen Infinity War. Don't spoil it.
+var THE_END = false
 
 // Cascading function to reset all layers below the current prestige layer
 
@@ -402,6 +424,17 @@ function update() {
 	
 	diff *= parseInt(localStorage.hacker) || 1
 	
+	// Luigi dies in Infinity War
+	
+	ENDGAME_PROGRESS = Decimal.log10(game.forks)/ENDGAME // Decimal.log10(Decimal.log10(game.forks))/Math.log10(ENDGAME) USE THIS LATER FOR REALLY LARGE ENDGAME VALUES
+	
+	// You win
+	
+	if(ENDGAME_PROGRESS >= 1 && !THE_END) {
+		setTimeout(function() {alert("You've reached the endgame. I'm still adding new content, which will be coming out soon. You can continue to push farther to get a head start, or just wait until the next layer comes out. Thanks for playing. :)")}, 1000)
+		THE_END = true
+	}
+	
 	for(var i = 1; i <= 80; i++) {
 		fr = game["fr" + i]
 		fr.production = fr.amount.multiply(fr.mult)
@@ -431,6 +464,7 @@ function update() {
 	//if(game.newCakeAtStake.gt(0)) game.keys = game.keys.add(gainedKeys().multiply(diff/1e5))
 	
 	ge("forks").innerHTML = shortenMoney(game.forks);
+	ge("forks").style.fontSize = 40 * (ENDGAME_PROGRESS + 1) + "px"
 	
 	ge("newepisodetimes").innerHTML = shortenMoney(game.newEpisode);
 	gc("keys", function(n) {n.innerHTML = shortenMoney(game.keys)})
@@ -495,8 +529,6 @@ function update() {
 	ge("ncurb").style.backgroundColor = game.karma.gte(game.karmaReductionCost) ? "#fff" : "#f00"
 	ge("ncuri").innerHTML = shorten(getKarmaReduction());
 	ge("ncurc").innerHTML = shortenMoney(game.karmaReductionCost);
-	
-	save();
 }
 
 prestige(Infinity);
@@ -504,5 +536,6 @@ prestige(Infinity);
 load();
 
 setInterval(update, 50);
+setInterval(save, 30000);
 
 </script>
