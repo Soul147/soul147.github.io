@@ -1,5 +1,5 @@
 function gainedKeys() {
-	return game.forks.divide(1e3).pow(1/2).multiply(getKeyMultiplier());
+	return game.forks.divide(1e3).pow(1/2).multiply(getKeyMultiplier()).floor();
 }
 
 function getKeyMultiplier() {
@@ -36,7 +36,7 @@ function getNEUpgradeEffect(u) {
 		case 1:
 			return Decimal.pow(1.05, game.totalFRBought.divide(10))
 		case 2:
-			return game.newEpisode.multiply(100).pow(0.5)
+			return game.newEpisode.pow(0.5)
 	}
 }
 

@@ -273,7 +273,7 @@ function formatValue(notation, value, places, placesUnder1000, noInf) {
 		}
 	}
 	if (notation === "Game percentages") {
-		return (Math.log10(Decimal.log10(value))/Math.log10(3.5e8)*100).toFixed(4)+'%'
+		return (Decimal.log10(value)/ENDGAME *100).toFixed(4)+'%' // Decimal.log10(Decimal.log10(value))/Math.log10(ENDGAME) USE THIS LATER FOR REALLY LARGE ENDGAME VALUES
 	}
 	if (notation === "Engineering" || notation === "Mixed engineering") pow = power - (power % 3)
 	else pow = power
@@ -284,7 +284,7 @@ function formatValue(notation, value, places, placesUnder1000, noInf) {
 	}
 
 	if (notation === "Logarithm") {
-		var base=game.options.logarithm.base
+		var base=game.options.logarithmBase || 10
 		var prefix
 		if (base==10) {
 			power=Decimal.log10(value)

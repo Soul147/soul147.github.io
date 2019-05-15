@@ -50,7 +50,7 @@ createAutomaton(function() {while(buyCakeMultiplier(true));while(buyCakeMultipli
 createAutomaton(function() {game.keys = game.keys.add(gainedKeys().multiply(diff/1e5))}, "1e3", "cakes")
 createAutomaton(function() {if(gainedCakes().gte(game.cakes)) newCakeAtStake()}, "1e3", "cakes")
 
-createAutomaton(function() {while(buyKarmaMultiplier(true));buyNCUpgrade(0);buyNCUpgrade(1)}, "1e5", "karma")
+createAutomaton(function() {while(buyKarmaMultiplier(true));while(buyKarmaReduction(true));buyNCUpgrade(0);buyNCUpgrade(1)}, "1e5", "karma")
 createAutomaton(function() {game.cakes = game.cakes.add(gainedCakes().multiply(diff/1e5))}, "1e6", "karma")
 
 createAutomaton(function() {game.karma = game.karma.add(gainedKarma().multiply(diff/1e5))}, "1e9", "time")

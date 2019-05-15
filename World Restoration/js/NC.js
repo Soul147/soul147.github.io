@@ -40,3 +40,11 @@ function buyKarmaMultiplier(auto) {
 	game.karmaMultiplier = game.karmaMultiplier.multiply(1.05);
 	game.karmaMultiplierCost = game.karmaMultiplierCost.multiply(1.4);
 }
+
+function buyKarmaReduction(auto) {
+	if(game.karma.lt(game.karmaReductionCost.multiply(1+!!auto*9))) return;
+	game.karma = game.karma.subtract(game.karmaReductionCost);
+	game.karmaReductionUpgrades = game.karmaReductionUpgrades.add(1)
+	game.karmaReductionCost = game.karmaReductionCost.multiply(1.5);
+	return true;
+}
