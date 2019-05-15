@@ -80,7 +80,7 @@
 	</div>
 	
 	<center>
-		You have repelled <span id = "forks" style = "font-size: 30px"></span> forks.<br>
+		<div style = "height: 80px">You have repelled <span id = "forks" style = "font-size: 30px"></span> forks.</div><br>
 		<button onclick = "buyMaxAll()" class = "before">Max All (M)</button>
 	</center>
 	
@@ -422,7 +422,8 @@ function update() {
 	
 	// Hackerman
 	
-	diff *= parseInt(localStorage.hacker) || 1
+	hacc = parseInt(localStorage.hacker) || 1
+	diff *= hacc
 	
 	// Luigi dies in Infinity War
 	
@@ -457,7 +458,7 @@ function update() {
 		ge("fr"+i).style.display = (!game["fr" + (i-1)] || game["fr" + (i-1)].amount.gt(0)) && getUnlockedFR() >= i ? "" : "none"
 	}
 	
-	updateAutomatons(diff);
+	updateAutomatons(diff / hacc);
 	updateAchievements();
 	
 	//if(game.newEpisode.gt(0)) buyMaxAll();
