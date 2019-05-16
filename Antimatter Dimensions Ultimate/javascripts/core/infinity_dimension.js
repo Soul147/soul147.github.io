@@ -43,6 +43,7 @@ function DimensionProduction(tier) {
   if (player.currentEternityChall == "eterc11") return ret
   if (player.currentEternityChall == "eterc7") ret = ret.dividedBy(player.tickspeed.dividedBy(1000))
   ret = ret.times(DimensionPower(tier))
+  if(inOC(4)) ret = ret.pow(0.25);
   if (player.challenges.includes("postc6")&&!inQC(3)) {
       let tick = new Decimal(player.tickspeed)
       if (player.dilation.active || player.galacticSacrifice) {
@@ -229,8 +230,6 @@ function getInfinityPowerEffectPower() {
 		if (player.currentChallenge.includes("postcngm3_2")) return Math.max(Math.pow(player.galaxies + (player.resets + player.tickspeedBoosts) / 24, 0.7), 7)
 		return Math.max(Math.pow(player.galaxies, 0.7), 7)
 	}
-	if(compOC(4)) return new Decimal(player.mods.ngt.t.reward[3])
-	if(player.mods.ngt) return 8
 	return 7
 }
 
@@ -273,8 +272,10 @@ function loadInfAutoBuyers() {
 var infDimPow = 1
 
 function getIDReplMult() {
-	if (player.masterystudies) if (player.masterystudies.includes('t311')) return getReplMult().pow(17.3)
-	return getReplMult()
+	ret = getReplMult()
+	if (player.masterystudies) if (player.masterystudies.includes('t311')) ret = ret.pow(17.3)
+	if(hasUpg(16)) ret = ret.pow(getUpgEff(16))
+	return ret;
 }
 
 function getEU2Mult() {

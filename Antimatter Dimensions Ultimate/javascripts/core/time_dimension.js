@@ -29,8 +29,8 @@ function getTimeDimensionPower(tier) {
   if (player.timestudy.studies.includes(93)) ret = ret.times(Decimal.pow(player.totalTickGained, 0.25).max(1))
   if (player.timestudy.studies.includes(103)) ret = ret.times(Math.max(player.replicanti.galaxies, 1))
   if (player.timestudy.studies.includes(151)) ret = ret.times(1e4)
-  if (player.timestudy.studies.includes(221)) ret = ret.times(Decimal.pow(1.0025, player.resets))
-  if (player.timestudy.studies.includes(227) && tier == 4) ret = ret.times(Math.pow(calcTotalSacrificeBoost().max(10).log10(), 10))
+  if (player.timestudy.studies.includes(221)) ret = ret.times(Decimal.pow(1.0025+!!player.mods.ngt*0.0065, player.resets))
+  if (player.timestudy.studies.includes(227) && tier == 4) ret = ret.times(Decimal.pow(calcTotalSacrificeBoost().max(10).log10(), 10+!!player.mods.ngt*290))
   if (player.currentEternityChall == "eterc9") ret = ret.times((Decimal.pow(Math.max(player.infinityPower.log2(), 1), 4)).max(1))
   if (ECTimesCompleted("eterc1") !== 0) ret = ret.times(Math.pow(Math.max(player.thisEternity*10, 0.9), 0.3+(ECTimesCompleted("eterc1")*0.05)))
   let ec10bonus = new Decimal(1)
@@ -41,7 +41,15 @@ function getTimeDimensionPower(tier) {
 
   if (player.replicanti.unl && player.replicanti.amount.gt(1) && player.dilation.upgrades.includes(5)) ret = ret.times(getReplMult().pow(0.1))
 	  
-  if(player.mods.ngt) ret = ret.multiply(getGravitonEffect());
+  if(player.mods.ngt) {
+	  if(tier <= 4 && !inOC(6)) {
+		  ret = ret.multiply(getGravitonEffect());
+		  if (hasUpg(15)) ret = ret.times(getUpgEff(15))
+	  }
+	  else {
+		  ret = ret.pow(1-(tier-4)*0.2)
+	  }
+  }
 
   if (inQC(6)) ret = ret.times(player.postC8Mult).dividedBy(player.matter.max(1))
 
@@ -56,7 +64,7 @@ function getTimeDimensionPower(tier) {
     }
   }
 
-
+  if(inOC(4)) ret = ret.pow(0.25);
   return ret
 
 }
@@ -191,7 +199,7 @@ function buyMaxTimeDimension(tier) {
 }
 
 function getTS11Effect() {
-	return Decimal.dividedBy(1,player.tickspeed.dividedBy(1000).pow(0.005).times(0.95).plus(player.tickspeed.dividedBy(1000).pow(0.0003).times(0.05)).max(Decimal.fromMantissaExponent(1, -2500)).pow(player.aarexModifications.newGameExpVersion?0.25:1));
+	return Decimal.dividedBy(1,player.tickspeed.dividedBy(1000).pow(0.005).times(0.95).plus(player.tickspeed.dividedBy(1000).pow(0.0003).times(0.05)).max(Decimal.fromMantissaExponent(1, -2500)).pow(player.aarexModifications.newGameExpVersion&&!player.mods.ngt?0.25:1));
 }
 
 function buyMaxTimeDimensions() {

@@ -59,7 +59,7 @@ function updateQoL(diff) {
 
 	// Automatically gain OP. 
 
-	if(player.mods.ngt && player.options.qol[9]) if(gainedOP().gt(1000)) {
+	if(player.mods.ngt && player.mods.ngt.omni && player.options.qol[9]) if(gainedOP().gt(1000)) {
 		player.mods.ngt.op = player.mods.ngt.op.add(gainedOP().divide(1000).multiply(diff/10));
 	}
 

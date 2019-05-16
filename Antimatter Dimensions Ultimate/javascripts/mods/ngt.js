@@ -2,7 +2,7 @@
 
 function resetNGT(hardReset) {
 	if(hardReset) player.mods.ngt = {
-		version: 1.2,
+		version: 2,
 		omni: 0, // times gone omnipotent stat
 		thisOmni: 0, // time this run
 		lastRun: new Decimal(0), // OP gained during previous run
@@ -16,6 +16,7 @@ function resetNGT(hardReset) {
 		newReplicatorCost: new Decimal(1e10),
 		oc: [], // omni-challenges completed
 		ocr: [], // omni-challenges currently running
+		t: {req: [], goal: [], reward: []}, // info for OCs
 		autobuyer: {
 			
 		}
@@ -34,6 +35,7 @@ function resetNGT(hardReset) {
 		}
 	}
 	for(var i = 1; i <= 8; i++) player.mods.ngt["r" + i] = {amount: new Decimal(0), power: new Decimal(1)}; 
+	updateOmniChallenges()
 }
 
 // Complete all ECs up to a certain point
@@ -60,7 +62,7 @@ function omniMilestoneReached(n) {
 }
 
 function omnipotenceReset(force, auto) {
-	if(!ngt.omni) setTimeout(function() {
+	if(!ngt.omni && !force) setTimeout(function() {
 		$("#dimensionsbtn").notify("New Dimension Unlocked", "success");
 		$("#eternitystorebtn").notify("New Time Studies Unlocked", "success");
 	}, 10000);
@@ -75,7 +77,7 @@ function omnipotenceReset(force, auto) {
 	
 	if((ngt.thisOmni > 600 || out || force) && !auto) dev.omniAnim(5 - !!player.mods.ngt.omni*4);
 	if(!force) player.mods.ngt.omni++;
-	if(!force) player.mods.ngt.op = player.mods.ngt.op.add(gainedOP());
+	if(!force) player.mods.ngt.op = player.mods.ngt.op.add(ngt.omni ? gainedOP() : 1);
 	if(!force) player.mods.ngt.lastRun = gainedOP();
 	
 	if (player.tickspeedBoosts !== undefined) player.tickspeedBoosts = 0
@@ -443,7 +445,9 @@ function updateOmniDimMults(reset) {
 		if(hasUpg(4)) mult = mult.multiply(getUpgEff(4))
 		if(hasUpg(8)) mult = mult.multiply(getUpgEff(8))
 		if(hasUpg(10)) mult = mult.multiply(getUpgEff(10))
+		if(hasUpg(14)) mult = mult.multiply(getUpgEff(14))
 		if(compOC(3)) mult = mult.multiply(ngt.t.reward[2])
+		if(player.achievements.includes("ngt18")) mult = mult.multiply(player.timestudy.studies.length+1)
 		
 		if(reset) d.mult = mult;
 		d.mult = Decimal.max(d.mult, mult)
@@ -458,7 +462,8 @@ function getGravitonEffect() {
 function getReplicatorMult() {
 	ret = new Decimal(1)
 	for(var i = 1; i <= 8; i++) {
-		ret = ret.multiply(Math.log10(Math.max(ngt["r"+i].amount.logarithm,0)+1)+1)
+		ret = ret.multiply(Math.log10(Math.max(ngt["r"+i].amount.logarithm,1))+1)
+		if(hasUpg(17)) ret = ret.multiply(getUpgEff(17))
 	}
 	
 	if(hasUpg(9)) return ret.pow(getUpgEff(9)).max(1);
@@ -466,7 +471,7 @@ function getReplicatorMult() {
 }
 
 function resetReplicators(hardReset) {
-	for(var i = 1; i <= 8; i++) {
+	for(var i = 1; i <= ngt.replicatorsUnlocked; i++) {
 		ngt["r" + i].amount = new Decimal(ngt.replicatorsUnlocked >= i ? 1 : 0)
 		if(hardReset) ngt["r" + i].power = new Decimal(1)
 	}
@@ -488,27 +493,44 @@ function updateReplicatorPowers() {
 		
 		r.power = new Decimal(1);
 		if(hasUpg(5)) r.power = r.power.multiply(getUpgEff(5))
+		if(hasUpg(17)) r.power = r.power.divide(1000)
 	}
 }
 
 // OP upgrades
 
-const opUpgCosts = [
+opUpgCosts = [
 	10,
-	1e5, 1e10,
-	1e25, 1e30, 1e40, 1e45, 1e106, 1e115, 1e120, 1e130
+	1e10, 1e15,
+	1e20, 1e25, 1e30, 1e35, 1e40, 1e45, 1e60, 1e100,
+	"1e110", "1e130", "1e140", "1e145", "1e170", "1e230", "1e250", "1e380", "1e400", "1e480", "1e500", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", 
 ]
+
+for(var i = 0; i < opUpgCosts.length; i++) {
+	opUpgCosts[i] = new Decimal(opUpgCosts[i])
+}
 
 function buyUpg(n) {
 	if(!affordUpg(n)) return;
 	if(ngt.opUpgrades.includes(n)) return;
 	ngt.op = ngt.op.subtract(opUpgCosts[n]);
 	ngt.opUpgrades.push(n);
+	updateOmniUpgrades()
+	
+	if(n == 11) {
+		showTab("challenges")
+		showChallengesTab("omnichallenges")
+	}
+	if(n == 17) {
+		resetReplicators()
+	}
+	
 	return true;
 }
 
 function hasUpg(n) {
 	if(!player.mods.ngt) return;
+	if(n == -1) return true;
 	return ngt.opUpgrades.includes(n);
 }
 
@@ -521,6 +543,10 @@ function getUpgEff(n) {
 	switch(n) {
 		case 0:
 			return Decimal.pow(2, ngt.op.logarithm).max(1);
+		case 1:
+			return getDimboostCostIncrease();
+		case 2:
+			return getGalaxyCostIncrease();
 		case 3:
 			return 1.1**(player.achievements.length+1)
 		case 4:
@@ -528,36 +554,52 @@ function getUpgEff(n) {
 		case 5:
 			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
 		case 6:
-			return Math.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0)/4+4
+			return Decimal.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0).add(4).multiply(4).sqrt().min(8)
 		case 7:
-			return Decimal.pow(10, Math.pow(player.galaxies, 0.5)).max(1);
+			return Decimal.max(Math.pow(player.galaxies, 0.25), 1);
 		case 8:
 			return Decimal.pow(2,Math.log(player.resets+1)).max(1);
 		case 9:
 			return Math.max(Math.log10(Math.max(player.totalTickGained,1)),0)/3+3
 		case 10:
-			return Decimal.pow(1+Math.log(1-player.tickspeed.logarithm), 5).max(1)
+			return Decimal.pow(1-player.tickspeed.logarithm, 0.1).multiply(100).max(1)
+		case 12:
+			return Decimal.log10(Decimal.max(ngt.r1.amount.log10(),1))**2
+		case 14: 
+			return getReplMult().pow(0.01)
+		case 15: 
+			return Decimal.pow(69, ngt.d8.amount.pow(2)).max(1)
+		case 16: 
+			return Decimal.pow(getReplicatorMult().log10(), 1.25).max(1)
+		case 17: 
+			return Decimal.pow(Decimal.log10(player.timeShards.log10()), 0.5).max(1)
 	}
 }
 
 function updateOmniUpgrades() {
 	ngt.opMult = new Decimal(1);
 	if(hasUpg(0)) ngt.opMult = ngt.opMult.multiply(getUpgEff(0));
-	ge("ouinfo11").innerHTML = shorten(getUpgEff(0))
-	ge("ouinfo21").innerHTML = getFullExpansion(getDimboostCostIncrease())
-	ge("ouinfo22").innerHTML = getFullExpansion(getGalaxyCostIncrease())
-	ge("ouinfo31").innerHTML = shorten(getUpgEff(3))
-	ge("ouinfo32").innerHTML = shorten(getUpgEff(4))
-	ge("ouinfo33").innerHTML = shorten(getUpgEff(5))
-	ge("ouinfo34").innerHTML = getUpgEff(6).toFixed(4)
-	ge("ouinfo35").innerHTML = shorten(getUpgEff(7))
-	ge("ouinfo36").innerHTML = shorten(getUpgEff(8))
-	ge("ouinfo37").innerHTML = getUpgEff(9).toFixed(4)
-	ge("ouinfo38").innerHTML = shorten(getUpgEff(10))
+	ngt.unlockedRings = 0
+	if(hasUpg(0)) ngt.unlockedRings++;
+	if(hasUpg(2)) ngt.unlockedRings++;
+	if(hasUpg(10)) ngt.unlockedRings++;
+	
+	if(hasUpg(20)) {
+		opUpgCosts[20] = new Decimal("1e500")
+	}
+	else {
+		opUpgCosts[20] = Decimal.pow(10, Math.random() * 20 + 490)
+	}
+	
+	gn("ouinfo", function(n, i) {n.innerHTML = shorten(getUpgEff(i))})
+	gn("oucost", function(n, id) {n.innerHTML = shortenCosts(opUpgCosts[id])})
+	
+	updateOmniSpins()
 }
 
-var rings = [1, 2, 8] // how many upgrades are in each ring
-var spins = [0, 0, 0] // how far each ring has spun
+var rings = [ 1,  2,  8, 18]  // how many upgrades are in each ring
+var total = [ 1,  3, 11, 29]  // I could automate it, but fuck it
+var spins = [ 0,  0,  0,  0]  // how far each ring has spun
 var last = 0
 
 function updateOmniSpins() {
@@ -566,7 +608,7 @@ function updateOmniSpins() {
 	diff = (Date.now() - last);
 	last = Date.now()
 	for(var i = 0; i < rings.length; i++) {
-		spins[i] += diff * i / 1e5
+		spins[i] += diff * 2**i / 1e5
 		
 		for(var j = 0; j < rings[i]; j++) {
 			// Get actual ID of upgrade from ring position
@@ -575,7 +617,6 @@ function updateOmniSpins() {
 			
 			a = i + 1
 			b = j + 1
-			div = ge("ou" + a + b);
 			
 			centerX = innerWidth / 2 - 10;
 			centerY = 1000;
@@ -587,26 +628,78 @@ function updateOmniSpins() {
 			offsetX = Math.cos(angle) * i * 160
 			offsetY = Math.sin(angle) * i * 160
 			
-			div.style.position = "absolute"
-			div.style.left = centerX + offsetX + "px";
-			div.style.top = centerY + offsetY + "px";
+			index = (total[i-1]||0)+j
+			l = (ngt.opUpgrades.length-10)/2
 			
-			ge("oucost" + a + b).innerHTML = shortenCosts(opUpgCosts[id])
-			div.className = hasUpg(id) ? "omniupgbought" : affordUpg(id) ? "omniupg" : "omniupglocked"
+			randomX = (index == 20) ? Math.random() * l - l/2 : 0
+			randomY = (index == 20) ? Math.random() * l - l/2 : 0
+			
+			div = document.getElementsByName("ou")[index]
+			
+			// div.style.display = ngt.unlockedRings >= i ? "" : "none"
+			div.style.opacity = ngt.unlockedRings >= i ? 1 : 0
+			div.style.position = "absolute"
+			div.style.left = centerX + offsetX + randomX + "px";
+			div.style.top = centerY + offsetY + randomY + "px";
+			div.className = !hasUpg(id-1) ? "omniupghidden" : hasUpg(id) ? "omniupgbought" : affordUpg(id) ? "omniupg" : "omniupglocked"
 			div.upgID = id;
 			div.onclick = function() {
 				buyUpg(this.upgID);
 			}
 		}
-	}
+	}			
 }
-
-setTimeout(function() {setInterval(updateOmniSpins, 1)}, 1000)
 
 // omni-challenges
 
+function updateOmniChallenges() {
+	ngt.t = {
+		req: [
+			new Decimal("1e1350000000"),
+			new Decimal("1e1800000000"),
+			new Decimal("1e2222222222"),
+			new Decimal("1e4200000000"),
+			new Decimal("1e5250000000"),
+			new Decimal("1e5750000000"),
+			new Decimal("1e9999999999"),
+			new Decimal("1e9999999999"),
+			new Decimal("1e9999999999"),
+			new Decimal("1e9999999999"),
+		],
+		goal: [
+			new Decimal("1e650000"),
+			new Decimal("1e10500000"),
+			new Decimal("1e11500000"),
+			new Decimal("1e5400000"),
+			new Decimal("1e400000000"),
+			new Decimal("1e250000000"),
+			new Decimal("1e999999999"),
+			new Decimal("1e999999999"),
+			new Decimal("1e999999999"),
+			new Decimal("1e999999999"),
+		],
+		reward: [
+			Decimal.max((Decimal.log10(player.firstBought) - 1) / 100 + 1, 1),
+			Decimal.max(Decimal.log10(Decimal.max(-player.tickspeed.logarithm, 0)), 0).pow(0.75),
+			Decimal.max(player.timeShards.logarithm, 0).pow(0.2).multiply(3).sqrt().max(3),
+			new Decimal(Decimal.log10(player.infinityPower.log10()+1)).pow(0.1),
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+		]
+	}
+}
+
+function getOCGoal() {
+	if(!player.mods.ngt) return
+	return ngt.t.goal[ngt.ocr[0]-1]
+}
+
 function startOmniChallenge(n) {
-	if(player.money.gte(ngt.t.req[n-1])) setOmniChallenge(n);
+	if(player.totalmoney.gte(ngt.t.req[n-1])) setOmniChallenge(n);
 }
 
 function setOmniChallenge(p) {
@@ -668,4 +761,33 @@ function toggleAutoOmniMode() {
 	else if (ngt.autobuyer.mode == "time") ngt.autobuyer.mode = "peak"
 	else ngt.autobuyer.mode = "amount"
 	updateAutoOmniMode()
+}
+
+// Progress Bar
+
+function doOmniProgress() {
+	document.getElementById("progressbar").className="omniProgress"
+	var gop = gainedOP()
+	if (inOC()) {
+		var percentage = Math.min(player.money.max(1).log10() / Decimal.log10(getOCGoal()) * 100, 100).toFixed(2) + "%"
+		document.getElementById("progressbar").style.width = percentage
+		document.getElementById("progresspercent").textContent = percentage
+		document.getElementById("progresspercent").setAttribute('ach-tooltip','Percentage to omni-challenge goal')
+	} else {
+		var gopLog = gop.log2()
+		var goal = Math.pow(2,Math.ceil(Math.log10(gopLog) / Math.log10(2)))
+		var percentage = Math.min(gopLog / goal * 100, 100).toFixed(2) + "%"
+		document.getElementById("progressbar").style.width = percentage
+		document.getElementById("progresspercent").textContent = percentage
+		document.getElementById("progresspercent").setAttribute('ach-tooltip',"Percentage to "+shortenDimensions(Decimal.pow(2,goal))+" OP gain")
+	}
+}
+
+function getDilationRequirement() {
+	return new Decimal("1e10000")
+}
+
+function divide() {
+    resetNGT(true)
+	omnipotenceReset(true)
 }

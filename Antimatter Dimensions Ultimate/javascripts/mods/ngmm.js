@@ -89,7 +89,7 @@ function buyGalaxyUpgrade(i) {
 function reduceDimCosts() {
 	let div=new Decimal(1)
 	if(player.mods.ngt) {
-		if(player.achievements.includes("ngt14")) div=div.multiply(Number.MAX_VALUE)
+		if(player.achievements.includes("ngt13")) div=div.multiply(1e308)
 	}
 	if (player.galacticSacrifice) {
 		if (player.achievements.includes("r21")) div=div.multiply(10)

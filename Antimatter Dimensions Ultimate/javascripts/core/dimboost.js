@@ -19,6 +19,7 @@ function getDimensionBoostPower(next, focusOn) {
       else if (player.challenges.includes("postc7")) ret = Math.pow(ret,2)
   }
   if (player.dilation.studies.includes(6)&&player.currentEternityChall!="eterc14"&&!inQC(3)&&!inQC(7)) ret = getExtraDimensionBoostPower().times(ret)
+  if(compOC(4)) ret = ret.pow(ngt.t.reward[3])
   return new Decimal(ret)
 }
 
@@ -32,7 +33,7 @@ function softReset(bulk) {
       giveAchievement("Boosting to the max");
   }
   if (player.currentChallenge=="challenge14") player.tickBoughtThisInf.pastResets.push({resets:player.resets,bought:player.tickBoughtThisInf.current})
-  if (player.dilation.upgrades.includes("ngpp3") && player.eternities >= 1e9 && player.masterystudies && player.aarexModifications.switch === undefined) {
+  if ((player.dilation.upgrades.includes("ngpp3") && player.eternities >= 1e9 && player.masterystudies && player.aarexModifications.switch === undefined) || player.achievements.includes("ngt14")) {
       skipResets()
       player.matter = new Decimal(0)
       player.postC8Mult = new Decimal(1)

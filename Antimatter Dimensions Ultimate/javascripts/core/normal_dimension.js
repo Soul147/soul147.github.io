@@ -56,6 +56,7 @@ function getDimensionFinalMultiplier(tier) {
   if (player.boughtDims&&player.achievements.includes("r98")) multiplier = multiplier.times(player.infinityDimension8.amount.max(1))
   if (player.achievements.includes("r84")) multiplier = multiplier.times(player.money.pow(player.galacticSacrifice?0.00002:0.00004).plus(1));
   else if (player.achievements.includes("r73")) multiplier = multiplier.times(player.money.pow(player.galacticSacrifice?0.00001:0.00002).plus(1));
+  if (player.achievements.includes("ngt17")) multiplier = multiplier.times(player.money.pow(0.001).plus(1));
 
 
   if (player.timestudy.studies.includes(71) && tier !== 8) multiplier = multiplier.times(calcTotalSacrificeBoost().pow(0.25).min("1e210000"));
@@ -207,7 +208,6 @@ function hasInfinityMult(tier) {
         if (player.aarexModifications.newGameExpVersion) dimMult *= 10
 
         if (player.infinityUpgrades.includes('dimMult')) dimMult *= infUpg12Pow()
-        if (hasUpg(7)) dimMult *= getUpgEff(7)
         if ((player.currentChallenge == "challenge9" || player.currentChallenge == "postc1")&&!nonrandom) dimMult = Math.pow(10/0.30,Math.random())*0.30
     
         if (player.achievements.includes("r58")) dimMult = player.galacticSacrifice?Math.pow(dimMult,1.0666):dimMult*1.01;
@@ -215,6 +215,7 @@ function hasInfinityMult(tier) {
         if (player.galacticSacrifice) if ((player.galacticSacrifice.upgrades.includes(33) && player.currentChallenge != "challenge15" && player.currentChallenge != "postc1") || focusOn == "g33") dimMult *= galUpgrade33();
         if (focusOn == "no-QC5") return dimMult
         if (QCIntensity(5)) dimMult += getQCReward(5)
+        if (hasUpg(7)) dimMult = Decimal.pow(dimMult, getUpgEff(7))
         if (player.masterystudies) {
 			if (player.masterystudies.includes("d12")) dimMult += getNanofieldRewardEffect(8)
 			if (focusOn != "linear") dimMult = Decimal.pow(dimMult, getMPTPower())
@@ -535,6 +536,6 @@ function getDimensionProductionPerSecond(tier) {
 		if (player.masterystudies != undefined) tick = tick.pow(getNanofieldRewardEffect(5))
 		return ret.times(Decimal.pow(10,(player.aarexModifications.newGame3MinusVersion?2:3)-maximum)).times(tick);
 	}
-	if(inOC(4)) ret = ret.pow(0.5);
+	if(inOC(4)) ret = ret.pow(0.25);
 	return ret.div(tick.div(1e3));
 }
