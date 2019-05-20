@@ -4760,7 +4760,9 @@
 				<center>
 					<div id = "lightupgrades" style = "position: absolute; left: 0%; width: 50%;">
 						you have <span id = "virtualparticles" class = "lightcurrency">0</span> virtual particles.<br>
-						they have created <span id = "virtualgalaxies" class = "lightcurrency">0</span> virtual galaxies.<br>
+						you have gained a total of <span id = "totalvirtualparticles" class = "lightcurrency">0</span>.<br>
+						you have <span id = "virtualgalaxies" class = "lightcurrency">0</span> virtual galaxies.<br>
+						next virtual galaxy at <span id = "virtualgalaxycost" class = "lightcurrency">0</span> virtual particles.<br>
 					</div>
 					<div id = "darkupgrades" style = "position: absolute; right: 0%; width: 50%">
 						you have <span id = "unstablematter" class = "darkcurrency">0</span> unstable matter.<br>
@@ -4772,8 +4774,10 @@
 						<input type = "range" min = "0" max = "10" value = "0" id = "energyinput" style = "width: 300px"><br>
 						<br>
 						the rift contains <span id = "riftenergy" class = "darkcurrency">0</span> energy. <span id = "energyrate" class = "darkcurrency">0</span> energy/s<br>
-						it has produced <span id = "eighthextra" class = "darkcurrency">0</span> eighth dimensions. <span id = "eighthprod" class = "darkcurrency">0</span> dimensions/s<br>
+						it has produced <span id = "eighthextra" class = "darkcurrency">0</span> eighth dimensions. <span id = "eighthprod" class = "darkcurrency">0</span> <span id = "eighthunit">dimensions/s</span><br>
 						rift stability: <span id = "stability" class = "darkcurrency">100%</span><br>
+						<br>
+						<button class = "darkbutton" style = "width: 300px; height: 50px;" onclick = "dumpEnergy()">release all energy from the rift.<br>gain <span id = "vpgain" class = "lightcurrency">0</span> VP.</button>
 					</div>
 				
 					<div id = "blade" style = "position: absolute; left: 40%; width: 20%" onclick = "divide()"><img src = "images/blade.png"></div>

@@ -21,8 +21,11 @@ function resetNGT(hardReset, divisionReset) {
 			
 		},
 		division: hardReset ? {
+			times: 0,
 			// light
 			vp: new Decimal(0),
+			totalvp: new Decimal(0),
+			vgal: 0,
 			// dark
 			um: new Decimal(0),
 			shards: new Decimal(0),
@@ -803,8 +806,8 @@ function getDilationRequirement() {
 animation = true
 
 function divide() {
-	if(ngt.division.divided) return false;
-	ngt.division.divided = true
+	if(!hasUpg(20)) return false;
+	ngt.division.times++
 	ngt.animating = true;
 	ge("blade").style.transitionDuration = "0.5s"
 	ge("blade").style.top = "50px"
@@ -834,7 +837,7 @@ function divide() {
 		omnipotenceReset(true, true)
 		player.infinityUpgrades.push("skipResetGalaxy")
 		softReset(0)
-		ngt.division.um = ngt.division.um.add(leftoverOP.log10())
+		ngt.division.um = ngt.division.um.max(leftoverOP.log10()) // gain up to your log(OP) in unstable matter at a time
 	}, 2000)
 	if(animation) {
 		setTimeout(function() {
@@ -852,7 +855,7 @@ function divide() {
 }
 
 function getHalfLife() {
-	return 600
+	return 3600
 }
 
 function getEnergyInput(base) {
@@ -865,8 +868,14 @@ function getEighthDimensions() {
 	return player.eightAmount.add(ngt.division.eightProduced || 0)
 }
 
-function getEighthProduction() {
-	return ngt.division.energy.sqrt();
+function getEighthProduction(display) {
+	ret = ngt.division.energy.sqrt().divide(1000);
+	if(display) {
+		// do this twice - once for hours, once for minutes
+		if(ret.lt(1)) ret = ret.multiply(60)
+		if(ret.lt(1)) ret = ret.multiply(60)
+	}
+	return ret;
 }
 
 function getRiftDamage() {
@@ -877,9 +886,38 @@ function getRiftStability() {
 	return ngt.division.health.divide(ngt.division.maxHealth);
 }
 
+function dumpEnergy() { // remove energy from the rift, gaining virtual particles
+	dumped = ngt.division.energy;
+	gain = getVPGain()
+	ngt.division.energy = new Decimal(0);
+	ngt.division.vp = ngt.division.vp.add(gain);
+	ngt.division.totalvp = ngt.division.totalvp.add(gain);
+}
+
+function getVPGain() {
+	return ngt.division.energy.divide(1e3).pow(2).floor()
+}
+
+function getVGalBase() {
+	return 2
+}
+
+function getVGalAmount() {
+	return Math.floor(Math.max(ngt.division.totalvp.multiply(getVGalBase()).log(getVGalBase()), 0))
+}
+
+function meltdown() { // you fucked up
+	
+}
+
 function updateDivision(diff) {
 	if(!player.mods.ngt) return;
+	ge("blade").style.display = hasUpg(20) ? "" : "none"
 	if(!ngt.animating && player.options.currentTab == "omnitab" && player.options.currentOmniTab == "theblade") ge("blade").style.top = Math.sin(Date.now() / 1000) * 40 + 200 + "px"
+	
+	// Virtual Particle calculations
+	
+	ngt.division.vgal = getVGalAmount()
 	
 	// Half-life of virtual particles
 	
@@ -905,22 +943,28 @@ function updateDivision(diff) {
 	
 	// Eighth dimension production
 	
+	ep = getEighthProduction()
 	ngt.division.energy = ngt.division.energy.add(getEnergyInput().multiply(diff/10))
-	amount = getEighthProduction().multiply(diff/10)
+	amount = ep.multiply(diff/10)
 	if(!ngt.division.eightProduced) ngt.division.eightProduced = new Decimal(0)
 	ngt.division.eightProduced = ngt.division.eightProduced.add(amount)
 	
 	// Update HTML
 	
 	ge("virtualparticles").innerHTML = getFullExpansion(ngt.division.vp)
+	ge("totalvirtualparticles").innerHTML = getFullExpansion(ngt.division.totalvp)
+	ge("virtualgalaxies").innerHTML = getFullExpansion(ngt.division.vgal)
+	ge("virtualgalaxycost").innerHTML = getFullExpansion(Decimal.pow(getVGalBase(), ngt.division.vgal))
 	
 	ge("unstablematter").innerHTML = getFullExpansion(ngt.division.um)
 	ge("drainrate").innerHTML = timeDisplayShort(getHalfLife()*10, true, 3)
 	ge("shards").innerHTML = getFullExpansion(ngt.division.shards)
 	ge("eighthextra").innerHTML = getFullExpansion(ngt.division.eightProduced)
-	ge("eighthprod").innerHTML = getFullExpansion(getEighthProduction())
+	ge("eighthprod").innerHTML = getFullExpansion(getEighthProduction(true))
+	ge("eighthunit").innerHTML = ep.gt(1) ? "dimensions/s" : ep.gt(1/60) ? "dimensions/m" : "dimensions/h"
 	ge("energyindisplay").innerHTML = getEnergyInput(true);
 	ge("riftenergy").innerHTML = getFullExpansion(ngt.division.energy);
 	ge("energyrate").innerHTML = getFullExpansion(getEnergyInput());
 	ge("stability").innerHTML = getFullExpansion(ngt.division.health) + "/" + getFullExpansion(ngt.division.maxHealth) + " (" + getRiftStability().multiply(100).toFixed(2) + "%)";
+	ge("vpgain").innerHTML = getFullExpansion(getVPGain())
 }

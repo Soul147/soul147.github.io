@@ -2183,8 +2183,16 @@ function transformSaveToDecimal() {
 		
 		updateToVersion(2, function() {
 			ngt.division = {
-				drain: new Decimal(0),
-				vp: new Decimal(0)
+				times: 0,
+				// light
+				vp: new Decimal(0),
+				totalvp: new Decimal(0),
+				vgal: 0,
+				// dark
+				um: new Decimal(0),
+				shards: new Decimal(0),
+				energy: new Decimal(0),
+				health: new Decimal(0),
 			}
 		})
 		

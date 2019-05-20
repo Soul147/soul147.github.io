@@ -7878,7 +7878,7 @@ function gameLoop(diff) {
 			ngt.bestOPTime = ngt.thisOmni;
 		}
 		
-		ge("omnitabbtn").style.display = (gainedOP().gte(1) || ngt.omni || ngt.division.divided) ? "" : "none"
+		ge("omnitabbtn").style.display = (gainedOP().gte(1) || ngt.omni || ngt.division.times) ? "" : "none"
 		
 		ge("gravdisable").innerHTML = " and gravitons (to time dimensions)"
 		
