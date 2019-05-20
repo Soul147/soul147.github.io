@@ -2181,7 +2181,7 @@ function transformSaveToDecimal() {
 			resetOmniDims = 2;
 		});
 		
-		updateToVersion(2, function() {
+		updateToVersion(2.1, function() {
 			ngt.division = {
 				times: 0,
 				// light
