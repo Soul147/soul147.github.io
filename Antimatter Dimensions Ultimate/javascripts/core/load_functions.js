@@ -2181,7 +2181,7 @@ function transformSaveToDecimal() {
 			resetOmniDims = 2;
 		});
 		
-		updateToVersion(2.1, function() {
+		updateToVersion(2.11, function() {
 			ngt.division = {
 				times: 0,
 				// light
@@ -2192,7 +2192,7 @@ function transformSaveToDecimal() {
 				um: new Decimal(0),
 				shards: new Decimal(0),
 				energy: new Decimal(0),
-				health: new Decimal(0),
+				damage: new Decimal(0),
 			}
 		})
 		
