@@ -30,7 +30,7 @@ function resetNGT(hardReset, divisionReset) {
 			um: new Decimal(0),
 			shards: new Decimal(0),
 			energy: new Decimal(0),
-			health: new Decimal(0),
+			damage: new Decimal(0),
 		} : player.mods.ngt.division,
 	}
 	for(var i = 1; i <= 8; i++) {
