@@ -233,7 +233,7 @@ tab("before")
 HTML = "<tr>"
 for(var i = 1; i <= 80; i++) {
 	if(i % 4 == 1) HTML += "</tr><tr>"
-	HTML += '<td id = "fr'+i+'" width = "20%">Fork Repellent '+i+'<br>Amount: <span id = "fr'+i+'a"></span><br>Multiplier: x<span id = "fr'+i+'m"></span><br>Production: <span id = "fr'+i+'p"></span> forks/s<br><button id = "fr'+i+'b" onclick = "buyFR('+i+')">Cost: <span id = "fr'+i+'c"></span> forks</button></td>'
+	HTML += '<td id = "fr'+i+'" width = "20%">Fork Repellent '+i+'<br>Amount: <span id = "fr'+i+'a"></span><br>Multiplier: x<span id = "fr'+i+'m"></span><br>Production: <span id = "fr'+i+'p"></span> forks/s<br><button id = "fr'+i+'b" onclick = "buyFR('+i+')">Requires <span id = "fr'+i+'c"></span> forks</button></td>'
 }
 ge("frlist").innerHTML += HTML
 
