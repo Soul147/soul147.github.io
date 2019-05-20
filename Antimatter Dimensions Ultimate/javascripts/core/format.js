@@ -621,14 +621,13 @@ function iroha (n, depth) {
   return iroha_special[prefix(num)] + (rec.eq(1) ? '' : iroha(rec, depth - 1));
 }
 
-function getFullExpansion(num, decimal) {
+function getFullExpansion(num, places) {
 	if (num === null) return "NaN"
 	if (isNaN(num)) return "NaN"
 	if (!break_infinity_js && typeof(num) != "number") if (isNaN(num.logarithm)) return "NaN"
-	if (num > 1e12) return shorten(num)
+	if (num > 1e15) return shorten(num)
 	if (player.options.notation === "Greek" || player.options.notation === "Morse code" || player.options.notation === "Symbols" || player.options.notation === "Lines" || player.options.notation === "Simplified Written") return convTo(player.options.notation, num)
-	if(decimal) return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-	return Math.floor(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+	return num.toFixed(places).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 shorten = function (money) {

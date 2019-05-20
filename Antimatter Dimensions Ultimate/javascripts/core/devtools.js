@@ -6,6 +6,12 @@ dev.giveAllAchievements = function() {
     })
 }
 
+dev.giveSomeAchievements = function(n=140) {
+	Object.keys(allAchievements).forEach( function(key) {
+		if(parseInt(key.substring(1)) < n) giveAchievement(allAchievements[key])
+	})
+}
+
 dev.giveAllSecretAchievements = function() {
     Object.keys(allAchievements).forEach( function(key) {
         if(key.includes("s")) giveAchievement(allAchievements[key])

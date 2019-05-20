@@ -2033,6 +2033,20 @@ br {
 	transition-duration: 0.2s
 }
 
+.lightcurrency, .darkcurrency {
+	font-size: 20px;
+}
+
+.lightcurrency {
+	color: white;
+	text-shadow: 0px 0px 2px black, 0px 0px 4px white;
+}
+
+.darkcurrency {
+	color: black;
+	text-shadow: 0px 0px 2px white, 0px 0px 4px black;
+}
+
 .op {
 	color: black;
 	font-size: 35px;

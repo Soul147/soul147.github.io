@@ -1,7 +1,7 @@
 // Initialize NGT stuff
 
-function resetNGT(hardReset) {
-	if(hardReset) player.mods.ngt = {
+function resetNGT(hardReset, divisionReset) {
+	if(hardReset || divisionReset) player.mods.ngt = {
 		version: 2,
 		omni: 0, // times gone omnipotent stat
 		thisOmni: 0, // time this run
@@ -19,7 +19,16 @@ function resetNGT(hardReset) {
 		t: {req: [], goal: [], reward: []}, // info for OCs
 		autobuyer: {
 			
-		}
+		},
+		division: hardReset ? {
+			// light
+			vp: new Decimal(0),
+			// dark
+			um: new Decimal(0),
+			shards: new Decimal(0),
+			energy: new Decimal(0),
+			health: new Decimal(0),
+		} : player.mods.ngt.division,
 	}
 	for(var i = 1; i <= 8; i++) {
 		j = i - 1
@@ -588,11 +597,20 @@ function updateOmniUpgrades() {
 		opUpgCosts[20] = new Decimal("1e500")
 	}
 	else {
-		opUpgCosts[20] = Decimal.pow(10, Math.random() * 20 + 490)
+		opUpgCosts[20] = Decimal.pow(10, Math.random() * 100 + 450)
 	}
+	
+	if(player.options.currentTab !== "omnitab" || player.options.currentOmniTab !== "omnipotence") return; // only run when tab is active
 	
 	gn("ouinfo", function(n, i) {n.innerHTML = shorten(getUpgEff(i))})
 	gn("oucost", function(n, id) {n.innerHTML = shortenCosts(opUpgCosts[id])})
+	gn("ou", function(div, id) {
+		div.className = !hasUpg(id-1) ? "omniupghidden" : hasUpg(id) ? "omniupgbought" : affordUpg(id) ? "omniupg" : "omniupglocked"
+		div.upgID = id;
+		div.onclick = function() {
+			buyUpg(this.upgID);
+		}
+	})
 	
 	updateOmniSpins()
 }
@@ -641,11 +659,6 @@ function updateOmniSpins() {
 			div.style.position = "absolute"
 			div.style.left = centerX + offsetX + randomX + "px";
 			div.style.top = centerY + offsetY + randomY + "px";
-			div.className = !hasUpg(id-1) ? "omniupghidden" : hasUpg(id) ? "omniupgbought" : affordUpg(id) ? "omniupg" : "omniupglocked"
-			div.upgID = id;
-			div.onclick = function() {
-				buyUpg(this.upgID);
-			}
 		}
 	}			
 }
@@ -787,7 +800,127 @@ function getDilationRequirement() {
 	return new Decimal("1e10000")
 }
 
+animation = true
+
 function divide() {
-    resetNGT(true)
-	omnipotenceReset(true)
+	if(ngt.division.divided) return false;
+	ngt.division.divided = true
+	ngt.animating = true;
+	ge("blade").style.transitionDuration = "0.5s"
+	ge("blade").style.top = "50px"
+	setTimeout(function() {
+		ge("blade").style.top = "2000px"
+	}, 1900)
+	setTimeout(function() {
+		if(animation) {
+			ge("death").style.display = ""
+			ge("bleed").style.opacity = 1
+		}
+		else {
+			ge("blade").style.transitionDuration = "0s"
+			ngt.animating = false
+		}
+		leftoverOP = ngt.op;
+		resetNGT(false, true)
+		omnipotenceReset(true, true)
+		player.infinityPoints = new Decimal(0)
+		setTheme()
+		player.autobuyers.forEach(function(a) {
+			a.isOn = false;
+		})
+		player.break = false;
+		showTab("dimensions")
+		showDimTab("antimatterdimensions")
+		omnipotenceReset(true, true)
+		player.infinityUpgrades.push("skipResetGalaxy")
+		softReset(0)
+		ngt.division.um = ngt.division.um.add(leftoverOP.log10())
+	}, 2000)
+	if(animation) {
+		setTimeout(function() {
+			i=0;
+			text = "the universe is bleeding.NNyou feel the energy of something that cannot exist.NNyou will regain what is lost and become stronger than ever.NNthe time has come to go beyond infinity.".split("")
+			text.forEach(function(letter) {i += 1+(letter=="N")*9-(letter==" "); setTimeout(function() {ge("bleed").innerHTML += letter == "N" ? "<br>" : letter}, i * 100)})
+		}, 5000)
+		setTimeout(function() {
+			ge("bleed").style.opacity = 0
+		}, 25000)
+		setTimeout(function() {
+			ge("death").style.display = "none"
+		}, 30000)
+	}
+}
+
+function getHalfLife() {
+	return 600
+}
+
+function getEnergyInput(base) {
+	ret = ge("energyinput").value**2;
+	if(base) return ret;
+	return ngt.division.um.multiply(ret/100);
+}
+
+function getEighthDimensions() {
+	return player.eightAmount.add(ngt.division.eightProduced || 0)
+}
+
+function getEighthProduction() {
+	return ngt.division.energy.sqrt();
+}
+
+function getRiftDamage() {
+	return ngt.division.energy
+}
+
+function getRiftStability() {
+	return ngt.division.health.divide(ngt.division.maxHealth);
+}
+
+function updateDivision(diff) {
+	if(!player.mods.ngt) return;
+	if(!ngt.animating && player.options.currentTab == "omnitab" && player.options.currentOmniTab == "theblade") ge("blade").style.top = Math.sin(Date.now() / 1000) * 40 + 200 + "px"
+	
+	// Half-life of virtual particles
+	
+	secondsElapsed = diff / 10;
+	
+	logChange = secondsElapsed*Math.log10(2)/getHalfLife();
+	newLog = ngt.division.um.log10() - logChange;
+	average = Decimal.pow(10, newLog);
+	amount = average.floor();
+	variance = average.subtract(amount)
+	if(Math.random() < variance) amount = amount.add(1)
+	gain = ngt.division.um.subtract(amount);
+	if(isNaN(gain.logarithm)) gain = new Decimal(0)
+	
+	ngt.division.shards = ngt.division.shards.add(gain);
+	ngt.division.um = amount;
+	
+	// Rift stability
+	
+	ngt.division.maxHealth = ngt.division.shards.pow(2).multiply(1000);
+	ngt.division.damage = ngt.division.damage.add(getRiftDamage().multiply(diff/10))
+	ngt.division.health = ngt.division.maxHealth.subtract(ngt.division.damage).max(0)
+	
+	// Eighth dimension production
+	
+	ngt.division.energy = ngt.division.energy.add(getEnergyInput().multiply(diff/10))
+	amount = getEighthProduction().multiply(diff/10)
+	if(!ngt.division.eightProduced) ngt.division.eightProduced = new Decimal(0)
+	ngt.division.eightProduced = ngt.division.eightProduced.add(amount)
+	
+	// Update HTML
+	
+	ge("virtualparticles").innerHTML = getFullExpansion(ngt.division.vp)
+	
+	ge("unstablematter").innerHTML = getFullExpansion(ngt.division.um)
+	ge("drainrate").innerHTML = timeDisplayShort(getHalfLife()*10, true, 3)
+	ge("shards").innerHTML = getFullExpansion(ngt.division.shards)
+	ge("eighthextra").innerHTML = getFullExpansion(ngt.division.eightProduced)
+	ge("eighthprod").innerHTML = getFullExpansion(getEighthProduction())
+	ge("energyindisplay").innerHTML = getEnergyInput(true);
+	ge("riftenergy").innerHTML = getFullExpansion(ngt.division.energy);
+	ge("energyrate").innerHTML = getFullExpansion(getEnergyInput());
+	ge("stability").innerHTML = getFullExpansion(ngt.division.health) + "/" + getFullExpansion(ngt.division.maxHealth) + " (" + getRiftStability().multiply(100).toFixed(2) + "%)";
 }

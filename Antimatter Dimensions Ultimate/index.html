@@ -4690,7 +4690,7 @@
                 <tr>
                     <td><button class="secondarytabbtn" onclick="showOmniTab('omnipotence')">Omnipotence</button></td>
                     <td><button class="secondarytabbtn" onclick="showOmniTab('omnimilestones')">Milestones</button></td>
-                    <!-- <td><button class="secondarytabbtn" onclick="showOmniTab('theblade')">The Blade</button></td> -->
+                    <td><button class="secondarytabbtn" onclick="showOmniTab('theblade')">The Blade</button></td>
                 </tr>
             </table>
 			<br>
@@ -4728,7 +4728,7 @@
 					<div class = "omniupglocked" name = "ou">replicators are slower, but their effect is boosted by time shards<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>distant galaxy scaling is 20% slower<span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>remote galaxy scaling is 20% slower<span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
-					<div class = "omniupglocked" name = "ou"><br>COMING NEXT UPDATE<br><span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
+					<div class = "omniupglocked" name = "ou"><br>unlock the blade<br><span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>???<br><span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>???<br><span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>???<br><span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
@@ -4756,9 +4756,30 @@
 					<div class = "omnimilestonelocked" id = "om8" style = "display: none">keep mastery studies<br><span id = "omreq8"></span></div><br>
 				</center>
 			</div>
-			<div id = "theblade" class = "omnitab">
+			<div id = "theblade" class = "omnitab" style = "height: 1500px">
 				<center>
-					<div id = "blade"><img src = "images/blade.png"></div>
+					<div id = "lightupgrades" style = "position: absolute; left: 0%; width: 50%;">
+						you have <span id = "virtualparticles" class = "lightcurrency">0</span> virtual particles.<br>
+						they have created <span id = "virtualgalaxies" class = "lightcurrency">0</span> virtual galaxies.<br>
+					</div>
+					<div id = "darkupgrades" style = "position: absolute; right: 0%; width: 50%">
+						you have <span id = "unstablematter" class = "darkcurrency">0</span> unstable matter.<br>
+						it has a half-life of <span id = "drainrate" class = "darkcurrency">0s</span>.<br>
+						you have <span id = "shards" class = "darkcurrency">0</span> dimensional shards.<br>
+						<br>
+						<br>
+						energy input: <span id = "energyindisplay">0</span>%<br>
+						<input type = "range" min = "0" max = "10" value = "0" id = "energyinput" style = "width: 300px"><br>
+						<br>
+						the rift contains <span id = "riftenergy" class = "darkcurrency">0</span> energy. <span id = "energyrate" class = "darkcurrency">0</span> energy/s<br>
+						it has produced <span id = "eighthextra" class = "darkcurrency">0</span> eighth dimensions. <span id = "eighthprod" class = "darkcurrency">0</span> dimensions/s<br>
+						rift stability: <span id = "stability" class = "darkcurrency">100%</span><br>
+					</div>
+				
+					<div id = "blade" style = "position: absolute; left: 40%; width: 20%" onclick = "divide()"><img src = "images/blade.png"></div>
+					<div id = "death" style = "z-index: 100000; position: fixed; width: 100%; height: 100%; left: 0; top: 0; background-color: black; transition-duration: 5s; display: none">
+						<div id = "bleed" style = "font-size: 200%; color: black; text-shadow: 0px 0px 7px #f00; width: 100%; position: fixed; top: 30%; transition-duration: 5s"></div>
+					</div>
 				</center>
 			</div>
 		</div>
@@ -4928,6 +4949,7 @@
         <div id="progressbar"><span id="progresspercent" ach-tooltip="Percentage until Infinity">0%</span></div>
     </div>
 	<div id = "omniAnim" style = "z-index: 69420; width: 0px; height: 0px; border-radius: 69420px; background: black; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%)"></div>
+	<div id = "fps" style = "z-index: 10000; text-align: right; font-size: 8px; position: fixed; right: 0; top: 0"></div>
 <script type="text/javascript" src="javascripts/autobuyer.js"></script>
 <script type="text/javascript" src="javascripts/break_infinity.min.js?1"></script>
 <script type="text/javascript" src="javascripts/logarithmica_numerus_lite.js?3"></script>
