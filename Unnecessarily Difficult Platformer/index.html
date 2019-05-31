@@ -184,6 +184,10 @@ window.oncontextmenu = function(e) {
 	addObject(selectedObject, mouse.gameX, mouse.gameY)
 	return false;
 }
+	
+window.onclick = function(e) {
+	removeObject(mouse.gameX, mouse.gameY);
+}
 
 // Object-spawning functions
 
@@ -195,7 +199,14 @@ function setSelectedObject(object) {
 }
 
 function addObject(object, x, y) {
+	cancel = false
+	objects.forEach(function(object2) {if(object.x == x && object.y == y) cancel = true})
+	if(cancel) return
 	window["object" + object](x, y)
+}
+	
+function removeObject(object, x, y) {
+	objects.forEach(function(object2) {if(object.x == x && object.y == y) currentLevel.objects.splice(currentLevel.objects.indexOf(object), 1)})
 }
 
 function objectWall(x, y) {
