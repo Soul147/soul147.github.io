@@ -475,7 +475,7 @@ function update() {
 	
 	ge("newepisodetimes").textContent = shortenMoney(game.newEpisode);
 	gc("keys", function(n) {n.textContent = shortenMoney(game.keys)})
-	ge("keygain").textContenttextContent = shortenMoney(gainedKeys());
+	ge("keygain").textContent = shortenMoney(gainedKeys());
 	ge("neu1b").style.backgroundColor = game.neUpgrades.includes(0) ? "#0f0" : game.keys.gte(game.neUpgradeCosts[0]) ? "#fff" : "#f00"
 	ge("neu1i").textContent = shorten(getNEUpgradeEffect(0));
 	ge("neu1c").textContent = shortenCosts(game.neUpgradeCosts[0]);
@@ -493,7 +493,7 @@ function update() {
 	ge("neurc").textContent = shortenMoney(game.keyReductionCost);
 	
 	ge("newcakeatstaketimes").textContent = shortenMoney(game.newCakeAtStake);
-	gc("cakes", function(n) {n.textContenttextContent = shortenMoney(game.cakes)})
+	gc("cakes", function(n) {n.textContent = shortenMoney(game.cakes)})
 	ge("empoweredcaketext").style.display = game.empoweredCakes.eq(0) ? "none" : ""
 	ge("exitbrake").style.display = game.brake ? "" : "none"
 	ge("empoweredcakes").textContent = shortenMoney(game.empoweredCakes);
