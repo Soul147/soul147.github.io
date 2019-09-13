@@ -213,4 +213,4 @@ showAutomationTab(game.options.saveTabs ? game.currentAutomationTab : "dimension
 
 update();
 
-// setInterval(save, 30)
+setInterval(save, 30000)
