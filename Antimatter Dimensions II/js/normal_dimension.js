@@ -16,20 +16,22 @@ function NormalDimension(i) {
 }
 
 function resetDimensions() {
-	game.dimensions = [game.dimensions[0]];
+	var antimatter = game.dimensions ? game.dimensions[0].amount : 10;
+	game.dimensions = [];
 	
-	for(var i = 1; i <= 10; i++) {
+	for(var i = 0; i <= 10; i++) {
 		game.dimensions[i] = new NormalDimension(i);
 	}
 	
-	game.dimensions[0].amount = new Decimal(10);
+	game.dimensions[0].amount = new Decimal(10)
+	if(false) game.dimensions[0].amount = new Decimal(antimatter) // do this later
 	
 	game.tickspeed = {bought: new Decimal(0), cost: new Decimal(1000), costMult: new Decimal(10)}
 	
 	game.sacrificeMult = new Decimal(1);
 	
-	//console.log(Date.now() - lastTime);
-	lastTime = Date.now();
+	// console.log(Date.now() - lastTime);
+	// lastTime = Date.now();
 }
 
 function getDimensionProduction(i) {

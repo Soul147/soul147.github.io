@@ -1,4 +1,4 @@
-function updateDimensionSet(name, abbr="", curr="") {
+function updateDimensionSet(name="dimension", abbr="", curr="") {
 	var Name = name[0].toUpperCase() + name.slice(1)
 	
 	for(var i = 10; i >= 0; i--) {
