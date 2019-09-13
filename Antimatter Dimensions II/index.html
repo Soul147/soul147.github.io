@@ -1,0 +1,144 @@
+<title>Antimatter Dimensions II</title>
+
+<link rel = "stylesheet" href = "css/main.css">
+
+<body>
+
+<center>
+	<div style = "padding: 10px">
+		You have <currency id = "antimatter"></currency> antimatter.<br>
+		You are getting <span id = "antimatterGrowth"></span> antimatter per second.<br><br>
+	</div>
+	<div id = "tabButtons">
+		<button class = "tabButton" onclick = "showTab('dimensions')">Dimensions</button>
+		<button class = "tabButton" onclick = "showTab('achievements')" style = "display: none">Achievements</button>
+		<button class = "tabButton" onclick = "showTab('statistics')">Statistics</button>
+		<button class = "tabButton" onclick = "showTab('challenges')" style = "display: none">Challenges</button>
+		<button class = "tabButton" onclick = "showTab('automation')" style = "display: none">Automation</button>
+		<button class = "infinityTabButton" id = "infinityTabButton" onclick = "showTab('infinity')" style = "font-weight: bold">Infinity</button>
+	</div>
+</center>
+
+<button id = "gainedIP" class = "infinityTabButton" onclick = "bigCrunch()" style = "font-size: 11px; width: 210px; height: 70px; position: absolute; left: 20; top: 20"></button>
+
+<div class = "tab" id = "bigCrunchTab" style = "font-size: 15px; padding-left: 15px">
+	<center>
+		<button class = "infinityTabButton" onclick = "bigCrunch()" style = "font-size: 69px; width: 500px; height: 150px;">Big Crunch</button>
+		<br>
+		The universe has collapsed on itself due to excess of antimatter.
+	</center>
+</div>
+
+<div class = "tab" id = "dimensionsTab" style = "font-size: 15px; padding-left: 15px">
+	<center>
+		<div id = "dimensionTabs" style = "padding: 10px">
+			<button id = "normalDimensionButton" class = "subtabButton" onclick = "showDimensionTab('normal')">Dimensions</button>
+			<button id = "infinityDimensionButton" class = "subtabButton" onclick = "showDimensionTab('infinity')">Infinity Dimensions</button>
+			<!-- <button id = "timeDimensionButton" class = "subtabButton" onclick = "showDimensionTab('time')">Time Dimensions</button> -->
+		</div>
+	</center>
+	<div class = "dimensionTab" id = "normalDimensionTab">
+		<center><button id = "sacrifice" onclick = "sacrifice()" style = "width: 350px; font-size: 12px"></button><br>Boosts 9th dimensions by x<span id = "sacrificePower"></span></center>
+		<table id = "dimensions" style = "font-size: 15px"></table>
+		<table style = "font-size: 15px">
+			<tr id = "shiftDisplay">
+				<td>Dimension Shift (<span id = "shifts"></span>): requires 2 <span id = "shiftReq"></span> dimensions</td>
+				<td style = "position: absolute; right: 20"><button id = "shift" onclick = "shift()" style = "width: 250px">Reset the game for a new dimension</button></td>
+			</tr>
+			<tr id = "boostDisplay">
+				<td style = "padding-bottom: 10px"><span id = "boostName"></span> (<span id = "boosts"></span>): requires <span id = "boostReq"></span> ninth dimensions <span id = "boostEffect"></span></td>
+				<td style = "position: absolute; right: 20"><button id = "boost" onclick = "boost()" style = "width: 250px">Reset the game for a <span id = "boostPower"></span>x boost</button></td>
+			</tr>
+			<tr id = "galaxyDisplay">
+				<td><span id = "galaxyName"></span> (<span id = "galaxies"></span>): requires <span id = "galaxyReq"></span> ninth dimensions</td>
+				<td style = "position: absolute; right: 20"><button id = "galaxy" onclick = "galaxy()" style = "width: 250px; height: 40px">Lose all your previous progress,<br>but get a tickspeed boost</button></td>
+			</tr>
+		</table>
+	</div>
+	<div class = "dimensionTab" id = "infinityDimensionTab">
+		<center id = "infinityPowerArea">
+			You have <currency id = "infinityPower"></currency> infinity power, multiplying all dimensions by <currency id = "infinityPowerEffect"></currency>.<br>
+			You are getting <span id = "infinityPowerGrowth"></span> infinity power per second.<br>
+		</center>
+		<br>
+		<table id = "infinityDimensions" style = "font-size: 15px"></table>
+		<div style = "position: absolute; left: 20; bottom: 20">Infinity Shift</div>
+		<div style = "position: absolute; right: 20; bottom: 20"><button id = "infinityshift" class = "buy" onclick = "infinityShift()" style = "font-size: 15px; width: 250px; height: 50px;">Reach <span id = "infinityshiftcost"></span> antimatter to unlock a new dimension.</button></div>
+	</div>
+</div>
+
+<div class = "tab" id = "achievementsTab">
+	<center>
+		coming soon...
+	</center>
+</div>
+
+<div class = "tab" id = "statisticsTab">
+	<center id = "statistics"></center>
+</div>
+
+<div class = "tab" id = "challengesTab">
+	<center>
+		<button class = "challenge">0</button>
+		<button class = "challenge">1</button>
+		<button class = "challenge">2</button>
+		<button class = "challenge">3</button>
+		<button class = "challenge">4</button>
+		<button class = "challenge">5</button>
+		<button class = "challenge">6</button>
+		<button class = "challenge">7</button>
+		<button class = "challenge">8</button>
+		<button class = "challenge">9</button>
+		<button class = "challenge">10</button>
+		<button class = "challenge">11</button>
+	</center>
+</div>
+
+<div class = "tab" id = "automationTab">
+	<center>
+		<div id = "automationTabs" style = "padding: 10px">
+			<button id = "dimensionAutomation" class = "subtabButton" onclick = "showAutomationTab('dimensions')">Dimensions</button>
+			<button id = "infinityAutomation" class = "subtabButton" onclick = "showAutomationTab('dimensions')">Infinity</button>
+		</div>
+		You have <currency id = "antimetal"></currency> anti-metal.
+		
+		<div class = "automationTab" id = "dimensionAutomationTab">
+			
+		</div>
+		
+		<div class = "automationTab" id = "dimensionAutomationTab">
+			
+		</div>
+	</center>
+</div>
+
+<div class = "tab" id = "infinityTab">
+	<center>
+		<div id = "infinityTabs" style = "padding: 10px">
+			<button id = "infinity" class = "subtabButton" onclick = "showInfinityTab('infinityUpgrades')">Infinity</button>
+			<button id = "breakInfinity" class = "subtabButton" onclick = "showInfinityTab('breakInfinity')">Break Infinity</button>
+		</div>
+		You have <currency class = "infinityPoints"></currency> infinity points.<br>
+		<span id = "infinityPointGeneration"></span><br>
+		<div class = "infinityTab" id = "infinityUpgradesTab">
+			<table id = "infinityUpgrades" style = "font-size: 10px"></table>
+		</div>
+		<div class = "infinityTab" id = "breakInfinityTab">
+			<button class = 'infinityupgrade' id = 'breakButton' onclick = 'game.break = !game.break; this.innerHTML = game.break ? "FIX INFINITY" : "BREAK INFINITY"'>BREAK INFINITY</button>
+			<table id = "postInfinityUpgrades" style = "font-size: 10px"></table>
+		</div>
+	</center>
+</div>
+
+</body>
+
+<script src = "js/break_eternity.js"></script>
+<script src = "js/automation.js"></script>
+<script src = "js/normal_dimension.js"></script>
+<script src = "js/infinity_dimension.js"></script>
+<script src = "js/tickspeed.js"></script>
+<script src = "js/dimboost.js"></script>
+<script src = "js/infinity.js"></script>
+<script src = "js/setup.js"></script>
+<script src = "js/format.js"></script>
+<script src = "js/game.js"></script>

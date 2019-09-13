@@ -7,6 +7,7 @@ function getDimensionBoostPower(next, focusOn) {
       if (player.challenges.includes("postc7")) ret = 4
       if (player.currentChallenge == "postc7" || inQC(6) || player.timestudy.studies.includes(81)) ret = 10
   }
+  if (player.mods.ngt && player.mods.ngt.bi2.includes(1)) ret *= 100
   if (player.boughtDims) ret += player.timestudy.ers_studies[4] + (next ? 1 : 0)
   if (player.galacticSacrifice ? (player.galacticSacrifice.upgrades.includes(23) && player.currentChallenge != "challenge15") || focusOn == "g23" : false) ret *= galUpgrade23()
   if (player.infinityUpgrades.includes("resetMult")&&player.galacticSacrifice) ret *= 1.2 + 0.05 * player.infinityPoints.max(1).log(10)
@@ -361,7 +362,7 @@ function getDimboostCostIncrease () {
 		if (player.infinityUpgrades.includes("postinfi50")) ret -= 0.5
 	} else {
 		if (player.timestudy.studies.includes(211)) ret -= 5
-		if (player.timestudy.studies.includes(222)) ret -= 2-!!player.mods.ngt
+		if (player.timestudy.studies.includes(222)) ret -= 2
 		if (player.mods.ngt) if(hasUpg(1)) ret -= 2
 		if (player.masterystudies) if (player.masterystudies.includes("t261")) ret -= 1
 		if (player.currentChallenge == "challenge4") ret += 5

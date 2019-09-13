@@ -4,7 +4,11 @@
 }
 
 body, button {
-	font-family: Typewriter !important;
+	font-family: Typewriter;
+}
+
+.currency {
+	font-size: 24px;
 }
 
 .before {
@@ -16,12 +20,10 @@ body, button {
 	transition-duration: 0.2s;
 	cursor: pointer;
 }
-
 .before:hover {
     color: #FFF;
     background: #8488C4;
 }
-
 .normal {
 	color: #FFFFFF;
 	background: #63CC00;
@@ -31,12 +33,10 @@ body, button {
 	transition-duration: 0.2s;
 	cursor: pointer;
 }
-
 .normal:hover {
 	color: #000000;
 	background: #59B200;
 }
-
 .cosmos {
 	color: #FFFFE5;
 	background: #040041;
@@ -46,12 +46,10 @@ body, button {
 	transition-duration: 0.2s;
 	cursor: pointer;
 }
-
 .cosmos:hover {
 	color: #FEFDFD;
 	background: #3500DA;
 }
-
 .unima {
 	color: #000000;
 	background: #FFFFFF;
@@ -62,43 +60,38 @@ body, button {
 	transition-duration: 0.2s;
 	cursor: pointer;
 }
-
 .unima:hover {
 	background: #CCCCCC;
 	color: #FFFFFF;
 }
-
 .box {
 	background: linear-gradient(#432EFE, #DAAFFE);
-	border: 2px solid transparent;
+	border: 2px solid #4832FE;
 	font-family: Typewriter;
 	font-weight: bold;
 	border-radius: 4px;
 	transition-duration: 0.2s;
-	animation: box 4s linear infinite
+	animation: box 3s linear infinite
 }
-
 .box:hover {
 	border-color: rgba(255,255,255,0.85);
-	box-shadow: inset 0px 0px 12px 0px #ffffff;
+	box-shadow: inset 0px 0px 12px 0px #FFFFFFF;
 	cursor: pointer
 }
-
 @keyframes box { 
 	0%{
 		color: #0E0072;
-		text-shadow: 0px 0px 3px #0E0072, 0px 0px 6px #ffffff;
+		text-shadow: 0px 0px 3px #0E0072, 0px 0px 6px #FFFFFF;
 	}
 	50% {
 		color: #2B188C;
-		text-shadow: 0px 0px 6px #2B188C, 0px 0px 6px #ffffff;
+		text-shadow: 0px 0px 6px #2B188C, 0px 0px 6px #FFFFFF;
 	}
 	100%{
 		color: #0E0072;
-		text-shadow: 0px 0px 3px #0E0072, 0px 0px 6px #ffffff;
+		text-shadow: 0px 0px 3px #0E0072, 0px 0px 6px #FFFFFF;
 	}
 }
-
 .again {
 	color: #8F00BF;
 	text-shadow: 0 0 1px #7900B2, 0 0 2px #8B00CC, 0 0 3px #9C00E5;
@@ -110,31 +103,39 @@ body, button {
 	transition-duration: 0.2s;
 	cursor: pointer;
 }
-
 .again:hover {
 	color: #C366FF;
 	text-shadow: 0 0 1px #7900B2, 0 0 2px #8B00CC, 0 0 3px #9C00E5;
-	background: radial-gradient(closest-side,#D400FF 0,#E900FF 33%,#FF00FF 100%);
 	border: 2px solid #FF0CFF;
 }
-
 .repeat {
-	color: #FFFFFF;
-	text-shadow: 0px 0px 3px #FFFFD6, 0px 0px 3px #FFFF9E;
-	background: linear-gradient(#270084,#6000AF 50%,#1900D3 100%);
+	background: linear-gradient(#270084, #6000AF 50%, #1900D3 100%);
 	border: 2px solid #00007F;
 	font-family: Typewriter;
 	font-weight: bold;
 	border-radius: 4px;
 	transition-duration: 0.2s;
 	cursor: pointer;
+	animation: repeat 3s linear infinite
 }
-
 .repeat:hover {
-	color: #FFFFE0;
-	text-shadow: 0px 0px 3px #FDAFFF, 0px 0px 3px #CD4FFF
+	      border-color: rgba(233,0,255,0.85);
+		box-shadow: inset 0px 0px 12px 0px #e900ff;
 }
-
+@keyframes repeat { 
+	0%{
+		color: #FFFFFF;
+		text-shadow: 0px 0px 3px #FFFFD6, 0px 0px 6px #FFFF9E;
+	}
+	50% {
+		color: #FFFFD0;
+		text-shadow: 0px 0px 6px #FDAFFF, 0px 0px 6px #CD4FFF;
+	}
+	100%{
+		color: #FFFFFF;
+		text-shadow: 0px 0px 3px #FFFFD6, 0px 0px 6px #FFFF9E;
+	}
+}
 .sight {
 	color: #000000;
 	text-shadow: 0px 0px 3px #FFBF00;
@@ -145,13 +146,142 @@ body, button {
 	border-radius: 4px;
 	transition-duration: 0.2s
 }
-
 .sight:hover {
 	color: #ffffff;
 	text-shadow: 0px 0px 3px #FFFF00;
 	cursor: pointer
 }
+.line {
+	color: #000000;
+	text-shadow: 0px 0px 3px #BDBDBD;
+	background: linear-gradient(#8B8B8B, transparent 50%, #8B8B8B 100%), radial-gradient(circle, #B0B0B0, #C9C9C9 50%, #E2E2E2 100%);
+	border: 2px solid transparent;
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	transition-duration: 0.2s
+}
+.line:hover {
+	color: #ffffff;
+	text-shadow: 0px 0px 3px #E2E2E2;
+	cursor: pointer
+}
+.metabox {
+	background: linear-gradient(#2EFE43, #AFFEDA);
+	border: 2px solid #32FE48;
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	animation: metabox 3s linear infinite
+}
+.metabox:hover {
+	border-color: rgba(255,255,255,0.85);
+	box-shadow: inset 0px 0px 12px 0px #FFFFFF;
+	cursor: pointer
+}
+@keyframes metabox { 
+	0%{
+		color: #00720E;
+		text-shadow: 0px 0px 3px #00720E, 0px 0px 6px #FFFFFF;
+	}
+	50% {
+		color: #188C2B;
+		text-shadow: 0px 0px 6px #188C2B, 0px 0px 6px #FFFFFF;
+	}
+	100%{
+		color: #00720E;
+		text-shadow: 0px 0px 3px #00720E, 0px 0px 6px #FFFFFF;
+	}
+}
+.frontier {
+	color: #FFFFFF;
+	text-shadow: 0px 0px 3px #FFFF66;
+	background: radial-gradient(transparent, #FFFFFF),  linear-gradient(#9F3FFF, #BF3FFF 12.5%, #E23FFF 25%, #FF3FFF 50%, #E23FFF 75%, #BF3FFF 87.5%, #9F3FFF 100%);
+	border: 2px solid #FFFFFF;
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	animation: frontier 3s linear infinite;
+	background-size: 100% 300%;
+	transition-duration: 0.2s
+}
+.frontier:hover {
+	color: #FFFFD8;
+	text-shadow: 0px 0px 6px #FFFFFF, 0px 0px 3px #FFFFFF;
+	cursor: pointer;
+}
+@keyframes frontier { 
+	0%{
+	    background-position: 0% 0%, 0% 0%;
+	}
+	100%{
+	    background-position: 0% 0%, 300% 300%;
+	}
+}
+.ext {
+	color: #000000;
+	text-shadow: 0px 0px 6px #FF0000, 0px 0px 3px #7F0000;
+	animation: ext 3s linear infinite;
+	border: 2px solid #1f1f1f;
+	background: radial-gradient(transparent, #000000), repeating-linear-gradient(90deg, #190000, #B20000 16%, #3F0000 42%, #E50000 64.25%, #260000 85.75%, #190000);
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	cursor: pointer;
+	background-size: 200% 100%;
+}
 
-td {
-	padding-right: 50px;
+.ext:hover {
+	color: #C00000;
+	border: 2px solid #3F0000;
+	text-shadow: 0px 0px 6px #000000, 0px 0px 3px #000000;
+}
+@keyframes ext{ 
+	0%{
+	    background-position: 0% 0%, 0% 0%;
+	}
+	100%{
+	    background-position: 0% 0%, 200% 200%;
+	}
+}
+.aah {
+	background: #fcfcfc;
+	color: #000000;
+	border: 2px solid #ffffff;
+	border-radius: 4px;
+	transition-duration: 0.2s
+}
+.aah:hover {
+	background: #000000;
+	color: #7f7f7f;
+	text-shadow: 0px 0px 3px #3f3f3f;
+	border-color: #000000;
+	cursor: pointer;
+}
+.corruption {
+	color: #000000;
+	text-shadow: 0px 0px 3px #660000;
+	background: radial-gradient(transparent, #3F0000),  linear-gradient(#B20000, #CC0000 12.5%, #E50000 25%, #FF0000 50%, #E50000 75%, #CC0000 87.5%, #B20000 100%);
+	border: 2px solid #FFFFFF;
+	font-family: Typewriter;
+	font-weight: bold;
+	border-radius: 4px;
+	animation: corruption 3s linear infinite;
+	background-size: 100% 300%;
+	transition-duration: 0.2s
+}
+.corruption:hover {
+	color: #200000;
+	text-shadow: 0px 0px 6px #7F0000, 0px 0px 3px #7F0000;
+	cursor: pointer;
+}
+@keyframes corruption { 
+	0%{
+	    background-position: 0% 0%, 0% 0%;
+	}
+	100%{
+	    background-position: 0% 0%, 300% 300%;
+	}
 }

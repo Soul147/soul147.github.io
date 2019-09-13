@@ -27,7 +27,7 @@ function updateAutomatons(diff) {
 	// Update all automaton-related elements
 	
 	gc("automatonToggle", function(e, i) {automatons[i].active = e.checked})
-	gc("automatonRequirement", function(e, i) {e.innerHTML = shortenCosts(automatons[i].consumption) + " " + automatons[i].currencyType})
+	gc("automatonRequirement", function(e, i) {e.innerHTML = shortenMoney(automatons[i].consumption) + " " + automatons[i].currencyType})
 	
 	automatons.forEach(function(automaton) {
 		automaton.update(diff);

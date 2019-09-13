@@ -30,7 +30,7 @@ function getTimeDimensionPower(tier) {
   if (player.timestudy.studies.includes(103)) ret = ret.times(Math.max(player.replicanti.galaxies, 1))
   if (player.timestudy.studies.includes(151)) ret = ret.times(1e4)
   if (player.timestudy.studies.includes(221)) ret = ret.times(Decimal.pow(1.0025+!!player.mods.ngt*0.0065, player.resets))
-  if (player.timestudy.studies.includes(227) && tier == 4) ret = ret.times(Decimal.pow(calcTotalSacrificeBoost().max(10).log10(), 10+!!player.mods.ngt*290))
+  if (player.timestudy.studies.includes(227) && tier == 4) ret = ret.times(Decimal.pow(calcTotalSacrificeBoost().max(10).log10(), 10+!!player.mods.ngt*70))
   if (player.currentEternityChall == "eterc9") ret = ret.times((Decimal.pow(Math.max(player.infinityPower.log2(), 1), 4)).max(1))
   if (ECTimesCompleted("eterc1") !== 0) ret = ret.times(Math.pow(Math.max(player.thisEternity*10, 0.9), 0.3+(ECTimesCompleted("eterc1")*0.05)))
   let ec10bonus = new Decimal(1)
@@ -40,7 +40,14 @@ function getTimeDimensionPower(tier) {
   if (player.achievements.includes("r128")) ret = ret.times(Math.max(player.timestudy.studies.length, 1))
 
   if (player.replicanti.unl && player.replicanti.amount.gt(1) && player.dilation.upgrades.includes(5)) ret = ret.times(getReplMult().pow(0.1))
-	  
+  
+  if(player.mods.ngt && player.mods.ngt.bi2.includes(0)) {
+	  if (player.infinityUpgrades.includes("totalMult")) ret = ret.times(totalMult)
+	  if (player.infinityUpgrades.includes("currentMult")) ret = ret.times(currentMult)
+	  if (player.infinityUpgrades.includes("infinitiedMult")) ret = ret.times(infinitiedMult)
+	  if (player.infinityUpgrades.includes("achievementMult")) ret = ret.times(achievementMult)
+	  if (player.infinityUpgrades.includes("challengeMult")) ret = ret.times(challengeMult)
+  }
   if(player.mods.ngt) {
 	  if(tier <= 4 && !inOC(6)) {
 		  ret = ret.multiply(getGravitonEffect());

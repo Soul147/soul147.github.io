@@ -1407,7 +1407,7 @@ if (player.version < 5) {
 	document.getElementById("autoDBChallengeDesc").textContent="There are only 6 dimensions, with dimension boost"+(player.tickspeedBoosts==undefined?"":", tickspeed boost,")+" and antimatter galaxy costs modified."
 	document.getElementById("autoCrunchChallengeDesc").textContent="Each dimension produces the dimension 2 below it; first dimensions produce reduced antimatter. "+(player.galacticSacrifice?"Galaxies are far more powerful.":"")
 	document.getElementById("autoDSChallengeDesc").textContent=player.tickspeedBoosts==undefined?"Per-ten multiplier is always 1x, but product of dimensions bought multiplies all dimensions.":"There is the product of amount instead of the product of bought."
-	document.getElementById("infPowEffectPowerDiv").innerHTML=player.galacticSacrifice||compOC(4)?"Raised to the power of <span id='infPowEffectPower' style='font-size:35px; color: black'></span>, t":"T"
+	document.getElementById("infPowEffectPowerDiv").innerHTML=player.galacticSacrifice||player.mods.ngt?"Raised to the power of <span id='infPowEffectPower' style='font-size:35px; color: black'></span>, t":"T"
 	document.getElementById("ngmmchalls").style.display=player.galacticSacrifice?"":"none"
 	document.getElementById("ngmmmchalls").style.display=player.tickspeedBoosts==undefined?"none":""
 	document.getElementById("irschalls").style.display=player.infinityUpgradesRespecced==undefined?"none":""
@@ -2115,6 +2115,7 @@ function transformSaveToDecimal() {
 		ngt.bestOPRate = new Decimal(ngt.bestOPRate);
 		ngt.omniPower = new Decimal(ngt.omniPower);
 		ngt.newReplicatorCost = new Decimal(ngt.newReplicatorCost);
+		ngt.ttcost = new Decimal(ngt.ttcost || 1);
 		if(ngt.autobuyer) ngt.autobuyer.limit = new Decimal(ngt.autobuyer.limit);
 		
 		transformObjectToDecimal(ngt.division)
@@ -2194,6 +2195,12 @@ function transformSaveToDecimal() {
 				energy: new Decimal(0),
 				damage: new Decimal(0),
 			}
+		})
+		
+		updateToVersion(3, function() {
+			ngt.bi2 = []
+			ngt.ttcost = new Decimal(1)
+			ngt.ttbought = 0
 		})
 		
 		ngt.version = ver;

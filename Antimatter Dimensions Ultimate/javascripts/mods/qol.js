@@ -65,6 +65,8 @@ function updateQoL(diff) {
 
 	// Autobuy autobuyers.
 
+	ge("maxallautobuyers").click()
+
 	// Update buttons.
 
 	for(var n = 0; n <= 10; n++) ge("qolBtn"+n).innerHTML=player.options.qol[n]?"ON":"OFF"

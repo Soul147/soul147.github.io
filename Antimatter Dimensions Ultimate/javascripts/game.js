@@ -1018,8 +1018,8 @@ function getEternitied() {
 function getGalaxyCostScalingStart(galaxies) {
 	if (player.currentEternityChall == "eterc5") return 0
 	var n = 100+ECTimesCompleted("eterc5")*5
-	if (player.timestudy.studies.includes(223)) n += player.mods.ngt?160:7
-	if (player.timestudy.studies.includes(224)) n += Math.floor(player.resets/(player.mods.ngt?850:2000))
+	if (player.timestudy.studies.includes(223)) n += player.mods.ngt?60:7
+	if (player.timestudy.studies.includes(224)) n += Math.floor(player.resets/(player.mods.ngt?800:2000))
 	
 	if (galaxies > 1399) {
 		let push = 5
@@ -1539,7 +1539,7 @@ function updateDimensions() {
 	if (document.getElementById("eternitystore").style.display == "block") {
 		if (document.getElementById("eternityupgrades").style.display == "block") {
 			document.getElementById("eter1").innerHTML = "Infinity Dimensions multiplier based on unspent EP (x" + (player.mods.ngt?"^1.5":"") + "+1)<br>Currently: "+shortenMoney(player.eternityPoints.pow(1+!!player.mods.ngt*0.5).plus(1))+"x<br>Cost: 5 EP"
-			document.getElementById("eter2").innerHTML = "Infinity Dimension multiplier based on eternities ("+(player.boughtDims?"x^log4(2x)":player.achievements.includes("ngpp15")||player.mods.ngt?"x^log10(x)^3.75":"(x/200)^log4(2x)")+")<br>Currently: "+shortenMoney(getEU2Mult())+"x<br>Cost: 10 EP"
+			document.getElementById("eter2").innerHTML = "Infinity Dimension multiplier based on eternities ("+(player.boughtDims?"x^log4(2x)":player.achievements.includes("ngpp15")?"x^log10(x)^3.75":"(x/200)^log4(2x)")+")<br>Currently: "+shortenMoney(getEU2Mult())+"x<br>Cost: 10 EP"
 			document.getElementById("eter3").innerHTML = "Infinity Dimensions multiplier based on "+(player.boughtDims?"time shards (x/"+shortenCosts(1e12)+"+1)":"sum of Infinity Challenge times")+"<br>Currently: "+shortenMoney(getEU3Mult())+"x<br>Cost: "+shortenCosts(50e3)+" EP"
 			document.getElementById("eter4").innerHTML = "Your achievement bonus affects Time Dimensions"+"<br>Cost: "+shortenCosts(1e16)+" EP"
 			document.getElementById("eter5").innerHTML = "Time Dimensions are multiplied by your unspent time theorems"+"<br>Cost: "+shortenCosts(1e40)+" EP"
@@ -3417,7 +3417,7 @@ function setAchieveTooltip() {
 	zero.setAttribute('ach-tooltip',"Get to Infinity without Dimension shifts, boosts or galaxies in a challenge. Reward: Dimensions 1-4 are 25% stronger"+(player.galacticSacrifice&&player.tickspeedBoosts==undefined?" and 1.25x to IP.":"."))
 	potato.setAttribute('ach-tooltip', "Get more than " + formatValue(player.options.notation, 1e29, 0, 0) + " ticks per second. Reward: Reduces starting tick interval by 2%.");
 	potato2.setAttribute('ach-tooltip', "Get more than " + formatValue(player.options.notation, 1e58, 0, 0) + " ticks per second. Reward: Reduces starting tick interval by 2%.");
-	potato3.setAttribute('ach-tooltip', "Get more than "+shortenCosts(new Decimal("1e8296262"))+" ticks per second.")
+	potato3.setAttribute('ach-tooltip', "Get more than "+shortenCosts(new Decimal("1e8296262"))+" ticks per second. " + (player.mods.ngt ? "Reward: Galaxies are 2% more powerful." : ""))
 	dimensional.setAttribute('ach-tooltip', "Reach " + formatValue(player.options.notation, 1e12, 0, 0) + " of all dimensions except 8th.");
 	anti.setAttribute('ach-tooltip', "Complete all the challenges. Reward: All dimension are 10% stronger"+(player.galacticSacrifice?" and tickspeed cost is also reduced based on dimension cost reduction.":"."))
 	forever.setAttribute('ach-tooltip', "Infinity in 1 minute or less. Reward: Start with "+shortenCosts(1e10)+" antimatter"+(player.galacticSacrifice&&player.tickspeedBoosts==undefined?" and multiplier to IP based on your best infinity time.":"."))
@@ -3450,7 +3450,7 @@ function setAchieveTooltip() {
 	infiniteIP.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e30008"))+" IP.")
 	over9000.setAttribute('ach-tooltip', "Get a total sacrifice multiplier of "+shortenCosts(new Decimal("1e9000"))+". Reward: Sacrifice doesn't reset your dimensions.")
 	dawg.setAttribute('ach-tooltip', "Have all your past 10 infinities be at least "+shortenMoney(Number.MAX_VALUE)+" times higher IP than the previous one. Reward: Your antimatter doesn't reset on dimboost/galaxy.")
-	blink2.setAttribute('ach-tooltip', "Eternity in under 200ms. Reward: Eternities more than a minute long give 3,000 Eternitied stat.")
+	blink2.setAttribute('ach-tooltip', "Eternity in under 200ms. Reward: Eternities more than 20 seconds long give 1,000 Eternitied stat.")
 	eatass.setAttribute('ach-tooltip', "Reach "+shortenCosts(1e100)+" IP without any infinities or first dimensions. Reward: IP multiplier based on time spent this infinity.")
 	layer.setAttribute('ach-tooltip', "Reach "+shortenMoney(Number.MAX_VALUE)+" EP.")
 	fkoff.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e22000"))+" IP without any time studies. Reward: Time dimensions are multiplied by the number of studies you have.")
@@ -3484,7 +3484,7 @@ function setAchieveTooltip() {
 	error404.setAttribute('ach-tooltip', "Get "+shorten(Decimal.pow(10,16e11))+" antimatter without having all types of non-First Dimensions and at least 2 normal galaxies.")
 	ie.setAttribute('ach-tooltip', "Get "+shorten(Decimal.pow(10,8e6))+" antimatter in a PC with QC6 & QC8 combination.")
 	wasted.setAttribute('ach-tooltip', "Get "+shorten(11e6)+" TT without having generated TTs and respeccing time studies.")
-	christian.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e359223"))+" IP. Reward: A free one-way ticket to Hell.")
+	christian.setAttribute('ach-tooltip', "Reach "+shortenCosts(new Decimal("1e359223"))+" IP. Reward: A multiplier on all dimensions based on IP and a free one-way ticket to Hell. Currently: " + shortenCosts(getChristianMult()) + "x")
 	// fuckthis.setAttribute('ach-tooltip', "Reach "+shorten(3.33e33)+" tachyon particles. Reward: Gain tachyon particles based on best antimatter^^0.75")
 	keemstar.setAttribute('ach-tooltip', "Reach "+shorten(Decimal.pow(10, player.totalTimePlayed/100))+" EP.")
 	yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Start with 100 eternities and dimensions cost " + shorten(Number.MAX_VALUE) + "x less.")
@@ -5277,7 +5277,7 @@ function challengesCompletedOnEternity() {
 
 function gainEternitiedStat() {
 	if (getEternitied() < 1 && player.achievements.includes("ng3p12")) return 20
-	return (player.dilation.upgrades.includes('ngpp2') ? Math.floor(Decimal.pow(player.dilation.dilatedTime, .1).toNumber()) : 1)*(player.achievements.includes("r124") && (player.bestEternity < 2 || player.eternityPoints.gt(1e50)) && player.thisEternity >= 600 ? 3000 : 1)*(player.timestudy.studies.includes(1001) ? Math.max(Math.pow(player.galaxies, 0.5+!!player.mods.ngt), 1) : 1)
+	return (player.dilation.upgrades.includes('ngpp2') ? Math.floor(Decimal.pow(player.dilation.dilatedTime, .1).toNumber()) : 1)*(player.achievements.includes("r124") && (player.bestEternity < 2 || player.eternityPoints.gt(1e50)) && player.thisEternity >= 200 ? 1000 : 1)*(player.timestudy.studies.includes(1001) ? Math.max(Math.pow(player.galaxies, 0.5+!!player.mods.ngt), 1) : 1)
 }
 
 function gainBankedInf() {
@@ -6373,7 +6373,7 @@ function quickReset() {
 
 function updateInfPower() {
 	document.getElementById("infPowAmount").textContent = shortenMoney(player.infinityPower)
-	if (player.galacticSacrifice) document.getElementById("infPowEffectPower").textContent = shorten(getInfinityPowerEffectPower())
+	if (ge("infPowEffectPower")) document.getElementById("infPowEffectPower").textContent = shorten(getInfinityPowerEffectPower())
 	if (player.currentEternityChall == "eterc9") document.getElementById("infDimMultAmount").textContent = shortenMoney((Decimal.pow(Math.max(player.infinityPower.log2(), 1), 4)).max(1))
 	else document.getElementById("infDimMultAmount").textContent = shortenMoney(player.infinityPower.pow(getInfinityPowerEffectPower()))
 	if (player.currentEternityChall == "eterc7") document.getElementById("infPowPerSec").textContent = "You are getting " +shortenDimensions(DimensionProduction(1))+" Seventh Dimensions per second."
@@ -7798,10 +7798,25 @@ function gameLoop(diff) {
 	}
 	if (player.infinitiedBank > 5000000000) giveAchievement("No ethical consumption");
 	if (eterchallscompletedtotal >= 50) giveAchievement("5 more eternities until the update");
+	
 		
+	// Auto-complete eternity challenges
+	
+	ge("studyCostChallenges1").innerHTML = shorten(new Decimal(Number.MAX_VALUE))
+	ge("studyCostChallenges2").innerHTML = shorten(new Decimal(Number.MAX_VALUE).pow(4))
+	
+	sumFirst10 = 0
+	for(var i = 1; i <= 10; i++) sumFirst10 += player.eternityChalls["eterc" + i] || 0;
+	sumFirst12 = 0
+	for(var i = 1; i <= 12; i++) sumFirst12 += player.eternityChalls["eterc" + i] || 0;
+	
+	ge("autochallenge1").className = sumFirst10 == 50 ? "eternitychallengestudybought" : player.eternityPoints.gte(Number.MAX_VALUE) ? "eternitychallengestudy" : "eternitychallengestudylocked"
+	ge("autochallenge2").className = sumFirst12 == 60 ? "eternitychallengestudybought" : player.eternityPoints.gte(Decimal.pow(Number.MAX_VALUE, 4)) ? "eternitychallengestudy" : "eternitychallengestudylocked"
+	
 	// Hide stuff from NG^^ that shouldn't be there
-	ge("autochallenge1").style.display = "none";
-	ge("autochallenge2").style.display = "none";
+	
+	ge("ngtbirow").style.display = "none";
+	ge("theoremop").style.display = "none";
 	ge("omnitabbtn").style.display = "none";
 	ge("odtabbtn").style.display = "none"
 	ge("octabbtn").style.display = "none"
@@ -7818,23 +7833,49 @@ function gameLoop(diff) {
 	if(player.mods.ngt) {
 		ngt = player.mods.ngt || {};
 		player.mods.ngt = ngt;
+		
+		completeEC(12, 5)
+		giveAchievement("5 more eternities until the update")
+	
+		if(player.totalmoney.gte("1e100000")) ge("ngtbirow").style.display = "";
+		
+		// New BI upgrades
+		
+		for(var i = 0; i < 6; i++) {
+ 			ge("bi2" + i).className = "infinistorebtnlocked";
+			if(player.infinityPoints.gt(biUpgCosts[i])) ge("bi2" + i).className = "infinistorebtn2";
+			if(ngt.bi2.includes(i)) ge("bi2" + i).className = "infinistorebtnbought";
+			ge("bi2c" + i).innerHTML = shortenCosts(biUpgCosts[i])
+		}
+		
+		ge("bi2d3").innerHTML = Math.min(ngt.thisOmni/1e4, 1).toFixed(3);
 	
 		// Super expensive studies
+		
+		if(ngt.omni > 0) {
+			ge("theorembuybackground").style.width = "800px"
+			ge("theorembuybackground").style.marginLeft = "-400px"
+			ge("theoremmax").style.marginLeft = "-390px"
+			ge("presetsbtn").style.marginLeft = "265px"
+			ge("theoremop").style.display = ""
+			ge("theoremop").className = ngt.op.gte(ngt.ttcost) ? "timetheorembtn" : "timetheorembtnlocked"
+			ge("theoremop").innerHTML = "Buy Time Theorems <br>Cost: " + getFullExpansion(ngt.ttcost) + " OP"
+		}
 	
 		superStudies = 0;
 		player.timestudy.studies.forEach(function(study) {if(study > 220 && study < 1000) superStudies++});
 	
 		for(var i = 0; i < studyCosts.length; i++) {
 			if(i > 57) studyCosts[i] *= 1;
-			else if(i > 45) studyCosts[i] *= 2000/9*(superStudies+1);
+			else if(i > 45) studyCosts[i] *= 250/9*2**(superStudies);
 			else if(i > 40) studyCosts[i] *= 20
 			else studyCosts[i] *= 3;
 			studyCosts[37] = 0;
 			if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
 		}
 		
-		ge("223eff").innerHTML = 160
-		ge("224eff").innerHTML = 850
+		ge("223eff").innerHTML = 60
+		ge("224eff").innerHTML = 800
 		ge("225eff").innerHTML = "1e308"
 		ge("226eff").innerHTML = 8
 		
@@ -7844,28 +7885,10 @@ function gameLoop(diff) {
 		ge("td7unl").innerHTML = shorten(1e8**i)
 		ge("td8unl").innerHTML = shorten(1e9**i)
 		
-		ge("ts222pow").innerHTML = 1
-		
 		if(ngt.omni <= 0) {
 			ge("ngtlockedstudies").style.display = "none"
 		}
 		else ge("ngtlockedstudies").style.display = "block"
-		
-		// Auto-complete eternity challenges
-		
-		ge("autochallenge1").style.display = "";
-		ge("autochallenge2").style.display = "";
-		ge("studyCostChallenges1").innerHTML = shorten(new Decimal(Number.MAX_VALUE))
-		ge("studyCostChallenges2").innerHTML = shorten(new Decimal(Number.MAX_VALUE).pow(4))
-		
-		sumFirst10 = 0
-		for(var i = 1; i <= 10; i++) sumFirst10 += player.eternityChalls["eterc" + i] || 0;
-		sumFirst12 = 0
-		for(var i = 1; i <= 12; i++) sumFirst12 += player.eternityChalls["eterc" + i] || 0;
-		
-		ge("autochallenge1").className = sumFirst10 == 50 ? "eternitychallengestudybought" : player.eternityPoints.gte(Number.MAX_VALUE) ? "eternitychallengestudy" : "eternitychallengestudylocked"
-		ge("autochallenge2").className = sumFirst12 == 60 ? "eternitychallengestudybought" : player.eternityPoints.gte(Decimal.pow(Number.MAX_VALUE, 4)) ? "eternitychallengestudy" : "eternitychallengestudylocked"
-		
 		updateTimeStudyButtons()
 		drawStudyTree()
 		
@@ -7912,7 +7935,7 @@ function gameLoop(diff) {
 		
 		ge("omniTimes").innerHTML = getFullExpansion(ngt.omni)
 		
-		for(var i = 0; i < 8 + !!player.masterystudies; i++) {
+		for(var i = 0; i <= 9 + !!player.masterystudies; i++) {
 			ge("om" + i).style.display = ""
 			ge("om" + i).className = "omnimilestonelocked"
 			if(omniMilestoneReached(i)) ge("om" + i).className = "omnimilestone"

@@ -1196,15 +1196,12 @@ button {
     font-weight: bold;
     font-family: Typewriter;
     border: 1px solid #691fa5;
-    width: 170px;
+    width: 190px;
     height: 70px;
     transition-duration: 0.2s;
     cursor: pointer;
     border-radius: 4px;
     font-size: 0.85rem;
-    position: fixed;
-    left: 50%;
-
     bottom: 5px;
     z-index: 1;
 }
@@ -1221,13 +1218,11 @@ button {
     font-weight: bold;
     font-family: Typewriter;
     border: 1px solid #691fa5;
-    width: 170px;
+    width: 190px;
     height: 70px;
     transition-duration: 0.2s;
     border-radius: 4px;
     font-size: 0.85rem;
-    position: fixed;
-    left: 50%;
     bottom: 5px;
     z-index: 1;
 }
@@ -1261,12 +1256,13 @@ button {
 
 #theorembuybackground {
     background: #E0E0E0;
-    width: 570px;
-    height: 110px;
+    width: 600px;
+	padding-top: 40px;
+	padding-bottom: 10px;
     position: fixed;
     bottom: 0;
     left: 50%;
-    margin-left: -287px;
+    margin-left: -300px;
     border: 2px solid black;
     border-bottom: none;
     border-top-left-radius: 7px;
@@ -1834,7 +1830,7 @@ br {
     display: block;
     margin: 0;
     margin-top: 20px;
-    pointer-events:none;
+    pointer-events: none;
 }
 
 
