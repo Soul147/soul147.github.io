@@ -158,6 +158,7 @@
 	</div>
 
 	<div id = "achievements" class = "tab">
+		Your achievements multiply your fork production by <span id = "achievementBoost"></span>
 		<table class = "achievement"></table>
 	</div>
 	
@@ -436,6 +437,9 @@ function update() {
 		THE_END = true
 	}
 	
+	var achievementMult = 1;
+	Achievements.getCompletions().forEach(function(b) {if(b) achievementMult *= 1.1});
+	
 	for(var i = 1; i <= 80; i++) {
 		fr = game["fr" + i]
 		fr.production = fr.amount.multiply(fr.mult)
@@ -447,6 +451,7 @@ function update() {
 		if(game.ncaUpgrades.includes(1)) fr.production = fr.production.multiply(getNCaUpgradeEffect(1));
 		if(game.ncUpgrades.includes(0)) fr.production = fr.production.multiply(getNCUpgradeEffect(0));
 		if(game.ncUpgrades.includes(1)) fr.production = fr.production.multiply(getNCUpgradeEffect(1));
+		fr.production = fr.production.multiply(achievementMult);
 		game.forks = game.forks.add(fr.production.multiply(diff/1000))
 		
 		ge("fr"+i+"a").innerHTML = shortenMoney(fr.amount);
