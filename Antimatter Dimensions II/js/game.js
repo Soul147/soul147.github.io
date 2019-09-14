@@ -29,7 +29,7 @@ function update() {
 	diff = Date.now() - game.lastUpdate || 0;
 	game.lastUpdate = Date.now()
 	
-	// diff *= 100
+	diff *= parseInt(localStorage.hacker) || 1;
 	
 	setTimeout(update, 1000 / game.options.fps)
 	
@@ -200,10 +200,12 @@ function update() {
 	`<br>
 	You have existed for ` + timeDisplay(getTimeSince("start")) + `.`
 
-	galaxy();
-	boost();
-	shift();
-	maxAll();
+	if(game.infinities.gt(0)) {
+		galaxy();
+		boost();
+		shift();
+		maxAll();
+	}
 	// if(gainedInfinityPoints().gt(420)) bigCrunch();
 }
 
@@ -214,4 +216,4 @@ showAutomationTab(game.options.saveTabs ? game.currentAutomationTab : "dimension
 
 update();
 
-// setInterval(save, 30)
+setInterval(save, 30000)
