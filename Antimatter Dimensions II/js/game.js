@@ -71,6 +71,7 @@ function update() {
 	displayIf("shiftDisplay", game.shifts < 5);
 	displayIf("boostDisplay", game.shifts == 5);
 	displayIf("galaxyDisplay", game.shifts == 5);
+	displayIf("sacrificeDisplay", game.shifts == 5)
 	
 	ge("boostName").textContent = getEffectiveDimensionBoosts().gte(getDimensionHypersonicStart()) ? "Dimension Hypersonic" : game.boosts.gte(getDimensionSupersonicStart()) ? "Dimension Supersonic" : "Dimension Boost"
 	ge("galaxyName").textContent = getEffectiveNormalGalaxies().gte(getDarkGalaxyStart()) ? "Dark Antimatter Galaxies" : getEffectiveNormalGalaxies().gte(getRemoteGalaxyStart()) ? "Remote Antimatter Galaxies" : game.galaxies.gte(getDistantGalaxyStart()) ? "Distant Antimatter Galaxies" : "Antimatter Galaxies"
@@ -190,11 +191,13 @@ function update() {
 	ge("infinityshift").className = canInfinityShift() ? "buy" : "lock"
 
 	ge("statistics").innerHTML = `You have made a total of ` + getFullExpansion(game.totalAntimatter) + ` antimatter.<br>
-	<br>
-	You have gone infinite ` + getFullExpansion(game.infinities) + ` times.<br>
-	Your fastest infinity is in ` + timeDisplay(game.bestInfinityTime) + `.<br>
-	You have spent ` + timeDisplay(getTimeSince("infinity")) + ` in this infinity.<br>
-	<br>
+	<br>` + 
+	(game.infinities.gt(0) ? 
+		`You have gone infinite ` + getFullExpansion(game.infinities) + ` times.<br>
+		Your fastest infinity is in ` + timeDisplay(game.bestInfinityTime) + `.<br>
+		You have spent ` + timeDisplay(getTimeSince("infinity")) + ` in this infinity.<br>`
+	: "") + 
+	`<br>
 	You have existed for ` + timeDisplay(getTimeSince("start")) + `.`
 
 	galaxy();
