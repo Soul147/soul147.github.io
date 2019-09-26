@@ -158,7 +158,8 @@
 	</div>
 
 	<div id = "achievements" class = "tab">
-		<table class = "achievement"></table>
+		Your achievements multiply your fork production by <span id = "achievementBoost"></span>.
+		<table class = "achievement" id = "achievementTable"></table>
 	</div>
 	
 	<div id = "options" class = "tab">
@@ -339,7 +340,7 @@ function load(file) {
 	gc("automatonToggle", function(e, i) {e.checked = automatons[i].active})
 	
 	Achievements.asArray().forEach(function(achievement) {
-		var table=document.getElementById("achievements").childNodes[1]; //get the table
+		var table=document.getElementById("achievementTable") //get the table
 		var row=table.insertRow(-1); //append a row to the bottom
 		var cell1=row.insertCell(0); //checkbox will be here
 		var cell2=row.insertCell(1); //name will be here
@@ -435,6 +436,10 @@ function update() {
 		setTimeout(function() {alert("You've reached the endgame. I'm still adding new content, which will be coming out soon. You can continue to push farther to get a head start, or just wait until the next layer comes out. Thanks for playing. :)")}, 1000)
 		THE_END = true
 	}
+  
+  var achievementMult = 1;
+	Achievements.getCompletions().forEach(function(b) {if(b) achievementMult *= 1.1});
+	ge("achievementBoost").innerHTML = achievementMult.toFixed(2)
 	
 	// Production loop (only iterate over unlocked frs)
 	const frAmt = getUnlockedFR()
@@ -449,6 +454,7 @@ function update() {
 		if(game.ncaUpgrades.includes(1)) fr.production = fr.production.multiply(getNCaUpgradeEffect(1));
 		if(game.ncUpgrades.includes(0)) fr.production = fr.production.multiply(getNCUpgradeEffect(0));
 		if(game.ncUpgrades.includes(1)) fr.production = fr.production.multiply(getNCUpgradeEffect(1));
+		fr.production = fr.production.multiply(achievementMult);
 		game.forks = game.forks.add(fr.production.multiply(diff/1000))
 		
 		ge("fr"+i+"a").textContent = shortenMoney(fr.amount);
