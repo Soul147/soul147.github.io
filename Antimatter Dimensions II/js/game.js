@@ -52,7 +52,7 @@ function update() {
 	ge("buyTickspeed").textContent = "Cost: " + shortenCosts(game.tickspeed.cost);
 	ge("buyTickspeed").className = ge("maxTickspeed").className = canBuyTickspeed() ? "buy" : "lock"
 	
-	ge("sacrificeContainer").style.display = game.dimensions[8].amount.eq(0)?"none":""
+	ge("sacrificeContainer").style.display = game.dimensions[9].amount.eq(0)?"none":""
 	ge("sacrifice").className = "buy"
 	ge("sacrifice").textContent = "Dimensional Sacrifice (" + shorten(getSacrificeGain()) + "x)"
 	ge("sacrificePower").textContent = shorten(game.sacrificeMult)
