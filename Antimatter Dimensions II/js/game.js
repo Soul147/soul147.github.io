@@ -189,13 +189,7 @@ function update() {
 	displayIf("infinityPowerArea", game.infinityShifts > 0)
 	ge("infinityshift").className = canInfinityShift() ? "buy" : "lock"
 
-	ge("statistics").innerHTML = `You have made a total of ` + getFullExpansion(game.totalAntimatter) + ` antimatter.<br>
-	<br>
-	You have gone infinite ` + getFullExpansion(game.infinities) + ` times.<br>
-	Your fastest infinity is in ` + timeDisplay(game.bestInfinityTime) + `.<br>
-	You have spent ` + timeDisplay(getTimeSince("infinity")) + ` in this infinity.<br>
-	<br>
-	You have existed for ` + timeDisplay(getTimeSince("start")) + `.`
+	ge("statistics").innerHTML = getStatisticsDisplay()
 
 	if(game.infinities.gt(0)) {
 		galaxy();
@@ -204,6 +198,20 @@ function update() {
 		maxAll();
 	}
 	// if(gainedInfinityPoints().gt(420)) bigCrunch();
+}
+
+function getStatisticsDisplay() {
+	let lines = []
+	lines.push(`You have made a total of ${getFullExpansion(game.totalAntimatter)} antimatter.`)
+	lines.push("")
+	if (game.infinities.gt(0)) {
+		lines.push(`You have gone infinite ${getFullExpansion(game.infinities)} times.`)
+		lines.push(`Your fastest infinity is in ${timeDisplay(game.bestInfinityTime)}.`)
+		lines.push(`You have spent ${timeDisplay(getTimeSince("infinity"))} in this infinity.`)
+		lines.push("")
+	}
+	lines.push(`You have existed for ${timeDisplay(getTimeSince("start"))}.`)
+	return lines.join("<br>")
 }
 
 showTab(game.options.saveTabs ? game.currentTab : "dimensions")
