@@ -123,6 +123,7 @@ function maxAll() {
 }
 
 function getSacrificeMult() {
+	if (game.dimensions[1].amount.eq(0)) return new Decimal(1)
 	var r = game.dimensions[1].amount.log10().pow(2);
 	if(game.infinityUpgrades.includes(23)) r = r.pow(1e6);
 	if(false) r = game.dimensions[1].amount.pow(0.01); // this is for later (ICs or something)
@@ -135,6 +136,8 @@ function getSacrificeGain() {
 }
 
 function sacrifice() {
+	if (getSacrificeGain().leq(1)) return false
 	game.sacrificeMult = getSacrificeMult().max(game.sacrificeMult)
 	for(var i = 1; i < 9; i++) game.dimensions[i].amount = game.dimensions[i].bought;
+	return true
 }
