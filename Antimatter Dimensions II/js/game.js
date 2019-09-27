@@ -6,7 +6,7 @@ function updateDimensionSet(name="dimension", abbr="", curr="") {
 			game[name + "s"][i].amount = game[name + "s"][i].amount.add(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).multiply(diff/1000));
 		}
 		if(i < 9) {
-			if(game.dimensions[i].amount) ge(abbr + "dimgrowth" + i).textContent = "(+" + shorten(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
+			if(game.dimensions[i].amount) ge(abbr + "dimgrowth" + i).textContent = game[name + "s"][i].amount.eq(0)?"":"(+" + shorten(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
 		}
 		
 		ge(abbr + "dimamount" + i).textContent = shortenMoney(game[name + "s"][i].amount)
