@@ -1,3 +1,38 @@
+var infinityUpgradeDescriptions = [
+	"Multiplier on all dimensions based on total existence time<br>Currently: " + shorten(getInfinityUpgradeEffect(0)) + "x",
+	"Multiplier on all dimensions based on time in this infinity<br>Currently: " + shorten(getInfinityUpgradeEffect(1)) + "x",
+	"Multiplier for unspent infinity points on first dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(2)) + "x",
+	"You start with the fourth and fifth dimensions unlocked",
+	"Dimensions 1-3 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
+	"Dimension upgrade multiplier is 10% stronger",
+	"Multiplier for unspent infinity points on all dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(6)) + "x",
+	"You start with the sixth and seventh dimensions unlocked",
+	"Dimensions 4-6 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
+	"Dimension boost multiplier is 25% stronger",
+	"Infinity point generation based on fastest infinity",
+	"You start with the eighth and ninth dimensions unlocked",
+	"Dimensions 7-9 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
+	"Dimension boost cost increases by 25% less",
+	"Infinity stat generation based on fastest infinity",
+	"Antimatter galaxies are twice as effective",
+	"Break Infinity",
+	"Power up all dimensions based on total antimatter produced<br>Currently: " + shorten(getInfinityUpgradeEffect(17)) + "x",
+	"Power up all dimensions based on current antimatter<br>Currently: " + shorten(getInfinityUpgradeEffect(18)) + "x",
+	"Power up all dimensions based on ninth dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(19)) + "x",
+	"Power up all dimensions based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(20)) + "x",
+	"Power up all dimensions based on challenge times<br>Currently: " + shorten(getInfinityUpgradeEffect(21)) + "x",
+	"Power up all dimensions based on achievements<br>Currently: " + shorten(getInfinityUpgradeEffect(22)) + "x",
+	"Dimensional Sacrifice is 1,000,000x stronger",
+	"Dimension boost multiplier is 60% stronger",
+	"Antimatter galaxies are 10% stronger",
+	"Do nothing",
+	"Waste 10 million IP",
+	"Make this button green",
+	"",
+	"",
+	"",
+]
+
 function atInfinity() {
 	return !game.break && game.dimensions[0].amount.gte(Number.MAX_VALUE);
 }

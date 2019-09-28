@@ -1,4 +1,5 @@
 var lastTab;
+var tierNames = ["0", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"]
 
 function ge(e) {
 	return document.getElementById(e) || document.createElement("div");
