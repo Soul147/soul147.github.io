@@ -16,6 +16,7 @@
 		<button class = "tabButton" onclick = "showTab('statistics')">Statistics</button>
 		<button class = "tabButton" onclick = "showTab('challenges')" style = "display: none">Challenges</button>
 		<button class = "tabButton" onclick = "showTab('automation')" style = "display: none">Automation</button>
+		<button class = "tabButton" onclick = "showTab('options')">Options</button>
 		<button class = "infinityTabButton" id = "infinityTabButton" onclick = "showTab('infinity')" style = "font-weight: bold">Infinity</button>
 	</div>
 </center>
@@ -128,6 +129,15 @@
 			<button class = 'infinityupgrade' id = 'breakButton' onclick = 'game.break = !game.break; this.innerHTML = game.break ? "FIX INFINITY" : "BREAK INFINITY"'>BREAK INFINITY</button>
 			<table id = "postInfinityUpgrades" style = "font-size: 10px"></table>
 		</div>
+	</center>
+</div>
+
+<div class = "tab" id = "optionsTab">
+	<center>
+		<button onclick="save();">Save</button>
+		<button onclick="exportGame();">Export</button>
+		<button onclick="importGame();">Import</button>
+		<button onclick="hardReset();">HARD RESET</button>
 	</center>
 </div>
 
