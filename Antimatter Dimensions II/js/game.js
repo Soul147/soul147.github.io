@@ -6,22 +6,27 @@ function updateDimensionSet(name="dimension", abbr="", curr="") {
 			game[name + "s"][i].amount = game[name + "s"][i].amount.add(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).multiply(diff/1000));
 		}
 		if(i < 9) {
-			if(game.dimensions[i].amount) ge(abbr + "dimgrowth" + i).textContent = "(+" + shorten(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
+			if(game.dimensions[i].amount) ge(abbr + "dimgrowth" + i).textContent = game[name + "s"][i].amount.eq(0)?"":"(+" + shorten(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
 		}
 		
-		ge(abbr + "dimamount" + i).textContent = shortenMoney(game[name + "s"][i].amount)
-		ge(abbr + "dimmult" + i).textContent = shorten(game[name + "s"][i].multiplier)
-		ge(abbr + "dimbuy" + i).textContent = "Cost: " + shortenCosts(game[name + "s"][i].cost) + curr
-		ge(abbr + "dimbuy" + i).className = window["canBuy" + Name](i) ? "buy" : "lock"
-		
-		if(i) ge(abbr + "dimDisplay" + i).style.display = 
-			game[name + "s"][i - 1].amount.gt(0) && 
-			(name == "dimension" ? 
+		if (i) {
+			let display =
+			game[name + "s"][i - 1].amount.gt(0) && (
+				name == "dimension" ?
 				game.shifts + 4 >= i : 
 			name == "infinityDimension" ? 
 				game.infinityShifts >= i : 
 				true
-			) ? "" : "none"
+			)
+
+			if (display) {
+				ge(abbr + "dimamount" + i).textContent = shortenMoney(game[name + "s"][i].amount)
+				ge(abbr + "dimmult" + i).textContent = shorten(game[name + "s"][i].multiplier)
+				ge(abbr + "dimbuy" + i).textContent = "Cost: " + shortenCosts(game[name + "s"][i].cost) + curr
+				ge(abbr + "dimbuy" + i).className = window["canBuy" + Name](i) ? "buy" : "lock"
+			}
+			ge(abbr + "dimDisplay" + i).style.display = display?"":"none"
+		}
 	}
 }
 
@@ -52,6 +57,7 @@ function update() {
 	ge("buyTickspeed").textContent = "Cost: " + shortenCosts(game.tickspeed.cost);
 	ge("buyTickspeed").className = ge("maxTickspeed").className = canBuyTickspeed() ? "buy" : "lock"
 	
+	ge("sacrificeContainer").style.display = game.dimensions[9].amount.eq(0)?"none":""
 	ge("sacrifice").className = "buy"
 	ge("sacrifice").textContent = "Dimensional Sacrifice (" + shorten(getSacrificeGain()) + "x)"
 	ge("sacrificePower").textContent = shorten(game.sacrificeMult)
@@ -61,7 +67,7 @@ function update() {
 	ge("shift").className = canShift() ? "buy" : "lock"
 	
 	ge("boosts").textContent = getFullExpansion(getEffectiveDimensionBoosts());
-	ge("boostReq").textContent = getFullExpansion(getDimensionBoostReq());
+	ge("boostReq").textContent = getFullExpansion(getDimensionBoostReq().ceil());
 	ge("boost").className = canBoost() ? "buy" : "lock" 
 	
 	ge("galaxies").textContent = getFullExpansion(getEffectiveNormalGalaxies());
@@ -79,10 +85,9 @@ function update() {
 	ge("galaxyPower").textContent = shortenMoney(getDimensionBoostPower())
 	ge("galaxyEffect").innerHTML = getTickPower().gte(2) ? "x" + shorten(getTickPower()) : "+" + shorten(getTickPower().subtract(1).multiply(100)) + "%"
 
-	if(game.infinityUpgrades.includes(4)) game.shifts = Math.max(game.shifts, 1);
-	if(game.infinityUpgrades.includes(8)) game.shifts = Math.max(game.shifts, 2);
-	if(game.infinityUpgrades.includes(12)) game.shifts = Math.max(game.shifts, 3);
-	if(game.infinityUpgrades.includes(16)) game.shifts = Math.max(game.shifts, 4);
+	if(game.infinityUpgrades.includes(3)) game.shifts = Math.max(game.shifts, 1);
+	if(game.infinityUpgrades.includes(7)) game.shifts = Math.max(game.shifts, 3);
+	if(game.infinityUpgrades.includes(11)) game.shifts = Math.max(game.shifts, 5);
 
 	game.tickCostMultIncrease = 10 - game.repeatInf[0].bought;
 	game.dimCostMultIncrease = 10 - game.repeatInf[2].bought;
@@ -93,41 +98,41 @@ function update() {
 		e.textContent = shortenMoney(game.infinityPoints)
 	})
 
-	infinityUpgradeDescriptions = [
-		"Multiplier on all dimensions based on total existence time<br>Currently: " + shorten(getInfinityUpgradeEffect(0)) + "x",
-		"Multiplier on all dimensions based on time in this infinity<br>Currently: " + shorten(getInfinityUpgradeEffect(1)) + "x",
-		"Multiplier for unspent infinity points on first dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(2)) + "x",
-		"You start with the fourth and fifth dimensions unlocked",
-		"Dimensions 1-3 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
-		"Dimension upgrade multiplier is 10% stronger",
-		"Multiplier for unspent infinity points on all dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(6)) + "x",
-		"You start with the sixth and seventh dimensions unlocked",
-		"Dimensions 4-6 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
-		"Dimension boost multiplier is 25% stronger",
-		"Infinity point generation based on fastest infinity",
-		"You start with the eighth and ninth dimensions unlocked",
-		"Dimensions 7-9 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
-		"Dimension boost cost increases by 25% less",
-		"Infinity stat generation based on fastest infinity",
-		"Antimatter galaxies are twice as effective",
-		"Break Infinity",
-		"Power up all dimensions based on total antimatter produced<br>Currently: " + shorten(getInfinityUpgradeEffect(17)) + "x",
-		"Power up all dimensions based on current antimatter<br>Currently: " + shorten(getInfinityUpgradeEffect(18)) + "x",
-		"Power up all dimensions based on ninth dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(19)) + "x",
-		"Power up all dimensions based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(20)) + "x",
-		"Power up all dimensions based on challenge times<br>Currently: " + shorten(getInfinityUpgradeEffect(21)) + "x",
-		"Power up all dimensions based on achievements<br>Currently: " + shorten(getInfinityUpgradeEffect(22)) + "x",
-		"Dimensional Sacrifice is 1,000,000x stronger",
-		"Dimension boost multiplier is 60% stronger",
-		"Antimatter galaxies are 10% stronger",
-		"Do nothing",
-		"Waste 10 million IP",
-		"Make this button green",
-		"",
-		"",
-		"",
-	]
-
+	if (game.currentTab == "infinity") {
+		var infinityUpgradeDescriptions = [
+			"Multiplier on all dimensions based on total existence time<br>Currently: " + shorten(getInfinityUpgradeEffect(0)) + "x",
+			"Multiplier on all dimensions based on time in this infinity<br>Currently: " + shorten(getInfinityUpgradeEffect(1)) + "x",
+			"Multiplier for unspent infinity points on first dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(2)) + "x",
+			"You start with the fourth and fifth dimensions unlocked",
+			"Dimensions 1-3 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
+			"Dimension upgrade multiplier is 10% stronger",
+			"Multiplier for unspent infinity points on all dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(6)) + "x",
+			"You start with the sixth and seventh dimensions unlocked",
+			"Dimensions 4-6 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
+			"Dimension boost multiplier is 25% stronger",
+			"Infinity point generation based on fastest infinity",
+			"You start with the eighth and ninth dimensions unlocked",
+			"Dimensions 7-9 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
+			"Dimension boost cost increases by 25% less",
+			"Infinity stat generation based on fastest infinity",
+			"Antimatter galaxies are twice as effective",
+			"Break Infinity",
+			"Power up all dimensions based on total antimatter produced<br>Currently: " + shorten(getInfinityUpgradeEffect(17)) + "x",
+			"Power up all dimensions based on current antimatter<br>Currently: " + shorten(getInfinityUpgradeEffect(18)) + "x",
+			"Power up all dimensions based on ninth dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(19)) + "x",
+			"Power up all dimensions based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(20)) + "x",
+			"Power up all dimensions based on challenge times<br>Currently: " + shorten(getInfinityUpgradeEffect(21)) + "x",
+			"Power up all dimensions based on achievements<br>Currently: " + shorten(getInfinityUpgradeEffect(22)) + "x",
+			"Dimensional Sacrifice is 1,000,000x stronger",
+			"Dimension boost multiplier is 60% stronger",
+			"Antimatter galaxies are 10% stronger",
+			"Do nothing",
+			"Waste 10 million IP",
+			"Make this button green",
+			"",
+			"",
+			"",
+		]
 	for(var i = 0; i < 32; i++) {
 		ge("infinityUpgrade" + i).className = game.infinityUpgrades.includes(i) ? "infinityUpgradeBought" : canBuyInfinityUpgrade(i) ? "infinityUpgrade" : "infinityUpgradeLocked";
 		ge("infinityUpgradeDesc" + i).innerHTML = infinityUpgradeDescriptions[i];
@@ -145,6 +150,7 @@ function update() {
 	}
 	if(text.length) text += "every " + timeDisplay(1 / getInfinityUpgradeEffect(10)) + "."
 	ge("infinityPointGeneration").textContent = text;
+	}
 
 	c = game.dimensions[0].amount.gte(Number.MAX_VALUE) && !(game.bestInfinityTime < 60000 || game.break);
 	displayIf("tabButtons", !c)
@@ -189,13 +195,7 @@ function update() {
 	displayIf("infinityPowerArea", game.infinityShifts > 0)
 	ge("infinityshift").className = canInfinityShift() ? "buy" : "lock"
 
-	ge("statistics").innerHTML = `You have made a total of ` + getFullExpansion(game.totalAntimatter) + ` antimatter.<br>
-	<br>
-	You have gone infinite ` + getFullExpansion(game.infinities) + ` times.<br>
-	Your fastest infinity is in ` + timeDisplay(game.bestInfinityTime) + `.<br>
-	You have spent ` + timeDisplay(getTimeSince("infinity")) + ` in this infinity.<br>
-	<br>
-	You have existed for ` + timeDisplay(getTimeSince("start")) + `.`
+	if (game.currentTab == 'statistics') ge("statistics").innerHTML = getStatisticsDisplay()
 
 	if(game.infinities.gt(0)) {
 		galaxy();
@@ -204,6 +204,20 @@ function update() {
 		maxAll();
 	}
 	// if(gainedInfinityPoints().gt(420)) bigCrunch();
+}
+
+function getStatisticsDisplay() {
+	let lines = []
+	lines.push(`You have made a total of ${getFullExpansion(game.totalAntimatter)} antimatter.`)
+	lines.push("")
+	if (game.infinities.gt(0)) {
+		lines.push(`You have gone infinite ${getFullExpansion(game.infinities)} times.`)
+		lines.push(`Your fastest infinity is in ${timeDisplay(game.bestInfinityTime)}.`)
+		lines.push(`You have spent ${timeDisplay(getTimeSince("infinity"))} in this infinity.`)
+		lines.push("")
+	}
+	lines.push(`You have existed for ${timeDisplay(getTimeSince("start"))}.`)
+	return lines.join("<br>")
 }
 
 showTab(game.options.saveTabs ? game.currentTab : "dimensions")

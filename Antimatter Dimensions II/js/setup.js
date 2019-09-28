@@ -1,4 +1,5 @@
 var lastTab;
+var tierNames = ["0", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"]
 
 function ge(e) {
 	return document.getElementById(e) || document.createElement("div");
@@ -30,6 +31,72 @@ function loadGame(n) {
 	game = saveData.games[n];
 	
 	updateSave();
+}
+
+function importGame() {
+	let input = prompt("Paste your exported game below:")
+	if (input === "") return
+	try {
+		let temp = JSON.parse(atob(input))
+		game = temp
+
+		updateSave();
+	} catch(err) {
+		alert("An error has occured while loading the save!")
+	}
+}
+
+function copyTextToClipboard(text) {
+  var textArea = document.createElement("textarea");
+  textArea.style.position = 'fixed';
+  textArea.style.top = 0;
+  textArea.style.left = 0;
+  textArea.style.width = '2em';
+  textArea.style.height = '2em';
+  textArea.style.padding = 0;
+  textArea.style.border = 'none';
+  textArea.style.outline = 'none';
+  textArea.style.boxShadow = 'none';
+  textArea.style.background = 'transparent';
+  textArea.value = text;
+  document.body.appendChild(textArea);
+	iosCopyToClipboard(textArea)
+  document.body.removeChild(textArea);
+}
+
+function iosCopyToClipboard(el) { // https://stackoverflow.com/questions/34045777/copy-to-clipboard-using-javascript-in-ios
+    var oldContentEditable = el.contentEditable,
+        oldReadOnly = el.readOnly,
+        range = document.createRange();
+
+    el.contentEditable = true;
+    el.readOnly = false;
+    range.selectNodeContents(el);
+
+    var s = window.getSelection();
+    s.removeAllRanges();
+    s.addRange(range);
+
+    el.setSelectionRange(0, 999999); // A big number, to cover anything that could be inside the element.
+
+    el.contentEditable = oldContentEditable;
+    el.readOnly = oldReadOnly;
+
+    document.execCommand('copy');
+}
+
+function exportGame() {
+	let savefile = btoa(JSON.stringify(saveData.games[saveData.currentGame]))
+	copyTextToClipboard(savefile)
+	alert("Copied to clipboard!")
+}
+
+function hardReset() {
+	if (confirm("Are you sure about doing a hard reset? THERE IS NO REWARD FOR THIS!")) {
+		if (confirm("This is the LAST confirm!")) {
+			newGame();
+		}
+	}
 }
 
 function updateSave() {
