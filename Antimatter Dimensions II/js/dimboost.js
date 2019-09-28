@@ -31,7 +31,7 @@ function getDimensionBoostScaling() {
 }
 
 function getDimensionBoostReq() {
-	return game.boosts.multiply(getDimensionBoostScaling()).add(2);
+	return game.boosts.multiply(getDimensionBoostScaling()).add(2).ceil();
 }
 
 function getDimensionBoostPower() {
