@@ -11,6 +11,7 @@
 	</div>
 	<div id = "tabButtons">
 		<button class = "tabButton" onclick = "showTab('dimensions')">Dimensions</button>
+		<button class = "tabButton" onclick = "showTab('options')">Options</button>
 		<button class = "tabButton" onclick = "showTab('achievements')" style = "display: none">Achievements</button>
 		<button class = "tabButton" onclick = "showTab('statistics')">Statistics</button>
 		<button class = "tabButton" onclick = "showTab('challenges')" style = "display: none">Challenges</button>
@@ -130,15 +131,24 @@
 	</center>
 </div>
 
+<div class = "tab" id = "optionsTab">
+	<center>
+		<button onclick="save();">Save</button>
+		<button onclick="exportGame();">Export</button>
+		<button onclick="importGame();">Import</button>
+		<button onclick="hardReset();">HARD RESET</button>
+	</center>
+</div>
+
 </body>
 
 <script src = "js/break_eternity.js"></script>
+<script src = "js/format.js"></script>
+<script src = "js/setup.js"></script>
 <script src = "js/automation.js"></script>
 <script src = "js/normal_dimension.js"></script>
 <script src = "js/infinity_dimension.js"></script>
 <script src = "js/tickspeed.js"></script>
 <script src = "js/dimboost.js"></script>
 <script src = "js/infinity.js"></script>
-<script src = "js/setup.js"></script>
-<script src = "js/format.js"></script>
 <script src = "js/game.js"></script>

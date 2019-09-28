@@ -1,7 +1,5 @@
 var lastTime = Date.now();
 
-var tierNames = ["0", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"]
-
 var dimensionBaseCosts = [0, 10, 100, 10000, 1e6, 1e9, 1e13, 1e18, 1e24, 1e30]
 var dimensionBaseCostMults = [0, 1000, 10000, 1e5, 1e6, 1e8, 1e10, 1e12, 1e15, 1e18]
 
@@ -123,6 +121,7 @@ function maxAll() {
 }
 
 function getSacrificeMult() {
+	if (game.dimensions[1].amount.eq(0)) return new Decimal(1)
 	var r = game.dimensions[1].amount.log10().pow(2);
 	if(game.infinityUpgrades.includes(23)) r = r.multiply(1e6);
 	if(false) r = game.dimensions[1].amount.pow(0.01); // this is for later (ICs or something)
@@ -135,6 +134,8 @@ function getSacrificeGain() {
 }
 
 function sacrifice() {
+	if (getSacrificeGain().eq(1)) return false
 	game.sacrificeMult = getSacrificeMult().max(game.sacrificeMult)
 	for(var i = 1; i < 9; i++) game.dimensions[i].amount = game.dimensions[i].bought;
+	return true
 }
