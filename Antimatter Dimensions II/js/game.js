@@ -67,7 +67,7 @@ function update() {
 	ge("shift").className = canShift() ? "buy" : "lock"
 	
 	ge("boosts").textContent = getFullExpansion(getEffectiveDimensionBoosts());
-	ge("boostReq").textContent = getFullExpansion(getDimensionBoostReq());
+	ge("boostReq").textContent = getFullExpansion(getDimensionBoostReq().ceil());
 	ge("boost").className = canBoost() ? "buy" : "lock" 
 	
 	ge("galaxies").textContent = getFullExpansion(getEffectiveNormalGalaxies());
