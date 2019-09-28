@@ -124,7 +124,7 @@ function maxAll() {
 
 function getSacrificeMult() {
 	var r = game.dimensions[1].amount.log10().pow(2);
-	if(game.infinityUpgrades.includes(23)) r = r.pow(1e6);
+	if(game.infinityUpgrades.includes(23)) r = r.multiply(1e6);
 	if(false) r = game.dimensions[1].amount.pow(0.01); // this is for later (ICs or something)
 	
 	return r;

@@ -10,17 +10,19 @@ function getInfinityPointMult() {
 	return Decimal.pow(2, game.repeatInf[1].bought)
 }
 
-function bigCrunch() {
-	if(game.dimensions[0].amount.lt(Number.MAX_VALUE)) return;
+function bigCrunch(force) {
+	if(game.dimensions[0].amount.lt(Number.MAX_VALUE) && !force) return;
 	
 	if(!(game.bestInfinityTime < 60000 || game.break)) {
 		showTab(lastTab);
 		lastTab = null;
 	}
 	
-	game.infinityPoints = game.infinityPoints.add(gainedInfinityPoints())
-	game.infinities = game.infinities.add(1);
-	if(getTimeSince("infinity") < game.bestInfinityTime) game.bestInfinityTime = getTimeSince("infinity")
+	if(!force) {
+		game.infinityPoints = game.infinityPoints.add(gainedInfinityPoints())
+		game.infinities = game.infinities.add(1);
+		if(getTimeSince("infinity") < game.bestInfinityTime) game.bestInfinityTime = getTimeSince("infinity")
+	}
 	game.infinityTime = Date.now();
 	game.bestIPRate = new Decimal(0);
 	
