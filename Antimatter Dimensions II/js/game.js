@@ -85,10 +85,9 @@ function update() {
 	ge("galaxyPower").textContent = shortenMoney(getDimensionBoostPower())
 	ge("galaxyEffect").innerHTML = getTickPower().gte(2) ? "x" + shorten(getTickPower()) : "+" + shorten(getTickPower().subtract(1).multiply(100)) + "%"
 
-	if(game.infinityUpgrades.includes(4)) game.shifts = Math.max(game.shifts, 1);
-	if(game.infinityUpgrades.includes(8)) game.shifts = Math.max(game.shifts, 2);
-	if(game.infinityUpgrades.includes(12)) game.shifts = Math.max(game.shifts, 3);
-	if(game.infinityUpgrades.includes(16)) game.shifts = Math.max(game.shifts, 4);
+	if(game.infinityUpgrades.includes(3)) game.shifts = Math.max(game.shifts, 1);
+	if(game.infinityUpgrades.includes(7)) game.shifts = Math.max(game.shifts, 3);
+	if(game.infinityUpgrades.includes(11)) game.shifts = Math.max(game.shifts, 5);
 
 	game.tickCostMultIncrease = 10 - game.repeatInf[0].bought;
 	game.dimCostMultIncrease = 10 - game.repeatInf[2].bought;
