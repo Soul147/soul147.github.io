@@ -98,7 +98,7 @@ function update() {
 	displayIf("infinityTabButton", game.infinities.gt(0))
 
 	gc("infinityPoints", function(e) {
-		e.textContent = shortenMoney(game.infinityPoints)
+		e.textContent = shortenMoney(game.infinityPoints.floor())
 	})
 
 	if (game.currentTab == "infinity") {
