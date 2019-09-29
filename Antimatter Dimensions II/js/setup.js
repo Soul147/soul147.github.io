@@ -102,9 +102,10 @@ function hardReset() {
 function updateSave() {
 	transformToDecimal(game);
 	
-	if(!game.options) game.options = {
+	if(!game.options || true) game.options = { // There really isn't any option change option yet soooo
 		notation: "Scientific",
-		mixedCutoff: 1e33
+		mixedCutoff: 1e33,
+		fps: 30
 	}
 	
 	if(!game.totalAntimatter) game.totalAntimatter = new Decimal(0);

@@ -3,10 +3,9 @@ function updateDimensionSet(name="dimension", abbr="", curr="") {
 	
 	for(var i = 10; i >= 0; i--) {
 		if(i != 10) {
-			game[name + "s"][i].amount = game[name + "s"][i].amount.add(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).multiply(diff/1000));
-		}
-		if(i < 9) {
-			if(game.dimensions[i].amount) ge(abbr + "dimgrowth" + i).textContent = game[name + "s"][i].amount.eq(0)?"":"(+" + shorten(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
+			let dimProduction = window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name))
+			game[name + "s"][i].amount = game[name + "s"][i].amount.add(dimProduction.multiply(diff/1000));
+			if (i != 9) ge(abbr + "dimgrowth" + i).textContent = game[name + "s"][i].amount.eq(0)?"":"(+" + shorten(dimProduction.divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
 		}
 		
 		if (i) {
