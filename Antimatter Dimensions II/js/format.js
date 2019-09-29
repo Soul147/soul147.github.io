@@ -9,7 +9,7 @@ function getFullExpansion(num, places) {
 function shorten(num, places = 2, shortPlaces = 2) {
 	if(!num.mag) num = new Decimal(num);
 	if(isNaN(num.mag)) return "NaN";
-	if(num.gte(Number.MAX_VALUE) && atInfinity()) return "Infinite";
+	if(num.gte(Number.MAX_VALUE) && !game.break) return "Infinite";
 		
 	if(num.iteratedlog(10, 2).gt(1e15)) {
 		var end = getFullExpansion(num.layer+1);

@@ -66,25 +66,29 @@ function canGalaxy() {
 function galaxy() {
 	if(!canGalaxy()) return;
 	
-	var bought = game.dimensions[9].amount.subtract(6).divide(getGalaxyScaling()).add(1).floor();
+	var bought = game.dimensions[9].amount.subtract(5).divide(getGalaxyScaling()).add(1).floor();
 	
 	game.galaxies = bought;
 	
-	// game.shifts = 0;
+	game.shifts = 0;
 	game.boosts = new Decimal(0);
 	resetDimensions();
+	
+	if(game.galaxies.gt(0)) giveAchievement(13)
+	if(game.galaxies.gt(1)) giveAchievement(14)
+	if(game.galaxies.gt(2)) giveAchievement(15)
 }
 
 function getGalaxyReq() {
-	return game.galaxies.multiply(getGalaxyScaling()).add(6).floor();
+	return game.galaxies.multiply(getGalaxyScaling()).add(5).floor();
 }
 
 function getGalaxyScaling() {
-	return 6;
+	return 5;
 }
 
 function getTickPower() {
-	return Decimal.pow(1.1, getEffectiveGalaxies()).divide(10).add(1);
+	return Decimal.pow(1.1, getEffectiveGalaxies().subtract(1)).divide(10).add(1);
 }
 
 function getEffectiveNormalGalaxies() {

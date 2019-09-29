@@ -31,6 +31,8 @@ function bigCrunch(force) {
 	game.galaxies = new Decimal(0);
 	resetDimensions();
 	resetInfinityDimensions();
+	
+	giveAchievement(9)
 }
 
 var infinityUpgrades = [];

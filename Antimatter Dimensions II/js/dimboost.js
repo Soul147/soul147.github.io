@@ -6,6 +6,7 @@ function shift() {
 	if(!canShift()) return;
 	game.shifts++;
 	resetDimensions();
+	if(game.shifts == 5) giveAchievement(10);
 }
 
 function canBoost() {
@@ -22,6 +23,8 @@ function boost(bulk) {
 	game.boosts = bought;
 	
 	resetDimensions();
+	
+	if(game.boosts.gte(5)) giveAchievement(11);
 }
 
 function getDimensionBoostScaling() {

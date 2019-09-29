@@ -36,6 +36,8 @@ function getDimensionProduction(i) {
 	var dim = game.dimensions[i];
 	
 	dim.multiplier = Decimal.pow(game.dimMult, dim.bought).divide(2**(dim.id-1));
+	dim.multiplier = dim.multiplier.multiply(getAchievementMultiplier())
+	
 	dim.multiplier = dim.multiplier.multiply(getDimensionBoostEffect())
 	
 	dim.multiplier = dim.multiplier.multiply(getInfinityPowerEffect())
@@ -55,6 +57,8 @@ function getDimensionProduction(i) {
 	if(game.infinityUpgrades.includes(21)) dim.multiplier = dim.multiplier.multiply(getInfinityUpgradeEffect(21))
 	if(game.infinityUpgrades.includes(22)) dim.multiplier = dim.multiplier.multiply(getInfinityUpgradeEffect(22))
 	
+	if(i == 9 && game.achievements.includes(17)) dim.multiplier = dim.multiplier.multiply(1.09);
+
 	return dim.amount.multiply(dim.multiplier);
 }
 
@@ -74,6 +78,8 @@ function buyDimension(i) {
 	dim.bought = dim.bought.add(1);
 	
 	dim.cost = dim.cost.multiply(dim.costMult);
+	
+	giveAchievement(i - 1)
 	
 	return true;
 }
@@ -134,7 +140,7 @@ function getSacrificeGain() {
 }
 
 function sacrifice() {
-	if (getSacrificeGain().eq(1)) return false
+	if (getSacrificeGain().eq(1)) giveAchievement(16);
 	game.sacrificeMult = getSacrificeMult().max(game.sacrificeMult)
 	for(var i = 1; i < 9; i++) game.dimensions[i].amount = game.dimensions[i].bought;
 	return true

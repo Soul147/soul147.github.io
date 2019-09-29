@@ -12,7 +12,7 @@
 	<div id = "tabButtons">
 		<button class = "tabButton" onclick = "showTab('dimensions')">Dimensions</button>
 		<button class = "tabButton" onclick = "showTab('options')">Options</button>
-		<button class = "tabButton" onclick = "showTab('achievements')" style = "display: none">Achievements</button>
+		<button class = "tabButton" onclick = "showTab('achievements')">Achievements</button>
 		<button class = "tabButton" onclick = "showTab('statistics')">Statistics</button>
 		<button class = "tabButton" onclick = "showTab('challenges')" style = "display: none">Challenges</button>
 		<button class = "tabButton" onclick = "showTab('automation')" style = "display: none">Automation</button>
@@ -39,7 +39,8 @@
 		</div>
 	</center>
 	<div class = "dimensionTab" id = "normalDimensionTab">
-		<center id = "sacrificeDisplay"><button id = "sacrifice" onclick = "sacrifice()" style = "width: 350px; font-size: 12px"></button><br>Boosts 9th dimensions by x<span id = "sacrificePower"></span></center>
+		<center><button class = "buy" style = "width: 100px; font-size: 12px; margin: 8" onclick = "maxAll()">Max All</button></center>
+		<center id = "sacrificeDisplay"><button id = "sacrifice" onclick = "sacrifice()" style = "width: 350px; font-size: 12px"></button><br>Boosts 9th dimensions by <span id = "sacrificePower"></span>x</center>
 		<table id = "dimensions" style = "font-size: 15px"></table>
 		<table style = "font-size: 15px">
 			<tr id = "shiftDisplay">
@@ -69,8 +70,11 @@
 </div>
 
 <div class = "tab" id = "achievementsTab">
-	<center>
-		coming soon...
+	<center style = "font-size: 16px">
+		Achievements Completed: <span id = "achievementCompletions"></span><br>
+		Rows Completed: <span id = "achievementRowCompletions"></span><br>
+		Achievement Multiplier: <span id = "achievementMultiplier"></span>x
+		<div id = "achievements"></div>
 	</center>
 </div>
 
@@ -145,6 +149,7 @@
 <script src = "js/break_eternity.js"></script>
 <script src = "js/format.js"></script>
 <script src = "js/setup.js"></script>
+<script src = "js/achievements.js"></script>
 <script src = "js/automation.js"></script>
 <script src = "js/normal_dimension.js"></script>
 <script src = "js/infinity_dimension.js"></script>

@@ -9,6 +9,27 @@ body, button {
 	color: #4f5957;
 }
 
+.achievementLocked, .achievementUnlocked {
+	width: 100;
+	height: 100;
+	border: 2px solid;
+	border-radius: 4px;
+	font-size: 11px;
+	text-align: center;
+	color: #fff;
+	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}
+
+.achievementLocked {
+	border-color: #666;
+	background-color: #6666;
+}
+
+.achievementUnlocked {
+	border-color: #090;
+	background-color: #0909;
+}
+
 currency {
 	color: black;
 	font-size: 30px;

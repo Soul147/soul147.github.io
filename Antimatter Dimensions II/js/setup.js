@@ -107,6 +107,7 @@ function updateSave() {
 		mixedCutoff: 1e33
 	}
 	
+	if(!game.achievements) game.achievements = [];
 	if(!game.totalAntimatter) game.totalAntimatter = new Decimal(0);
 	if(!game.dimensions) resetDimensions();
 	if(!game.shifts) game.shifts = 0;
@@ -187,6 +188,14 @@ function showInfinityTab(name) {
 function displayIf(e, c) {
 	ge(e).style.display = c ? "" : "none";
 }
+
+t = "<table><tr>"
+for(var i = 0; i < 18; i++) t += `
+<td id = "achievement` + i + `">a</td>
+` + (i % 9 == 8 ? "</tr><tr>" : "")
+t += "</tr></table>"
+
+ge("achievements").innerHTML = t;
 
 for(var i = 1; i < 10; i++) ge("dimensions").innerHTML += `
 <tr id = "dimDisplay` + i + `" style = "text-align: right">
@@ -279,3 +288,11 @@ function f() {
 f()
 
 window.onresize = f;
+
+addEventListener("keydown", function(e) {
+	var c = e.keyCode;
+	
+	if(c == 77) maxAll();
+	if(c == 67) bigCrunch();
+	if(c == 27) exitChallenge();
+})

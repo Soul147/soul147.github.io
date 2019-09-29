@@ -198,6 +198,15 @@ function update() {
 
 	if(game.currentTab == 'statistics') ge("statistics").innerHTML = getStatisticsDisplay()
 
+	// Achievement checks
+	
+	ge("achievementCompletions").innerText = getFullExpansion(game.achievements.length) + " / " + getFullExpansion(achievements);
+	ge("achievementMultiplier").innerText = getFullExpansion(getAchievementMultiplier());
+	ge("achievementRowCompletions").innerText = getFullExpansion(game.achievementRowsCompleted);
+
+	if(game.dimensions[0].amount.gt(1e80)) giveAchievement(12)
+	if(game.dimensions[9].amount.eq(9)) giveAchievement(17)
+
 	if(game.infinities.gt(0)) {
 		galaxy();
 		boost();
@@ -227,5 +236,6 @@ showInfinityTab(game.options.saveTabs ? game.currentInfinityTab : "infinityUpgra
 showAutomationTab(game.options.saveTabs ? game.currentAutomationTab : "dimension")
 
 update();
+updateAchievements()
 
-setInterval(save, 30000)
+setInterval(save, 30)
