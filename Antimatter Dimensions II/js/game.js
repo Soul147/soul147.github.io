@@ -153,6 +153,7 @@ function update() {
 	}
 	if(text.length) text += "every " + timeDisplay(1 / getInfinityUpgradeEffect(10)) + "."
 	ge("infinityPointGeneration").textContent = text;
+	ge("breakButton").textContent = game.break?"FIX INFINITY" : "BREAK INFINITY"
 	}
 
 	c = game.dimensions[0].amount.gte(Number.MAX_VALUE) && !(game.bestInfinityTime < 60000 || game.break);
