@@ -19,7 +19,7 @@ function updateAchievementDescriptions() {
 		"You got past the big wall", `Buy an antimatter galaxy.`, 
 		"Triple galaxy", `Buy 2 antimatter galaxies.`, 
 		"Intergalactic", `Buy 3 antimatter galaxies.`, 
-		"There's no point in doing that", `Do a Dimensional Sacrifice for less than a 1.01x multiplier.`, 
+		"There's no point in doing that", `Sacrifice without having any ninth dimensions.`, 
 		"Unhevi", `Have exactly 9 ninth dimensions. Reward: Ninth dimensions are 9% stronger.`,
 	]
 }
@@ -48,7 +48,7 @@ function getAchievementMultiplier() {
 	for(var i = 0; i < achievements; i += 9) {
 		var completed = true;
 		for(var j = 0; j < 9; j++) {
-			if(!game.achievements.includes(i * 9 + j)) completed = false;
+			if(!game.achievements.includes(i + j)) completed = false;
 		}
 		if(completed) {
 			game.achievementRowsCompleted++;

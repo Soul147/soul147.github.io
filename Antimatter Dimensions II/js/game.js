@@ -96,6 +96,8 @@ function update() {
 	game.dimCostMultIncrease = 10 - game.repeatInf[2].bought;
 
 	displayIf("infinityTabButton", game.infinities.gt(0))
+	displayIf("automationTabButton", game.infinities.gt(0))
+	displayIf("challengesTabButton", game.infinities.gt(0))
 
 	gc("infinityPoints", function(e) {
 		e.textContent = shortenMoney(game.infinityPoints.floor())
@@ -212,7 +214,7 @@ function update() {
 
 	if(game.infinities.gt(0)) {
 		galaxy();
-		boost();
+		// boost();
 		shift();
 		maxAll();
 	}

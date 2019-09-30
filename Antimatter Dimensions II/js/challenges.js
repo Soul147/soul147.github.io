@@ -7,5 +7,3 @@ function startChallenge(i) {
 	
 	bigCrunch(true);
 }
-
-// this is a work in progress

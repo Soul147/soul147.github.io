@@ -140,7 +140,8 @@ function getSacrificeGain() {
 }
 
 function sacrifice() {
-	if (getSacrificeGain().eq(1)) giveAchievement(16);
+	if (getSacrificeGain().lte(1)) return;
+	if(game.dimensions[9].amount.eq(0)) giveAchievement(16)
 	game.sacrificeMult = getSacrificeMult().max(game.sacrificeMult)
 	for(var i = 1; i < 9; i++) game.dimensions[i].amount = game.dimensions[i].bought;
 	return true
