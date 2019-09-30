@@ -3,10 +3,9 @@ function updateDimensionSet(name="dimension", abbr="", curr="") {
 	
 	for(var i = 10; i >= 0; i--) {
 		if(i != 10) {
-			game[name + "s"][i].amount = game[name + "s"][i].amount.add(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).multiply(diff/1000));
-		}
-		if(i < 9) {
-			if(game.dimensions[i].amount) ge(abbr + "dimgrowth" + i).textContent = game[name + "s"][i].amount.eq(0)?"":"(+" + shorten(window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name)).divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
+			let dimProduction = window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name))
+			game[name + "s"][i].amount = game[name + "s"][i].amount.add(dimProduction.multiply(diff/1000));
+			if (i != 9) ge(abbr + "dimgrowth" + i).textContent = game[name + "s"][i].amount.eq(0)?"":"(+" + shorten(dimProduction.divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
 		}
 		
 		if (i) {
@@ -86,9 +85,12 @@ function update() {
 	ge("galaxyPower").textContent = shortenMoney(getDimensionBoostPower())
 	ge("galaxyEffect").innerHTML = getTickPower().gte(2) ? "x" + shorten(getTickPower()) : "+" + shorten(getTickPower().subtract(1).multiply(100)) + "%"
 
-	if(game.infinityUpgrades.includes(3)) game.shifts = Math.max(game.shifts, 1);
-	if(game.infinityUpgrades.includes(7)) game.shifts = Math.max(game.shifts, 3);
-	if(game.infinityUpgrades.includes(11)) game.shifts = Math.max(game.shifts, 5);
+	if(game.infinityUpgrades.includes(3)) game.shifts = Math.max(game.shifts, 2);
+	if(game.infinityUpgrades.includes(7)) game.shifts = Math.max(game.shifts, 4);
+	if(game.infinityUpgrades.includes(11)) {
+		game.shifts = Math.max(game.shifts, 5);
+		game.galaxies = Decimal.max(game.galaxies, 1);
+	}
 
 	game.tickCostMultIncrease = 10 - game.repeatInf[0].bought;
 	game.dimCostMultIncrease = 10 - game.repeatInf[2].bought;
@@ -96,7 +98,7 @@ function update() {
 	displayIf("infinityTabButton", game.infinities.gt(0))
 
 	gc("infinityPoints", function(e) {
-		e.textContent = shortenMoney(game.infinityPoints)
+		e.textContent = shortenMoney(game.infinityPoints.floor())
 	})
 
 	if (game.currentTab == "infinity") {
@@ -104,15 +106,15 @@ function update() {
 			"Multiplier on all dimensions based on total existence time<br>Currently: " + shorten(getInfinityUpgradeEffect(0)) + "x",
 			"Multiplier on all dimensions based on time in this infinity<br>Currently: " + shorten(getInfinityUpgradeEffect(1)) + "x",
 			"Multiplier for unspent infinity points on first dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(2)) + "x",
-			"You start with the fourth and fifth dimensions unlocked",
+			"You start with the fifth and sixth dimensions unlocked",
 			"Dimensions 1-3 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
 			"Dimension upgrade multiplier is 10% stronger",
 			"Multiplier for unspent infinity points on all dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(6)) + "x",
-			"You start with the sixth and seventh dimensions unlocked",
+			"You start with the seventh and eighth dimensions unlocked",
 			"Dimensions 4-6 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
 			"Dimension boost multiplier is 25% stronger",
 			"Infinity point generation based on fastest infinity",
-			"You start with the eighth and ninth dimensions unlocked",
+			"You start with the ninth dimensions unlocked and one galaxy",
 			"Dimensions 7-9 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
 			"Dimension boost cost increases by 25% less",
 			"Infinity stat generation based on fastest infinity",
@@ -151,6 +153,7 @@ function update() {
 	}
 	if(text.length) text += "every " + timeDisplay(1 / getInfinityUpgradeEffect(10)) + "."
 	ge("infinityPointGeneration").textContent = text;
+	ge("breakButton").textContent = game.break?"FIX INFINITY" : "BREAK INFINITY"
 	}
 
 	c = game.dimensions[0].amount.gte(Number.MAX_VALUE) && !(game.bestInfinityTime < 60000 || game.break);

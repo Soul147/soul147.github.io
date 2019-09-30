@@ -20,7 +20,7 @@
 	</div>
 </center>
 
-<button id = "gainedIP" class = "infinityTabButton" onclick = "bigCrunch()" style = "font-size: 11px; width: 210px; height: 70px; position: absolute; left: 20; top: 20"></button>
+<button id = "gainedIP" class = "infinityTabButton" onmousedown = "bigCrunch()" style = "font-size: 11px; width: 210px; height: 70px; position: absolute; left: 20; top: 20"></button>
 
 <div class = "tab" id = "bigCrunchTab" style = "font-size: 15px; padding-left: 15px">
 	<center>
@@ -129,7 +129,7 @@
 			<table id = "infinityUpgrades" style = "font-size: 10px"></table>
 		</div>
 		<div class = "infinityTab" id = "breakInfinityTab">
-			<button class = 'infinityupgrade' id = 'breakButton' onclick = 'game.break = !game.break; this.innerHTML = game.break ? "FIX INFINITY" : "BREAK INFINITY"'>BREAK INFINITY</button>
+			<button class = 'infinityupgrade' id = 'breakButton' onclick = 'game.break = !game.break;'>BREAK INFINITY</button>
 			<table id = "postInfinityUpgrades" style = "font-size: 10px"></table>
 		</div>
 	</center>
