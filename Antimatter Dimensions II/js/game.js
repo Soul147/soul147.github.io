@@ -1,15 +1,20 @@
 function updateDimensionSet(name="dimension", abbr="", curr="") {
 	var Name = name[0].toUpperCase() + name.slice(1)
 	
+	var c12 = inChallenge(12) && name == "dimension";
+	
 	for(var i = 10; i >= 0; i--) {
-		if(i != 10) {
-			let dimProduction = window["get" + Name + "Production"](i + 1).multiply(getTickspeed(name))
-			game[name + "s"][i].amount = game[name + "s"][i].amount.add(dimProduction.multiply(diff/1000));
-			if (i != 9) ge(abbr + "dimgrowth" + i).textContent = game[name + "s"][i].amount.eq(0)?"":"(+" + shorten(dimProduction.divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
+		if(i < 10-c12) {
+			var tickspeed = inChallenge(7) ? 1 : getTickspeed(name);
+			var dimProduction = window["get" + Name + "Production"](i + 1).multiply(tickspeed).multiply(getChallengeMultiplier(name))
+			if(c12) var dimProductionUp = window["get" + Name + "Production"](i + 2).multiply(tickspeed).multiply(getChallengeMultiplier(name))
+			var realProduction = i ? (c12 ? dimProductionUp : dimProduction) : (c12 ? dimProduction.divide(100).add(dimProductionUp) : dimProduction);
+			game[name + "s"][i].amount = game[name + "s"][i].amount.add(realProduction.multiply(diff/1000));
+			if (i < 9-c12) ge(abbr + "dimgrowth" + i).textContent = game[name + "s"][i].amount.eq(0)?"":"(+" + shorten(realProduction.divide(game[name + "s"][i].amount).multiply(100)) + "%/s)"
 		}
 		
 		if (i) {
-			let display =
+			var display =
 			game[name + "s"][i - 1].amount.gt(0) && (
 				name == "dimension" ?
 				game.shifts + 4 >= i : 
@@ -39,6 +44,7 @@ function update() {
 	
 	game.dimMult = new Decimal(2);
 	if(game.infinityUpgrades.includes(5)) game.dimMult = game.dimMult.multiply(1.1)
+	if(inChallenge(2)) game.dimMult = game.dimMult.multiply(0.8)
 	
 	updateDimensionSet("dimension")
 	updateDimensionSet("infinityDimension", "inf", " IP")
@@ -46,17 +52,19 @@ function update() {
 	game.totalAntimatter = game.totalAntimatter.add(getDimensionProduction(1).multiply(getTickspeed("dimension")).multiply(diff/1000));
 	
 	ge("antimatter").textContent = getFullExpansion(game.dimensions[0].amount)
-	ge("antimatterGrowth").textContent = getFullExpansion(getDimensionProduction(1).multiply(getTickspeed("dimension")))
+	ge("antimatterGrowth").textContent = getFullExpansion(getDimensionProduction(1).multiply(inChallenge(7) ? 1 : getTickspeed("dimension")))
 	
 	ge("infinityPower").textContent = getFullExpansion(game.infinityDimensions[0].amount)
 	ge("infinityPowerEffect").textContent = shorten(getInfinityPowerEffect())
 	ge("infinityPowerGrowth").textContent = getFullExpansion(getInfinityDimensionProduction(1).multiply(getTickspeed()))
 	
-	ge("tickspeed").textContent = shorten(getTickspeed("dimension"));
+	ge("tickspeed").textContent = inChallenge(7) ? "" : shorten(getTickspeed("dimension"));
 	ge("buyTickspeed").textContent = "Cost: " + shortenCosts(game.tickspeed.cost);
 	ge("buyTickspeed").className = ge("maxTickspeed").className = canBuyTickspeed() ? "buy" : "lock"
 	
-	ge("sacrificeContainer").style.display = game.dimensions[9].amount.eq(0)?"none":""
+	ge("dimMult").textContent = shorten(game.dimMult, 2, 1)
+	
+	displayIf("sacrificeContainer", game.shifts == 5)
 	ge("sacrifice").className = "buy"
 	ge("sacrifice").textContent = "Dimensional Sacrifice (" + shorten(getSacrificeGain()) + "x)"
 	ge("sacrificePower").textContent = shorten(game.sacrificeMult)
@@ -66,31 +74,25 @@ function update() {
 	ge("shift").className = canShift() ? "buy" : "lock"
 	
 	ge("boosts").textContent = getFullExpansion(getEffectiveDimensionBoosts());
-	ge("boostReq").textContent = getFullExpansion(getDimensionBoostReq().ceil());
+	dr = getDimensionBoostReq()
+	ge("boostReq").textContent = (inChallenge(10) ? getFullExpansion(dr, 2) + " fourth " : getFullExpansion(dr.ceil()) + " ninth ");
 	ge("boost").className = canBoost() ? "buy" : "lock" 
 	
 	ge("galaxies").textContent = getFullExpansion(getEffectiveNormalGalaxies());
-	ge("galaxyReq").textContent = getFullExpansion(getGalaxyReq());
+	ge("galaxyReq").textContent = getFullExpansion(getGalaxyReq()) + (inChallenge(10) ? " fourth " : " ninth ");
 	ge("galaxy").className = canGalaxy() ? "buy" : "lock" 
 	
-	displayIf("shiftDisplay", game.shifts < 5);
-	displayIf("boostDisplay", game.shifts == 5);
-	displayIf("galaxyDisplay", game.shifts == 5);
+	displayIf("shiftDisplay", game.shifts < 5 && !inChallenge(10));
+	displayIf("boostDisplay", game.shifts == 5 || inChallenge(10));
+	displayIf("galaxyDisplay", game.shifts == 5 || inChallenge(10));
 	displayIf("sacrificeDisplay", game.shifts == 5)
 	
 	ge("boostName").textContent = getEffectiveDimensionBoosts().gte(getDimensionHypersonicStart()) ? "Dimension Hypersonic" : game.boosts.gte(getDimensionSupersonicStart()) ? "Dimension Supersonic" : "Dimension Boost"
 	ge("galaxyName").textContent = getEffectiveNormalGalaxies().gte(getDarkGalaxyStart()) ? "Dark Antimatter Galaxies" : getEffectiveNormalGalaxies().gte(getRemoteGalaxyStart()) ? "Remote Antimatter Galaxies" : game.galaxies.gte(getDistantGalaxyStart()) ? "Distant Antimatter Galaxies" : "Antimatter Galaxies"
 	ge("boostPower").textContent = shorten(getDimensionBoostPower(), 2, 1)
 	ge("boostEffect").textContent = "(" + shorten(getDimensionBoostEffect()) + "x on all dimensions)"
-	ge("galaxyPower").textContent = shortenMoney(getDimensionBoostPower())
-	ge("galaxyEffect").innerHTML = getTickPower().gte(2) ? "x" + shorten(getTickPower()) : "+" + shorten(getTickPower().subtract(1).multiply(100)) + "%"
-
-	if(game.infinityUpgrades.includes(3)) game.shifts = Math.max(game.shifts, 2);
-	if(game.infinityUpgrades.includes(7)) game.shifts = Math.max(game.shifts, 4);
-	if(game.infinityUpgrades.includes(11)) {
-		game.shifts = Math.max(game.shifts, 5);
-		game.galaxies = Decimal.max(game.galaxies, 1);
-	}
+	ge("galaxyPower").textContent = shortenMoney(getGalaxyPower(), 2, 1)
+	ge("galaxyEffect").innerHTML = inChallenge(7) ? "x" + shorten(getTickPower().pow(7)) + " on 9th dimensions" : getTickPower().gte(2) ? "x" + shorten(getTickPower()) : "+" + shorten(getTickPower().subtract(1).multiply(100)) + "%"
 
 	game.tickCostMultIncrease = 10 - game.repeatInf[0].bought;
 	game.dimCostMultIncrease = 10 - game.repeatInf[2].bought;
@@ -122,8 +124,8 @@ function update() {
 			"Infinity stat generation based on fastest infinity",
 			"Antimatter galaxies are twice as effective",
 			"Break Infinity",
-			"Power up all dimensions based on total antimatter produced<br>Currently: " + shorten(getInfinityUpgradeEffect(17)) + "x",
-			"Power up all dimensions based on current antimatter<br>Currently: " + shorten(getInfinityUpgradeEffect(18)) + "x",
+			"Power up all dimensions based on current antimatter<br>Currently: " + shorten(getInfinityUpgradeEffect(17)) + "x",
+			"Power up all dimensions based on total antimatter produced<br>Currently: " + shorten(getInfinityUpgradeEffect(18)) + "x",
 			"Power up all dimensions based on ninth dimensions<br>Currently: " + shorten(getInfinityUpgradeEffect(19)) + "x",
 			"Power up all dimensions based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(20)) + "x",
 			"Power up all dimensions based on challenge times<br>Currently: " + shorten(getInfinityUpgradeEffect(21)) + "x",
@@ -201,7 +203,19 @@ function update() {
 	displayIf("infinityPowerArea", game.infinityShifts > 0)
 	ge("infinityshift").className = canInfinityShift() ? "buy" : "lock"
 
-	if(game.currentTab == 'statistics') ge("statistics").innerHTML = getStatisticsDisplay()
+	ge("challengeInfo").style.left = innerWidth / 2 - 175;
+	ge("challengeInfo").style.top = 290;
+	
+	displayIf("challengeMultiplier", inChallenge(4) || inChallenge(5) || inChallenge(6))
+		
+	ge("challengeMultiplier").innerHTML = "<br>Challenge production factor: " + getChallengeMultiplier().multiply(100).toFixed(2) + "%"
+	
+	if(game.currentTab == "challenges") {
+		updateChallengeDescriptions();
+		ge("challengeDescription").innerHTML = challengeDescriptions[selectedChallenge+selectedChallengeType*12]
+	}	
+	
+	if(game.currentTab == "statistics") ge("statistics").innerHTML = getStatisticsDisplay()
 
 	// Achievement checks
 	
@@ -209,14 +223,24 @@ function update() {
 	ge("achievementMultiplier").innerText = getFullExpansion(getAchievementMultiplier());
 	ge("achievementRowCompletions").innerText = getFullExpansion(game.achievementRowsCompleted);
 
-	if(game.dimensions[0].amount.gt(1e80)) giveAchievement(12)
-	if(game.dimensions[9].amount.eq(9)) giveAchievement(17)
+	if(game.shifts == 5) giveAchievement(10);
+	if(game.boosts.gte(5)) giveAchievement(11);
+	
+	if(game.galaxies.gt(0)) giveAchievement(13)
+	if(game.galaxies.gt(1)) giveAchievement(14)
+	if(game.galaxies.gt(2)) giveAchievement(15)
+
+	if(game.dimensions[0].amount.gt(1e303)) giveAchievement(12)
+	if(game.dimensions[0].amount.gte(6.66e201) && game.dimensions[9].amount.eq(9)) giveAchievement(17)
+	if(game.sacrificeMult.gte(66666) && !inChallenge(8)) giveAchievement(18)
+	if(game.dimensions[0].amount.gte(Number.MAX_VALUE) && game.sacrificeMult.eq(1)) giveAchievement(26)
+	if(game.dimensions[0].amount.gte(Number.MAX_VALUE) && game.dimensions[9].amount.eq(0)) giveAchievement()
 
 	if(game.infinities.gt(0)) {
 		galaxy();
 		// boost();
 		shift();
-		maxAll();
+		//maxAll();
 	}
 	// if(gainedInfinityPoints().gt(420)) bigCrunch();
 }
@@ -243,4 +267,4 @@ showAutomationTab(game.options.saveTabs ? game.currentAutomationTab : "dimension
 update();
 updateAchievements()
 
-setInterval(save, 30)
+// setInterval(save, 30)

@@ -5,10 +5,10 @@ function ge(e) {
 	return document.getElementById(e) || document.createElement("div");
 }
 
-function gc(e, f) {
+function gc(e, f, o=0) {
 	l = document.getElementsByClassName(e);
-	for(var i = 0; i < l.length; i++) {
-		f(l[i], i); // pass the element and the position of the element in the array to function for each element
+	for(var i = o; i < l.length + o; i++) {
+		f(l[i % l.length], i); // pass the element and the position of the element in the array to function for each element
 	}
 }
 
@@ -102,7 +102,7 @@ function hardReset() {
 function updateSave() {
 	transformToDecimal(game);
 	
-	if(!game.options || true) game.options = { // There really isn't any option change option yet soooo
+	if(!game.options) game.options = {
 		notation: "Scientific",
 		mixedCutoff: 1e33,
 		fps: 30
@@ -122,12 +122,24 @@ function updateSave() {
 	if(!game.infinityUpgrades) resetInfinityUpgrades();
 	if(!game.infinityDimensions) resetInfinityDimensions(true);
 	
+	if(!game.challenges) {
+		game.challenges = []
+		game.challengesRunning = []
+	}
+	for(var i = game.challenges.length; i < 1; i++) {
+		game.challenges[i] = []
+		for(var j = 0; j < 12; j++) game.challenges[i][j] = {}
+	}
+	
 	if(!game.autobuyers) {
 		game.antimetal = new Decimal(0);
 		resetAutobuyers();
 	}
 	
 	if(!game.startTime) game.startTime = Date.now();
+	if(!game.buyTime) game.buyTime = Date.now();
+	if(!game.resetTime) game.resetTime = Date.now();
+	if(!game.shiftTime) game.shiftTime = Date.now();
 	if(!game.boostTime) game.boostTime = Date.now();
 	if(!game.galaxyTime) game.galaxyTime = Date.now();
 	if(!game.infinityTime) game.infinityTime = Date.now();
@@ -191,7 +203,7 @@ function displayIf(e, c) {
 }
 
 t = "<table><tr>"
-for(var i = 0; i < 18; i++) t += `
+for(var i = 0; i < achievements; i++) t += `
 <td id = "achievement` + i + `">a</td>
 ` + (i % 9 == 8 ? "</tr><tr>" : "")
 t += "</tr></table>"
@@ -275,7 +287,7 @@ function f() {
 		var angle = Math.PI / 6 * i;
 		
 		var x = innerWidth / 2 - 40;
-		var y = 450;
+		var y = 425;
 		var r = 250;
 		
 		x += r * Math.sin(angle);
@@ -296,4 +308,9 @@ addEventListener("keydown", function(e) {
 	if(c == 77) maxAll();
 	if(c == 67) bigCrunch();
 	if(c == 27) exitChallenge();
+	
+	if(c > 48 && c < 58) {
+		if(!e.shiftKey) maxDimension(i - 48)
+		else buyDimension(i - 48)
+	}
 })

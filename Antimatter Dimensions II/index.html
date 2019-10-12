@@ -39,8 +39,15 @@
 		</div>
 	</center>
 	<div class = "dimensionTab" id = "normalDimensionTab">
-		<center><button class = "buy" style = "width: 100px; font-size: 12px; margin: 8" onclick = "maxAll()">Max All</button></center>
-		<center id = "sacrificeDisplay"><button id = "sacrifice" onclick = "sacrifice()" style = "width: 350px; font-size: 12px"></button><br>Boosts 9th dimensions by <span id = "sacrificePower"></span>x</center>
+		<center style = "margin: 8; font-size: 11px">
+			Dimension upgrade multiplier: <span id = "dimMult"></span>x<br>
+			<button class = "buy" style = "width: 100px; font-size: 12px" onclick = "maxAll()">Max All</button>
+			<span id = "sacrificeDisplay">
+				<button id = "sacrifice" onclick = "sacrifice()" style = "width: 350px; font-size: 12px"></button><br>
+				Dimensional sacrifice boost to 9th dimensions: <span id = "sacrificePower"></span>x
+			</span>
+			<span id = "challengeMultiplier"></span>
+		</center>
 		<table id = "dimensions" style = "font-size: 15px"></table>
 		<table style = "font-size: 15px">
 			<tr id = "shiftDisplay">
@@ -48,11 +55,11 @@
 				<td style = "position: absolute; right: 20"><button id = "shift" onclick = "shift()" style = "width: 250px">Reset the game for a new dimension</button></td>
 			</tr>
 			<tr id = "boostDisplay">
-				<td style = "padding-bottom: 10px"><span id = "boostName"></span> (<span id = "boosts"></span>): requires <span id = "boostReq"></span> ninth dimensions <span id = "boostEffect"></span></td>
+				<td style = "padding-bottom: 10px"><span id = "boostName"></span> (<span id = "boosts"></span>): requires <span id = "boostReq"></span> dimensions <span id = "boostEffect"></span></td>
 				<td style = "position: absolute; right: 20"><button id = "boost" onclick = "boost()" style = "width: 250px">Reset the game for a <span id = "boostPower"></span>x boost</button></td>
 			</tr>
 			<tr id = "galaxyDisplay">
-				<td><span id = "galaxyName"></span> (<span id = "galaxies"></span>): requires <span id = "galaxyReq"></span> ninth dimensions</td>
+				<td><span id = "galaxyName"></span> (<span id = "galaxies"></span>): requires <span id = "galaxyReq"></span> dimensions</td>
 				<td style = "position: absolute; right: 20"><button id = "galaxy" onclick = "galaxy()" style = "width: 250px; height: 40px">Lose all your previous progress,<br>but get a tickspeed boost</button></td>
 			</tr>
 		</table>
@@ -83,19 +90,32 @@
 </div>
 
 <div class = "tab" id = "challengesTab">
+	<div style = "position: absolute; padding: 50px; width: 300px">
+		<center>	
+			<h2 id = "selectedChallengeType">Challenges</h2>
+			<button class = "subtabButton" style = "width: 25px" onclick = "scrollChallengesBy(-1)"><</button>
+			<button class = "subtabButton" onclick = "exitChallenge()">Exit Challenge</button>
+			<button class = "subtabButton" style = "width: 25px" onclick = "scrollChallengesBy(+1)">></button>
+			<p id = "challengeBenefits">
+		</center>
+	</div>
 	<center>
-		<button class = "challenge">0</button>
-		<button class = "challenge">1</button>
-		<button class = "challenge">2</button>
-		<button class = "challenge">3</button>
-		<button class = "challenge">4</button>
-		<button class = "challenge">5</button>
-		<button class = "challenge">6</button>
-		<button class = "challenge">7</button>
-		<button class = "challenge">8</button>
-		<button class = "challenge">9</button>
-		<button class = "challenge">10</button>
-		<button class = "challenge">11</button>
+		<br>You are currently in <span id = "activeChallenges"></span>.
+		<button class = "challenge" onclick = "selectChallenge(12)" infinity>12</button>
+		<button class = "challenge" onclick = "selectChallenge(1)">1</button>
+		<button class = "challenge" onclick = "selectChallenge(2)">2</button>
+		<button class = "challenge" onclick = "selectChallenge(3)">3</button>
+		<button class = "challenge" onclick = "selectChallenge(4)">4</button>
+		<button class = "challenge" onclick = "selectChallenge(5)">5</button>
+		<button class = "challenge" onclick = "selectChallenge(6)">6</button>
+		<button class = "challenge" onclick = "selectChallenge(7)">7</button>
+		<button class = "challenge" onclick = "selectChallenge(8)">8</button>
+		<button class = "challenge" onclick = "selectChallenge(9)">9</button>
+		<button class = "challenge" onclick = "selectChallenge(10)">10</button>
+		<button class = "challenge" onclick = "selectChallenge(11)">11</button>
+		
+		<button disabled id = "challengeInfo" style = "text-align: center; position: absolute; top: 500; width: 350; height: 350; vertical-align: bottom !important; background: none; border: 0px; font-size: 12px"></button>
+		
 	</center>
 </div>
 
@@ -155,5 +175,6 @@
 <script src = "js/tickspeed.js"></script>
 <script src = "js/dimboost.js"></script>
 <script src = "js/infinity.js"></script>
+<script src = "js/challenges.js"></script>
 <script src = "js/setup.js"></script>
 <script src = "js/game.js"></script>

@@ -1,35 +1,39 @@
 function canShift() {
-	return game.dimensions[game.shifts + 4].bought.gt(1) && game.shifts < 5 && !atInfinity();
+	return game.dimensions[game.shifts + 4].bought.gt(1) && game.shifts < 5 && !atInfinity() && !inChallenge(10);
 }
 
 function shift() {
 	if(!canShift()) return;
 	game.shifts++;
+	game.shiftTime = game.resetTime = Date.now();
 	resetDimensions();
-	if(game.shifts == 5) giveAchievement(10);
+}
+
+function getStartingShifts() {
+	return getChallengeSet() == 1 ? 0 : game.infinityUpgrades.includes(3)*2 + game.infinityUpgrades.includes(7)*2 + game.infinityUpgrades.includes(11);
 }
 
 function canBoost() {
-	return game.dimensions[9].amount.gte(getDimensionBoostReq()) && game.shifts == 5 && !atInfinity();
+	if(inChallenge(10)) return game.dimensions[4].amount.gte(getDimensionBoostReq())
+	return game.dimensions[9].amount.gte(getDimensionBoostReq()) && game.shifts == 5 && !atInfinity() && !inChallenge(8);
 }
 
 function boost(bulk) {
 	if(!canBoost()) return;
 	
-	var bought = game.dimensions[9].amount.subtract(2).divide(getDimensionBoostScaling()).add(1).floor();
+	var bought = game.dimensions[inChallenge(10) ? 4 : 9].amount.subtract(2).divide(getDimensionBoostScaling()).add(1).floor();
 	
 	if(game.boosts.gte(bought)) return;
 	
 	game.boosts = bought;
-	
+	game.boostTime = game.resetTime = Date.now();
 	resetDimensions();
-	
-	if(game.boosts.gte(5)) giveAchievement(11);
 }
 
 function getDimensionBoostScaling() {
 	var r = 2;
 	if(game.infinityUpgrades.includes(13)) r *= 0.75;
+	if(inChallenge(10)) r /= 3;
 	return r;
 }
 

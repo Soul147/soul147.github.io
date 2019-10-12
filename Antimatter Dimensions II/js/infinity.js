@@ -22,22 +22,32 @@ function bigCrunch(force) {
 		game.infinityPoints = game.infinityPoints.add(gainedInfinityPoints())
 		game.infinities = game.infinities.add(1);
 		if(getTimeSince("infinity") < game.bestInfinityTime) game.bestInfinityTime = getTimeSince("infinity")
+		
+		giveAchievement(9)
+		if(!game.heretic && !inChallenge(10)) giveAchievement(19)
+		game.heretic = false;
+
+		if(inChallenge() && getChallengeSet() < 3) {
+			var c = game.challenges[getChallengeSet()-1][game.challengesRunning[0]-1]
+			c.completed = true;
+			c.bestTime = getTimeSince("infinity");
+			exitChallenge();
+		}
 	}
+	
 	game.infinityTime = Date.now();
 	game.bestIPRate = new Decimal(0);
 	
-	game.shifts = 0;
+	game.shifts = getStartingShifts();
 	game.boosts = new Decimal(0);
-	game.galaxies = new Decimal(0);
+	game.galaxies = new Decimal(game.infinityUpgrades.includes(11)+0);
 	resetDimensions();
 	resetInfinityDimensions();
-	
-	giveAchievement(9)
 }
 
 var infinityUpgrades = [];
 
-var infinityUpgradeCosts = "1,1,3,20,1,2,5,40,1,3,10,100,1,4,15,200,0,1e4,5e4,1e5,2e5,2e6,1e7,1e6,1e100,1e100,1e7,1e7,1e8,0,0,0".split(",");
+var infinityUpgradeCosts = "1,1,3,20,1,2,5,40,1,3,10,100,1,4,15,200,0,1e3,5e4,1e5,2e5,2e6,1e7,1e6,1e100,1e100,1e7,1e7,1e8,0,0,0".split(",");
 
 function canBuyInfinityUpgrade(i) {
 	if(game.infinityUpgrades.includes(i)) return false;
@@ -88,9 +98,9 @@ function getInfinityUpgradeEffect(n) {
 		case 10: 
 			return 0.1 / game.bestInfinityTime;
 		case 17:
-			return game.totalAntimatter.add(1).log10().pow(0.5).add(1);
-		case 18:
 			return game.dimensions[0].amount.add(1).log10().pow(0.75).add(1);
+		case 18:
+			return game.totalAntimatter.add(1).log10().pow(0.75).add(1);
 		case 19:
 			return game.dimensions[9].amount.pow(1.5).add(1);
 		case 20:

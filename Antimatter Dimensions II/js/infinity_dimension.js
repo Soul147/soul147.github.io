@@ -1,8 +1,8 @@
-var infDimensionBaseCosts = [0, 1e6, 1e8, 1e10, 1e15, 1e90, 1e130, 1e180, 1e240, 1e300]
+var infDimensionBaseCosts = [0, 1e3, 1e8, 1e10, 1e15, 1e90, 1e130, 1e180, 1e240, 1e300]
 var infDimensionCostMults = [0, 1e3, 1e6, 1e8, 1e10, 1e15, 1e20, 1e25, 1e30, 1e35]
 var infDimensionBuyMults = [0, 50, 30, 10, 5, 5, 5, 5, 5, 5]
 
-var infDimensionUnlockRequirements = [0, "1e900", "1e1300", 0, 0, 0, 0, 0, 0, 0, Infinity]
+var infDimensionUnlockRequirements = [0, "1e750", "1e1300", 0, 0, 0, 0, 0, 0, 0, Infinity]
 
 function InfinityDimension(i) {
 	this.id = game.infinityDimensions.length;
@@ -44,7 +44,7 @@ function resetInfinityDimensions(hard) {
 function getInfinityDimensionProduction(i) {
 	var dim = game.infinityDimensions[i];
 	
-	dim.multiplier = Decimal.pow(infDimensionBuyMults[dim.id], dim.bought).divide(10**(i-2));
+	dim.multiplier = Decimal.pow(infDimensionBuyMults[dim.id], dim.bought)
 	
 	return dim.amount.multiply(dim.multiplier);
 }
@@ -83,7 +83,7 @@ function maxAllInfinityDimensions() {
 }
 
 function getInfinityPowerPower() { // ...why
-	return 5
+	return 2
 }
 
 function getInfinityPowerEffect() {

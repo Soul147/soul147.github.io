@@ -9,10 +9,12 @@ function buyTickspeed() {
 	
 	if(!canBuyTickspeed()) return;
 	game.dimensions[0].amount = game.dimensions[0].amount.subtract(dim.cost);
+	if(inChallenge(9)) suffer(0);
 	
 	dim.bought = dim.bought.add(1);
 	
 	dim.cost = dim.cost.multiply(dim.costMult);
+	game.buyTime = Date.now();
 	
 	return true;
 }
@@ -23,6 +25,7 @@ function maxTickspeed() {
 	while(dim.cost.lte(Number.MAX_VALUE) && buyTickspeed());
 	
 	if(!canBuyTickspeed()) return;
+	game.buyTime = Date.now();
 	
 	// Superbuying
 	
@@ -60,23 +63,21 @@ function getTickspeed(name) {
 // Galaxies
 
 function canGalaxy() {
-	return game.dimensions[9].amount.gte(getGalaxyReq()) && !atInfinity();
+	if(inChallenge(10)) return game.dimensions[4].amount.gte(getGalaxyReq())
+	return game.dimensions[9].amount.gte(getGalaxyReq()) && !atInfinity() && !inChallenge(8);
 }
 
 function galaxy() {
 	if(!canGalaxy()) return;
 	
-	var bought = game.dimensions[9].amount.subtract(5).divide(getGalaxyScaling()).add(1).floor();
+	var bought = game.dimensions[inChallenge(10) ? 4 : 9].amount.subtract(5).divide(getGalaxyScaling()).add(1).floor();
 	
 	game.galaxies = bought;
 	
-	game.shifts = 0;
+	game.shifts = getStartingShifts();
 	game.boosts = new Decimal(0);
+	game.galaxyTime = game.resetTime = Date.now();
 	resetDimensions();
-	
-	if(game.galaxies.gt(0)) giveAchievement(13)
-	if(game.galaxies.gt(1)) giveAchievement(14)
-	if(game.galaxies.gt(2)) giveAchievement(15)
 }
 
 function getGalaxyReq() {
@@ -88,7 +89,7 @@ function getGalaxyScaling() {
 }
 
 function getTickPower() {
-	return Decimal.pow(1.1, getEffectiveGalaxies().subtract(1)).divide(10).add(1);
+	return Decimal.pow(1.1, getEffectiveGalaxies().subtract(1)).divide(10-inChallenge(12)*6).add(1);
 }
 
 function getEffectiveNormalGalaxies() {
@@ -102,7 +103,7 @@ function getEffectiveNormalGalaxies() {
 	if(r.gt(y)) r = r.subtract(y).pow(getRemoteGalaxyPower()).add(y).floor();
 	if(r.gt(z)) r = Decimal.pow(10, r.subtract(z).log10().pow(getDarkGalaxyPower())).add(z).floor();
 	
-	return r.add(1);
+	return r.add(!inChallenge(11)+0);
 }
 
 function getEffectiveGalaxies() {
@@ -111,7 +112,7 @@ function getEffectiveGalaxies() {
 
 function getGalaxyPower() {
 	var r = new Decimal(1);
-	if(game.infinityUpgrades.includes(15)) r = r.multiply(2);
+	if(game.infinityUpgrades.includes(15) && !inChallenge()) r = r.multiply(2);
 	if(game.infinityUpgrades.includes(25)) r = r.multiply(1.1);
 	
 	return r;

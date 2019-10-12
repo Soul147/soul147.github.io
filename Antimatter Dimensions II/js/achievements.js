@@ -1,4 +1,4 @@
-const achievements = 18;
+const achievements = 27;
 
 function updateAchievementDescriptions() {
 	achievementDescriptions = [
@@ -12,15 +12,27 @@ function updateAchievementDescriptions() {
 		"90 degrees to infinity", `Buy a single eighth dimension.`,
 		"Impossible", `Buy a single ninth dimension.`,
 		
-		"To Infinity", `Reach ${shortenMoney("1.8e308")} antimatter.`,
+		"To Infinity", `Reach ${shortenMoney("1.8e308")} antimatter. Reward: Start with 100 extra antimatter.`,
 		"The tenth dimension is a lie", `Get 5 dimension shifts.`, 
 		"Boosting to the max", `Get 5 dimension boosts.`,
-		"Uh oh", `Get over ${shortenMoney(1e80)} antimatter.`, 
+		"Uh oh", `Get over ${shortenMoney(1e303)} antimatter.`, 
 		"You got past the big wall", `Buy an antimatter galaxy.`, 
 		"Triple galaxy", `Buy 2 antimatter galaxies.`, 
 		"Intergalactic", `Buy 3 antimatter galaxies.`, 
 		"There's no point in doing that", `Sacrifice without having any ninth dimensions.`, 
-		"Unhevi", `Have exactly 9 ninth dimensions. Reward: Ninth dimensions are 9% stronger.`,
+		"Unhevi", `Get over ${shortenMoney(6.66e201)} antimatter with exactly 9 ninth dimensions. Reward: Ninth dimensions are 9% stronger.`,
+		
+		"The gods are pleased", `Get a multiplier of over 66,666 from dimensional sacrifice. Challenge 8 doesn't count. Reward: Sacrifice is 10% stronger.`,
+		"Cast out the heretic", `Reach infinity without ever buying a ninth dimension. Challenge 10 doesn't count. Reward: Dimensions 1-8 are 8% stronger.`,
+		"", ``,
+		"", ``,
+		"", ``,
+		"", ``,
+		"That sucked", `Complete a challenge.`,
+		"Hevi would be proud", `Complete all of the challenges.`,
+		"I don't believe in gods", `Reach infinity without sacrificing.`,
+		
+		"Oh hey", `Have exactly 69 ninth dimensions.`,
 	]
 }
 
