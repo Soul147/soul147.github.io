@@ -113,7 +113,7 @@ function getInfinityUpgradeEffect(n) {
 		case 20:
 			return game.infinities.multiply(308).sqrt().add(1);
 		case 21: 
-			return 1e9 / getChallengeTimes();
+			return Math.max(1e9 / getChallengeTimes(), 1);
 		case 22:
 			return game.achievements.length ** Math.log10(game.achievements.length);
 	}
