@@ -27,7 +27,7 @@ function infinityShift() {
 	for(var i = 1; i <= 10; i++) {
 		game.infinityDimensions[i].amount = game.infinityDimensions[i].bought;
 	}
-	game.infinityDimensions[0].amount = 1;
+	game.infinityDimensions[0].amount = new Decimal(1);
 }
 
 function resetInfinityDimensions() {
