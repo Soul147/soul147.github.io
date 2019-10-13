@@ -24,6 +24,10 @@ function infinityShift() {
 	if(!canInfinityShift()) return;
 	if(game.infinityShifts.eq(9)) return;
 	game.infinityShifts = game.infinityShifts.add(1);
+	for(var i = 1; i <= 10; i++) {
+		game.infinityDimensions[i].amount = game.infinityDimensions[i].bought;
+	}
+	game.infinityDimensions[0].amount = 1;
 }
 
 function resetInfinityDimensions() {
@@ -33,6 +37,8 @@ function resetInfinityDimensions() {
 	for(var i = 0; i <= 10; i++) {
 		game.infinityDimensions[i] = new InfinityDimension(i);
 	}
+	
+	game.infinityDimensions[0].amount = new Decimal(1);
 }
 
 function getInfinityDimensionProduction(i) {
