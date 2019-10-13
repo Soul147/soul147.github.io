@@ -81,5 +81,5 @@ function getInfinityPowerPower() { // ...why
 }
 
 function getInfinityPowerEffect() {
-	return game.infinityDimensions[0].amount.pow(getInfinityPowerPower())
+	return game.infinityDimensions[0].amount.pow(getInfinityPowerPower()).max(1)
 }
