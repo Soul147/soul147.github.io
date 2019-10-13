@@ -25,14 +25,22 @@ function bigCrunch(force) {
 		
 		giveAchievement(9)
 		if(!game.heretic && !inChallenge(10)) giveAchievement(19)
+		if(game.bestInfinityTime < 3600000) giveAchievement(22)
+		if(game.bestInfinityTime < 60000) giveAchievement(31)
+		if(game.bestInfinityTime < 1000) giveAchievement(40)
 		game.heretic = false;
 
 		if(inChallenge() && getChallengeSet() < 3) {
 			var c = game.challenges[getChallengeSet()-1][game.challengesRunning[0]-1]
 			c.completed = true;
 			c.bestTime = getTimeSince("infinity");
+			if(c.bestTime < 180000) giveAchievement(29)
 			exitChallenge();
 		}
+		
+		if(getChallengeCompletions() > 0) giveAchievement(23);
+		if(game.challenges[0][9].completed) giveAchievement(24);
+		if(getChallengeCompletions() > 11) giveAchievement(25);
 	}
 	
 	game.infinityTime = Date.now();
@@ -42,12 +50,11 @@ function bigCrunch(force) {
 	game.boosts = new Decimal(0);
 	game.galaxies = new Decimal(game.infinityUpgrades.includes(11)+0);
 	resetDimensions();
-	resetInfinityDimensions();
 }
 
 var infinityUpgrades = [];
 
-var infinityUpgradeCosts = "1,1,3,20,1,2,5,40,1,3,10,100,1,4,15,200,0,1e3,5e4,1e5,2e5,2e6,1e7,1e6,1e100,1e100,1e7,1e7,1e8,0,0,0".split(",");
+var infinityUpgradeCosts = "1,1,3,20,1,2,5,40,1,3,10,100,1,4,15,200,0,1e3,5e3,1e4,2e5,5e7,1e12,1e100,1e100,1e100,1e7,1e7,1e8,0,0,0".split(",");
 
 function canBuyInfinityUpgrade(i) {
 	if(game.infinityUpgrades.includes(i)) return false;
@@ -104,11 +111,11 @@ function getInfinityUpgradeEffect(n) {
 		case 19:
 			return game.dimensions[9].amount.pow(1.5).add(1);
 		case 20:
-			return game.infinities.multiply(308).cbrt().add(1);
+			return game.infinities.multiply(308).sqrt().add(1);
 		case 21: 
-			return 10000;
+			return 1e9 / getChallengeTimes();
 		case 22:
-			return 10000;
+			return game.achievements.length ** Math.log10(game.achievements.length);
 	}
 }
 
@@ -119,4 +126,9 @@ function resetInfinityUpgrades() {
 		{cost: new Decimal(10), costMult: new Decimal(10), bought: new Decimal(0)}, 
 		{cost: new Decimal(1e5), costMult: new Decimal(1e5), bought: new Decimal(0)}
 	]
+}
+
+function breakInfinity() {
+	if(getChallengeCompletions() < 10) return;
+	game.break = !game.break;
 }

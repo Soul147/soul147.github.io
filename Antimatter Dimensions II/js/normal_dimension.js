@@ -21,7 +21,7 @@ function resetDimensions() {
 		game.dimensions[i] = new NormalDimension(i);
 	}
 	
-	game.dimensions[0].amount = new Decimal(10+game.achievements.includes(9)*100)
+	game.dimensions[0].amount = new Decimal(10+game.achievements.includes(9)*100+game.achievements.includes(22)*1000)
 	if(false) game.dimensions[0].amount = new Decimal(antimatter) // do this later
 	
 	game.tickspeed = {bought: new Decimal(0), cost: new Decimal(1000), costMult: new Decimal(10)}

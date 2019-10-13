@@ -1,8 +1,6 @@
-var infDimensionBaseCosts = [0, 1e3, 1e8, 1e10, 1e15, 1e90, 1e130, 1e180, 1e240, 1e300]
+var infDimensionBaseCosts = [0, 1e4, 1e6, 1e10, 1e15, 1e90, 1e130, 1e180, 1e240, 1e300]
 var infDimensionCostMults = [0, 1e3, 1e6, 1e8, 1e10, 1e15, 1e20, 1e25, 1e30, 1e35]
 var infDimensionBuyMults = [0, 50, 30, 10, 5, 5, 5, 5, 5, 5]
-
-var infDimensionUnlockRequirements = [0, "1e750", "1e1300", 0, 0, 0, 0, 0, 0, 0, Infinity]
 
 function InfinityDimension(i) {
 	this.id = game.infinityDimensions.length;
@@ -14,37 +12,33 @@ function InfinityDimension(i) {
 	this.costMult = new Decimal(infDimensionCostMults[i]);
 }
 
+function getInfinityShiftCost() {
+	return Decimal.pow(Number.MAX_VALUE, game.infinityShifts.multiply(game.infinityShifts.add(1)).divide(2).add(3))
+}
+
 function canInfinityShift() {
-	return game.dimensions[0].amount.gte(infDimensionUnlockRequirements[game.infinityShifts+1]);
+	return game.dimensions[0].amount.gte(getInfinityShiftCost());
 }
 
 function infinityShift() {
 	if(!canInfinityShift()) return;
-	if(game.infinityShifts == 9) return;
-	game.infinityShifts++
-	bigCrunch();
+	if(game.infinityShifts.eq(9)) return;
+	game.infinityShifts = game.infinityShifts.add(1);
 }
 
-function resetInfinityDimensions(hard) {
-	if(hard) {
-		game.infinityDimensions = [];
-		game.infinityShifts = 0;
-	
-		for(var i = 0; i <= 10; i++) {
-			game.infinityDimensions[i] = new InfinityDimension(i);
-		}
-	}
+function resetInfinityDimensions() {
+	game.infinityDimensions = [];
+	game.infinityShifts = new Decimal(0);
+
 	for(var i = 0; i <= 10; i++) {
-		game.infinityDimensions[i].amount = game.infinityDimensions[i].bought;
+		game.infinityDimensions[i] = new InfinityDimension(i);
 	}
-	
-	game.infinityDimensions[0].amount = new Decimal(1);
 }
 
 function getInfinityDimensionProduction(i) {
 	var dim = game.infinityDimensions[i];
 	
-	dim.multiplier = Decimal.pow(infDimensionBuyMults[dim.id], dim.bought)
+	dim.multiplier = Decimal.pow(infDimensionBuyMults[dim.id], dim.bought).multiply(Decimal.pow(10, game.infinityShifts.subtract(i)))
 	
 	return dim.amount.multiply(dim.multiplier);
 }
@@ -83,7 +77,7 @@ function maxAllInfinityDimensions() {
 }
 
 function getInfinityPowerPower() { // ...why
-	return 2
+	return 3
 }
 
 function getInfinityPowerEffect() {

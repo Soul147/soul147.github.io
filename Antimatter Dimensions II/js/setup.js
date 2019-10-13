@@ -120,7 +120,8 @@ function updateSave() {
 	if(!game.infinities) game.infinities = new Decimal(0);
 	if(!game.infinityPoints) game.infinityPoints = new Decimal(0);
 	if(!game.infinityUpgrades) resetInfinityUpgrades();
-	if(!game.infinityDimensions) resetInfinityDimensions(true);
+	if(!game.infinityDimensions) resetInfinityDimensions();
+	if(!game.infinityShifts.mag) game.infinityShifts = new Decimal(0);
 	
 	if(!game.challenges) {
 		game.challenges = []
@@ -180,6 +181,14 @@ function showDimensionTab(name) {
 	})
 	ge(name + "DimensionTab").style.display = "";
 	game.currentDimensionTab = name;
+}
+
+function showStatisticsTab(name) {
+	gc("statisticsTab", function(e) {
+		e.style.display = "none";
+	})
+	ge(name + "StatisticsTab").style.display = "";
+	game.currentStatisticsTab = name;
 }
 
 function showAutomationTab(name) {
@@ -310,7 +319,8 @@ addEventListener("keydown", function(e) {
 	if(c == 27) exitChallenge();
 	
 	if(c > 48 && c < 58) {
-		if(!e.shiftKey) maxDimension(i - 48)
-		else buyDimension(i - 48)
+		if(!e.shiftKey) maxDimension(c - 48)
+		else buyDimension(c - 48)
 	}
+	if(c == 48) maxTickspeed();
 })

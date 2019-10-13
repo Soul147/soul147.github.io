@@ -1,4 +1,6 @@
 function inChallenge(i, j=0) {
+	if(!game.challenges) return;
+	
 	if(!i) return game.challengesRunning.length;
 	
 	// Note to self: Put checks for challenge traps in here, not in startChallenge
@@ -19,8 +21,6 @@ function startChallenge(i, j=0) {
 	if(j == 3) eternity(true);
 	
 	if(!j) game.galaxies = new Decimal(0);
-	
-	selectChallenge(0);
 }
 
 function exitChallenge() {
@@ -30,10 +30,12 @@ function exitChallenge() {
 	
 	for(var i = 0; i < cs; i++) {
 		exited = false;
-		for(var j = 0; j < 12; j++) {
+		for(var j = 1; j <= 12; j++) {
 			if(game.challengesRunning.includes(j + i * 12)) {
 				game.challengesRunning.splice(game.challengesRunning.indexOf(j + i * 12), 1)
 				exited = true;
+				if(i < 2) bigCrunch(true);
+				if(i == 3) eternity(true);
 			}
 		}
 		if(exited) return;
@@ -96,6 +98,8 @@ function updateChallengeDescriptions() {
 	gc("challenge", function(e, i) {
 		if(inChallenge(i, selectedChallengeType)) e.setAttribute("running", true);
 		else e.removeAttribute("running");
+		if(game.challenges[selectedChallengeType][i-1].completed) e.setAttribute("completed", true);
+		else e.removeAttribute("completed");
 		
 		names = []
 		for(var i in layerNames) {
@@ -104,6 +108,16 @@ function updateChallengeDescriptions() {
 		}
 		if(selectedChallengeType) e.setAttribute(names[selectedChallengeType].substring(0, names[selectedChallengeType].length - 1), true)
 	}, 1)
+
+	if(selectedChallenge < 1) return;
+
+	var i = selectedChallenge, j = selectedChallengeType;
+	
+	state = i ? (inChallenge(i+j*12) ? "Running" : game.challenges[j][i-1].completed ? "Completed" : game.challenges[j][i-1].locked ? "Locked" : "Start") : "Start"
+	
+	ge("challengeInfo").innerHTML = layerNames[j] + 
+		"Challenge " + i + "<br><br><span id = 'challengeDescription'></span><br><br><button onmousedown = 'startChallenge(selectedChallenge)' class = 'challengeButton challengeButton" + 
+		state + "'>" + (i ? state : "Exit Challenge") + "</button>";
 }
 
 selectedChallenge = selectedChallengeType = 0;
@@ -126,24 +140,39 @@ function selectChallenge(i) {
 		return ge("challengeInfo").innerHTML = ""
 	}
 	
-	var j = selectedChallengeType;
 	selectedChallenge = i;
-	
-	state = i ? (inChallenge(i+j*12) ? "Running" : game.challenges[j][i-1].completed ? "Completed" : game.challenges[j][i-1].locked ? "Locked" : "Start") : "Start"
-	
-	ge("challengeInfo").innerHTML = layerNames[j] + 
-		"Challenge " + i + "<br><br><span id = 'challengeDescription'></span><br><br><button onclick = 'startChallenge(selectedChallenge)' class = 'challengeButton challengeButton" + 
-		state + "'>" + (i ? state : "Exit Challenge") + "</button>";
 }
 
 function getChallengeMultiplier(name = "dimension") {
-	if(name !== "dimension") return;
+	if(name !== "dimension") return 1;
 	
 	var c4 = inChallenge(4) ? Decimal.min(getTimeSince("buy") / 60000, 1).max(0.01).pow(2) : 1;
 	var c5 = inChallenge(5) ? Decimal.max(1 - getTimeSince("reset") / 300000, 0.01).pow(2) : 1;
 	var c6 = inChallenge(6) ? game.dimensions[6].amount.max(1).log10().max(1).pow(-1) : 1;
 	
 	return Decimal.multiply(c4, c5).multiply(c6);
+}
+
+function getChallengeRequirement() {
+	return Number.MAX_VALUE
+}
+
+function canCompleteChallenge() {
+	return game.dimensions[0].amount.gt(getChallengeRequirement());
+}
+
+function getChallengeCompletions() {
+	var completions = 0;
+	game.challenges[0].forEach(function(challenge) {if(challenge.completed) completions++;})
+	return completions;
+}
+
+function getChallengeTimes() {
+	var sum = 0;
+	for(var i = 0; i < 12; i++) {
+		sum += game.challenges[0][i].completed ? game.challenges[0][i].bestTime : Infinity
+	}
+	return sum;
 }
 
 function suffer(n) {
@@ -154,4 +183,13 @@ function suffer(n) {
 		if(dim.cost.eq(nc)) dim.cost = dim.cost.multiply(dim.costMult);
 	}
 	if(n && game.tickspeed.cost.eq(nc)) game.tickspeed.cost = game.tickspeed.cost.multiply(game.tickspeed.costMult);
+}
+
+function getInfinityChallengesUnlocked() {
+	var req = ["1e2800"]
+	var unl = 0;
+	for(var i = 0; i < req.length; i++) {
+		if(game.totalAntimatter.gte(req)) unl++;
+	}
+	return unl;
 }

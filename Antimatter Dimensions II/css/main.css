@@ -183,6 +183,10 @@ button.infinityUpgradeBought {
 	box-shadow: 0px 0px 50px black, 0px 0px 50px black;
 }
 
+.challenge[completed] {
+	box-shadow: 0px 0px 50px green, 0px 0px 50px green;
+}
+
 .challenge[locked] {
 	opacity: 0.5;
 }

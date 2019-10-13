@@ -1,4 +1,4 @@
-const achievements = 27;
+const achievements = 45;
 
 function updateAchievementDescriptions() {
 	achievementDescriptions = [
@@ -17,22 +17,40 @@ function updateAchievementDescriptions() {
 		"Boosting to the max", `Get 5 dimension boosts.`,
 		"Uh oh", `Get over ${shortenMoney(1e303)} antimatter.`, 
 		"You got past the big wall", `Buy an antimatter galaxy.`, 
-		"Triple galaxy", `Buy 2 antimatter galaxies.`, 
+		"Triple Galaxy", `Buy 2 antimatter galaxies.`, 
 		"Intergalactic", `Buy 3 antimatter galaxies.`, 
 		"There's no point in doing that", `Sacrifice without having any ninth dimensions.`, 
 		"Unhevi", `Get over ${shortenMoney(6.66e201)} antimatter with exactly 9 ninth dimensions. Reward: Ninth dimensions are 9% stronger.`,
 		
 		"The gods are pleased", `Get a multiplier of over 66,666 from dimensional sacrifice. Challenge 8 doesn't count. Reward: Sacrifice is 10% stronger.`,
 		"Cast out the heretic", `Reach infinity without ever buying a ninth dimension. Challenge 10 doesn't count. Reward: Dimensions 1-8 are 8% stronger.`,
-		"", ``,
-		"", ``,
-		"", ``,
-		"", ``,
+		"The grind begins", `Get 1,000 infinities.`,
+		"Hoarding infinities", `Have over 1,000 unspent Infinity Points.`,
+		"I am speed", `Infinity in under an hour. Reward: Start with 1,000 extra antimatter.`,
 		"That sucked", `Complete a challenge.`,
+		"Suffer", `Complete challenge 9.`,
 		"Hevi would be proud", `Complete all of the challenges.`,
 		"I don't believe in gods", `Reach infinity without sacrificing.`,
 		
+		"And Beyond", `Break Infinity.`,
+		"New Dimensions", `Unlock the first infinity dimension.`,
+		"Life is pain", `Complete a challenge in under 3 minutes.`,
+		"Suicide is badass", `Get the sum of all challenge times under 3 minutes.`,
+		"That's fast!", `Infinity in under a minute.`,
+		"1 million is a lot", `Reach 1 million infinity power.`,
+		"Get off of Amazon", `Buy 150 of a single dimension in one infinity. Reward: Dimensions get a multiplier based on the amount bought.`,
+		"There better not be 9", `Unlock the second infinity dimension.`,
+		"Is this hell?", `Get the sum of all challenge times under 5 seconds.`,
+		
 		"Oh hey", `Have exactly 69 ninth dimensions.`,
+		"Infinitely Challenging", `Complete Infinity Challenge 1.`,
+		"Don't judge me, I'm a sadist", `Complete Infinity Challenge 5.`,
+		"", ``,
+		"Supersanic", `Infinity in under a second.`,
+		"", ``,
+		"", ``,
+		"", ``,
+		"Yes. This is hell.", `Get the sum of all infinity challenge times under 6.66 seconds.`,
 	]
 }
 

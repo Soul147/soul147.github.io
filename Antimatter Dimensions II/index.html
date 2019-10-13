@@ -86,7 +86,14 @@
 </div>
 
 <div class = "tab" id = "statisticsTab">
-	<center id = "statistics"></center>
+	<center>
+		<div id = "statisticsTabs" style = "padding: 10px">
+			<button id = "normalStatistics" class = "subtabButton" onclick = "showStatisticsTab('normal')">Statistics</button>
+			<button id = "challengeStatistics" class = "subtabButton" onclick = "showStatisticsTab('challenge')">Challenge Times</button>
+		</div>
+		<div class = "statisticsTab" id = "normalStatisticsTab"></div>
+		<div class = "statisticsTab" id = "challengeStatisticsTab"></div>
+	</center>
 </div>
 
 <div class = "tab" id = "challengesTab">
@@ -101,7 +108,7 @@
 	</div>
 	<center>
 		<br>You are currently in <span id = "activeChallenges"></span>.
-		<button class = "challenge" onclick = "selectChallenge(12)" infinity>12</button>
+		<button class = "challenge" onclick = "selectChallenge(12)">12</button>
 		<button class = "challenge" onclick = "selectChallenge(1)">1</button>
 		<button class = "challenge" onclick = "selectChallenge(2)">2</button>
 		<button class = "challenge" onclick = "selectChallenge(3)">3</button>
@@ -149,7 +156,8 @@
 			<table id = "infinityUpgrades" style = "font-size: 10px"></table>
 		</div>
 		<div class = "infinityTab" id = "breakInfinityTab">
-			<button class = 'infinityupgrade' id = 'breakButton' onclick = 'game.break = !game.break;'>BREAK INFINITY</button>
+			<br>
+			<button class = 'infinityupgrade' id = 'breakButton' onclick = 'breakInfinity()'>BREAK INFINITY</button>
 			<table id = "postInfinityUpgrades" style = "font-size: 10px"></table>
 		</div>
 	</center>
@@ -157,10 +165,14 @@
 
 <div class = "tab" id = "optionsTab">
 	<center>
-		<button onclick="save();">Save</button>
-		<button onclick="exportGame();">Export</button>
-		<button onclick="importGame();">Import</button>
-		<button onclick="hardReset();">HARD RESET</button>
+		<button class = "buy" onclick="save();">Save</button>
+		<button class = "buy" onclick="exportGame();">Export</button>
+		<button class = "buy" onclick="importGame();">Import</button>
+		<button class = "buy" onclick="hardReset();">HARD RESET</button>
+		<br>
+		<button class = "buy" id = "autosaveOption" onclick="game.options.autosave = !game.options.autosave;">Autosave: Off</button>
+		<button class = "buy" id = "saveTabsOption" onclick="game.options.saveTabs = !game.options.saveTabs;">Save Tabs: Off</button>
+		<button class = "buy" id = "automateOption" onclick="game.options.automate = !game.options.automate;" tooltip = "This is a temporary option, and will only be here until I finish developing Automation. Use it to automatically buy dimensions, tickspeed, shifts, and galaxies.">Auto Max All: Off</button>
 	</center>
 </div>
 
