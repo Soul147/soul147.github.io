@@ -17,7 +17,7 @@ function getInfinityShiftCost() {
 }
 
 function canInfinityShift() {
-	return game.dimensions[0].amount.gte(getInfinityShiftCost());
+	return game.dimensions[0].amount.gte(getInfinityShiftCost()) && (game.infinityShifts.lt(4) || getChallengeCompletions(1) > 11);
 }
 
 function infinityShift() {

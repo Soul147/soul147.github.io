@@ -72,7 +72,7 @@
 		<br>
 		<table id = "infinityDimensions" style = "font-size: 15px"></table>
 		<div style = "position: absolute; left: 20; bottom: 20">Infinity Shift</div>
-		<div style = "position: absolute; right: 20; bottom: 20"><button id = "infinityshift" class = "buy" onclick = "infinityShift()" style = "font-size: 15px; width: 250px; height: 50px;">Reach <span id = "infinityshiftcost"></span> antimatter to unlock a new dimension.</button></div>
+		<div style = "position: absolute; right: 20; bottom: 20"><button id = "infinityshift" class = "buy" onclick = "infinityShift()" style = "font-size: 15px; width: 250px; height: 50px;"><span id = "infinityshiftcost"></span></button></div>
 	</div>
 </div>
 
@@ -87,9 +87,8 @@
 
 <div class = "tab" id = "statisticsTab">
 	<center>
-		<div id = "statisticsTabs" style = "padding: 10px">
+		<div id = "statisticsTabs" style = "padding: 10px; display: none">
 			<button id = "normalStatistics" class = "subtabButton" onclick = "showStatisticsTab('normal')">Statistics</button>
-			<button id = "challengeStatistics" class = "subtabButton" onclick = "showStatisticsTab('challenge')">Challenge Times</button>
 		</div>
 		<div class = "statisticsTab" id = "normalStatisticsTab"></div>
 		<div class = "statisticsTab" id = "challengeStatisticsTab"></div>
@@ -100,10 +99,10 @@
 	<div style = "position: absolute; padding: 50px; width: 300px">
 		<center>	
 			<h2 id = "selectedChallengeType">Challenges</h2>
-			<button class = "subtabButton" id = "cleft" style = "width: 25px" onclick = "scrollChallengesBy(-1)"><</button>
+			<button class = "subtabButton" id = "cLeft" style = "width: 25px" onclick = "scrollChallengesBy(-1)"><</button>
 			<button class = "subtabButton" onclick = "exitChallenge()">Exit Challenge</button>
-			<button class = "subtabButton" id = "cright" style = "width: 25px" onclick = "scrollChallengesBy(+1)">></button>
-			<p id = "challengeBenefits">
+			<button class = "subtabButton" id = "cRight" style = "width: 25px" onclick = "scrollChallengesBy(+1)">></button>
+			<p id = "challengeBenefits"></p>
 		</center>
 	</div>
 	<center>

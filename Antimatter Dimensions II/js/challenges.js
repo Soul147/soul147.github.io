@@ -3,7 +3,7 @@ function inChallenge(i, j=0) {
 	
 	if(!i) return game.challengesRunning.length;
 	
-	// Note to self: Put checks for challenge traps in here, not in startChallenge
+	if(i < 7 && j == 0 && inChallenge(1, 1)) return true;
 	
 	return game.challengesRunning.includes(i + j * 12);
 }
@@ -62,7 +62,25 @@ function updateChallengeDescriptions() {
 		`Dimension shifts are disabled. Dimension boosts and antimatter galaxies cost fourth dimensions.<br><br>Reward: Dimension Boost autobuyer.`,
 		`You start without any galaxies.<br><br>Reward: Antimatter Galaxy autobuyer.`,
 		`Each dimension produces the one two below it. Tickspeed upgrades are stronger to compensate.<br><br>Reward: Tickspeed autobuyer.`,
+		
+		`Challenges 1-6 are all applied at once.<br><br>ICDATA<br><br>Reward: 1.47x on all infinity dimensions for each infinity challenge completed.`,
+		``,
+		``,
+		``,
+		``,
+		``,
+		``,
+		``,
+		``,
+		``,
+		``,
+		``,
 	]
+	
+	for(var i = 13; i < 25; i++) {
+		challengeDescriptions[i] = challengeDescriptions[i].replace(`ICDATA`, `Goal: ${shortenCosts(icGoals[i - 13])} antimatter`)
+		if(getInfinityChallengesUnlocked() < i - 12) challengeDescriptions[i] = `Requires ${shortenCosts(icRequirements[i - 13])} antimatter`;
+	}
 	
 	var i = [], t = []
 	
@@ -96,9 +114,9 @@ function updateChallengeDescriptions() {
 	ge("activeChallenges").innerHTML = s;
 	
 	gc("challenge", function(e, i) {
-		if(inChallenge(i, selectedChallengeType)) e.setAttribute("running", true);
+		if(inChallenge(i, game.selectedChallengeType)) e.setAttribute("running", true);
 		else e.removeAttribute("running");
-		if(game.challenges[selectedChallengeType][i-1].completed) e.setAttribute("completed", true);
+		if(game.challenges[game.selectedChallengeType][i-1].completed) e.setAttribute("completed", true);
 		else e.removeAttribute("completed");
 		
 		names = []
@@ -106,32 +124,36 @@ function updateChallengeDescriptions() {
 			names[i] = layerNames[i].toLowerCase();
 			e.removeAttribute(names[i].substring(0, names[i].length - 1))
 		}
-		if(selectedChallengeType) e.setAttribute(names[selectedChallengeType].substring(0, names[selectedChallengeType].length - 1), true)
+		if(game.selectedChallengeType) e.setAttribute(names[game.selectedChallengeType].substring(0, names[game.selectedChallengeType].length - 1), true)
 	}, 1)
 
 	if(selectedChallenge < 1) return;
 
-	var i = selectedChallenge, j = selectedChallengeType;
+	var i = selectedChallenge, j = game.selectedChallengeType;
 	
 	state = i ? (inChallenge(i+j*12) ? "Running" : game.challenges[j][i-1].completed ? "Completed" : game.challenges[j][i-1].locked ? "Locked" : "Start") : "Start"
 	
 	ge("challengeInfo").innerHTML = layerNames[j] + 
-		"Challenge " + i + "<br><br><span id = 'challengeDescription'></span><br><br><button onmousedown = 'startChallenge(selectedChallenge)' class = 'challengeButton challengeButton" + 
+		"Challenge " + i + "<br><br><span id = 'challengeDescription'></span><br><br><button onmousedown = 'startChallenge(selectedChallenge, game.selectedChallengeType)' class = 'challengeButton challengeButton" + 
 		state + "'>" + (i ? state : "Exit Challenge") + "</button>";
 }
 
-selectedChallenge = selectedChallengeType = 0;
+selectedChallenge = 0;
 
 function scrollChallengesBy(n) {
-	scrollChallengesTo(selectedChallengeType + n);
+	scrollChallengesTo(game.selectedChallengeType + n);
+}
+
+function getChallengeTypeCap() {
+	return !!getInfinityChallengesUnlocked()
 }
 
 function scrollChallengesTo(n) {
-	selectedChallengeType = n;
-	if(selectedChallengeType < 0) selectedChallengeType = 0;
-	cap = 0;
-	if(selectedChallengeType > cap) selectedChallengeType = cap;
-	ge("selectedChallengeType").innerHTML = layerNames[selectedChallengeType] + "Challenges"
+	game.selectedChallengeType = n;
+	if(game.selectedChallengeType < 0) game.selectedChallengeType = 0;
+	cap = getChallengeTypeCap();
+	if(game.selectedChallengeType > cap) game.selectedChallengeType = cap;
+	ge("selectedChallengeType").innerHTML = layerNames[game.selectedChallengeType] + "Challenges"
 	selectChallenge(-1)
 }
 
@@ -154,23 +176,24 @@ function getChallengeMultiplier(name = "dimension") {
 }
 
 function getChallengeRequirement() {
-	return Number.MAX_VALUE
+	if(getChallengeSet() == 1) return Number.MAX_VALUE;
+	if(getChallengeSet() == 2) return infinityChallengeRequirements[game.challengesRunning[0]]
 }
 
 function canCompleteChallenge() {
 	return game.dimensions[0].amount.gt(getChallengeRequirement());
 }
 
-function getChallengeCompletions() {
+function getChallengeCompletions(s=0) {
 	var completions = 0;
-	game.challenges[0].forEach(function(challenge) {if(challenge.completed) completions++;})
+	game.challenges[s].forEach(function(challenge) {if(challenge.completed) completions++;})
 	return completions;
 }
 
-function getChallengeTimes() {
+function getChallengeTimes(s=game.selectedChallengeType) {
 	var sum = 0;
 	for(var i = 0; i < 12; i++) {
-		sum += game.challenges[0][i].completed ? game.challenges[0][i].bestTime : Infinity
+		sum += game.challenges[s][i].completed ? game.challenges[s][i].bestTime : Infinity
 	}
 	return sum;
 }
@@ -185,11 +208,86 @@ function suffer(n) {
 	if(n && game.tickspeed.cost.eq(nc)) game.tickspeed.cost = game.tickspeed.cost.multiply(game.tickspeed.costMult);
 }
 
+var icRequirements = ["1e4000", "ee10", "eee10", "eeee10", "eeeee10", "eeeeee10", "eeeeeee10", "eeeeeeee10", "eeeeeeeee10", "eeeeeeeeee10", "eeeeeeeeeee10", "eeeeeeeeeeee10"]
+var icGoals = ["1e2000", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]
+
 function getInfinityChallengesUnlocked() {
-	var req = ["1e2800"]
 	var unl = 0;
-	for(var i = 0; i < req.length; i++) {
-		if(game.totalAntimatter.gte(req)) unl++;
+	for(var i = 0; i < icRequirements.length; i++) {
+		if(game.totalAntimatter.gte(icRequirements[i])) unl++;
 	}
 	return unl;
+}
+
+function getChallengeReward(i, j) {
+	return [
+		[
+			"First Dimension Autobuyer",
+			"Second Dimension Autobuyer",
+			"Third Dimension Autobuyer",
+			"Fourth Dimension Autobuyer",
+			"Fifth Dimension Autobuyer",
+			"Sixth Dimension Autobuyer",
+			"Seventh Dimension Autobuyer",
+			"Eighth Dimension Autobuyer",
+			"Ninth Dimension Autobuyer",
+			"Dimension Boost Autobuyer",
+			"Antimatter Galaxy Autobuyer",
+			"Tickspeed Autobuyer",
+		],
+		[
+			100 ** (getChallengeCompletions(1) / 12),
+		]
+	][j][i-1]
+}
+
+function getChallengeBenefits() {
+	let lines = []
+	switch(game.selectedChallengeType) {
+		case 0:
+			text = "Your challenge completions grant you access to ", dims = [], other = [], otherNames = ["dimension boost", "antimatter galaxy", "tickspeed"];
+			for(var i = 0; i < 9; i++) if(game.challenges[0][i].completed) dims.push(i);
+			for(var i = 9; i < 12; i++) if(game.challenges[0][i].completed) other.push(i);
+			if(dims.length) {
+				text += (dims.length<2?"the "+tierNames[dims[0]+1].toLowerCase():"") + " dimension autobuyer"
+				if(dims.length > 1) {
+					text += "s "
+					for(var i = 0; i < dims.length; i++) 
+						if(dims[i]+1) {
+							text += (dims[i]+1)
+							if(i < dims.length - 1) text += ((dims.length==2) || (i == dims.length - 2) ? " and " : ", ")
+						}
+				}
+				
+				if(other.length) {
+					text += (dims.length+other.length>2?", ":" and ")
+					for(var i = 0; i < other.length; i++) {
+						if(!(c = i < other.length - 1) && other.length > 1) text += "and "
+						if(other[i]) text += "the " + otherNames[other[i]-9] + " autobuyer";
+						if(c) text += ", ";
+						else text += "."
+					}
+				}
+				else text += "."
+			}
+			else {
+				for(var i = 0; i < other.length; i++) {
+					if(!(c = i < other.length - 1) && other.length > 1) text += "and "
+					if(other[i]) text += "the " + otherNames[other[i]-9] + " autobuyer";
+					if(c) text += ", ";
+					else text += "."
+				}
+			}
+			if(text.length > 50) {
+				lines.push(text);
+				lines.push("");
+				lines.push("");
+			}
+			break;
+		case 1:
+			for(var i = 0; i < 12; i++) lines.push(`Challenge ${i+1} Record: ${game.challenges[0][i].completed ? timeDisplay(game.challenges[0][i].bestTime) : "N/A"}`)
+			lines.push(`<br>Sum of all challenge times is ${timeDisplay(getChallengeTimes())}`)
+			break;
+	}
+	return lines.join("<br>") + "Records" + getStatisticsDisplay("challenge")
 }

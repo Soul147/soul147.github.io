@@ -112,7 +112,7 @@ function getEffectiveGalaxies() {
 
 function getGalaxyPower() {
 	var r = new Decimal(1);
-	if(game.infinityUpgrades.includes(15) && !inChallenge()) r = r.multiply(2);
+	if(game.infinityUpgrades.includes(15) && getChallengeSet() !== 1 && !inChallenge(1, 1)) r = r.multiply(2);
 	if(game.infinityUpgrades.includes(25)) r = r.multiply(1.1);
 	
 	return r;

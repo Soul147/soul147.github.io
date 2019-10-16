@@ -186,7 +186,7 @@ function update() {
 
 	displayIf("gainedIP", (game.bestInfinityTime < 60000 && atInfinity()) || game.break);
 	ge("gainedIP").style.fontSize = game.break || inChallenge() ? "11px" : "30px"
-	ge("gainedIP").innerHTML = getChallengeSet() == 1 || getChallengeSet == 2 ? 
+	ge("gainedIP").innerHTML = getChallengeSet() == 1 || getChallengeSet() == 2 ? 
 		(canCompleteChallenge() ? "Big Crunch to complete challenge." : "Reach " + shortenMoney(getChallengeRequirement()) + " antimatter to complete challenge.") : 
 		game.break ? 
 			"<b>Big Crunch for " + shortenMoney(gainedInfinityPoints()) + "<br>Infinity Points.</b><br>" + 
@@ -199,15 +199,15 @@ function update() {
 	
 	displayIf("postInfinityUpgrades", game.break)
 
-	ge("repeatInf0").innerHTML = "Tickspeed cost multiplier increase<br>" + game.tickCostMultIncrease + "x" + (game.repeatInf[0].bought.lt(8) ? " > " + (game.tickCostMultIncrease-1) + "x<br>Cost: " + shortenMoney(getRepeatInfCost(0)) + " IP" : "")
+	ge("repeatInf0").innerHTML = "Tickspeed cost multiplier increase<br>" + game.tickCostMultIncrease + "x" + (game.repeatInf[0].bought.lt(7) ? " > " + (game.tickCostMultIncrease-1) + "x<br>Cost: " + shortenMoney(getRepeatInfCost(0)) + " IP" : "")
 	ge("repeatInf1").innerHTML = "Multiply IP gain by 2<br>Currently: " + shortenMoney(Decimal.pow(2, game.repeatInf[1].bought)) + "x<br>Cost: " + shortenMoney(getRepeatInfCost(1)) + " IP"
 	ge("repeatInf2").innerHTML = "Dimension cost multiplier increase<br>" + game.dimCostMultIncrease + "x" + (game.repeatInf[2].bought.lt(7) ? " > " + (game.dimCostMultIncrease-1) + "x<br>Cost: " + shortenMoney(getRepeatInfCost(2)) + " IP" : "")
 	
-	ge("repeatInf0").className = game.repeatInf[0].bought.gt(7) ? "infinityUpgradeBought" : canBuyRepeatInf(0) ? "infinityUpgrade" : "infinityUpgradeLocked"
+	ge("repeatInf0").className = game.repeatInf[0].bought.gt(6) ? "infinityUpgradeBought" : canBuyRepeatInf(0) ? "infinityUpgrade" : "infinityUpgradeLocked"
 	ge("repeatInf1").className = canBuyRepeatInf(1) ? "infinityUpgrade" : "infinityUpgradeLocked"
 	ge("repeatInf2").className = game.repeatInf[2].bought.gt(6) ? "infinityUpgradeBought" : canBuyRepeatInf(2) ? "infinityUpgrade" : "infinityUpgradeLocked"
 
-	ge("infinityshiftcost").textContent = shortenCosts(getInfinityShiftCost())
+	ge("infinityshiftcost").textContent = (getChallengeCompletions(1) > 11 || game.infinityShifts.lt(4)) ? "Reach " + shortenCosts(getInfinityShiftCost()) + " antimatter to unlock a new dimension." : "Complete all 12 infinity challenges to unlock."
 	displayIf("infinityPowerArea", game.infinityShifts.gt(0))
 	ge("infinityshift").className = canInfinityShift() ? "buy" : "lock"
 
@@ -220,8 +220,11 @@ function update() {
 	
 	if(game.currentTab == "challenges") {
 		updateChallengeDescriptions();
-		ge("challengeDescription").innerHTML = challengeDescriptions[selectedChallenge+selectedChallengeType*12]
-	}	
+		ge("challengeDescription").innerHTML = challengeDescriptions[selectedChallenge+game.selectedChallengeType*12]
+		ge("cLeft").style.opacity = (game.selectedChallengeType > 0) + 0
+		ge("cRight").style.opacity = (game.selectedChallengeType < getChallengeTypeCap()) + 0
+		ge("challengeBenefits").innerHTML = getChallengeBenefits()
+	}
 	
 	if(game.currentTab == "statistics") {
 		ge(game.currentStatisticsTab + "StatisticsTab").innerHTML = getStatisticsDisplay(game.currentStatisticsTab)
@@ -283,8 +286,9 @@ function getStatisticsDisplay(type) {
 			lines.push(`You have existed for ${timeDisplay(getTimeSince("start"))}.`)
 			break;
 		case "challenge":
-			for(var i = 0; i < 12; i++) lines.push(`Challenge ${i+1} Record: ${game.challenges[0][i].completed ? timeDisplay(game.challenges[0][i].bestTime) : "N/A"}`)
-			lines.push(`<br>Sum of all challenge times is ${timeDisplay(getChallengeTimes())}`)
+			lines.push("<br>")
+			for(var i = 0; i < 12; i++) if(game.challenges[game.selectedChallengeType][i].completed) lines.push(`Challenge ${i+1} Record: ${game.challenges[game.selectedChallengeType][i].completed ? timeDisplay(game.challenges[game.selectedChallengeType][i].bestTime) : "N/A"}`)
+			lines.push(`<br>Sum of all challenge times is ${timeDisplay(getChallengeTimes(game.selectedChallengeType))}`)
 			break;
 	}
 	return lines.join("<br>")
@@ -295,6 +299,7 @@ showDimensionTab(game.options.saveTabs ? game.currentDimensionTab : "normal")
 showStatisticsTab(game.options.saveTabs ? game.currentStatisticsTab : "normal")
 showInfinityTab(game.options.saveTabs ? game.currentInfinityTab : "infinityUpgrades")
 showAutomationTab(game.options.saveTabs ? game.currentAutomationTab : "dimension")
+scrollChallengesTo(game.options.saveTabs ? game.selectedChallengeType : 0)
 
 update();
 updateAchievements()

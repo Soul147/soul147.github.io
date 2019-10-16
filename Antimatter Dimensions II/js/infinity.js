@@ -124,7 +124,7 @@ function resetInfinityUpgrades() {
 	game.repeatInf = [
 		{cost: new Decimal(1e10), costMult: new Decimal(10), bought: new Decimal(0)}, 
 		{cost: new Decimal(10), costMult: new Decimal(10), bought: new Decimal(0)}, 
-		{cost: new Decimal(1e5), costMult: new Decimal(1e5), bought: new Decimal(0)}
+		{cost: new Decimal(1e10), costMult: new Decimal(1e10), bought: new Decimal(0)}
 	]
 }
 

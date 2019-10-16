@@ -146,6 +146,9 @@ function doHighStandard(e) {
 
 function timeDisplay(time) {
   time = time / 1000
+  
+  if(time == Infinity) return "Eternity"
+  
   if (time <= 10) return time.toFixed(3) + " seconds"
   time = Math.floor(time)
 
