@@ -10,8 +10,13 @@ function getInfinityPointMult() {
 	return Decimal.pow(2, game.repeatInf[1].bought)
 }
 
+function getInfinity() {
+	if(getChallengeSet() == 2) return getChallengeGoal()
+	return Number.MAX_VALUE
+}
+
 function bigCrunch(force) {
-	if(game.dimensions[0].amount.lt(Number.MAX_VALUE) && !force) return;
+	if(game.dimensions[0].amount.lt(getInfinity()) && !force) return;
 	
 	if(!(game.bestInfinityTime < 60000 || game.break)) {
 		showTab(lastTab);
@@ -31,9 +36,9 @@ function bigCrunch(force) {
 		game.heretic = false;
 
 		if(inChallenge() && getChallengeSet() < 3) {
-			var c = game.challenges[getChallengeSet()-1][game.challengesRunning[0]-1]
+			var c = game.challenges[getChallengeSet()-1][(game.challengesRunning[0]-1)%12]
 			c.completed = true;
-			c.bestTime = getTimeSince("infinity");
+			c.bestTime = Math.min(c.bestTime || Infinity, getTimeSince("infinity"));
 			if(c.bestTime < 180000) giveAchievement(29)
 			exitChallenge();
 		}
@@ -54,7 +59,7 @@ function bigCrunch(force) {
 
 var infinityUpgrades = [];
 
-var infinityUpgradeCosts = "1,1,3,20,1,2,5,40,1,3,10,100,1,4,15,200,0,1e3,5e3,1e4,2e5,5e7,1e12,1e100,1e100,1e100,1e7,1e7,1e8,0,0,0".split(",");
+var infinityUpgradeCosts = "1,1,3,20,1,2,5,40,1,3,10,100,1,4,15,200,0,1e3,5e3,1e4,2e5,5e7,1e12,1e20,1e100,1e100,1e7,1e7,1e8,0,0,0".split(",");
 
 function canBuyInfinityUpgrade(i) {
 	if(game.infinityUpgrades.includes(i)) return false;
@@ -74,7 +79,7 @@ function getRepeatInfCost(i) {
 }
 
 function canBuyRepeatInf(i) {
-	if(i !== 1 && game.repeatInf[i].bought > 7 - (i/2)) return false;
+	if(i !== 1 && game.repeatInf[i].bought > 6 - i) return false;
 	return game.infinityPoints.gte(getRepeatInfCost(i));
 }
 
@@ -115,7 +120,7 @@ function getInfinityUpgradeEffect(n) {
 		case 21: 
 			return Math.max(1e9 / getChallengeTimes(), 1);
 		case 22:
-			return game.achievements.length ** Math.log10(game.achievements.length);
+			return game.achievements.length ** (Math.log10(game.achievements.length+1)+1);
 	}
 }
 

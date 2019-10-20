@@ -44,7 +44,9 @@ function resetInfinityDimensions() {
 function getInfinityDimensionProduction(i) {
 	var dim = game.infinityDimensions[i];
 	
-	dim.multiplier = Decimal.pow(infDimensionBuyMults[dim.id], dim.bought).multiply(Decimal.pow(10, game.infinityShifts.subtract(i)))
+	dim.multiplier = Decimal.pow(infDimensionBuyMults[dim.id], dim.bought).multiply(Decimal.pow(10, game.infinityShifts.subtract(i).add(game.infinityUpgrades.includes(23)*(9-i)*0.5)))
+	if(challengeCompleted(1, 1)) dim.multiplier = dim.multiplier.multiply(getChallengeReward(1, 1))
+	if(game.achievements.includes(39)) dim.multiplier = dim.multiplier.multiply(1.01);
 	
 	return dim.amount.multiply(dim.multiplier);
 }
@@ -82,7 +84,7 @@ function maxAllInfinityDimensions() {
 	for(var i = 1; i < 10; i++) maxInfinityDimension(i);
 }
 
-function getInfinityPowerPower() { // ...why
+function getInfinityPowerPower() { // ...bruh
 	return 3
 }
 

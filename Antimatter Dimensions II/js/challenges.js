@@ -63,11 +63,11 @@ function updateChallengeDescriptions() {
 		`You start without any galaxies.<br><br>Reward: Antimatter Galaxy autobuyer.`,
 		`Each dimension produces the one two below it. Tickspeed upgrades are stronger to compensate.<br><br>Reward: Tickspeed autobuyer.`,
 		
-		`Challenges 1-6 are all applied at once.<br><br>ICDATA<br><br>Reward: 1.47x on all infinity dimensions for each infinity challenge completed.`,
-		``,
-		``,
-		``,
-		``,
+		`Challenges 1-6 are all applied at once.ICDATAReward: 1.47x on all infinity dimensions for each infinity challenge completed.`,
+		`You are forced to do a dimensional sacrifice every tick.ICDATAReward: Dimensional sacrifice is much stronger and unlocks dimensional sacrifice autobuyer.`,
+		`Antimatter galaxies add to the tickspeed multiplier instead of multiplying.ICDATAReward: Add ${getChallengeReward(3, 1)} to the final tickspeed multiplier per antimatter galaxy.`,
+		`All dimension multipliers are reduced. Reduction is greater if a dimension is not the most recent one upgraded. ICDATAReward: Dimension upgrade multiplier is 50% stronger.`,
+		`Upgrading a dimension increases the cost of all other upgrades of equal or lesser cost.ICDATAReward: Galaxies are ???% more powerful.`,
 		``,
 		``,
 		``,
@@ -78,7 +78,7 @@ function updateChallengeDescriptions() {
 	]
 	
 	for(var i = 13; i < 25; i++) {
-		challengeDescriptions[i] = challengeDescriptions[i].replace(`ICDATA`, `Goal: ${shortenCosts(icGoals[i - 13])} antimatter`)
+		challengeDescriptions[i] = challengeDescriptions[i].replace(`ICDATA`, `<br><br>Goal: ${shortenCosts(icGoals[i - 13])} antimatter<br><br>`)
 		if(getInfinityChallengesUnlocked() < i - 12) challengeDescriptions[i] = `Requires ${shortenCosts(icRequirements[i - 13])} antimatter`;
 	}
 	
@@ -175,13 +175,13 @@ function getChallengeMultiplier(name = "dimension") {
 	return Decimal.multiply(c4, c5).multiply(c6);
 }
 
-function getChallengeRequirement() {
+function getChallengeGoal() {
 	if(getChallengeSet() == 1) return Number.MAX_VALUE;
-	if(getChallengeSet() == 2) return infinityChallengeRequirements[game.challengesRunning[0]]
+	if(getChallengeSet() == 2) return icGoals[game.challengesRunning[game.challengesRunning.length - 1] - 13]
 }
 
 function canCompleteChallenge() {
-	return game.dimensions[0].amount.gt(getChallengeRequirement());
+	return game.dimensions[0].amount.gt(getChallengeGoal());
 }
 
 function getChallengeCompletions(s=0) {
@@ -203,13 +203,16 @@ function suffer(n) {
 	for(var i = 1; i <= 9; i++) {
 		if(i == n) continue;
 		var dim = game.dimensions[i];
-		if(dim.cost.eq(nc)) dim.cost = dim.cost.multiply(dim.costMult);
+		if(inChallenge(5, 1) && dim.cost.lte(nc)) {
+			dim.cost = game.dimensions[n].cost.max(dim.cost);
+		}
+		else if(dim.cost.eq(nc)) dim.cost = dim.cost.multiply(dim.costMult);
 	}
 	if(n && game.tickspeed.cost.eq(nc)) game.tickspeed.cost = game.tickspeed.cost.multiply(game.tickspeed.costMult);
 }
 
-var icRequirements = ["1e4000", "ee10", "eee10", "eeee10", "eeeee10", "eeeeee10", "eeeeeee10", "eeeeeeee10", "eeeeeeeee10", "eeeeeeeeee10", "eeeeeeeeeee10", "eeeeeeeeeeee10"]
-var icGoals = ["1e2000", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]
+var icRequirements = ["1e3000", "1e3500", "1e6000", "1e7500", "1e1e17000", "eeeeee10", "eeeeeee10", "eeeeeeee10", "eeeeeeeee10", "eeeeeeeeee10", "eeeeeeeeeee10", "eeeeeeeeeeee10"]
+var icGoals = ["1e1500", "1e2000", "1e2750", "1e3000", "0", "0", "0", "0", "0", "0", "0", "0"]
 
 function getInfinityChallengesUnlocked() {
 	var unl = 0;
@@ -217,6 +220,10 @@ function getInfinityChallengesUnlocked() {
 		if(game.totalAntimatter.gte(icRequirements[i])) unl++;
 	}
 	return unl;
+}
+
+function challengeCompleted(i, j) {
+	return game.challenges[j][i-1].completed;
 }
 
 function getChallengeReward(i, j) {
@@ -237,6 +244,8 @@ function getChallengeReward(i, j) {
 		],
 		[
 			100 ** (getChallengeCompletions(1) / 12),
+			"Improved Formula",
+			new Decimal(0.01),
 		]
 	][j][i-1]
 }
@@ -245,7 +254,7 @@ function getChallengeBenefits() {
 	let lines = []
 	switch(game.selectedChallengeType) {
 		case 0:
-			text = "Your challenge completions grant you access to ", dims = [], other = [], otherNames = ["dimension boost", "antimatter galaxy", "tickspeed"];
+			text = "Your completions grant you access to ", dims = [], other = [], otherNames = ["dimension boost", "antimatter galaxy", "tickspeed"];
 			for(var i = 0; i < 9; i++) if(game.challenges[0][i].completed) dims.push(i);
 			for(var i = 9; i < 12; i++) if(game.challenges[0][i].completed) other.push(i);
 			if(dims.length) {
@@ -285,8 +294,18 @@ function getChallengeBenefits() {
 			}
 			break;
 		case 1:
-			for(var i = 0; i < 12; i++) lines.push(`Challenge ${i+1} Record: ${game.challenges[0][i].completed ? timeDisplay(game.challenges[0][i].bestTime) : "N/A"}`)
-			lines.push(`<br>Sum of all challenge times is ${timeDisplay(getChallengeTimes())}`)
+			if(getChallengeCompletions(1)) {
+				lines.push("Your completions grant you access to: <br>")
+				var t = [
+					`${getChallengeReward(1, 1).toFixed(2)}x on all infinity dimensions.`,
+					`Improved dimensional sacrifice formula.<br>Dimensional sacrifice autobuyer.`,
+					`+${shorten(getChallengeReward(3, 1).multiply(getEffectiveGalaxies()))} to tickspeed multiplier from galaxies.`,
+					`+50% to dimension upgrade multiplier.`,
+				]
+				for(var i = 1; i <= 12; i++) if(challengeCompleted(i, 1)) lines.push(t[i-1])
+				lines.push("")
+				lines.push("")
+			}
 			break;
 	}
 	return lines.join("<br>") + "Records" + getStatisticsDisplay("challenge")

@@ -133,11 +133,6 @@ function updateSave() {
 		for(var j = 0; j < 12; j++) game.challenges[i][j] = {}
 	}
 	
-	if(!game.autobuyers) {
-		game.antimetal = new Decimal(0);
-		resetAutobuyers();
-	}
-	
 	if(!game.startTime) game.startTime = Date.now();
 	if(!game.buyTime) game.buyTime = Date.now();
 	if(!game.resetTime) game.resetTime = Date.now();
@@ -148,6 +143,13 @@ function updateSave() {
 	if(!game.eternityTime) game.eternityTime = Date.now();
 	
 	if(!game.bestInfinityTime) game.bestInfinityTime = Infinity;
+	
+	// if(!game.automator) game.automator = {
+		// antimetal: new Decimal(0),
+		// spent: new Decimal(0),
+		// level: new Decimal(0),
+		// extensions: [],
+	// }
 }
 
 if(localStorage.ad2) {

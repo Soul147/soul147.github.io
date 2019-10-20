@@ -89,7 +89,11 @@ function getGalaxyScaling() {
 }
 
 function getTickPower() {
-	return Decimal.pow(1.1, getEffectiveGalaxies().subtract(1)).divide(10-inChallenge(12)*6).add(1);
+	var r = Decimal.pow(1.1, getEffectiveGalaxies().subtract(1)).divide(10-inChallenge(12)*6).add(1);
+	var ic3 = getChallengeReward(3, 1).multiply(getEffectiveGalaxies());
+	if(inChallenge(3, 1)) r = ic3.add(1);
+	if(challengeCompleted(3, 1)) r = r.add(ic3)
+	return r;
 }
 
 function getEffectiveNormalGalaxies() {
@@ -112,7 +116,7 @@ function getEffectiveGalaxies() {
 
 function getGalaxyPower() {
 	var r = new Decimal(1);
-	if(game.infinityUpgrades.includes(15) && getChallengeSet() !== 1 && !inChallenge(1, 1)) r = r.multiply(2);
+	if(game.infinityUpgrades.includes(15) && getChallengeSet() !== 1 && getChallengeSet() !== 2) r = r.multiply(2);
 	if(game.infinityUpgrades.includes(25)) r = r.multiply(1.1);
 	
 	return r;

@@ -1,16 +1,8 @@
-function Autobuyer(onUpdate, interval, cost) {
-	this.onUpdate = onUpdate;
-	this.interval = interval;
-	this.cost = new Decimal(cost);
+function updateAutomator() {
 	
-	this.upgrade = function() {
-		
-	}
 }
 
-function resetAutobuyers() {
-	game.autobuyers = []
-	for(var i = 0; i < 12; i++) {
-		game.autobuyers.push(new Autobuyer())
-	}
+function upgradeAutomator() {
+	var a = game.automator;
+	if(a.antimetal.lt(Decimal.pow(8, a.level))) return;
 }

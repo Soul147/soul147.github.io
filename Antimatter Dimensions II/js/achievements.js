@@ -29,7 +29,7 @@ function updateAchievementDescriptions() {
 		"I am speed", `Infinity in under an hour. Reward: Start with 1,000 extra antimatter.`,
 		"That sucked", `Complete a challenge.`,
 		"Suffer", `Complete challenge 9.`,
-		"Hevi would be proud", `Complete all of the challenges.`,
+		"Hevi would be proud", `Complete all of the challenges. Reward: You can start with dimension shifts in challenges.`,
 		"I don't believe in gods", `Reach infinity without sacrificing.`,
 		
 		"And Beyond", `Break Infinity.`,
@@ -45,7 +45,7 @@ function updateAchievementDescriptions() {
 		"Oh hey", `Have exactly 69 ninth dimensions.`,
 		"Infinitely Challenging", `Complete Infinity Challenge 1.`,
 		"Don't judge me, I'm a sadist", `Complete Infinity Challenge 5.`,
-		"", ``,
+		"That's a lot of infinities", `Get all dimension multipliers over ${shorten(Number.MAX_VALUE)}. Reward: Infinity dimensions are 1% stronger.`,
 		"Supersanic", `Infinity in under a second.`,
 		"", ``,
 		"", ``,

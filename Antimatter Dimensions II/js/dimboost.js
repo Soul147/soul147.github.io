@@ -10,7 +10,8 @@ function shift() {
 }
 
 function getStartingShifts() {
-	return getChallengeSet() == 1 ? 0 : game.infinityUpgrades.includes(3)*2 + game.infinityUpgrades.includes(7)*2 + game.infinityUpgrades.includes(11);
+	if(inChallenge(10)) return 0;
+	return getChallengeSet() == 1 && !game.achievements.includes(25) ? 0 : game.infinityUpgrades.includes(3)*2 + game.infinityUpgrades.includes(7)*2 + game.infinityUpgrades.includes(11);
 }
 
 function canBoost() {
@@ -21,7 +22,7 @@ function canBoost() {
 function boost(bulk) {
 	if(!canBoost()) return;
 	
-	var bought = game.dimensions[inChallenge(10) ? 4 : 9].amount.subtract(2).divide(getDimensionBoostScaling()).add(1).floor();
+	var bought = game.dimensions[inChallenge(10) ? 4 : 9].amount.subtract(4).divide(getDimensionBoostScaling()).add(1).floor();
 	
 	if(game.boosts.gte(bought)) return;
 	
@@ -38,7 +39,7 @@ function getDimensionBoostScaling() {
 }
 
 function getDimensionBoostReq() {
-	return game.boosts.multiply(getDimensionBoostScaling()).add(2);
+	return game.boosts.multiply(getDimensionBoostScaling()).add(4);
 }
 
 function getDimensionBoostPower() {

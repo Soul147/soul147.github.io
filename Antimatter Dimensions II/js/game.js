@@ -45,11 +45,14 @@ function update() {
 	game.dimMult = new Decimal(2);
 	if(game.infinityUpgrades.includes(5)) game.dimMult = game.dimMult.multiply(1.1)
 	if(inChallenge(2)) game.dimMult = game.dimMult.multiply(0.8)
+	if(challengeCompleted(4, 1)) game.dimMult = game.dimMult.multiply(1.5)
 	
 	updateDimensionSet("dimension")
 	updateDimensionSet("infinityDimension", "inf", " IP")
 	// updateDimensionSet("timeDimension", "time", " EP")
 	game.totalAntimatter = game.totalAntimatter.add(getDimensionProduction(1).multiply(getTickspeed("dimension")).multiply(diff/1000));
+	
+	if(inChallenge(2, 1)) sacrifice()
 	
 	ge("antimatter").textContent = getFullExpansion(game.dimensions[0].amount)
 	ge("antimatterGrowth").textContent = getFullExpansion(getDimensionProduction(1).multiply(inChallenge(7) ? 1 : getTickspeed("dimension")))
@@ -99,7 +102,7 @@ function update() {
 
 	displayIf("infinityTabButton", game.infinities.gt(0))
 	displayIf("challengesTabButton", game.infinityUpgrades.length > 15)
-	// displayIf("automationTabButton", getChallengeCompletions()) // Note to self: Finish this you lazy motherfucker
+	displayIf("automationTabButton", getChallengeCompletions() > 69) // Note to self: Finish this you lazy motherfucker
 
 	gc("infinityPoints", function(e) {
 		e.textContent = shortenMoney(game.infinityPoints.floor())
@@ -130,7 +133,7 @@ function update() {
 			"Power up all dimensions based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(20)) + "x",
 			"Power up all dimensions based on challenge times<br>Currently: " + shorten(getInfinityUpgradeEffect(21)) + "x",
 			"Power up all dimensions based on achievements<br>Currently: " + shorten(getInfinityUpgradeEffect(22)) + "x",
-			"Dimensional Sacrifice is 1,000,000x stronger",
+			"Infinity Dimensions get a multiplier based on their tier, giving the best boost to the lowest",
 			"Dimension boost multiplier is 60% stronger",
 			"Antimatter galaxies are 10% stronger",
 			"Do nothing",
@@ -140,10 +143,11 @@ function update() {
 			"",
 			"",
 		]
-	for(var i = 0; i < 32; i++) {
-		ge("infinityUpgrade" + i).className = game.infinityUpgrades.includes(i) ? "infinityUpgradeBought" : canBuyInfinityUpgrade(i) ? "infinityUpgrade" : "infinityUpgradeLocked";
-		ge("infinityUpgradeDesc" + i).innerHTML = infinityUpgradeDescriptions[i];
-		ge("infinityUpgradeCost" + i).innerHTML = shortenCosts(infinityUpgradeCosts[i]) + " IP";
+		for(var i = 0; i < 32; i++) {
+			ge("infinityUpgrade" + i).className = game.infinityUpgrades.includes(i) ? "infinityUpgradeBought" : canBuyInfinityUpgrade(i) ? "infinityUpgrade" : "infinityUpgradeLocked";
+			ge("infinityUpgradeDesc" + i).innerHTML = infinityUpgradeDescriptions[i];
+			ge("infinityUpgradeCost" + i).innerHTML = shortenCosts(infinityUpgradeCosts[i]) + " IP";
+		}
 	}
 	
 	var text = ""
@@ -164,7 +168,6 @@ function update() {
 				`10 challenge completions are required to break infinity.
 				Progress: ${getChallengeCompletions()} / 10`
 		)
-	}
 
 	c = game.dimensions[0].amount.gte(Number.MAX_VALUE) && !(game.bestInfinityTime < 60000 || game.break);
 	displayIf("tabButtons", !c)
@@ -187,13 +190,13 @@ function update() {
 	displayIf("gainedIP", (game.bestInfinityTime < 60000 && atInfinity()) || game.break);
 	ge("gainedIP").style.fontSize = game.break || inChallenge() ? "11px" : "30px"
 	ge("gainedIP").innerHTML = getChallengeSet() == 1 || getChallengeSet() == 2 ? 
-		(canCompleteChallenge() ? "Big Crunch to complete challenge." : "Reach " + shortenMoney(getChallengeRequirement()) + " antimatter to complete challenge.") : 
+		(canCompleteChallenge() ? "Big Crunch to complete challenge." : "Reach " + shortenMoney(getChallengeGoal()) + " antimatter to complete challenge.") : 
 		game.break ? 
 			"<b>Big Crunch for " + shortenMoney(gainedInfinityPoints()) + "<br>Infinity Points.</b><br>" + 
 			shorten(rate) + " IP/min<br>Peak: " + 
 			(game.options.showBestRateAt ? shorten(game.bestIPRateAt) + " IP" : shorten(game.bestIPRate) + " IP/min") : "<b>Big Crunch</b>"
 	
-	ge("antimetal").textContent = getFullExpansion(game.antimetal)
+	// ge("antimetal").textContent = getFullExpansion(game.automator.antimetal)
 	displayIf("dimensionTabs", game.break)
 	displayIf("automationTabs", game.break)
 	
@@ -201,11 +204,11 @@ function update() {
 
 	ge("repeatInf0").innerHTML = "Tickspeed cost multiplier increase<br>" + game.tickCostMultIncrease + "x" + (game.repeatInf[0].bought.lt(7) ? " > " + (game.tickCostMultIncrease-1) + "x<br>Cost: " + shortenMoney(getRepeatInfCost(0)) + " IP" : "")
 	ge("repeatInf1").innerHTML = "Multiply IP gain by 2<br>Currently: " + shortenMoney(Decimal.pow(2, game.repeatInf[1].bought)) + "x<br>Cost: " + shortenMoney(getRepeatInfCost(1)) + " IP"
-	ge("repeatInf2").innerHTML = "Dimension cost multiplier increase<br>" + game.dimCostMultIncrease + "x" + (game.repeatInf[2].bought.lt(7) ? " > " + (game.dimCostMultIncrease-1) + "x<br>Cost: " + shortenMoney(getRepeatInfCost(2)) + " IP" : "")
+	ge("repeatInf2").innerHTML = "Dimension cost multiplier increase<br>" + game.dimCostMultIncrease + "x" + (game.repeatInf[2].bought.lt(5) ? " > " + (game.dimCostMultIncrease-1) + "x<br>Cost: " + shortenMoney(getRepeatInfCost(2)) + " IP" : "")
 	
 	ge("repeatInf0").className = game.repeatInf[0].bought.gt(6) ? "infinityUpgradeBought" : canBuyRepeatInf(0) ? "infinityUpgrade" : "infinityUpgradeLocked"
 	ge("repeatInf1").className = canBuyRepeatInf(1) ? "infinityUpgrade" : "infinityUpgradeLocked"
-	ge("repeatInf2").className = game.repeatInf[2].bought.gt(6) ? "infinityUpgradeBought" : canBuyRepeatInf(2) ? "infinityUpgrade" : "infinityUpgradeLocked"
+	ge("repeatInf2").className = game.repeatInf[2].bought.gt(4) ? "infinityUpgradeBought" : canBuyRepeatInf(2) ? "infinityUpgrade" : "infinityUpgradeLocked"
 
 	ge("infinityshiftcost").textContent = (getChallengeCompletions(1) > 11 || game.infinityShifts.lt(4)) ? "Reach " + shortenCosts(getInfinityShiftCost()) + " antimatter to unlock a new dimension." : "Complete all 12 infinity challenges to unlock."
 	displayIf("infinityPowerArea", game.infinityShifts.gt(0))
@@ -257,6 +260,9 @@ function update() {
 	if(game.infinityShifts.gt(0)) giveAchievement(34)
 	if(getChallengeTimes() < 180000) giveAchievement(35)
 	if(game.dimensions[9].amount.eq(69)) giveAchievement(36)
+	if(challengeCompleted(1, 1)) giveAchievement(37)
+	if(challengeCompleted(5, 1)) giveAchievement(38)
+	if(game.dimensions[7].multiplier.gte(Number.MAX_VALUE)) giveAchievement(39)
 		
 	ge("autosaveOption").innerHTML = "Autosave: " + ["Off", "On"][!!game.options.autosave+0]
 	ge("saveTabsOption").innerHTML = "Save Tabs: " + ["Off", "On"][!!game.options.saveTabs+0]
@@ -264,11 +270,12 @@ function update() {
 
 	if(game.options.automate) {
 		galaxy();
-		// boost();
+		boost();
 		shift();
 		maxAll();
+		if(getSacrificeGain().gt(10) && challengeCompleted(2, 1)) sacrifice();
 	}
-	// if(gainedInfinityPoints().gt(420)) bigCrunch();
+	// if(gainedInfinityPoints().gt(5e15)) bigCrunch();
 }
 
 function getStatisticsDisplay(type) {
@@ -286,9 +293,10 @@ function getStatisticsDisplay(type) {
 			lines.push(`You have existed for ${timeDisplay(getTimeSince("start"))}.`)
 			break;
 		case "challenge":
-			lines.push("<br>")
+			lines.push("")
+			if(getChallengeCompletions(game.selectedChallengeType)) lines.push("")
 			for(var i = 0; i < 12; i++) if(game.challenges[game.selectedChallengeType][i].completed) lines.push(`Challenge ${i+1} Record: ${game.challenges[game.selectedChallengeType][i].completed ? timeDisplay(game.challenges[game.selectedChallengeType][i].bestTime) : "N/A"}`)
-			lines.push(`<br>Sum of all challenge times is ${timeDisplay(getChallengeTimes(game.selectedChallengeType))}`)
+			lines.push(`<br>Sum of all ${layerNames[game.selectedChallengeType].toLowerCase()}challenge times is ${timeDisplay(getChallengeTimes(game.selectedChallengeType))}`)
 			break;
 	}
 	return lines.join("<br>")
@@ -304,4 +312,4 @@ scrollChallengesTo(game.options.saveTabs ? game.selectedChallengeType : 0)
 update();
 updateAchievements()
 
-setInterval(function() {if(game.options.autosave) save()}, 30000)
+setInterval(function() {if(game.options.autosave) save()}, 10000)

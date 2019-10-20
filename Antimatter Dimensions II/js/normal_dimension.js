@@ -60,9 +60,12 @@ function getDimensionProduction(i) {
 	if(game.infinityUpgrades.includes(22)) dim.multiplier = dim.multiplier.multiply(getInfinityUpgradeEffect(22))
 	
 	if(i == 9 && game.achievements.includes(17)) dim.multiplier = dim.multiplier.multiply(1.09);
+	if(game.achievements.includes(33)) dim.multiplier = dim.multiplier.multiply(dim.bought)
 	
 	if(inChallenge(1) && i == 1) dim.multiplier = dim.multiplier.divide(Number.MAX_VALUE).max(1);
 	if(inChallenge(7) && i == 9) dim.multiplier = dim.multiplier.multiply(getTickPower().pow(game.tickspeed.bought.multiply(7)));
+	
+	if(inChallenge(4, 1)) dim.multiplier = dim.multiplier.pow(0.5 + (game.lastBoughtDimension == i) * 0.4);
 
 	return dim.amount.multiply(dim.multiplier);
 }
@@ -78,7 +81,8 @@ function buyDimension(i) {
 	
 	if(!canBuyDimension(i)) return;
 	game.dimensions[0].amount = game.dimensions[0].amount.subtract(dim.cost);
-	if(inChallenge(9)) suffer(i);
+	if(inChallenge(9) || inChallenge(5, 1)) suffer(i);
+	if(inChallenge(4, 1)) game.lastBoughtDimension = i;
 	
 	dim.amount = dim.amount.add(1);
 	dim.bought = dim.bought.add(1);
@@ -131,16 +135,20 @@ function maxDimension(i) {
 }
 
 function maxAll() {
-	maxTickspeed();
 	for(var i = 1; i < 10; i++) maxDimension(i);
+	maxTickspeed();
 }
 
 function getSacrificeMult() {
 	if(game.dimensions[1].amount.eq(0)) return new Decimal(1)
 	if(inChallenge(8)) return game.dimensions[1].amount.pow(0.05);
 	var r = game.dimensions[1].amount.log10().pow(2+game.achievements.includes(18)*0.2);
-	if(game.infinityUpgrades.includes(23)) r = r.multiply(1e6);
-	if(false) r = game.dimensions[1].amount.pow(0.01); // this is for later (ICs or something)
+	
+	if(challengeCompleted(2, 1)) {
+		var power = 0.01;
+		if(game.achievements.includes(18)) power += 0.001;
+		r = game.dimensions[1].amount.pow(power); // this is for later (ICs or something)
+	}
 	
 	return r;
 }
