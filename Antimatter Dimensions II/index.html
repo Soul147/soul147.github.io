@@ -5,7 +5,7 @@
 <body>
 
 <center>
-	<div style = "padding: 10px">
+	<div style = "padding: 20px">
 		You have <currency id = "antimatter"></currency> antimatter.<br>
 		You are getting <span id = "antimatterGrowth"></span> antimatter per second.<br><br>
 	</div>
@@ -20,7 +20,10 @@
 	</div>
 </center>
 
-<button id = "gainedIP" class = "infinityTabButton" onmousedown = "bigCrunch()" style = "font-size: 11px; width: 210px; height: 70px; position: absolute; left: 20; top: 20"></button>
+<div id = "infinityPrestige" style = "position: absolute; left: 20; top: 10">
+	You have <span class = "infinityPoints"></span> Infinity Points.<br><br>
+	<button id = "gainedIP" class = "infinityTabButton" onmousedown = "bigCrunch()" style = "font-size: 11px; width: 210px; height: 70px"></button>
+</div>
 
 <div class = "tab" id = "bigCrunchTab" style = "font-size: 15px; padding-left: 15px">
 	<center>
@@ -128,17 +131,22 @@
 <div class = "tab" id = "automationTab">
 	<center>
 		<div id = "automationTabs" style = "padding: 10px">
-			<button id = "dimensionAutomation" class = "subtabButton" onclick = "showAutomationTab('dimensions')">Dimensions</button>
-			<button id = "infinityAutomation" class = "subtabButton" onclick = "showAutomationTab('dimensions')">Infinity</button>
-		</div>
-		You have <currency id = "antimetal"></currency> anti-metal.
-		
-		<div class = "automationTab" id = "dimensionAutomationTab">
-			
+			<button id = "coreAutomation" class = "subtabButton" onclick = "showAutomationTab('core')">Core</button>
+			<button id = "class1Automation" class = "subtabButton" onclick = "showAutomationTab('class1')">Infinity</button>
 		</div>
 		
-		<div class = "automationTab" id = "dimensionAutomationTab">
-			
+		<div class = "automationTab" id = "coreAutomationTab">
+			<h1>AUTOMATOR CORE</h1>
+			<h2>Class <span id = "auClass"></span></h2>
+			<button id = "upgradeCore" style = "width: 300; height: 50; font-size: 16px" onclick = "upgradeAutomator()"></button><br><br>
+			<textarea id = "auScript" style = "color: white; background-color: #1f1f1f; width: 384; height: 256"></textarea>
+			<span style = "text-align: left; color: #0f0; background-color: #1f1f1f; width: 384; height: 254; display: inline-block; overflow: auto" id = "auLog"></span>
+			<input style = "color: #0f0; background-color: #1f1f1f; font-family: lucida console; width: 384; margin-left: -390; position: relative; top: -6;" onchange = "logAu(' > ' + this.value); runAu(this.value); this.value = ''">
+		</div>
+		
+		<div class = "automationTab" id = "class1AutomationTab">
+			You have <span class = "infinityPoints"></span> IP.<br>
+			<table id = "automationTable1" cellspacing = 8></table>
 		</div>
 	</center>
 </div>
@@ -149,7 +157,7 @@
 			<button id = "infinity" class = "subtabButton" onclick = "showInfinityTab('infinityUpgrades')">Infinity</button>
 			<button id = "breakInfinity" class = "subtabButton" onclick = "showInfinityTab('breakInfinity')">Break Infinity</button>
 		</div>
-		You have <currency class = "infinityPoints"></currency> infinity points.<br>
+		You have <currency class = "infinityPoints"></currency> Infinity Points.<br>
 		<span id = "infinityPointGeneration"></span><br>
 		<div class = "infinityTab" id = "infinityUpgradesTab">
 			<table id = "infinityUpgrades" style = "font-size: 10px"></table>
@@ -177,7 +185,7 @@
 
 </body>
 
-<script src = "js/break_eternity.js"></script>
+<script src = "js/omeganum.js"></script>
 <script src = "js/format.js"></script>
 <script src = "js/achievements.js"></script>
 <script src = "js/automation.js"></script>

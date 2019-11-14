@@ -98,14 +98,6 @@ function DimensionPower(tier) {
   if (ECTimesCompleted("eterc4") !== 0) mult = mult.times(player.infinityPoints.pow(0.003 + ECTimesCompleted("eterc4")*0.002).min(new Decimal("1e200")))
 
   if (ECTimesCompleted("eterc9") !== 0) mult = mult.times(player.timeShards.pow(ECTimesCompleted("eterc9")*0.1).plus(1).min(new Decimal("1e400")))
-	  
-  if(player.mods.ngt && player.mods.ngt.bi2.includes(0)) {
-	  if (player.infinityUpgrades.includes("totalMult")) mult = mult.times(totalMult)
-	  if (player.infinityUpgrades.includes("currentMult")) mult = mult.times(currentMult)
-	  if (player.infinityUpgrades.includes("infinitiedMult")) mult = mult.times(infinitiedMult)
-	  if (player.infinityUpgrades.includes("achievementMult")) mult = mult.times(achievementMult)
-	  if (player.infinityUpgrades.includes("challengeMult")) mult = mult.times(challengeMult)
-  }
 
   if (inQC(6)) mult = mult.times(player.postC8Mult).dividedBy(player.matter.max(1))
 
@@ -238,7 +230,6 @@ function getInfinityPowerEffectPower() {
 		if (player.currentChallenge.includes("postcngm3_2")) return Math.max(Math.pow(player.galaxies + (player.resets + player.tickspeedBoosts) / 24, 0.7), 7)
 		return Math.max(Math.pow(player.galaxies, 0.7), 7)
 	}
-	if(player.mods.ngt) return 2 + player.mods.ngt.bi2.includes(2) + Math.min(player.mods.ngt.bi2.includes(3)*ngt.thisOmni/1e4, 1);
 	return 7
 }
 
@@ -291,7 +282,8 @@ function getEU2Mult() {
 	if (player.boughtDims) return Decimal.pow(getEternitied(), Math.log(getEternitied()*2+1)/Math.log(4))
 	var cap = Math.min(getEternitied(), 100000)
 	var soft = getEternitied() - cap
-	ret = Decimal.pow(cap/200 + 1, Math.log(cap*2+1)/Math.log(4)).times(new Decimal(soft/200 + 1).times(Math.log(soft*2+1)/Math.log(4)).max(1)).max(player.achievements.includes("ngpp15")?Decimal.pow(10, Math.pow(Math.log10(getEternitied()), 4.75)):1)
+	ret = Decimal.pow(cap/200 + 1, Math.log(cap*2+1)/Math.log(4)).times(new Decimal(soft/200 + 1).times(Math.log(soft*2+1)/Math.log(4)).max(1)).max(player.achievements.includes("ngpp15")||player.mods.ngt?Decimal.pow(10, Math.pow(Math.log10(getEternitied()), 4.75)):1)
+	if(inOC()) return ret.pow(1/100)
 	return ret
 }
 

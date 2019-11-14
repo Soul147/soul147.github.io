@@ -13,6 +13,16 @@ function NormalDimension(i) {
 	this.costMult = new Decimal(dimensionBaseCostMults[i]);
 }
 
+function getStartingAntimatter() {
+	r = 10
+	if(game.achievements.includes(9)) r = 100
+	if(game.achievements.includes(22)) r = 1000
+	if(game.achievements.includes(31)) r = 2e5
+	if(game.achievements.includes(999)) r = 1e10
+	if(game.achievements.includes(999)) r = 1e25
+	return new Decimal(r);
+}
+
 function resetDimensions() {
 	var antimatter = game.dimensions ? game.dimensions[0].amount : 10;
 	game.dimensions = [];
@@ -21,7 +31,7 @@ function resetDimensions() {
 		game.dimensions[i] = new NormalDimension(i);
 	}
 	
-	game.dimensions[0].amount = new Decimal(10+game.achievements.includes(9)*100+game.achievements.includes(22)*1000)
+	game.dimensions[0].amount = getStartingAntimatter()
 	if(false) game.dimensions[0].amount = new Decimal(antimatter) // do this later
 	
 	game.tickspeed = {bought: new Decimal(0), cost: new Decimal(1000), costMult: new Decimal(10)}
@@ -35,7 +45,6 @@ function resetDimensions() {
 
 function getDimensionProduction(i) {
 	var dim = game.dimensions[i];
-	if(!dim) console.log(i)
 	
 	dim.multiplier = Decimal.pow(game.dimMult, dim.bought).divide(2**(dim.id-1));
 	dim.multiplier = dim.multiplier.multiply(getAchievementMultiplier())
@@ -60,6 +69,7 @@ function getDimensionProduction(i) {
 	if(game.infinityUpgrades.includes(22)) dim.multiplier = dim.multiplier.multiply(getInfinityUpgradeEffect(22))
 	
 	if(i == 9 && game.achievements.includes(17)) dim.multiplier = dim.multiplier.multiply(1.09);
+	if(i !== 9 && game.achievements.includes(24)) dim.multiplier = dim.multiplier.multiply(1.08);
 	if(game.achievements.includes(33)) dim.multiplier = dim.multiplier.multiply(dim.bought)
 	
 	if(inChallenge(1) && i == 1) dim.multiplier = dim.multiplier.divide(Number.MAX_VALUE).max(1);
@@ -77,7 +87,7 @@ function canBuyDimension(i) {
 function buyDimension(i) {
 	var dim = game.dimensions[i];
 	
-	if(dim.cost.gt(Number.MAX_VALUE)) return maxDimension(i);
+	//if(dim.cost.gt(Number.MAX_VALUE)) return maxDimension(i);
 	
 	if(!canBuyDimension(i)) return;
 	game.dimensions[0].amount = game.dimensions[0].amount.subtract(dim.cost);
@@ -88,6 +98,7 @@ function buyDimension(i) {
 	dim.bought = dim.bought.add(1);
 	
 	dim.cost = dim.cost.multiply(dim.costMult);
+	if(dim.cost.divide(dim.costMult).gt(Number.MAX_VALUE)) dim.costMult = dim.costMult.multiply(game.dimCostMultIncrease);
 	
 	game.buyTime = Date.now();
 	giveAchievement(i - 1)
@@ -96,13 +107,23 @@ function buyDimension(i) {
 	return true;
 }
 
-function maxDimension(i) {
+function maxDimension(i, b) {
 	var dim = game.dimensions[i];
-	
-	while(dim.cost.lte(Number.MAX_VALUE) && buyDimension(i));
 	
 	if(!canBuyDimension(i)) return;
 	game.buyTime = Date.now();
+	giveAchievement(i - 1)
+	if(i == 9) game.heretic = true;
+	
+	if(dim.cost.lte(Number.MAX_VALUE)) {
+		var bought = game.dimensions[0].amount.min(Number.MAX_VALUE).log10().subtract(dim.cost.log10()).divide(dim.costMult.log10()).ceil()
+		
+		dim.amount = dim.amount.add(bought);
+		dim.bought = dim.bought.add(bought);
+		dim.cost = dim.cost.multiply(dim.costMult.pow(bought));
+		
+		return bought.gt(0);
+	}
 	
 	// Superbuying
 	
@@ -110,7 +131,7 @@ function maxDimension(i) {
 		dim.cost = game.dimensions[0].amount;
 		dim.bought = dim.cost.log10().sqrt();
 		dim.amount = Decimal.max(dim.amount, dim.bought);
-		return;
+		return true;
 	}
 
 	var a = Decimal.log10(game.dimCostMultIncrease).divide(2), 
@@ -132,6 +153,8 @@ function maxDimension(i) {
 	
 	dim.cost = newCost.multiply(newMult);
 	dim.costMult = newMult.multiply(game.dimCostMultIncrease);
+	
+	return true;
 }
 
 function maxAll() {

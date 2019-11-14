@@ -5,7 +5,7 @@ function canBuyTickspeed() {
 function buyTickspeed() {
 	var dim = game.tickspeed;
 	
-	if(dim.cost.gt(Number.MAX_VALUE)) return maxTickspeed();
+	// if(dim.cost.gt(Number.MAX_VALUE)) return maxTickspeed();
 	
 	if(!canBuyTickspeed()) return;
 	game.dimensions[0].amount = game.dimensions[0].amount.subtract(dim.cost);
@@ -14,6 +14,8 @@ function buyTickspeed() {
 	dim.bought = dim.bought.add(1);
 	
 	dim.cost = dim.cost.multiply(dim.costMult);
+	if(dim.cost.divide(dim.costMult).gt(Number.MAX_VALUE)) dim.costMult = dim.costMult.multiply(game.tickCostMultIncrease);
+	
 	game.buyTime = Date.now();
 	
 	return true;
@@ -22,20 +24,27 @@ function buyTickspeed() {
 function maxTickspeed() {
 	var dim = game.tickspeed;
 	
-	while(dim.cost.lte(Number.MAX_VALUE) && buyTickspeed());
-	
 	if(!canBuyTickspeed()) return;
 	game.buyTime = Date.now();
+	
+	if(dim.cost.lte(Number.MAX_VALUE)) {
+		var bought = game.dimensions[0].amount.min(Number.MAX_VALUE).log10().subtract(dim.cost.log10()).divide(dim.costMult.log10()).ceil()
+		
+		dim.bought = dim.bought.add(bought);
+		dim.cost = dim.cost.multiply(dim.costMult.pow(bought));
+		
+		return bought.gt(0);
+	}
 	
 	// Superbuying
 	
 	if(game.dimensions[0].amount.layer >= 3) {
 		dim.cost = game.dimensions[0].amount;
-		dim.bought = dim.cost.log10().sqrt();
-		return;
+		dim.bought = dim.cost.log10().sqrt().divide(Math.log(Math.log(game.tickCostMultIncrease)));
+		return true;
 	}
 
-	var a = Decimal.log10(game.dimCostMultIncrease).divide(2), 
+	var a = Decimal.log10(game.tickCostMultIncrease).divide(2), 
 		b = dim.costMult.log10().subtract(a), 
 		c = dim.cost.log10().subtract(game.dimensions[0].amount.log10()),
 		d = b.pow(2).subtract(a.multiply(c).multiply(4))
@@ -46,17 +55,25 @@ function maxTickspeed() {
 	
 	if(x.lt(1)) return;
 	
-	var newCost = dim.cost.multiply(dim.costMult.pow(x.subtract(1))).multiply(Decimal.pow(game.dimCostMultIncrease, x.subtract(1).multiply(x.subtract(2)).divide(2)))
-	var newMult = dim.costMult.multiply(Decimal.pow(game.dimCostMultIncrease, x.subtract(1)));
+	var newCost = dim.cost.multiply(dim.costMult.pow(x.subtract(1))).multiply(Decimal.pow(game.tickCostMultIncrease, x.subtract(1).multiply(x.subtract(2)).divide(2)))
+	var newMult = dim.costMult.multiply(Decimal.pow(game.tickCostMultIncrease, x.subtract(1)));
 	
 	dim.bought = dim.bought.add(x);
 	
 	dim.cost = newCost.multiply(newMult);
 	dim.costMult = newMult.multiply(game.tickCostMultIncrease);
+	
+	return true;
 }
 
 function getTickspeed(name) {
-	if(name == "dimension") return Decimal.pow(getTickPower(), game.tickspeed.bought);
+	var r = Decimal.pow(getTickPower(), game.tickspeed.bought);
+	if(game.achievements.includes(20)) r = r.multiply(1.01);
+	if(game.achievements.includes(23)) r = r.multiply(1.02);
+	if(game.achievements.includes(29)) r = r.multiply(1.05);
+	if(game.achievements.includes(34)) r = r.multiply(1.10);
+	
+	if(name == "dimension") return r;
 	return 1;
 }
 
@@ -72,6 +89,7 @@ function galaxy() {
 	
 	var bought = game.dimensions[inChallenge(10) ? 4 : 9].amount.subtract(5).divide(getGalaxyScaling()).add(1).floor();
 	
+	game.totalGalaxies = game.totalGalaxies.add(bought.subtract(game.galaxies));
 	game.galaxies = bought;
 	
 	game.shifts = getStartingShifts();
@@ -118,7 +136,6 @@ function getGalaxyPower() {
 	var r = new Decimal(1);
 	if(game.infinityUpgrades.includes(15) && getChallengeSet() !== 1 && getChallengeSet() !== 2) r = r.multiply(2);
 	if(game.infinityUpgrades.includes(25)) r = r.multiply(1.1);
-	
 	return r;
 }
 

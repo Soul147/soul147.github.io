@@ -15,6 +15,8 @@ function getChallengeSet() {
 }
 
 function startChallenge(i, j=0) {
+	if(!challengeUnlocked(i, j)) return;
+	
 	game.challengesRunning = i ? [i + j * 12] : []
 	
 	if(j < 2) bigCrunch(true);
@@ -131,7 +133,7 @@ function updateChallengeDescriptions() {
 
 	var i = selectedChallenge, j = game.selectedChallengeType;
 	
-	state = i ? (inChallenge(i+j*12) ? "Running" : game.challenges[j][i-1].completed ? "Completed" : game.challenges[j][i-1].locked ? "Locked" : "Start") : "Start"
+	state = inChallenge(i+j*12) ? "Running" : game.challenges[j][i-1].completed ? "Completed" : challengeUnlocked(i, j) ? "Start" : "Locked"
 	
 	ge("challengeInfo").innerHTML = layerNames[j] + 
 		"Challenge " + i + "<br><br><span id = 'challengeDescription'></span><br><br><button onmousedown = 'startChallenge(selectedChallenge, game.selectedChallengeType)' class = 'challengeButton challengeButton" + 
@@ -224,6 +226,15 @@ function getInfinityChallengesUnlocked() {
 
 function challengeCompleted(i, j) {
 	return game.challenges[j][i-1].completed;
+}
+
+function challengeUnlocked(i, j) {
+	switch(j) {
+		case 0:
+			return true;
+		case 1:
+			return getInfinityChallengesUnlocked() >= i;
+	}
 }
 
 function getChallengeReward(i, j) {

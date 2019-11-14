@@ -1,5 +1,11 @@
+var devMode = true;
+
 var lastTab;
 var tierNames = ["0", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"]
+var smallCurrency = {
+	infinityPoints: "IP",
+	eternityPoints: "EP"
+}
 
 function ge(e) {
 	return document.getElementById(e) || document.createElement("div");
@@ -14,7 +20,8 @@ function gc(e, f, o=0) {
 
 function transformToDecimal(object) { // It's so much better than hevi's version, because it's recursive and I'm a lazy piece of shit
 	for(i in object) {
-		if(typeof(object[i]) == "string" && !isNaN(new Decimal("e" + object[i]).mag)) object[i] = new Decimal(object[i]); 
+		if(i == "raw") return; // for fuck's sake
+		if(typeof(object[i]) == "string" && !isNaN(new Decimal(object[i]))) object[i] = new Decimal(object[i]); 
 		if(typeof(object[i]) == "object") transformToDecimal(object[i]) // iterates over all objects inside the object
 	}
 }
@@ -114,6 +121,8 @@ function updateSave() {
 	if(!game.shifts) game.shifts = 0;
 	if(!game.boosts) game.boosts = new Decimal(0);
 	if(!game.galaxies) game.galaxies = new Decimal(0);
+	if(!game.totalBoosts) game.totalBoosts = new Decimal(0);
+	if(!game.totalGalaxies) game.totalGalaxies = new Decimal(0);
 	if(!game.dimMult) game.dimMult = new Decimal(2);
 	if(!game.dimCostMultIncrease) game.dimCostMultIncrease = 10;
 	if(!game.tickCostMultDecrease) game.tickCostMultIncrease = 10;
@@ -144,12 +153,22 @@ function updateSave() {
 	
 	if(!game.bestInfinityTime) game.bestInfinityTime = Infinity;
 	
-	// if(!game.automator) game.automator = {
-		// antimetal: new Decimal(0),
-		// spent: new Decimal(0),
-		// level: new Decimal(0),
-		// extensions: [],
-	// }
+	if(!game.automator) game.automator = {
+		class: 0,
+		extensions: [],
+	}
+	
+	au = game.automator;
+	ge("auScript").value = au.raw || "";
+	
+	var c = []
+	for(var i = au.extensions.length; i < 14; i++) au.extensions[i] = Extension(0.5**i, 2**i, "infinityPoints")
+		
+	au.extensions.forEach(function(e) {
+		ge("buyauto" + (e.id)).onclick = function() {
+			upgradeExtension(9)
+		}
+	})
 }
 
 if(localStorage.ad2) {
@@ -292,6 +311,20 @@ ge("postInfinityUpgrades").innerHTML = h + `
 	<td><button id = "repeatInf1" onclick = "buyRepeatInf(1)"></button></td>
 	<td><button id = "repeatInf2" onclick = "buyRepeatInf(2)"></button></td>
 </tr>
+`
+
+var t = `<tr>`
+
+for(var i = 0; i < 9; i++) t += `
+<td class = "autobuyer" id = "dimensionAutobuyer${i}">${tierNames[i+1]} Dimension Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${i}" onclick = "upgradeExtension(${i})"></button></td>${(i+1)%3?"":"</tr><tr>"}
+`
+
+ge("automationTable1").innerHTML += t + `
+<td class = "autobuyer" id = "tickspeedAutobuyer">Tickspeed Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${9}" onclick = "upgradeExtension(9)"></button></td>
+<td class = "autobuyer" id = "boostAutobuyer">Dimension Boost Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${10}" onclick = "upgradeExtension(10)"></button></td>
+<td class = "autobuyer" id = "galaxyAutobuyer">Antimatter Galaxy Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${11}" onclick = "upgradeExtension(11)"></button></td></tr>
+<td class = "autobuyer" id = "sacrificeAutobuyer">Dimensional Sacrifice Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${12}" onclick = "upgradeExtension(12)"></button></td>
+<td class = "autobuyer" id = "infinityAutobuyer">Big Crunch Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${13}" onclick = "upgradeExtension(13)"></button></td>
 `
 
 function f() {

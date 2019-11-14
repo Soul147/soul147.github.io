@@ -6,7 +6,8 @@ function updateDimensionSet(name="dimension", abbr="", curr="") {
 	for(var i = 10; i >= 0; i--) {
 		if(i < 10-c12) {
 			var tickspeed = inChallenge(7) ? 1 : getTickspeed(name);
-			var dimProduction = window["get" + Name + "Production"](i + 1).multiply(tickspeed).multiply(getChallengeMultiplier(name))
+			var base = window["get" + Name + "Production"](i + 1)
+			var dimProduction = base.gt(0) ? base.multiply(tickspeed).multiply(getChallengeMultiplier(name)) : new Decimal(0)
 			if(c12) var dimProductionUp = window["get" + Name + "Production"](i + 2).multiply(tickspeed).multiply(getChallengeMultiplier(name))
 			var realProduction = i ? (c12 ? dimProductionUp : dimProduction) : (c12 ? dimProduction.divide(100).add(dimProductionUp) : dimProduction);
 			game[name + "s"][i].amount = game[name + "s"][i].amount.add(realProduction.multiply(diff/1000));
@@ -40,7 +41,7 @@ function update() {
 	
 	diff *= parseInt(localStorage.hacker) || 1;
 	
-	setTimeout(update, 1000 / game.options.fps)
+	setTimeout(update, 1)
 	
 	game.dimMult = new Decimal(2);
 	if(game.infinityUpgrades.includes(5)) game.dimMult = game.dimMult.multiply(1.1)
@@ -102,7 +103,7 @@ function update() {
 
 	displayIf("infinityTabButton", game.infinities.gt(0))
 	displayIf("challengesTabButton", game.infinityUpgrades.length > 15)
-	displayIf("automationTabButton", getChallengeCompletions() > 69) // Note to self: Finish this you lazy motherfucker
+	displayIf("automationTabButton", getChallengeCompletions()) // Note to self: Finish this you lazy motherfucker
 
 	gc("infinityPoints", function(e) {
 		e.textContent = shortenMoney(game.infinityPoints.floor())
@@ -187,6 +188,7 @@ function update() {
 		game.bestIPRateAt = gainedInfinityPoints()
 	}
 
+	displayIf("infinityPrestige", game.infinities.gt(0))
 	displayIf("gainedIP", (game.bestInfinityTime < 60000 && atInfinity()) || game.break);
 	ge("gainedIP").style.fontSize = game.break || inChallenge() ? "11px" : "30px"
 	ge("gainedIP").innerHTML = getChallengeSet() == 1 || getChallengeSet() == 2 ? 
@@ -198,7 +200,6 @@ function update() {
 	
 	// ge("antimetal").textContent = getFullExpansion(game.automator.antimetal)
 	displayIf("dimensionTabs", game.break)
-	displayIf("automationTabs", game.break)
 	
 	displayIf("postInfinityUpgrades", game.break)
 
@@ -241,32 +242,63 @@ function update() {
 
 	if(game.shifts == 5) giveAchievement(10);
 	if(game.boosts.gte(5)) giveAchievement(11);
-	
+	if(game.dimensions[0].amount.gt(1e303)) giveAchievement(12)
 	if(game.galaxies.gt(0)) giveAchievement(13)
 	if(game.galaxies.gt(1)) giveAchievement(14)
 	if(game.galaxies.gt(2)) giveAchievement(15)
-
-	if(game.dimensions[0].amount.gt(1e303)) giveAchievement(12)
 	if(game.dimensions[0].amount.gte(6.66e201) && game.dimensions[9].amount.eq(9)) giveAchievement(17)
+	
 	if(game.sacrificeMult.gte(66666) && !inChallenge(8)) giveAchievement(18)
-	if(game.infinities.gt(1e3)) giveAchievement(20)
-	if(game.infinityPoints.gt(1e3)) giveAchievement(21)
+	if(game.dimensions[8].amount.gt(1e27)) giveAchievement(19)
+	if(getTickspeed("dimension").gt(1e16)) giveAchievement(20)
+	if(game.infinities.gt(10)) giveAchievement(21)
 	if(game.dimensions[0].amount.gte(Number.MAX_VALUE) && game.sacrificeMult.eq(1)) giveAchievement(26)
-	if(game.break) giveAchievement(27)
-	if(game.infinityShifts.gt(0)) giveAchievement(28)
-	if(getChallengeTimes() < 180000) giveAchievement(30)
-	if(game.infinityDimensions[0].amount.gt(1e6)) giveAchievement(32)
-	if(game.dimensions[1].bought.gte(150)) giveAchievement(33)
-	if(game.infinityShifts.gt(0)) giveAchievement(34)
-	if(getChallengeTimes() < 180000) giveAchievement(35)
-	if(game.dimensions[9].amount.eq(69)) giveAchievement(36)
-	if(challengeCompleted(1, 1)) giveAchievement(37)
-	if(challengeCompleted(5, 1)) giveAchievement(38)
-	if(game.dimensions[7].multiplier.gte(Number.MAX_VALUE)) giveAchievement(39)
+	if(game.totalGalaxies.gte(100)) giveAchievement(27)
+	if(game.infinityPoints.gte(1000)) giveAchievement(28);
+	if(game.infinities.gte(1000)) giveAchievement(30);
+	if(getChallengeCompletions() > 0) giveAchievement(32);
+	if(game.challenges[0][9].completed) giveAchievement(33);
+	if(getChallengeCompletions() > 11) giveAchievement(35);
+	if(game.break) giveAchievement(36);
+	if(game.totalAntimatter.gt(Decimal.pow(Number.MAX_VALUE, 2))) giveAchievement(37);
 		
-	ge("autosaveOption").innerHTML = "Autosave: " + ["Off", "On"][!!game.options.autosave+0]
-	ge("saveTabsOption").innerHTML = "Save Tabs: " + ["Off", "On"][!!game.options.saveTabs+0]
-	ge("automateOption").innerHTML = "Auto Max All: " + ["Off", "On"][!!game.options.automate+0]
+	ge("autosaveOption").innerText = "Autosave: " + ["Off", "On"][!!game.options.autosave+0]
+	ge("saveTabsOption").innerText = "Save Tabs: " + ["Off", "On"][!!game.options.saveTabs+0]
+	ge("automateOption").innerText = "Auto Max All: " + ["Off", "On"][!!game.options.automate+0]
+
+	ge("auClass").innerText = au.class
+	ge("upgradeCore").innerText = `Unlock Class ${au.class+1} - ${layerNames[au.class+1]}`;
+	ge("upgradeCore").className = canUpgradeAutomator() ? "buy" : "lock"
+
+	for(var i = 0; i < 2; i++) displayIf("class" + i + "Automation", au.class >= i)
+	
+	au.extensions.forEach(function(e) {
+		e.charge += e.speed * diff / 1000;
+		if(e.charge > 2**au.class) e.charge = 2**au.class;
+		
+		var div = ge(e.id < 9 ? "dimensionAutobuyer" + e.id : ["tickspeedAutobuyer", "boostAutobuyer", "galaxyAutobuyer", "sacrificeAutobuyer", "infinityAutobuyer"][e.id-9])
+		
+		ge("buyauto" + (e.id)).innerHTML = "50% smaller interval<br>Cost: " + shortenCosts(e.cost) + " " + smallCurrency[e.currency]
+		
+		div.children[1].innerHTML = "Level " + getFullExpansion(e.level) + "<br>Interval: " + timeDisplayShort(1 / e.speed) + "<br>" + (e.speed <= 1 ? timeDisplayShort(Math.max(1 / e.speed * (1 - e.charge), 0)) + " remaining until charged" : getFullExpansion(e.speed) + " activations per second")
+		div.children[2].style.width = Math.min(e.charge, 1) * 230
+		div.children[2].innerText = (e.charge*100).toFixed(0) + "%"
+	})
+	
+	au.raw = ge("auScript").value;
+	au.script = au.raw.split(`
+`);
+	if(!au.tickDelay) au.tickDelay = 0;
+	if(au.tickDelay > 0) au.tickDelay--;
+	else {
+		au.delay -= diff;
+		if(au.delay < 0) {
+			au.delay = 0;
+			au.line++;
+			if(au.line >= au.script.length || !au.line) au.line = 0;
+			runAu(au.script[au.line])
+		}
+	}
 
 	if(game.options.automate) {
 		galaxy();
@@ -283,6 +315,11 @@ function getStatisticsDisplay(type) {
 	switch(type) {
 		case "normal":
 			lines.push(`You have made a total of ${getFullExpansion(game.totalAntimatter)} antimatter.`)
+			if(game.boosts.gt(0)) lines.push(`You have ${getFullExpansion(game.boosts)} dimensional boosts.`)
+			if(game.galaxies.gt(0)) lines.push(`You have ${getFullExpansion(game.galaxies)} antimatter galaxies.`)
+			if(game.totalBoosts.gt(0)) lines.push(`You have done a total of ${getFullExpansion(game.totalBoosts)} dimensional boosts.`)
+			if(game.totalGalaxies.gt(0)) lines.push(`You have created a total of ${getFullExpansion(game.totalGalaxies)} antimatter galaxies.`)
+		
 			lines.push("")
 			if (game.infinities.gt(0)) {
 				lines.push(`You have gone infinite ${getFullExpansion(game.infinities)} times.`)
@@ -306,7 +343,7 @@ showTab(game.options.saveTabs ? game.currentTab : "dimensions")
 showDimensionTab(game.options.saveTabs ? game.currentDimensionTab : "normal")
 showStatisticsTab(game.options.saveTabs ? game.currentStatisticsTab : "normal")
 showInfinityTab(game.options.saveTabs ? game.currentInfinityTab : "infinityUpgrades")
-showAutomationTab(game.options.saveTabs ? game.currentAutomationTab : "dimension")
+showAutomationTab(game.options.saveTabs ? game.currentAutomationTab : "core")
 scrollChallengesTo(game.options.saveTabs ? game.selectedChallengeType : 0)
 
 update();

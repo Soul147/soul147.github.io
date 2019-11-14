@@ -2,8 +2,7 @@
 
 function resetNGT(hardReset, divisionReset) {
 	if(hardReset || divisionReset) player.mods.ngt = {
-		version: 3,
-		bi2: [],
+		version: 2,
 		omni: 0, // times gone omnipotent stat
 		thisOmni: 0, // time this run
 		lastRun: new Decimal(0), // OP gained during previous run
@@ -51,22 +50,6 @@ function resetNGT(hardReset, divisionReset) {
 	updateOmniChallenges()
 }
 
-// New Break Infinity upgrades
-
-biUpgCosts = [
-	"1e2000", "1e4500", "1e35000", "1e650000"
-]
-
-for(var i = 0; i < biUpgCosts.length; i++) {
-	biUpgCosts[i] = new Decimal(biUpgCosts[i])
-}
-
-function buyBI2(n) {
-	if(player.infinityPoints.lt(biUpgCosts[n])) return;
-	if(player.mods.ngt.bi2.includes(n)) return;
-	player.mods.ngt.bi2.push(n);
-}
-
 // Complete all ECs up to a certain point
 
 function completeEC(n, a) {
@@ -78,7 +61,7 @@ function gainedOP() {
 	return Decimal.pow(10, player.eternityPoints.plus(gainedEternityPoints()).e/(308)).times(player.mods.ngt.opMult || 1).divide(10).floor();
 }
 
-const omReqList = ["10", "100", "1000", "10000", "1e5", "1e10", "1e25", "1e33", "1e50", "1e10000", "1e1000000"]
+const omReqList = ["10", "100", "1e5", "1e10", "1e20", "1e33", "1e50", "1e10000", "1e1000000"]
 
 function omniMilestoneReq(n) {
 	return new Decimal(omReqList[n])
@@ -205,7 +188,7 @@ function omnipotenceReset(force, auto) {
 		postC3Reward: new Decimal(1),
 		eternityPoints: new Decimal(0),
 		eternities: 100,
-		eternitiesBank: omniMilestoneReached(5) ? (player.eternitiesBank || 0) + player.eternities * 0.05 : 0,
+		eternitiesBank: omniMilestoneReached(6) ? (player.eternitiesBank || 0) + player.eternities * 0.05 : 0,
 		thisEternity: 0,
 		bestEternity: player.bestEternity,
 		eternityUpgrades: omniMilestoneReached(2) ? player.eternityUpgrades : [],
@@ -345,7 +328,7 @@ function omnipotenceReset(force, auto) {
 			epcost: new Decimal(1),
 			studies: [],
 		},
-		eternityChalls: player.eternityChalls,
+		eternityChalls: omniMilestoneReached(5) ? player.eternityChalls : {},
 		eternityChallGoal: new Decimal(Number.MAX_VALUE),
 		currentEternityChall: "",
 		eternityChallUnlocked: 0,
@@ -364,7 +347,7 @@ function omnipotenceReset(force, auto) {
 		dimlife: true,
 		dead: true,
 		dilation: {
-			studies: omniMilestoneReached(9) ? player.dilation.studies : [],
+			studies: omniMilestoneReached(7) ? player.dilation.studies : [],
 			active: false,
 			tachyonParticles: player.achievements.includes("ng3p37") ? player.dilation.bestTP.sqrt() : new Decimal(0),
 			dilatedTime: new Decimal(0),
@@ -372,7 +355,7 @@ function omnipotenceReset(force, auto) {
 			bestTP: player.dilation.bestTP,
 			nextThreshold: new Decimal(1000),
 			freeGalaxies: 0,
-			upgrades: omniMilestoneReached(9) ? player.dilation.upgrades : [],
+			upgrades: omniMilestoneReached(7) ? player.dilation.upgrades : [],
 			rebuyables: {
 				1: 0,
 				2: 0,
@@ -383,7 +366,7 @@ function omnipotenceReset(force, auto) {
 		why: player.why,
 		options: player.options,
 		meta: player.meta,
-		masterystudies: player.masterystudies ? (omniMilestoneReached(10) ? player.masterystudies : []) : undefined,
+		masterystudies: player.masterystudies ? (omniMilestoneReached(8) ? player.masterystudies : []) : undefined,
 		autoEterOptions: player.autoEterOptions,
 		galaxyMaxBulk: player.galaxyMaxBulk,
 		quantum: player.quantum ? player.quantum : undefined,
@@ -428,17 +411,9 @@ function omnipotenceReset(force, auto) {
 	if(player.meta) updateLastTenQuantums()
 	updateAutobuyers()
 	resetTimeDimensions()
-	if(!omniMilestoneReached(1)) player.mods.ngt.bi2 = []
-	if(!omniMilestoneReached(3)) {
-		player.timestudy.theorem += ngt.ttbought
-		player.timestudy.totalTheorem += ngt.ttbought
-	}
+	
 	player.mods.ngt.thisOmni = 0;
 	player.mods.ngt.bestOPRate = new Decimal(0);
-}
-
-function getChristianMult() {
-	return player.infinityPoints;
 }
 
 function buyOmniDimension(n, useOP) {
@@ -538,9 +513,9 @@ function updateReplicatorPowers() {
 
 opUpgCosts = [
 	10,
-	1000, 10000,
-	1e5, 1e6, 1e9, 1e15, 1e25, 1e30, 1e60, 1e100,
-	"1e110", "1e130", "1e135", "1e145", "1e170", "1e190", "1e250", "1e380", "1e400", "1e480", "1e500", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", 
+	1e10, 1e15,
+	1e20, 1e25, 1e30, 1e35, 1e40, 1e45, 1e60, 1e100,
+	"1e110", "1e130", "1e140", "1e145", "1e170", "1e230", "1e250", "1e380", "1e400", "1e480", "1e500", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", 
 ]
 
 for(var i = 0; i < opUpgCosts.length; i++) {
@@ -589,11 +564,11 @@ function getUpgEff(n) {
 		case 4:
 			return Decimal.pow(ngt.op.logarithm, 1.5).max(1);
 		case 5:
-			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(3).max(1);
+			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
 		case 6:
-			return Decimal.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0).add(4).min(8)
+			return Decimal.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0).add(4).multiply(4).sqrt().min(8)
 		case 7:
-			return Decimal.max(Math.pow(player.galaxies, 0.5), 1);
+			return Decimal.max(Math.pow(player.galaxies, 0.25), 1);
 		case 8:
 			return Decimal.pow(2,Math.log(player.resets+1)).max(1);
 		case 9:
@@ -605,7 +580,7 @@ function getUpgEff(n) {
 		case 14: 
 			return getReplMult().pow(0.01)
 		case 15: 
-			return Decimal.pow(69, ngt.d8.amount.pow(2)).max(1)
+			return Decimal.pow(69, ngt.d8.amount.pow(2).min(ngt.d8.amount.multiply(50))).max(1)
 		case 16: 
 			return Decimal.pow(getReplicatorMult().log10(), 1.25).max(1)
 		case 17: 
@@ -697,8 +672,8 @@ function updateOmniChallenges() {
 	ngt.t = {
 		req: [
 			new Decimal("1e1350000000"),
-			new Decimal("1e1600000000"),
-			new Decimal("1e2000000000"),
+			new Decimal("1e1800000000"),
+			new Decimal("1e2222222222"),
 			new Decimal("1e4200000000"),
 			new Decimal("1e5250000000"),
 			new Decimal("1e5750000000"),
@@ -709,8 +684,8 @@ function updateOmniChallenges() {
 		],
 		goal: [
 			new Decimal("1e650000"),
-			new Decimal("1e8000000"),
 			new Decimal("1e10500000"),
+			new Decimal("1e11500000"),
 			new Decimal("1e5400000"),
 			new Decimal("1e400000000"),
 			new Decimal("1e250000000"),
@@ -890,7 +865,6 @@ function getEnergyInput(base) {
 }
 
 function getEighthDimensions() {
-	if(!player.mods.ngt) return player.eightAmount;
 	return player.eightAmount.add(ngt.division.eightProduced || 0)
 }
 

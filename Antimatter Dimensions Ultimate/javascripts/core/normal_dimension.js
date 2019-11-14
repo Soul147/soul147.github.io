@@ -56,7 +56,6 @@ function getDimensionFinalMultiplier(tier) {
   if (player.boughtDims&&player.achievements.includes("r98")) multiplier = multiplier.times(player.infinityDimension8.amount.max(1))
   if (player.achievements.includes("r84")) multiplier = multiplier.times(player.money.pow(player.galacticSacrifice?0.00002:0.00004).plus(1));
   else if (player.achievements.includes("r73")) multiplier = multiplier.times(player.money.pow(player.galacticSacrifice?0.00001:0.00002).plus(1));
-  if (player.achievements.includes("ngt11")) multiplier = multiplier.times(getChristianMult());
   if (player.achievements.includes("ngt17")) multiplier = multiplier.times(player.money.pow(0.001).plus(1));
 
 

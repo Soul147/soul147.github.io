@@ -11,7 +11,23 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/styles.css?12">
     <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <script type="text/javascript" src="https://www.google-analytics.com/analytics.js"></script>
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-77268961-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
     <script type="text/javascript" src="javascripts/stuck.js"></script>
 </head>
 <img id="loading" src="images/Loading.png">
@@ -4269,6 +4285,7 @@
                         <td>
                             <button id="postinfi33" class="infinistorebtn1" onclick="buyInfinityUpgrade('autoBuyerUpgrade',1e15)">Autobuyers work twice as fast <br>Cost: 1 Qa IP</button>
                         </td>
+
                     </tr>
                     <tr>
                         <td>
@@ -4284,30 +4301,6 @@
                             <button id="offlineProd" class="infinimultbtn">Dimension cost multiplier increase <br>10x -> 9x<br>Cost: 10 M IP</button>
                         </td>
                     </tr>
-					<div id = "ngtbirow">
-                    <tr>
-                        <td>
-                            <button id="bi20" class="infinistorebtn1" onclick="buyBI2(0)">Post-infinity upgrades affect Infinity and Time Dimensions <br>Cost: <span id = "bi2c0"></span> IP</button>
-                        </td>
-                        <td>
-                            <button id="bi21" class="infinistorebtn1" onclick="buyBI2(1)">Base power of dimension boosts is 100x stronger<br>Cost: <span id = "bi2c1"></span> IP</button>
-                        </td>
-                        <td>
-                            <button id="bi22" class="infinistorebtn1" onclick="buyBI2(2)">Improve the Infinity Power effect<br>^2 > ^3<br>Cost: <span id = "bi2c2"></span> IP</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button id="bi23" class="infinistorebtn1" onclick="buyBI2(3)">Infinity Power is stronger based on time spent this omnipotence<br>Currently: +<span id = "bi2d3"></span><br>Cost: <span id = "bi2c3"></span> IP</button>
-                        </td>
-                        <td>
-                            <button id="bi24" class="infinistorebtn1" onclick="buyBI2(4)">Make this button green<br>Cost: <span id = "bi2c4"></span> IP</button>
-                        </td>
-                        <td>
-                            <button id="bi25" class="infinistorebtn1" onclick="buyBI2(5)">Do nothing at all<br>Cost: <span id = "bi2c5"></span> IP</button>
-                        </td>
-                    </tr>
-					</div>
                 </table>
                 <div>
                     <table id="footer">
@@ -4757,12 +4750,10 @@
 					<div class = "omnimilestonelocked" id = "om2">keep eternity upgrades<br><span id = "omreq2"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om3">keep time studies<br><span id = "omreq3"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om4">keep banked infinities<br><span id = "omreq4"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om5">keep 5% of eternities<br><span id = "omreq5"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om6">unlock max buy RGs<br><span id = "omreq6"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om7">unlock automatic EP gain<br><span id = "omreq7"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om8">unlock automatic OP gain<br><span id = "omreq8"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om9">keep dilation studies<br><span id = "omreq9"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om10" style = "display: none">keep mastery studies<br><span id = "omreq10"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om5">keep eternity challenges<br><span id = "omreq5"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om6">keep 5% of eternities<br><span id = "omreq6"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om7">keep dilation studies<br><span id = "omreq7"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om8" style = "display: none">keep mastery studies<br><span id = "omreq8"></span></div><br>
 				</center>
 			</div>
 			<div id = "theblade" class = "omnitab" style = "height: 1500px">
@@ -4949,16 +4940,13 @@
 			<button class='storebtn' onclick="setTheme('Void')" style='width: 240px'>Select Void</button>
 		</p>
 	</div>
-    <div id="TTbuttons" style="display:none">
-        <button class="timetheorembtn" onclick="toggleAutoTT()" id="theoremmax" style="position: fixed; left: 50%; margin-left:-290px; width:130px; height: 30px; font-size: 0.75rem; bottom: 85px">Buy max Theorems</button>
-        <button class="timetheorembtn" onclick="openStudyPresets()" id="presetsbtn" style="position: fixed; left: 50%; margin-left:165px; width:130px; height: 30px; font-size: 0.75rem; ">Presets</button>
-        <div id="theorembuybackground">
-			<center>
-				<button class="timetheorembtn" onclick="buyWithAntimatter()" id="theoremam">Buy Time Theorems <br>Cost: 1e20000 antimatter</button>
-				<button class="timetheorembtn" onclick="buyWithIP()" id="theoremip">Buy Time Theorems <br>Cost: 1 IP</button>
-				<button class="timetheorembtnlocked" onclick="buyWithEP()" id="theoremep">Buy Time Theorems <br>Cost: 1 EP</button>
-				<button class="timetheorembtnlocked" onclick="buyWithOP()" id="theoremop" style = "display: none">Buy Time Theorems <br>Cost: 1 OP</button></div>
-			</center>
+    <div id="TTbuttons" style="display:none;">
+        <button class="timetheorembtn" onclick="toggleAutoTT()" id="theoremmax" style="margin-left:-276px; width:130px; height: 30px; font-size: 0.75rem; bottom: 77px;">Buy max Theorems</button>
+        <button class="timetheorembtn" onclick="openStudyPresets()" id="presetsbtn" style="margin-left:146px; width:130px; height: 30px; font-size: 0.75rem; bottom: 77px;">Presets</button>
+        <button class="timetheorembtn" onclick="buyWithAntimatter()" id="theoremam" style="margin-left: -276px">Buy Time Theorems <br>Cost: 1e20000 antimatter</button>
+        <button class="timetheorembtn" onclick="buyWithIP()" id="theoremip" style="margin-left: -86px">Buy Time Theorems <br>Cost: 1 IP</button>
+        <button class="timetheorembtnlocked" onclick="buyWithEP()" id="theoremep" style="margin-left: 106px">Buy Time Theorems <br>Cost: 1 EP</button>
+        <div id="theorembuybackground"></div>
         <p id="timetheorems" style="position: fixed;">You have 0 Time Theorems.</p>
     </div>
     <div id="progress" style="display:none">

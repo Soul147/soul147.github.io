@@ -292,3 +292,37 @@ button.infinityUpgradeBought {
 	visibility: visible;
 	opacity: 1;
 }
+
+.autobuyer {
+	font-size: 12px !important;
+	border: 1px solid gray;
+    width: 230px;
+    height: 155px;
+    text-align: center;
+    font-size: 100%;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.autobuyerInner {
+	background: #0001;
+	height: 20;
+	overflow: visible;
+}
+
+.autobuyerButton {
+      color: white;
+      background: #1F1F1F;
+      border: 1px solid gray;
+      width: 180px;
+      height: 35px;
+      transition-duration: 0.2s;
+      cursor: pointer;
+      border-radius: 4px;
+      font-family: Typewriter;
+}
+
+.autobuyerButton:hover {
+	background: #026;
+    border-radius: 4px;
+}

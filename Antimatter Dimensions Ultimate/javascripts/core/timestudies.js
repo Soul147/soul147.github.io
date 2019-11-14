@@ -46,27 +46,6 @@ function buyWithEP() {
   } else return false
 }
 
-function buyWithOP() {
-  if(!player.mods.ngt) return;
-  ngt = player.mods.ngt
-	if(!player.timestudy.totalTheorem) player.timestudy.totalTheorem = 0;
-  if (player.mods.ngt.gravitons.lt(1)) {
-      alert("you need to buy at least 1 omni-dimension before you can purchase theorems with omnipotence points.")
-      return false;
-  }
-  if (ngt.op.gte(ngt.ttcost)) {
-      ngt.op = ngt.op.minus(ngt.ttcost)
-      ngt.ttcost = ngt.ttcost.times(2)
-      player.timestudy.theorem += 1000
-	  player.timestudy.totalTheorem += 1000
-	  ngt.ttbought += 1000
-      updateTheoremButtons()
-      updateTimeStudyButtons()
-      updateEternityUpgrades()
-      return true
-  } else return false
-}
-
 function maxTheorems() {
 	if(!player.timestudy.totalTheorem) player.timestudy.totalTheorem = 0;
 	var gainTT = Math.floor((player.money.log10() - player.timestudy.amcost.log10()) / 20000 + 1)
@@ -93,20 +72,6 @@ function maxTheorems() {
 		if (!break_infinity_js && isNaN(player.eternityPoints.logarithm)) player.eternityPoints = new Decimal(0)
 		player.timestudy.epcost = player.timestudy.epcost.times(Decimal.pow(2, gainTT))
 	}
-	
-	if(player.mods.ngt) {
-		ngt = player.mods.ngt
-		gainTT = Math.floor(ngt.op.div(ngt.ttcost).plus(1).log2())*1000
-		if (gainTT > 0 && ngt.gravitons.gt(0)) {
-			player.timestudy.theorem += gainTT
-			player.timestudy.totalTheorem += gainTT
-			ngt.ttbought += gainTT
-			ngt.op = ngt.op.sub(Decimal.pow(2, gainTT/1000).sub(1).times(ngt.ttcost))
-			if (!break_infinity_js && isNaN(ngt.op.logarithm)) ngt.op = new Decimal(0)
-			ngt.ttcost = ngt.ttcost.times(Decimal.pow(2, gainTT/1000))
-		}
-	}
-	
 	updateTheoremButtons()
 	updateTimeStudyButtons()
 	updateEternityUpgrades()
@@ -126,8 +91,8 @@ function updateTheoremButtons() {
 		document.getElementById("theoremam").style.display=""
 		document.getElementById("theoremip").style.display=""
 		document.getElementById("theoremep").style.display=""
-		document.getElementById("timetheorems").style.bottom="85px"
-		document.getElementById("presetsbtn").style.bottom="85px"
+		document.getElementById("timetheorems").style.bottom="80px"
+		document.getElementById("presetsbtn").style.bottom="77px"
 		document.getElementById("theorembuybackground").style.bottom = "0"
 		document.getElementById("theoremam").className = player.money.gte(player.timestudy.amcost) ? "timetheorembtn" : "timetheorembtnlocked"
 		document.getElementById("theoremip").className = player.infinityPoints.gte(player.timestudy.ipcost) ? "timetheorembtn" : "timetheorembtnlocked"
@@ -408,7 +373,6 @@ function respecTimeStudies(force) {
           }
           if (player.masterystudies) if (player.timestudy.studies.length>1) player.quantum.wasted = false
           player.timestudy.theorem = player.timestudy.totalTheorem
-		  if(player.mods.ngt) player.timestudy.theorem += player.mods.ngt.ttbought
 		  player.timestudy.studies = []
        }
   } else if (respecMastery) {

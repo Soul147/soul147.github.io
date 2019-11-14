@@ -13,7 +13,7 @@ function InfinityDimension(i) {
 }
 
 function getInfinityShiftCost() {
-	return Decimal.pow(Number.MAX_VALUE, game.infinityShifts.multiply(game.infinityShifts.add(1)).divide(2).add(3))
+	return Decimal.pow(Number.MAX_VALUE, Decimal.pow(2, game.infinityShifts.add(1)))
 }
 
 function canInfinityShift() {
