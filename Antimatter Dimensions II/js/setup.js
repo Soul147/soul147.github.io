@@ -114,7 +114,10 @@ function updateSave() {
 	if(!game.options) game.options = {
 		notation: "Scientific",
 		mixedCutoff: 1e33,
-		fps: 30
+		fps: 30,
+		automate: true,
+		autosave: true,
+		saveTabs: false
 	}
 
 	if(!game.achievements) game.achievements = [];
