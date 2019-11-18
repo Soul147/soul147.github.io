@@ -3,11 +3,12 @@ var currencyNames = ["infinityPoints"]
 function Extension(s = 1, c, u = "infinityPoints") {
 	var extension = {
 		id: au.extensions.length,
-		level: new Decimal(0),
+		level: new Decimal(l),
 		cost: new Decimal(c),
 		currency: u,
 		charge: 0,
 		speed: new Decimal(s),
+		baseSpeed: new Decimal(s),
 	}
 	
 	return extension;
@@ -25,10 +26,10 @@ function upgradeAutomator() {
 
 function upgradeExtension(n) {
 	if(game[au.extensions[n].currency].lt(au.extensions[n].cost)) return;
-	game[au.currency] = game[au.extensions[n].currency].subtract(au.extensions[n].cost);
+	game[au.extensions[n].currency] = game[au.extensions[n].currency].subtract(au.extensions[n].cost);
 	au.extensions[n].cost = au.extensions[n].cost.multiply(2);
 	au.extensions[n].level = au.extensions[n].level.add(1);
-	au.extensions[n].speed = Decimal.pow(2, au.extensions[n].level)
+	au.extensions[n].speed = au.extensions[n].speed.multiply(2);
 }
 
 function fireExtension(i, a, b, c, d, e, f) {
@@ -78,6 +79,8 @@ function getExtByName(name) {
 
 function extUnlocked(c) {
 	if(c < 12) return challengeCompleted(c+1, 0);
+	if(c == 12) return challengeCompleted(2, 1);
+	if(c == 13) return canBreakInfinity() || game.break;
 }
 
 function ccmd(a, b, c) {
@@ -122,7 +125,7 @@ function runAu(line) {
 		}
 		if(ccmd(cmd, "boost")) runAu("fire 10")
 		if(ccmd(cmd, "galaxy")) runAu("fire 11")
-		if(ccmd(cmd, "infinity") || ccmd(cmd, "crunch")) runAu("fire 12")
+		if(ccmd(cmd, "infinity") || ccmd(cmd, "crunch")) runAu("fire 13")
 	}
 	catch(e) {
 		logAu("<span style = 'color: #f00'>" + e.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</span>")

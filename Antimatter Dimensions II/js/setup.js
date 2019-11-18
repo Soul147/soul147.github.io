@@ -7,6 +7,10 @@ var smallCurrency = {
 	eternityPoints: "EP"
 }
 
+function infp(n=1) {
+	return Decimal.pow(Number.MAX_VALUE, n);
+}
+
 function ge(e) {
 	return document.getElementById(e) || document.createElement("div");
 }
@@ -21,7 +25,7 @@ function gc(e, f, o=0) {
 function transformToDecimal(object) { // It's so much better than hevi's version, because it's recursive and I'm a lazy piece of shit
 	for(i in object) {
 		if(i == "raw") return; // for fuck's sake
-		if(typeof(object[i]) == "string" && !isNaN(new Decimal(object[i]))) object[i] = new Decimal(object[i]);
+		if(typeof(object[i]) == "string" && !isNaN(new Decimal(object[i]))) object[i] = new Decimal(object[i]); 
 		if(typeof(object[i]) == "object") transformToDecimal(object[i]) // iterates over all objects inside the object
 	}
 }
@@ -30,13 +34,13 @@ saveData = {games: [], currentGame: 0}
 
 function newGame() {
 	game = {}
-
+	
 	updateSave();
 }
 
 function loadGame(n) {
 	game = saveData.games[n];
-
+	
 	updateSave();
 }
 
@@ -102,24 +106,19 @@ function hardReset() {
 	if (confirm("Are you sure about doing a hard reset? THERE IS NO REWARD FOR THIS!")) {
 		if (confirm("This is the LAST confirm!")) {
 			newGame();
-			save();
-			location.reload();
 		}
 	}
 }
 
 function updateSave() {
 	transformToDecimal(game);
-
+	
 	if(!game.options) game.options = {
 		notation: "Scientific",
 		mixedCutoff: 1e33,
-		fps: 30,
-		automate: true,
-		autosave: true,
-		saveTabs: false
+		fps: 30
 	}
-
+	
 	if(!game.achievements) game.achievements = [];
 	if(!game.totalAntimatter) game.totalAntimatter = new Decimal(0);
 	if(!game.dimensions) resetDimensions();
@@ -135,9 +134,9 @@ function updateSave() {
 	if(!game.infinityPoints) game.infinityPoints = new Decimal(0);
 	if(!game.infinityUpgrades) resetInfinityUpgrades();
 	if(!game.infinityDimensions) resetInfinityDimensions();
-	if(!game.infinityShifts.mag) game.infinityShifts = new Decimal(0);
+	if(!game.infinityShifts) game.infinityShifts = new Decimal(0);
 	if(!game.selectedChallengeType) game.selectedChallengeType = 0;
-
+	
 	if(!game.challenges) {
 		game.challenges = []
 		game.challengesRunning = []
@@ -146,7 +145,7 @@ function updateSave() {
 		game.challenges[i] = []
 		for(var j = 0; j < 12; j++) game.challenges[i][j] = {}
 	}
-
+	
 	if(!game.startTime) game.startTime = Date.now();
 	if(!game.buyTime) game.buyTime = Date.now();
 	if(!game.resetTime) game.resetTime = Date.now();
@@ -155,20 +154,20 @@ function updateSave() {
 	if(!game.galaxyTime) game.galaxyTime = Date.now();
 	if(!game.infinityTime) game.infinityTime = Date.now();
 	if(!game.eternityTime) game.eternityTime = Date.now();
-
+	
 	if(!game.bestInfinityTime) game.bestInfinityTime = Infinity;
-
+	
 	if(!game.automator) game.automator = {
 		class: 0,
 		extensions: [],
 	}
-
+	
 	au = game.automator;
 	ge("auScript").value = au.raw || "";
-
+	
 	var c = []
 	for(var i = au.extensions.length; i < 14; i++) au.extensions[i] = Extension(0.5**i, 2**i, "infinityPoints")
-
+		
 	au.extensions.forEach(function(e) {
 		ge("buyauto" + (e.id)).onclick = function() {
 			upgradeExtension(9)
@@ -178,7 +177,7 @@ function updateSave() {
 
 if(localStorage.ad2) {
 	saveData = JSON.parse(atob(localStorage.ad2));
-
+	
 	loadGame(saveData.currentGame);
 }
 
@@ -186,7 +185,7 @@ else newGame();
 
 function save() {
 	saveData.games[saveData.currentGame] = game;
-
+	
 	localStorage.ad2 = btoa(JSON.stringify(saveData));
 }
 
@@ -312,9 +311,9 @@ for(var i = 17; i < 29; i++) {
 
 ge("postInfinityUpgrades").innerHTML = h + `
 <tr>
+	<td></td>
 	<td><button id = "repeatInf0" onclick = "buyRepeatInf(0)"></button></td>
-	<td><button id = "repeatInf1" onclick = "buyRepeatInf(1)"></button></td>
-	<td><button id = "repeatInf2" onclick = "buyRepeatInf(2)"></button></td>
+	<td></td>
 </tr>
 `
 
@@ -335,14 +334,14 @@ ge("automationTable1").innerHTML += t + `
 function f() {
 	gc("challenge", function(e, i) {
 		var angle = Math.PI / 6 * i;
-
+		
 		var x = innerWidth / 2 - 40;
 		var y = 425;
 		var r = 250;
-
+		
 		x += r * Math.sin(angle);
 		y -= r * Math.cos(angle);
-
+		
 		e.style.left = x;
 		e.style.top = y;
 	})
@@ -354,14 +353,19 @@ window.onresize = f;
 
 addEventListener("keydown", function(e) {
 	var c = e.keyCode;
-
+	
 	if(c == 77) maxAll();
 	if(c == 67) bigCrunch();
 	if(c == 27) exitChallenge();
-
+	
 	if(c > 48 && c < 58) {
 		if(!e.shiftKey) maxDimension(c - 48)
 		else buyDimension(c - 48)
 	}
 	if(c == 48) maxTickspeed();
+	
+	if(e.ctrlKey && c == 83) {
+		save();
+		e.preventDefault();
+	}
 })

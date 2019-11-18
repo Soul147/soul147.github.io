@@ -1,6 +1,8 @@
 function inChallenge(i, j=0) {
 	if(!game.challenges) return;
 	
+	// if(i == 5 && j == 1) return false;
+	
 	if(!i) return game.challengesRunning.length;
 	
 	if(i < 7 && j == 0 && inChallenge(1, 1)) return true;
@@ -69,14 +71,14 @@ function updateChallengeDescriptions() {
 		`You are forced to do a dimensional sacrifice every tick.ICDATAReward: Dimensional sacrifice is much stronger and unlocks dimensional sacrifice autobuyer.`,
 		`Antimatter galaxies add to the tickspeed multiplier instead of multiplying.ICDATAReward: Add ${getChallengeReward(3, 1)} to the final tickspeed multiplier per antimatter galaxy.`,
 		`All dimension multipliers are reduced. Reduction is greater if a dimension is not the most recent one upgraded. ICDATAReward: Dimension upgrade multiplier is 50% stronger.`,
-		`Upgrading a dimension increases the cost of all other upgrades of equal or lesser cost.ICDATAReward: Galaxies are ???% more powerful.`,
-		``,
-		``,
-		``,
-		``,
-		``,
-		``,
-		``,
+		`Upgrading a dimension increases the cost of all other upgrades of equal or lesser cost.ICDATAReward: Galaxies are 10% more powerful.`,
+		`Production starts at 100% but drops extremely quickly, resetting on shift, boost, or galaxy.ICDATAReward: Infinity Dimensions are affected by tickspeed^0.01.`,
+		`Antimatter galaxies are disabled, but dimension boosts are twice as effective.ICDATAReward: Dimension boost multiplier is 150% stronger.`,
+		`Dimension multipliers 1-8 are divided by ${shorten(infp())}^tier.ICDATAReward: Multiplier to dimensions 1-8 based on 9th dimension multiplier.`,
+		`All Infinity Challenge rewards are disabled.ICDATAReward: Your achievement multiplier affects infinity dimensions.`,
+		`Dimension boosts and dimensional sacrifice are disabled.ICDATAReward: Multiplier to Infinity Dimensions based on infinities.`,
+		`Dimension multipliers are reduced based on tier.ICDATAReward: Break Infinity upgrade 8 is stronger.`,
+		`Infinity Power is 33% weaker.ICDATAReward: Infinity Power is 33% stronger.`,
 	]
 	
 	for(var i = 13; i < 25; i++) {
@@ -147,7 +149,7 @@ function scrollChallengesBy(n) {
 }
 
 function getChallengeTypeCap() {
-	return !!getInfinityChallengesUnlocked()
+	return 0+!!getInfinityChallengesUnlocked()
 }
 
 function scrollChallengesTo(n) {
@@ -167,18 +169,19 @@ function selectChallenge(i) {
 	selectedChallenge = i;
 }
 
-function getChallengeMultiplier(name = "dimension") {
+function getChallengeDivider(name = "dimension") {
 	if(name !== "dimension") return 1;
 	
-	var c4 = inChallenge(4) ? Decimal.min(getTimeSince("buy") / 60000, 1).max(0.01).pow(2) : 1;
-	var c5 = inChallenge(5) ? Decimal.max(1 - getTimeSince("reset") / 300000, 0.01).pow(2) : 1;
-	var c6 = inChallenge(6) ? game.dimensions[6].amount.max(1).log10().max(1).pow(-1) : 1;
+	var c4 = inChallenge(4) ? Decimal.min(getTimeSince("buy") / 60000, 1).max(0.01).pow(-2) : 1;
+	var c5 = inChallenge(5) ? Decimal.max(1 - getTimeSince("reset") / 300000, 0.01).pow(-2) : 1;
+	var c6 = inChallenge(6) ? game.dimensions[6].amount.max(1).log10().max(1) : 1;
+	var ic6 = inChallenge(6, 1) ? Decimal.pow(10, getTimeSince("reset") / 100) : 1;
 	
-	return Decimal.multiply(c4, c5).multiply(c6);
+	return Decimal.multiply(c4, c5).multiply(c6).multiply(ic6);
 }
 
 function getChallengeGoal() {
-	if(getChallengeSet() == 1) return Number.MAX_VALUE;
+	if(getChallengeSet() == 1) return infp();
 	if(getChallengeSet() == 2) return icGoals[game.challengesRunning[game.challengesRunning.length - 1] - 13]
 }
 
@@ -200,7 +203,7 @@ function getChallengeTimes(s=game.selectedChallengeType) {
 	return sum;
 }
 
-function suffer(n) {
+function suffer(n, a) {
 	nc = n ? game.dimensions[n].cost : game.tickspeed.cost;
 	for(var i = 1; i <= 9; i++) {
 		if(i == n) continue;
@@ -213,8 +216,8 @@ function suffer(n) {
 	if(n && game.tickspeed.cost.eq(nc)) game.tickspeed.cost = game.tickspeed.cost.multiply(game.tickspeed.costMult);
 }
 
-var icRequirements = ["1e3000", "1e3500", "1e6000", "1e7500", "1e1e17000", "eeeeee10", "eeeeeee10", "eeeeeeee10", "eeeeeeeee10", "eeeeeeeeee10", "eeeeeeeeeee10", "eeeeeeeeeeee10"]
-var icGoals = ["1e1500", "1e2000", "1e2750", "1e3000", "0", "0", "0", "0", "0", "0", "0", "0"]
+var icRequirements = ["1e2000", "1e2500", "1e5000", "1e7750", "1e9000", "1e12500", "1e17000", "1e25000", "1e35000", "1e35000", "1e35000", "1e500000"]
+var icGoals = ["1e1000", "1e1500", "1e2500", "1e3300", "1e5000", "1e5500", "1e6900", "1e3000", "1e15000", "1e17000", "1e8250", "0"]
 
 function getInfinityChallengesUnlocked() {
 	var unl = 0;
@@ -225,7 +228,7 @@ function getInfinityChallengesUnlocked() {
 }
 
 function challengeCompleted(i, j) {
-	return game.challenges[j][i-1].completed;
+	return game.challenges[j][i-1].completed && (j == 1 ? !inChallenge(9, 1) : true);
 }
 
 function challengeUnlocked(i, j) {
@@ -255,8 +258,15 @@ function getChallengeReward(i, j) {
 		],
 		[
 			100 ** (getChallengeCompletions(1) / 12),
-			"Improved Formula",
+			0,
 			new Decimal(0.01),
+			0,
+			0,
+			0,
+			0,
+			game.dimensions[9].multiplier.pow(0.1),
+			0,
+			game.infinities.pow(1/3),
 		]
 	][j][i-1]
 }
@@ -312,8 +322,17 @@ function getChallengeBenefits() {
 					`Improved dimensional sacrifice formula.<br>Dimensional sacrifice autobuyer.`,
 					`+${shorten(getChallengeReward(3, 1).multiply(getEffectiveGalaxies()))} to tickspeed multiplier from galaxies.`,
 					`+50% to dimension upgrade multiplier.`,
+					`+10% to galaxy effectiveness.`,
+					`${shorten(getTickspeed("infinityDimension"))}x tickspeed for infinity dimensions.`,
+					`+150% to dimension boost multiplier.`,
+					`${shorten(getChallengeReward(8, 1))}x on dimensions 1-8.`,
+					`${getAchievementMultiplier()}x on all infinity dimensions.`,
+					`${shorten(getChallengeReward(10, 1))}x on all infinity dimensions.`,
+					`Boost to infinity dimensions based on tier.`,
+					`+33% to Infinity Power effect.`,
 				]
 				for(var i = 1; i <= 12; i++) if(challengeCompleted(i, 1)) lines.push(t[i-1])
+				if(inChallenge(9, 1)) lines.push("REWARDS DISABLED");
 				lines.push("")
 				lines.push("")
 			}

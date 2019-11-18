@@ -619,11 +619,11 @@
 			}
 			if (isNaN(x.array[i])){
 				x.array=[NaN];
-				return;
+				return new Decimal(1);
 			}
 			if (!isFinite(x.array[i])){
 				x.array=[Infinity];
-				return;
+				return new Decimal(1);
 			}
 		}
 		do{

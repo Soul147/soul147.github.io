@@ -26,6 +26,7 @@ function maxTickspeed() {
 	
 	if(!canBuyTickspeed()) return;
 	game.buyTime = Date.now();
+	if(inChallenge(9)) suffer(0);
 	
 	if(dim.cost.lte(Number.MAX_VALUE)) {
 		var bought = game.dimensions[0].amount.min(Number.MAX_VALUE).log10().subtract(dim.cost.log10()).divide(dim.costMult.log10()).ceil()
@@ -74,6 +75,7 @@ function getTickspeed(name) {
 	if(game.achievements.includes(34)) r = r.multiply(1.10);
 	
 	if(name == "dimension") return r;
+	if(name == "infinityDimension" && challengeCompleted(6, 1)) return r.pow(0.01);
 	return 1;
 }
 
@@ -81,7 +83,7 @@ function getTickspeed(name) {
 
 function canGalaxy() {
 	if(inChallenge(10)) return game.dimensions[4].amount.gte(getGalaxyReq())
-	return game.dimensions[9].amount.gte(getGalaxyReq()) && !atInfinity() && !inChallenge(8);
+	return game.dimensions[9].amount.gte(getGalaxyReq()) && !atInfinity() && !inChallenge(8) && !inChallenge(7, 1);
 }
 
 function galaxy() {
@@ -95,7 +97,8 @@ function galaxy() {
 	game.shifts = getStartingShifts();
 	game.boosts = new Decimal(0);
 	game.galaxyTime = game.resetTime = Date.now();
-	resetDimensions();
+	// resetDimensions();
+	return true;
 }
 
 function getGalaxyReq() {
@@ -135,7 +138,7 @@ function getEffectiveGalaxies() {
 function getGalaxyPower() {
 	var r = new Decimal(1);
 	if(game.infinityUpgrades.includes(15) && getChallengeSet() !== 1 && getChallengeSet() !== 2) r = r.multiply(2);
-	if(game.infinityUpgrades.includes(25)) r = r.multiply(1.1);
+	if(challengeCompleted(5, 1)) r = r.multiply(1.1);
 	return r;
 }
 

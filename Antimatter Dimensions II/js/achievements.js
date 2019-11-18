@@ -1,4 +1,4 @@
-const achievements = 63;
+const achievements = 72;
 
 function updateAchievementDescriptions() {
 	achievementDescriptions = [
@@ -43,26 +43,54 @@ function updateAchievementDescriptions() {
 		"Hevi would be proud", `Complete all of the challenges.`,
 		
 		"And Beyond", `Break Infinity.`,
-		"Two Infinities at Once", `Reach ${shorten(Decimal.pow(Number.MAX_VALUE, 2))} antimatter.`,
+		"Two Infinities at Once", `Reach ${shorten(infp(2))} antimatter. Reward: 2x multiplier to IP.`,
+		"Powered Up", `Buy 6 Break Infinity upgrades.`,
 		"New Dimensions", `Unlock the first infinity dimension.`,
-		"Galaxy Supercluster", `Buy 10,000 antimatter galaxies.`,
+		"Supersanic", `Infinity in under a minute. Reward: Start with 10 billion antimatter.`,
+		"Boosted", `Dimension boost 27 times in a single infinity. Reward: Dimension boosts are 1% stronger.`,
 		"Zero Deaths", `Reach infinity without any dimension shifts, boosts, or galaxies. Reward: You can start with dimension shifts in challenges.`,
-		"1 million is a lot", `Reach 1 million infinity power.`,
-		"Get off of Amazon", `Buy 150 first dimensions in a single infinity. Reward: Dimensions get a multiplier based on the amount bought.`,
 		"Life is pain", `Complete a challenge in under 3 minutes.`,
 		"Suicide is badass", `Get the sum of all challenge times under 3 minutes.`,
 		
+		"1 million is a lot", `Reach 1 million infinity power.`,
+		"Get off of Amazon", `Buy 150 first dimensions in a single infinity. Reward: Dimensions get a multiplier based on the amount bought.`,
+		"Oh hey", `Have exactly 69 ninth dimensions at once. Reward: Break Infinity upgrade 3 is 3.14x stronger.`,
 		"There better not be 9", `Unlock the second infinity dimension.`,
-		"Is this hell?", `Get the sum of all challenge times under 5 seconds.`,
-		"Oh hey", `Have exactly 69 ninth dimensions.`,
+		"Forever isn't that long", `Infinity in under a second. Reward: Start with ${getFullExpansion(1e25)} antimatter.`,
+		"Unholy Infinity", `Get all dimension multipliers over ${shorten(infp())}. Reward: Infinity dimensions are 1% stronger.`,
 		"Infinitely Challenging", `Complete Infinity Challenge 1.`,
 		"Don't judge me, I'm a sadist", `Complete Infinity Challenge 5.`,
-		"Unholy Infinity", `Get all dimension multipliers over ${shorten(Number.MAX_VALUE)}. Reward: Infinity dimensions are 1% stronger.`,
-		"Supersanic", `Infinity in under a minute.`,
-		"Forever isn't that long", `Infinity in under a second.`,
-		"Blink of an Eye", `Infinity in under a tenth of a second.`,
+		"Is this hell?", `Get the sum of all challenge times under 5 seconds.`,
+		
+		"ERROR 909: Dimension Not Found", `Reach infinity with only 1 first dimension. Reward: First dimensions are stronger the more you have.`,
+		"INFINITE POWER", `Reach ${shorten(infp())} Infinity Power.`,
+		"THIS<BR>ACHIEVEMENT<BR>DOESN'T<BR>EXIST", `Reach 9.9999e9999 antimatter. Reward: Dimensions are more powerful the more antimatter you have.`,
+		"You can get 50 galaxies?", `Get 50 galaxies.`,
+		"Blink of an Eye", `Infinity in under a tenth of a second. Reward: Start with ${getFullExpansion(1e100)} antimatter.`,
+		"Yet another infinity reference", `Get a total sacrifice multiplier of ${shorten(infp())}. Reward: Sacrifice is stronger.`,
+		"Hevipelle did nothing wrong", `Complete Infinity Challenge 5 in 10 seconds or less.`,
+		"Antichallenged", `Complete all 12 infinity challenges.`,
 		"Yes. This is hell.", `Get the sum of all infinity challenge times under 6.66 seconds.`,
+		
+		"Galaxy Supercluster", `Buy 10,000 antimatter galaxies.`,
+		"Ludicrous Speed", `Big Crunch for 1e200 IP in 2 seconds or less.`,
+		"I got a few to spare", `Reach ${shorten("1e35000")} antimatter. Reward: Dimensions are more powerful the more antimatter you have.`,
+		"All your IP are belong to us", `Big Crunch for ${shorten(infp())} IP.`,
+		"Time is Relative", `Go Eternal. (You can't get this achievement, because I haven't made Eternity yet.)`,
+		"Maximum Overdrive", `Reach ${shorten(1e303)} IP per minute.`,
+		"Oh hey... You're still here?", `Reach ${shorten("1e333")} IP.`,
+		"0 degrees from infinity", `Unlock the eighth infinity dimension.`,
+		"Are you kidding me?", `Unlock the ninth infinity dimension.`,
+		
 		"Galaxy Filament", `Buy 1,000,000 antimatter galaxies.`,
+		"Is this safe?", `Reach Infinite replicanti in under 30 minutes.`,
+		"Minute of Infinity", `Reach Infinite replicanti in under a minute.`,
+		"Never tell me the odds", `Eternity without ever having more than one replicanti.`,
+		"", ``,
+		"", ``,
+		"", ``,
+		"", ``,
+		"", ``,
 	]
 }
 

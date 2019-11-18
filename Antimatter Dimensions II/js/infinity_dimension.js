@@ -1,4 +1,4 @@
-var infDimensionBaseCosts = [0, 1e4, 1e6, 1e10, 1e15, 1e90, 1e130, 1e180, 1e240, 1e300]
+var infDimensionBaseCosts = [0, 1e8, 1e10, 1e12, 1e15, 1e90, 1e140, 1e180, 1e240, 1e300]
 var infDimensionCostMults = [0, 1e3, 1e6, 1e8, 1e10, 1e15, 1e20, 1e25, 1e30, 1e35]
 var infDimensionBuyMults = [0, 50, 30, 10, 5, 5, 5, 5, 5, 5]
 
@@ -13,11 +13,12 @@ function InfinityDimension(i) {
 }
 
 function getInfinityShiftCost() {
-	return Decimal.pow(Number.MAX_VALUE, Decimal.pow(2, game.infinityShifts.add(1)))
+	if(game.infinityShifts.lt(4)) return infp(game.infinityShifts.add(2).multiply(2))
+	return infp(game.infinityShifts.multiply(2).pow(2));
 }
 
 function canInfinityShift() {
-	return game.dimensions[0].amount.gte(getInfinityShiftCost()) && (game.infinityShifts.lt(4) || getChallengeCompletions(1) > 11);
+	return game.dimensions[0].amount.gte(getInfinityShiftCost()) && (game.infinityShifts.lt(4) || getChallengeCompletions(1) > 5);
 }
 
 function infinityShift() {
@@ -44,15 +45,21 @@ function resetInfinityDimensions() {
 function getInfinityDimensionProduction(i) {
 	var dim = game.infinityDimensions[i];
 	
-	dim.multiplier = Decimal.pow(infDimensionBuyMults[dim.id], dim.bought).multiply(Decimal.pow(10, game.infinityShifts.subtract(i).add(game.infinityUpgrades.includes(23)*(9-i)*0.5)))
+	dim.multiplier = Decimal.pow(infDimensionBuyMults[dim.id], dim.bought).multiply(Decimal.pow(10, game.infinityShifts.subtract(i)))
 	if(challengeCompleted(1, 1)) dim.multiplier = dim.multiplier.multiply(getChallengeReward(1, 1))
-	if(game.achievements.includes(39)) dim.multiplier = dim.multiplier.multiply(1.01);
+	if(challengeCompleted(9, 1)) dim.multiplier = dim.multiplier.multiply(getAchievementMultiplier())
+	if(challengeCompleted(10, 1)) dim.multiplier = dim.multiplier.multiply(getChallengeReward(10, 1))
+	if(game.achievements.includes(50)) dim.multiplier = dim.multiplier.multiply(1.01);
+	if(game.infinityUpgrades.includes(23)) dim.multiplier = dim.multiplier.multiply(getInfinityUpgradeEffect(23))
+	if(game.infinityUpgrades.includes(24)) dim.multiplier = dim.multiplier.multiply((challengeCompleted(11, 1) ? 10 : 2.5) ** (10 - i))
+	if(game.infinityUpgrades.includes(25)) dim.multiplier = dim.multiplier.multiply(getInfinityUpgradeEffect(25))
+	
 	
 	return dim.amount.multiply(dim.multiplier);
 }
 
 function canBuyInfinityDimension(i) {
-	return game.infinityDimensions[i].cost.lte(game.infinityPoints)
+	return game.infinityDimensions[i].cost.lte(game.infinityPoints) && game.infinityShifts.gte(i);
 }
 
 function buyInfinityDimension(i) {

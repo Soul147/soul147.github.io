@@ -11,12 +11,12 @@ function shift() {
 
 function getStartingShifts() {
 	if(inChallenge(10)) return 0;
-	return getChallengeSet() == 1 && !game.achievements.includes(25) ? 0 : game.infinityUpgrades.includes(3)*2 + game.infinityUpgrades.includes(7)*2 + game.infinityUpgrades.includes(11);
+	return getChallengeSet() == 1 && !game.achievements.includes(42) ? 0 : game.infinityUpgrades.includes(3)*2 + game.infinityUpgrades.includes(7)*2 + game.infinityUpgrades.includes(11);
 }
 
 function canBoost() {
 	if(inChallenge(10)) return game.dimensions[4].amount.gte(getDimensionBoostReq())
-	return game.dimensions[9].amount.gte(getDimensionBoostReq()) && game.shifts == 5 && !atInfinity() && !inChallenge(8);
+	return game.dimensions[9].amount.gte(getDimensionBoostReq()) && game.shifts == 5 && !atInfinity() && !inChallenge(8) && !inChallenge(10, 1);
 }
 
 function boost(bulk) {
@@ -29,7 +29,8 @@ function boost(bulk) {
 	game.totalBoosts = game.totalBoosts.add(bought.subtract(game.boosts));	
 	game.boosts = bought;
 	game.boostTime = game.resetTime = Date.now();
-	resetDimensions();
+	// resetDimensions();
+	return true;
 }
 
 function getDimensionBoostScaling() {
@@ -46,7 +47,10 @@ function getDimensionBoostReq() {
 function getDimensionBoostPower() {
 	var r = new Decimal(2);
 	if(game.infinityUpgrades.includes(9)) r = r.multiply(1.25)
-	if(game.infinityUpgrades.includes(24)) r = r.multiply(1.6)
+	// if(game.infinityUpgrades.includes(24)) r = r.multiply(1.6)
+	if(game.achievements.includes(41)) r = r.multiply(1.01)
+	if(challengeCompleted(7, 1)) r = r.multiply(2.5)
+	if(inChallenge(7, 1)) r = r.pow(2)
 	return r;
 }
 

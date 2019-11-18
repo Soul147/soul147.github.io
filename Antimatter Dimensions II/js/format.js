@@ -9,12 +9,12 @@ function shorten(num, places = 2, shortPlaces = 2) {
 	if(num.isNaN() || !num.log10()) return "NaN"
 	
 	if(num.lt(1e3)) return num.toFixed(shortPlaces);
-	if(num.gt(Number.MAX_VALUE) && !game.break) return "Infinite"
+	if(num.gt(infp()) && !game.break) return "Infinite"
 	
 	if(game.options.notation == "Scientific") {
 		var e = num.log10().floor();
 		var m = Decimal.pow(10, num.log10().subtract(e))
-		return m.toFixed(2) + "e" + getFullExpansion(e)	;
+		return m.toFixed(places) + "e" + getFullExpansion(e);
 	}
 }
 
