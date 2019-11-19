@@ -3,7 +3,7 @@ var currencyNames = ["infinityPoints"]
 function Extension(s = 1, c, u = "infinityPoints") {
 	var extension = {
 		id: au.extensions.length,
-		level: new Decimal(l),
+		level: new Decimal(0),
 		cost: new Decimal(c),
 		currency: u,
 		charge: 0,
