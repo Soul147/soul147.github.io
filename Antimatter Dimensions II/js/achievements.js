@@ -76,7 +76,7 @@ function updateAchievementDescriptions() {
 		"Ludicrous Speed", `Big Crunch for 1e200 IP in 2 seconds or less.`,
 		"I got a few to spare", `Reach ${shorten("1e35000")} antimatter. Reward: Dimensions are more powerful the more antimatter you have.`,
 		"All your IP are belong to us", `Big Crunch for ${shorten(infp())} IP.`,
-		"Time is Relative", `Go Eternal. (You can't get this achievement, because I haven't made Eternity yet.)`,
+		"Time is Relative", `Go Eternal.`,
 		"Maximum Overdrive", `Reach ${shorten(1e303)} IP per minute.`,
 		"Oh hey... You're still here?", `Reach ${shorten("1e333")} IP.`,
 		"0 degrees from infinity", `Unlock the eighth infinity dimension.`,

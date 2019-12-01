@@ -63,9 +63,9 @@ function updateChallengeDescriptions() {
 		`Tickspeed upgrades are more powerful, but tickspeed only affects ninth dimensions.<br><br>Reward: Seventh Dimension autobuyer.`,
 		`Dimension boosts and galaxies are disabled. Sacrifice resets everything but is immensely more powerful.<br><br>Reward: Eighth Dimension autobuyer.`,
 		`Buying anything increases the cost of all upgrades of equal cost.<br><br>Reward: Ninth Dimension autobuyer.`,
+		`Each dimension produces the one two below it. Tickspeed upgrades are stronger to compensate.<br><br>Reward: Tickspeed autobuyer.`,
 		`Dimension shifts are disabled. Dimension boosts and antimatter galaxies cost fourth dimensions.<br><br>Reward: Dimension Boost autobuyer.`,
 		`You start without any galaxies.<br><br>Reward: Antimatter Galaxy autobuyer.`,
-		`Each dimension produces the one two below it. Tickspeed upgrades are stronger to compensate.<br><br>Reward: Tickspeed autobuyer.`,
 		
 		`Challenges 1-6 are all applied at once.ICDATAReward: 1.47x on all infinity dimensions for each infinity challenge completed.`,
 		`You are forced to do a dimensional sacrifice every tick.ICDATAReward: Dimensional sacrifice is much stronger and unlocks dimensional sacrifice autobuyer.`,
@@ -78,7 +78,7 @@ function updateChallengeDescriptions() {
 		`All Infinity Challenge rewards are disabled.ICDATAReward: Your achievement multiplier affects infinity dimensions.`,
 		`Dimension boosts and dimensional sacrifice are disabled.ICDATAReward: Multiplier to Infinity Dimensions based on infinities.`,
 		`Dimension multipliers are reduced based on tier.ICDATAReward: Break Infinity upgrade 8 is stronger.`,
-		`Infinity Power is 33% weaker.ICDATAReward: Infinity Power is 33% stronger.`,
+		`Infinity Power is 33% weaker.ICDATAReward: Infinity Shifts are ???% stronger.`,
 	]
 	
 	for(var i = 13; i < 25; i++) {
@@ -216,8 +216,8 @@ function suffer(n, a) {
 	if(n && game.tickspeed.cost.eq(nc)) game.tickspeed.cost = game.tickspeed.cost.multiply(game.tickspeed.costMult);
 }
 
-var icRequirements = ["1e2000", "1e2500", "1e5000", "1e7750", "1e9000", "1e12500", "1e17000", "1e25000", "1e35000", "1e35000", "1e35000", "1e500000"]
-var icGoals = ["1e1000", "1e1500", "1e2500", "1e3300", "1e5000", "1e5500", "1e6900", "1e3000", "1e15000", "1e17000", "1e8250", "0"]
+var icRequirements = ["1e2000", "1e2500", "1e5000", "1e7750", "1e9000", "1e12500", "1e17000", "1e25000", "1e35000", "1e35000", "1e35000", "1e50000"]
+var icGoals = ["1e1000", "1e1500", "1e2500", "1e3300", "1e4000", "1e5500", "1e6900", "1e3000", "1e15000", "1e17000", "1e8250", "1e21000"]
 
 function getInfinityChallengesUnlocked() {
 	var unl = 0;
@@ -266,7 +266,7 @@ function getChallengeReward(i, j) {
 			0,
 			game.dimensions[9].multiplier.pow(0.1),
 			0,
-			game.infinities.pow(1/3),
+			game.infinities.pow(1/2),
 		]
 	][j][i-1]
 }
@@ -329,7 +329,7 @@ function getChallengeBenefits() {
 					`${getAchievementMultiplier()}x on all infinity dimensions.`,
 					`${shorten(getChallengeReward(10, 1))}x on all infinity dimensions.`,
 					`Boost to infinity dimensions based on tier.`,
-					`+33% to Infinity Power effect.`,
+					`+???% Infinity Shift effectiveness.`,
 				]
 				for(var i = 1; i <= 12; i++) if(challengeCompleted(i, 1)) lines.push(t[i-1])
 				if(inChallenge(9, 1)) lines.push("REWARDS DISABLED");

@@ -2,27 +2,39 @@
 
 <link rel = "stylesheet" href = "css/main.css">
 
-<body>
+<body bgcolor="">
 
 <center>
 	<div style = "padding: 20px">
-		You have <currency id = "antimatter"></currency> antimatter.<br>
+		You have <currency id = "antimatter" onclick = "game.dimensions[0].amount = game.dimensions[0].amount.add(1)"></currency> antimatter.<br>
 		You are getting <span id = "antimatterGrowth"></span> antimatter per second.<br><br>
 	</div>
 	<div id = "tabButtons">
 		<button class = "tabButton" onclick = "showTab('dimensions')">Dimensions</button>
-		<button class = "tabButton" onclick = "showTab('options')">Options</button>
-		<button class = "tabButton" onclick = "showTab('achievements')">Achievements</button>
-		<button class = "tabButton" onclick = "showTab('statistics')">Statistics</button>
+		<span id = "optionsButtons" style = "display: none">
+			<button class = "tabButton" onclick = "showTab('options')">Options</button>
+			<button class = "tabButton" onclick = "showTab('achievements')">Achievements</button>
+			<button class = "tabButton" onclick = "showTab('statistics')">Statistics</button>
+		</span>
 		<button class = "tabButton" id = "challengesTabButton" onclick = "showTab('challenges')">Challenges</button>
 		<button class = "tabButton" id = "automationTabButton" onclick = "showTab('automation')">Automation</button>
 		<button class = "infinityTabButton" id = "infinityTabButton" onclick = "showTab('infinity')" style = "font-weight: bold">Infinity</button>
+		<button class = "eternityTabButton" id = "eternityTabButton" onclick = "showTab('eternity')" style = "font-weight: bold">Eternity</button>
 	</div>
 </center>
 
 <div id = "infinityPrestige" style = "position: absolute; left: 20; top: 10">
-	You have <span class = "infinityPoints"></span> Infinity Points.<br><br>
-	<button id = "gainedIP" class = "infinityTabButton" onmousedown = "bigCrunch()" style = "font-size: 11px; width: 210px; height: 70px"></button>
+	<center>
+		You have <span class = "infinityPoints"></span> Infinity Points.<br><br>
+		<button id = "gainedIP" class = "infinityTabButton" onmousedown = "bigCrunch()" style = "font-size: 11px; width: 210px; height: 70px"></button>
+	</center>
+</div>
+
+<div id = "eternityPrestige" style = "position: absolute; right: 20; top: 10">
+	<center>
+		<span id = "EP">You have <span class = "eternityPoints"></span> Eternity Points.</span><br><br>
+		<button id = "gainedEP" class = "eternityTabButton" onmousedown = "eternity()" style = "font-size: 11px; width: 210px; height: 70px"></button>
+	</center>
 </div>
 
 <div class = "tab" id = "bigCrunchTab" style = "font-size: 15px; padding-left: 15px">
@@ -38,23 +50,24 @@
 		<div id = "dimensionTabs" style = "padding: 10px">
 			<button id = "normalDimensionButton" class = "subtabButton" onclick = "showDimensionTab('normal')">Dimensions</button>
 			<button id = "infinityDimensionButton" class = "subtabButton" onclick = "showDimensionTab('infinity')">Infinity Dimensions</button>
-			<!-- <button id = "timeDimensionButton" class = "subtabButton" onclick = "showDimensionTab('time')">Time Dimensions</button> -->
+			<button id = "timeDimensionButton" class = "subtabButton" onclick = "showDimensionTab('time')">Time Dimensions</button>
 		</div>
 	</center>
 	<div class = "dimensionTab" id = "normalDimensionTab">
-		<center style = "margin: 8; font-size: 11px">
+		<center style = "margin: 8; font-size: 12px">
 			Dimension upgrade multiplier: <span id = "dimMult"></span>x<br>
-			<button class = "buy" style = "width: 100px; font-size: 12px" onclick = "maxAll()">Max All</button>
+			<button class = "buy" style = "width: 100px" onclick = "maxAll()">Max All</button>
+			<button id = "resetDimsButton" class = "buy" style = "width: 150px" onclick = "resetDimensions()">Reset Dimensions</button>
 			<span id = "sacrificeDisplay">
-				<button id = "sacrifice" onclick = "sacrifice()" style = "width: 350px; font-size: 12px"></button><br>
+				<button id = "sacrifice" onclick = "sacrifice()" style = "width: 350px"></button><br>
 				Dimensional sacrifice boost to 9th dimensions: <span id = "sacrificePower"></span>x
 			</span>
 			<span id = "challengeMultiplier"></span>
 		</center>
-		<table id = "dimensions" style = "font-size: 15px"></table>
-		<table style = "font-size: 15px">
+		<table id = "dimensions" style = "font-size: 12px"></table>
+		<table style = "font-size: 12px">
 			<tr id = "shiftDisplay">
-				<td>Dimension Shift (<span id = "shifts"></span>): requires 2 <span id = "shiftReq"></span> dimensions</td>
+				<td style = "padding-bottom: 10px">Dimension Shift (<span id = "shifts"></span>): requires 2 <span id = "shiftReq"></span> dimensions</td>
 				<td style = "position: absolute; right: 20"><button id = "shift" onclick = "shift()" style = "width: 250px">Reset the game for a new dimension</button></td>
 			</tr>
 			<tr id = "boostDisplay">
@@ -68,15 +81,26 @@
 		</table>
 	</div>
 	<div class = "dimensionTab" id = "infinityDimensionTab">
-		<center id = "infinityPowerArea">
+		<center id = "infinityPowerArea" style = "font-size: 12px">
 			You have <currency id = "infinityPower"></currency> infinity power, multiplying all dimensions by <currency id = "infinityPowerEffect"></currency>.<br>
 			You are getting <span id = "infinityPowerGrowth"></span> infinity power per second.<br>
-			<button class = "buy" style = "width: 100px; font-size: 12px" onclick = "maxAllInfinityDimensions()">Max All</button>
+			<button class = "buy" style = "width: 100px; margin-top: 10px" onclick = "maxAllInfinityDimensions()">Max All</button>
 		</center>
 		<br>
-		<table id = "infinityDimensions" style = "font-size: 15px"></table>
+		<table id = "infinityDimensions" style = "font-size: 12px"></table>
 		<div style = "position: absolute; left: 20; bottom: 20">Infinity Shift</div>
-		<div style = "position: absolute; right: 20; bottom: 20"><button id = "infinityshift" class = "buy" onclick = "infinityShift()" style = "font-size: 15px; width: 250px; height: 50px;"><span id = "infinityshiftcost"></span></button></div>
+		<div style = "position: absolute; right: 20; bottom: 20"><button id = "infinityshift" class = "buy" onclick = "infinityShift()" style = "font-size: 14px; width: 250px; height: 50px;"><span id = "infinityshiftcost"></span></button></div>
+	</div>
+	
+	<div class = "dimensionTab" id = "timeDimensionTab">
+		<center id = "timeShardArea" style = "font-size: 12px">
+			You've gained <currency id = "freeTickspeed"></currency> tickspeed upgrades. They multiply tickspeed by <currency id = "freeTickspeedEffect"></currency>.<br>
+			You have <currency id = "timeShards"></currency> time shards. Next tickspeed upgrade at <currency id = "timeShardThreshold"></currency>.<br>
+			You are getting <span id = "timeShardGrowth"></span> time shards per second.<br>
+			<button class = "buy" style = "width: 100px; font-size: 13px; margin-top: 10px" onclick = "maxAllTimeDimensions()">Max All</button>
+		</center>
+		<br>
+		<table id = "timeDimensions" style = "font-size: 13px; text-align: left"></table>
 	</div>
 </div>
 
@@ -90,7 +114,7 @@
 </div>
 
 <div class = "tab" id = "statisticsTab">
-	<center>
+	<center><br>
 		<div id = "statisticsTabs" style = "padding: 10px; display: none">
 			<button id = "normalStatistics" class = "subtabButton" onclick = "showStatisticsTab('normal')">Statistics</button>
 		</div>
@@ -134,20 +158,48 @@
 		<div id = "automationTabs" style = "padding: 10px">
 			<button id = "coreAutomation" class = "subtabButton" onclick = "showAutomationTab('core')">Core</button>
 			<button id = "class1Automation" class = "subtabButton" onclick = "showAutomationTab('class1')">Infinity</button>
+			<button id = "class2Automation" class = "subtabButton" onclick = "showAutomationTab('class2')">Eternity</button>
 		</div>
 		
 		<div class = "automationTab" id = "coreAutomationTab">
 			<h1>AUTOMATOR CORE</h1>
 			<h2>Class <span id = "auClass"></span></h2>
 			<button id = "upgradeCore" style = "width: 300; height: 50; font-size: 16px" onclick = "upgradeAutomator()"></button><br><br>
+			<select id = "fileOptions" onchange = "selectFileOption()">
+				<option disabled selected style = "display: none">File</option>
+				<option>New</option>
+				<option>Open</option>
+				<option>Save</option>
+				<option>Save As</option>
+				<option>Rename</option>
+				<option>Delete</option>
+			</select>
+			<br>
 			<textarea id = "auScript" style = "color: white; background-color: #1f1f1f; width: 384; height: 256"></textarea>
-			<span style = "text-align: left; color: #0f0; background-color: #1f1f1f; width: 384; height: 254; display: inline-block; overflow: auto" id = "auLog"></span>
-			<input style = "color: #0f0; background-color: #1f1f1f; font-family: lucida console; width: 384; margin-left: -390; position: relative; top: -6;" onchange = "logAu(' > ' + this.value); runAu(this.value); this.value = ''">
+			<span style = "text-align: left; color: #0f0; background-color: #1f1f1f; width: 384; height: 254; display: inline-block; overflow: auto"><div id = "auLog" style = "padding: 4px; padding-bottom: 24px; white-space: pre-wrap"></div></span>
+			<input id = "cmdline" style = "color: #0f0; background-color: #1f1f1f; font-family: lucida console; width: 384; margin-left: -390; position: relative; top: -6;">
+			<div id = "fileMenu" style = "opacity: 0; pointer-events: none; box-shadow: 0px 0px 20px #0009; border: 1px solid #1883d7; width: 580; height: 380; margin-left: -300; margin-top: -200; position: absolute; left: 50%; top: 50%; transition: 0.2s; background: #fff; color: #000; text-align: left; padding: 10px; transform: scale(0.75, 0.75)">
+				<div onclick = "closeFileMenu(null, false)" class = "redButton">×</div>
+				<span id = "fileMenuHeader" style = "font-size: 12px; position: absolute; top: 7"></span><br>
+				<div style = "position: absolute; left: 0; top: 30px; width: 600; border-top: 30px solid #eee; height: 270; border-bottom: 70px solid #eee; overflow: auto">
+					<table id = "fileMenuFiles" cellspacing = 0 style = "font-size: 11px !important; text-align: left; padding: 7"></table>
+				</div>
+				<div style = "position: absolute; bottom: 25px;">
+					File Name: <input id = "fileName" style = "width: 300" onkeyup = "updateFileButton()">
+					<button class = "lock" onclick = "closeFileMenu(ge('fileName').value)" style = "width: 100; height: 20" id = "fileButton"></button>
+					<button class = "buy" onclick = "closeFileMenu(null, false)" style = "width: 100; height: 20">Cancel</button>
+				</div>
+			</div>
 		</div>
 		
 		<div class = "automationTab" id = "class1AutomationTab">
 			You have <span class = "infinityPoints"></span> IP.<br>
 			<table id = "automationTable1" cellspacing = 8></table>
+		</div>
+		
+		<div class = "automationTab" id = "class2AutomationTab">
+			You have <span class = "eternityPoints"></span> EP.<br>
+			<table id = "automationTable2" cellspacing = 8></table>
 		</div>
 	</center>
 </div>
@@ -171,38 +223,97 @@
 	</center>
 </div>
 
+<div class = "tab" id = "eternityTab">
+	<center>
+		<div id = "eternityTabs" style = "padding: 10px">
+			<button class = "subtabButton" onclick = "showEternityTab('timeStudies')">Time Studies</button>
+			<button class = "subtabButton" onclick = "showEternityTab('eternityUpgrades')">Eternity Upgrades</button>
+			<button class = "subtabButton" onclick = "showEternityTab('eternityMilestones')">Eternity Milestones</button>
+			<button class = "subtabButton" onclick = "showEternityTab('replicanti')">Replicanti</button>
+		</div>
+		<div class = "eternityTab" id = "timeStudiesTab">
+			<canvas id = "studyTreeCanvas"></canvas>
+			<div id = "timeStudyTree" style = "position: fixed; left: 0; top: 200; width: 100%; height: 100%; overflow: hidden; box-shadow: inset 0px 0px 50px black"><div id = "timeStudies" draggable = false></div></div>
+			<div style = "position: fixed; left: 0; bottom: -3; padding: 10px; border-radius: 4px; border-top: 1px solid black; border-right: 1px solid black; background: #ddd">
+				Time Theorems: <span id = "ttamount"></span><br>
+				<button class = "buy" style = "height: 30" id = "respecTS" onclick = "respecTimeStudies()">Respec Time Studies</button><br>
+				<button id = "ttbutton0" onclick = "tree.buyTheorems(0)"></button><br>
+				<button id = "ttbutton1" onclick = "tree.buyTheorems(1)"></button><br>
+				<button id = "ttbutton2" onclick = "tree.buyTheorems(2)"></button>
+			</div>
+		</div>
+		<div class = "eternityTab" id = "eternityUpgradesTab">
+			You have <currency class = "eternityPoints"></currency> Eternity Points.<br>
+			<table id = "eternityUpgrades" style = "font-size: 10px"></table>
+		</div>
+		<div class = "eternityTab" id = "eternityMilestonesTab">
+			<table id = "eternityMilestones" style = "font-size: 10px"></table>
+		</div>
+		<div class = "eternityTab" id = "replicantiTab">
+			You have <currency class = "eternityPoints"></currency> Eternity Points.<br>
+			<br>
+			You have <currency id = "replicanti"></currency> replicanti, translated to a <currency id = "replicantiEff"></currency>x multiplier on all infinity dimensions.<br>
+			<br>
+			<button id = "replChance" onclick = "buyReplUpgrade(0)" style = "width: 200; height: 50"></button>
+			<button id = "replSpeed" onclick = "buyReplUpgrade(1)" style = "width: 200; height: 50"></button>
+			<button id = "replGalaxy" onclick = "buyReplUpgrade(2)" style = "width: 200; height: 50"></button><br><br>
+			Max Replicanti: <span id = "replMax"></span><br><br>
+			<button id = "replGain" onclick = "replGalaxy()" style = "width: 200; height: 75"></button>
+		</div>
+	</center>
+</div>
+
 <div class = "tab" id = "optionsTab">
 	<center>
+		<br>
 		<button class = "buy" onclick="save();">Save</button>
 		<button class = "buy" onclick="exportGame();">Export</button>
 		<button class = "buy" onclick="importGame();">Import</button>
 		<button class = "buy" onclick="hardReset();">HARD RESET</button>
 		<br>
+		<br>
 		<button class = "buy" id = "autosaveOption" onclick="game.options.autosave = !game.options.autosave;">Autosave: Off</button>
 		<button class = "buy" id = "saveTabsOption" onclick="game.options.saveTabs = !game.options.saveTabs;">Save Tabs: Off</button>
-		<button class = "buy" id = "automateOption" onclick="game.options.automate = !game.options.automate;" tooltip = "This is a temporary option, and will only be here until I finish developing Automation. Use it to automatically buy dimensions, tickspeed, shifts, and galaxies.">Auto Max All: Off</button><br>
+		<button class = "buy" id = "smallOptionsOption" onclick="game.options.smallOptions = !game.options.smallOptions;">Small Options: Off</button>
+		<button class = "buy" id = "bestRateOption" onclick="game.options.showBestRateAt = !game.options.showBestRateAt;">Best Rate At X: Off</button>
+		<br>
+		<br>
+		Exported Save: <input id = "exported" style = "width: 170" placeholder = "Save will appear here"></input>
+		<br>
 		<h1>Credits</h1>
 		Hevipelle - Creator of the legendary original game, <a href = "https://ivark.github.io" target = "_blank">Antimatter Dimensions</a>.<br>You are a god. Thank you and everyone else who worked on the original AD.<br>
 		<br>
-		Naruyoko - Creator of the unholy number library <a href = "https://github.com/Naruyoko/OmegaNum.js" target = "_blank">OmegaNum.js</a> that the game wouldn't run without.<br>
+		Patashu - Creator of <a href = "https://github.com/Patashu/break_eternity.js" target = "_blank">break_eternity.js</a>, the number library that the game runs on.<br>
 		Nyan Cat - Author of many performance improvements that help the game run faster than 2 FPS.<br>
 		Despacit - Creator of the alternate version, <a href = "https://ad2-thing.glitch.me/" target = "_blank">AD Redux</a>. and contributor of ideas to this version.<br>
 		Aarex - Main creator of <a href = "https://raw.githack.com/aarextiaokhiao/IvarK.github.io/master/" target = "_blank">NG+++</a> and the other mods for AD, which I have taken inspiration from.<br>
-		Reinhardt - Creator of <a href = "https://reinhardt-c.github.io/TrueInfinity/" target = "_blank">True Infinity</a>, which game me something to beat.<br>
+		Reinhardt - Creator of <a href = "https://reinhardt-c.github.io/TrueInfinity/" target = "_blank">True Infinity</a>, which provided motivation. TI Beta is out now, you should play it.<br>
 	</center>
+</div>
+
+<div id = "optionsButton">Options<br>
+	<span id = "optionsButtonText">
+		<span onclick = "showTab('options')">Options</span><br>
+		<span onclick = "showTab('achievements')">Achievements</span><br>
+		<span onclick = "showTab('statistics')">Statistics</span><br>
+	</span>
 </div>
 
 </body>
 
-<script src = "js/omeganum.js"></script>
+<script src = "js/break_eternity.js"></script>
 <script src = "js/format.js"></script>
 <script src = "js/achievements.js"></script>
 <script src = "js/automation.js"></script>
 <script src = "js/normal_dimension.js"></script>
 <script src = "js/infinity_dimension.js"></script>
+<script src = "js/time_dimension.js"></script>
 <script src = "js/tickspeed.js"></script>
 <script src = "js/dimboost.js"></script>
 <script src = "js/infinity.js"></script>
+<script src = "js/eternity.js"></script>
 <script src = "js/challenges.js"></script>
+<script src = "js/timestudy.js"></script>
+<script src = "js/replicanti.js"></script>
 <script src = "js/setup.js"></script>
 <script src = "js/game.js"></script>

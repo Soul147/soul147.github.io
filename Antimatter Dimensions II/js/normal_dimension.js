@@ -14,14 +14,14 @@ function NormalDimension(i) {
 }
 
 function getStartingAntimatter() {
-	r = 10
-	if(game.achievements.includes(9)) r = 100
-	if(game.achievements.includes(22)) r = 1000
-	if(game.achievements.includes(31)) r = 2e5
-	if(game.achievements.includes(40)) r = 1e10
-	if(game.achievements.includes(49)) r = 1e25
-	if(game.achievements.includes(58)) r = 1e100
-	return new Decimal(r);
+	r = 90
+	if(game.achievements.includes(9)) r = 200
+	if(game.bestInfinityTime < 18e6) r = 1000
+	if(game.bestInfinityTime < 36e5) r = 2e5
+	if(game.bestInfinityTime < 6e4) r = 1e10
+	if(game.bestInfinityTime < 1e3) r = 1e25
+	if(game.bestInfinityTime < 100) r = 1e100
+	return new Decimal(r).add(0.4); // just in case
 }
 
 function resetDimensions() {
@@ -69,10 +69,12 @@ function getDimensionProduction(i) {
 	if(game.infinityUpgrades.includes(21)) dim.multiplier = dim.multiplier.multiply(getInfinityUpgradeEffect(21))
 	if(game.infinityUpgrades.includes(22)) dim.multiplier = dim.multiplier.multiply(getInfinityUpgradeEffect(22))
 	if(i < 9 && challengeCompleted(8, 1)) dim.multiplier = dim.multiplier.multiply(getChallengeReward(8, 1))
-	if(i == 1 && game.achievements.includes(54)) dim.multiplier = dim.multiplier.multiply(game.dimensions[1].amount.pow(0.001))
-	if(game.achievements.includes(56)) dim.multiplier = dim.multiplier.multiply(game.dimensions[0].amount.pow(0.0001))
-	if(game.achievements.includes(65)) dim.multiplier = dim.multiplier.multiply(game.dimensions[0].amount.pow(0.0002))
-	
+	if(i == 1 && game.achievements.includes(54)) dim.multiplier = dim.multiplier.multiply(game.dimensions[1].amount.pow(0.001).max(1))
+	if(game.achievements.includes(56)) dim.multiplier = dim.multiplier.multiply(game.dimensions[0].amount.pow(0.0001).max(1))
+	if(game.achievements.includes(65)) dim.multiplier = dim.multiplier.multiply(game.dimensions[0].amount.pow(0.0002).max(1))
+	if(tree.hasStudy("p11")) dim.multiplier = dim.multiplier.multiply(tree.getEff("p11"));
+	if(tree.hasStudy("p31") && i !== 9) dim.multiplier = dim.multiplier.multiply(tree.getEff("p31"));
+
 	if(i == 9 && game.achievements.includes(17)) dim.multiplier = dim.multiplier.multiply(1.09);
 	if(i !== 9 && game.achievements.includes(24)) dim.multiplier = dim.multiplier.multiply(1.08);
 	if(game.achievements.includes(46)) dim.multiplier = dim.multiplier.multiply(dim.bought.max(1))
@@ -88,7 +90,7 @@ function getDimensionProduction(i) {
 }
 
 function canBuyDimension(i) {
-	return i <= game.shifts + 4 && game.dimensions[i].cost.lte(game.dimensions[0].amount) && !atInfinity()
+	return i <= game.shifts + 4 && game.dimensions[i].cost.lte(game.dimensions[0].amount) && (!atInfinity() || game.break)
 }
 
 function buyDimension(i) {
@@ -115,6 +117,8 @@ function buyDimension(i) {
 }
 
 function maxDimension(i, b) {
+	if(inChallenge(9)) {while(buyDimension(i)); return}
+	
 	var dim = game.dimensions[i];
 	
 	if(!canBuyDimension(i)) return;
@@ -128,15 +132,16 @@ function maxDimension(i, b) {
 		dim.amount = dim.amount.add(bought);
 		dim.bought = dim.bought.add(bought);
 		dim.cost = dim.cost.multiply(dim.costMult.pow(bought));
-		if(inChallenge(9) || inChallenge(5, 1)) suffer(i);
+		if(inChallenge(5, 1)) suffer(i);
 		if(inChallenge(4, 1)) game.lastBoughtDimension = i;
+		game.dimensions[0].amount = game.dimensions[0].amount.subtract(dim.cost.divide(dim.costMult))
 		
 		return bought.gt(0);
 	}
 	
 	// Superbuying
 	
-	if(game.dimensions[0].amount.layer >= 3) {
+	if(game.dimensions[0].amount.layer > 3) {
 		dim.cost = game.dimensions[0].amount;
 		dim.bought = dim.cost.log10().sqrt();
 		dim.amount = Decimal.max(dim.amount, dim.bought);
@@ -182,6 +187,8 @@ function getSacrificeMult() {
 	if(challengeCompleted(2, 1)) {
 		var power = 0.01;
 		if(game.achievements.includes(18)) power += 0.001;
+		if(game.achievements.includes(59)) power += 0.001;
+		if(tree.hasStudy("r31")) power += 0.001;
 		r = game.dimensions[1].amount.pow(power); // this is for later (ICs or something)
 	}
 	

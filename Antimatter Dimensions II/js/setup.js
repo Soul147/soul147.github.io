@@ -1,4 +1,4 @@
-var devMode = true;
+var devMode = false;
 
 var lastTab;
 var tierNames = ["0", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"]
@@ -24,8 +24,8 @@ function gc(e, f, o=0) {
 
 function transformToDecimal(object) { // It's so much better than hevi's version, because it's recursive and I'm a lazy piece of shit
 	for(i in object) {
-		if(i == "raw") return; // for fuck's sake
-		if(typeof(object[i]) == "string" && !isNaN(new Decimal(object[i]))) object[i] = new Decimal(object[i]); 
+		if(i == "automator") continue; // for fuck's sake
+		if(typeof(object[i]) == "string" && !isNaN(new Decimal("e" + object[i]).mag)) object[i] = new Decimal(object[i]); 
 		if(typeof(object[i]) == "object") transformToDecimal(object[i]) // iterates over all objects inside the object
 	}
 }
@@ -50,7 +50,6 @@ function importGame() {
 	try {
 		let temp = JSON.parse(atob(input))
 		game = temp
-
 		updateSave();
 	} catch(err) {
 		alert("An error has occured while loading the save!")
@@ -58,42 +57,30 @@ function importGame() {
 }
 
 function copyTextToClipboard(text) {
-  var textArea = document.createElement("textarea");
-  textArea.style.position = 'fixed';
-  textArea.style.top = 0;
-  textArea.style.left = 0;
-  textArea.style.width = '2em';
-  textArea.style.height = '2em';
-  textArea.style.padding = 0;
-  textArea.style.border = 'none';
-  textArea.style.outline = 'none';
-  textArea.style.boxShadow = 'none';
-  textArea.style.background = 'transparent';
-  textArea.value = text;
-  document.body.appendChild(textArea);
-	iosCopyToClipboard(textArea)
-  document.body.removeChild(textArea);
+	ge("exported").value = text;
+	iosCopyToClipboard(ge("exported"))
 }
 
 function iosCopyToClipboard(el) { // https://stackoverflow.com/questions/34045777/copy-to-clipboard-using-javascript-in-ios
-    var oldContentEditable = el.contentEditable,
-        oldReadOnly = el.readOnly,
-        range = document.createRange();
+	var oldContentEditable = el.contentEditable,
+		oldReadOnly = el.readOnly,
+		range = document.createRange();
 
-    el.contentEditable = true;
-    el.readOnly = false;
-    range.selectNodeContents(el);
+	el.contentEditable = true;
+	el.readOnly = false;
+	range.selectNodeContents(el);
 
-    var s = window.getSelection();
-    s.removeAllRanges();
-    s.addRange(range);
+	var s = window.getSelection();
+	s.removeAllRanges();
+	s.addRange(range);
 
-    el.setSelectionRange(0, 999999); // A big number, to cover anything that could be inside the element.
+	el.select();
+	el.setSelectionRange(0, 999999); // A big number, to cover anything that could be inside the element.
 
-    el.contentEditable = oldContentEditable;
-    el.readOnly = oldReadOnly;
+	el.contentEditable = oldContentEditable;
+	el.readOnly = oldReadOnly;
 
-    document.execCommand('copy');
+	document.execCommand('copy');
 }
 
 function exportGame() {
@@ -136,6 +123,12 @@ function updateSave() {
 	if(!game.infinityDimensions) resetInfinityDimensions();
 	if(!game.infinityShifts) game.infinityShifts = new Decimal(0);
 	if(!game.selectedChallengeType) game.selectedChallengeType = 0;
+	if(!game.eternityPoints) game.eternityPoints = new Decimal(0);
+	if(!game.eternities) game.eternities = new Decimal(0);
+	if(!game.timeDimensions) resetTimeDimensions();
+	if(!game.timestudy) game.timestudy = {theorems: new Decimal(0), bought: [new Decimal(0), new Decimal(0), new Decimal(0)], studies: []};
+	if(!game.eternityUpgrades) resetEternityUpgrades();
+	if(!game.replicanti) resetReplicanti();
 	
 	if(!game.challenges) {
 		game.challenges = []
@@ -156,6 +149,7 @@ function updateSave() {
 	if(!game.eternityTime) game.eternityTime = Date.now();
 	
 	if(!game.bestInfinityTime) game.bestInfinityTime = Infinity;
+	if(!game.bestEternityTime) game.bestEternityTime = Infinity;
 	
 	if(!game.automator) game.automator = {
 		class: 0,
@@ -163,16 +157,72 @@ function updateSave() {
 	}
 	
 	au = game.automator;
+	if(!au.save) au.save = {}
+	if(!au.memory) au.memory = {}
+	
+	au.file = {
+		"New": function(force) {
+			if(!force) if(au.file.isUnsaved() && !confirm("You have unsaved changes. Are you sure you want to create a new file?")) return;
+			delete au.currentFile;
+			au.raw = ge("auScript").value = "";
+		},
+		"Open": function(name, force) {
+			if(!force) if(au.file.isUnsaved() && !confirm("You have unsaved changes. Are you sure you want to open a new file?")) return;
+			
+			var h = function(n) {
+				au.currentFile = n;
+				au.raw = ge("auScript").value = au.save[n].script;
+			}
+			
+			if(name) return h(name);
+			
+			openFileMenu("Open")
+			onFileMenuClosed(h)
+		},
+		"Save": function() {
+			if(!au.currentFile) return au.file["Save As"]()
+			au.save[au.currentFile] = {
+				name: au.currentFile,
+				lastEdit: Date.now(),
+				script: au.raw
+			}
+		},
+		"Save As": function(name, force) {
+			openFileMenu("Save As")
+			onFileMenuClosed(function(n) {
+				if(au.save[n] && !confirm("A file called " + n + ".au already exists. Overwrite?")) return;
+				au.currentFile = n;
+				au.file.Save();
+			})
+		},
+		"Rename": function() {
+			openFileMenu("Rename")
+			onFileMenuClosed(function(n) {
+				delete au.save[au.currentFile];
+				au.currentFile = n;
+				au.file.Save();
+			})
+		},
+		"Delete": function() {
+			if(au.file.isUnsaved() && !confirm("Are you sure you want to delete " + au.currentFile + ".au?")) return;
+			delete au.save[au.currentFile];
+			au.file.New(true);
+		},
+		
+		isUnsaved: function() {
+			return au.currentFile ? au.raw !== au.save[au.currentFile].script : au.raw.length;
+		}
+	}
+	au.cmdline = {
+		current: 0,
+		history: []
+	}
+	
 	ge("auScript").value = au.raw || "";
 	
 	var c = []
-	for(var i = au.extensions.length; i < 14; i++) au.extensions[i] = Extension(0.5**i, 2**i, "infinityPoints")
-		
-	au.extensions.forEach(function(e) {
-		ge("buyauto" + (e.id)).onclick = function() {
-			upgradeExtension(9)
-		}
-	})
+	for(var i = 0; i < 15; i++) au.extensions[i] = Extension(0.5**i, 2**i, "infinityPoints", au.extensions[i]?au.extensions[i].level:0)
+	for(var i = 0; i < 15; i++) au.extensions[i+15] = Extension(0.5**i/86400, 2**i, "eternityPoints", au.extensions[i]?au.extensions[i].level:0)
 }
 
 if(localStorage.ad2) {
@@ -233,6 +283,14 @@ function showInfinityTab(name) {
 	game.currentInfinityTab = name;
 }
 
+function showEternityTab(name) {
+	gc("eternityTab", function(e) {
+		e.style.display = "none";
+	})
+	ge(name + "Tab").style.display = "";
+	game.currentEternityTab = name;
+}
+
 function displayIf(e, c) {
 	ge(e).style.display = c ? "" : "none";
 }
@@ -269,6 +327,15 @@ for(var i = 1; i < 10; i++) ge("infinityDimensions").innerHTML += `
 	<td style = "position: absolute; width: 200; left: 400; text-align: left"><span id = "infdimgrowth`+i+`"></span></td>
 	<td style = "position: absolute; width: 200; left: 600">x<span id = "infdimmult`+i+`"></span></td>
 	<td style = "position: absolute; right: 20"><button class = "buy" id = "infdimbuy`+i+`" onclick = "buyInfinityDimension(`+i+`)"></button></td>
+</tr>`
+
+for(var i = 1; i < 10; i++) ge("timeDimensions").innerHTML += `
+<tr id = "timedimDisplay` + i + `" style = "text-align: right">
+	<td style = "text-align: left; padding-bottom: 8px; width: 250">` + tierNames[i] + ` Time Dimension</td>
+	<td style = "position: absolute; width: 100"><span id = "timedimamount`+i+`"></span></td>
+	<td style = "position: absolute; width: 200; left: 400; text-align: left"><span id = "timedimgrowth`+i+`"></span></td>
+	<td style = "position: absolute; width: 200; left: 600">x<span id = "timedimmult`+i+`"></span></td>
+	<td style = "position: absolute; right: 20"><button class = "buy" id = "timedimbuy`+i+`" onclick = "buyTimeDimension(`+i+`)"></button></td>
 </tr>`
 
 h = ""
@@ -317,6 +384,51 @@ ge("postInfinityUpgrades").innerHTML = h + `
 </tr>
 `
 
+h = ""
+c = 0
+
+for(var i in eternityMilestones) {
+	c++
+	var m = eternityMilestones[i]
+	if(c % 3 == 1) h += "<tr>"
+	h += `
+		<td>
+			<button class = "eternitymilestone" id = "eternityMilestone${i}">
+				${m.desc}<br>
+				Requirement: ${m.req} Eternit${m.req==1?"y":"ies"}
+			</button>
+		</td>
+	`
+	if(c % 3 == 3) h += "</tr>"
+}
+
+ge("eternityMilestones").innerHTML = h
+
+h = ""
+
+for(var i = 0; i < 5; i++) {
+	if(i % 5 == 0) h += "<tr>"
+	h += `
+		<td>
+			<button id = "eternityUpgrade` + i + `" onclick = "buyEternityUpgrade(` + i + `)">
+				<span id = "eternityUpgradeDesc` + i + `"></span><br>
+				Cost: <span id = "eternityUpgradeCost` + i + `"></span>
+			</button>
+		</td>
+	`
+	if(i % 5 == 4) h += "</tr>"
+}
+
+ge("eternityUpgrades").innerHTML = h + `
+<tr>
+	<td></td>
+	<td></td>
+	<td><button id = "repeatEter0" onclick = "buyRepeatEter(0)"></button></td>
+	<td></td>
+	<td></td>
+</tr>
+`
+
 var t = `<tr>`
 
 for(var i = 0; i < 9; i++) t += `
@@ -329,6 +441,18 @@ ge("automationTable1").innerHTML += t + `
 <td class = "autobuyer" id = "galaxyAutobuyer">Antimatter Galaxy Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${11}" onclick = "upgradeExtension(11)"></button></td></tr>
 <td class = "autobuyer" id = "sacrificeAutobuyer">Dimensional Sacrifice Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${12}" onclick = "upgradeExtension(12)"></button></td>
 <td class = "autobuyer" id = "infinityAutobuyer">Big Crunch Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${13}" onclick = "upgradeExtension(13)"></button></td>
+<td class = "autobuyer" id = "ipmultAutobuyer">IP Multiplier Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${14}" onclick = "upgradeExtension(14)"></button></td>
+`
+
+var t = `<tr>`
+
+for(var i = 0; i < 9; i++) t += `
+<td class = "autobuyer" id = "infdimensionAutobuyer${i}">${tierNames[i+1]} Infinity Dimension Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${i+15}" onclick = "upgradeExtension(${i+15})"></button></td>${(i+1)%3?"":"</tr><tr>"}
+`
+
+ge("automationTable2").innerHTML += t + `
+<td class = "autobuyer" id = "infinityShiftAutobuyer">Infinity Shift Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${24}" onclick = "upgradeExtension(24)"></button></td>
+<td class = "autobuyer" id = "eternityAutobuyer">Eternity Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${25}" onclick = "upgradeExtension(25)"></button></td>
 `
 
 function f() {
@@ -336,7 +460,7 @@ function f() {
 		var angle = Math.PI / 6 * i;
 		
 		var x = innerWidth / 2 - 40;
-		var y = 425;
+		var y = 440;
 		var r = 250;
 		
 		x += r * Math.sin(angle);
@@ -356,6 +480,7 @@ addEventListener("keydown", function(e) {
 	
 	if(c == 77) maxAll();
 	if(c == 67) bigCrunch();
+	if(c == 69) eternity();
 	if(c == 27) exitChallenge();
 	
 	if(c > 48 && c < 58) {
@@ -369,3 +494,51 @@ addEventListener("keydown", function(e) {
 		e.preventDefault();
 	}
 })
+
+var mouse = {x: 0, y: 0, dx: 0, dy: 0}
+
+ge("timeStudyTree").addEventListener("mousedown", function() {
+	tree.camera.dragging = true;
+})
+ge("timeStudyTree").addEventListener("wheel", function(e) {
+	tree.camera.zoom = Math.max(Math.min(tree.camera.zoom * 0.999**e.deltaY, 1), 0.2)
+})
+addEventListener("mouseup", function() {
+	tree.camera.dragging = false;
+})
+addEventListener("mousemove", function(e) {
+	mouse.dx = e.x - mouse.x;
+	mouse.dy = e.y - mouse.y;
+	
+	if(tree.camera.dragging) {
+		tree.camera.x -= mouse.dx / tree.camera.zoom;
+		tree.camera.y -= mouse.dy / tree.camera.zoom;
+	}
+	
+	mouse.x = e.x;
+	mouse.y = e.y;
+})
+
+ge("cmdline").onkeydown = function(e) {
+	var c = e.keyCode;
+	
+	if(c == 38) {
+		if(au.cmdline.current == au.cmdline.history.length) au.cmdline.typing = ge("cmdline").value;
+		au.cmdline.current = Math.max(au.cmdline.current - 1, 0);
+		ge("cmdline").value = au.cmdline.history[au.cmdline.current] || au.cmdline.typing;
+	}
+	if(c == 40) {
+		au.cmdline.current = Math.min(au.cmdline.current + 1, au.cmdline.history.length);
+		ge("cmdline").value = au.cmdline.history[au.cmdline.current] || au.cmdline.typing;
+		if(au.cmdline.current == au.cmdline.history.length) au.cmdline.typing = "";
+	}
+	if(c == 13) {
+		v = ge("cmdline").value
+		logAu(' > ' + v); 
+		runAu(v, true); 
+		au.cmdline.history.push(v);
+		au.cmdline.current = au.cmdline.history.length;
+		ge("cmdline").value = ''
+		auLog.children[auLog.children.length-1].scrollIntoView()
+	}
+}

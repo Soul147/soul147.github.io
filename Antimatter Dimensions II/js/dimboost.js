@@ -1,5 +1,5 @@
 function canShift() {
-	return game.dimensions[game.shifts + 4].bought.gt(1) && game.shifts < 5 && !atInfinity() && !inChallenge(10);
+	return game.dimensions[game.shifts + 4].bought.gt(1) && game.shifts < 5 && (!atInfinity() || game.break) && !inChallenge(11);
 }
 
 function shift() {
@@ -10,23 +10,23 @@ function shift() {
 }
 
 function getStartingShifts() {
-	if(inChallenge(10)) return 0;
+	if(inChallenge(11)) return 0;
 	return getChallengeSet() == 1 && !game.achievements.includes(42) ? 0 : game.infinityUpgrades.includes(3)*2 + game.infinityUpgrades.includes(7)*2 + game.infinityUpgrades.includes(11);
 }
 
 function canBoost() {
-	if(inChallenge(10)) return game.dimensions[4].amount.gte(getDimensionBoostReq())
-	return game.dimensions[9].amount.gte(getDimensionBoostReq()) && game.shifts == 5 && !atInfinity() && !inChallenge(8) && !inChallenge(10, 1);
+	if(inChallenge(11)) return game.dimensions[4].amount.gte(getDimensionBoostReq())
+	return game.dimensions[9].amount.gte(getDimensionBoostReq()) && game.shifts == 5 && (!atInfinity() || game.break) && !inChallenge(8) && !inChallenge(10, 1);
 }
 
 function boost(bulk) {
 	if(!canBoost()) return;
 	
-	var bought = game.dimensions[inChallenge(10) ? 4 : 9].amount.subtract(4).divide(getDimensionBoostScaling()).add(1).floor();
+	var bought = game.dimensions[inChallenge(11) ? 4 : 9].amount.subtract(4).divide(getDimensionBoostScaling()).add(1).floor();
 	
 	if(game.boosts.gte(bought)) return;
 	
-	game.totalBoosts = game.totalBoosts.add(bought.subtract(game.boosts));	
+	game.totalBoosts = game.totalBoosts.add(bought.subtract(game.boosts));
 	game.boosts = bought;
 	game.boostTime = game.resetTime = Date.now();
 	// resetDimensions();
@@ -36,7 +36,7 @@ function boost(bulk) {
 function getDimensionBoostScaling() {
 	var r = 2;
 	if(game.infinityUpgrades.includes(13)) r *= 0.75;
-	if(inChallenge(10)) r /= 3;
+	if(inChallenge(11)) r /= 3;
 	return r;
 }
 
@@ -50,6 +50,7 @@ function getDimensionBoostPower() {
 	// if(game.infinityUpgrades.includes(24)) r = r.multiply(1.6)
 	if(game.achievements.includes(41)) r = r.multiply(1.01)
 	if(challengeCompleted(7, 1)) r = r.multiply(2.5)
+	if(tree.hasStudy("p23")) r = r.multiply(4);
 	if(inChallenge(7, 1)) r = r.pow(2)
 	return r;
 }
