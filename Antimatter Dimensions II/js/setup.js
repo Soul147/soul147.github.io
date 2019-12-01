@@ -98,12 +98,6 @@ function hardReset() {
 }
 
 function updateSave() {
-	if(game.totalAntimatter.toString().includes("array")) {
-		newGame();
-		save();
-		location.reload();
-	}
-	
 	transformToDecimal(game);
 	
 	if(!game.options) game.options = {
