@@ -99,7 +99,7 @@ function galaxy() {
 	game.shifts = getStartingShifts();
 	game.boosts = new Decimal(0);
 	game.galaxyTime = game.resetTime = Date.now();
-	// resetDimensions();
+	if(!devMode) resetDimensions();
 	return true;
 }
 

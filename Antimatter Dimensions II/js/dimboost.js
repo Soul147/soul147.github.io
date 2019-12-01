@@ -29,7 +29,7 @@ function boost(bulk) {
 	game.totalBoosts = game.totalBoosts.add(bought.subtract(game.boosts));
 	game.boosts = bought;
 	game.boostTime = game.resetTime = Date.now();
-	// resetDimensions();
+	if(!devMode) resetDimensions();
 	return true;
 }
 

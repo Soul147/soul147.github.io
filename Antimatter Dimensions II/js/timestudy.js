@@ -63,7 +63,7 @@ function ns(p) {
 }
 
 ns({x:     0, y:     0, id:  "s00", cost:    1, desc: "Begin.", and: true})
-ns({x:    -1, y:    -1, id:  "p11", cost:    1, desc: "Multiplier to normal dimensions, increasing during this eternity", eff: function() {return Decimal.pow(10, getTimeSince("eternity")/1e3).min(infp())}, pre: ["s00"]})
+ns({x:    -1, y:    -1, id:  "p11", cost:    1, desc: "Multiplier to normal dimensions, increasing during this eternity", eff: function() {return Decimal.pow(10, getTimeSince("eternity")/1e4).min(infp())}, pre: ["s00"]})
 ns({x:    -1, y:    -2, id:  "p21", cost:    2, desc: "Gain more infinities based on dimension boosts", eff: function() {return game.boosts}, pre: ["p11"]})
 ns({x:    -2, y:    -1, id:  "p22", cost:    2, desc: "Boosts based on infinities are 10x stronger", pre: ["p11"]})
 ns({x:    -2, y:    -2, id:  "p23", cost:    4, desc: "Dimension Boosts are 4x as powerful", pre: ["p11"]})
@@ -83,7 +83,7 @@ ns({x:     3, y:     0, id:  "r21", cost:   25, desc: "Distant antimatter galaxy
 ns({x:     3, y:     1, id:  "r22", cost:    5, desc: "You gain replicanti three times faster", pre: ["r11"]})
 ns({x:     4, y:     1, id:  "r31", cost:    5, desc: "Sacrifice is 10% stronger", pre: ["r21"]})
 ns({x:     4, y:     2, id:  "r32", cost:   50, desc: "Replicanti galaxies are 50% more effective", pre: ["r22"]})
-ns({x:     0, y:     3, id:  "d11", cost: 5000, desc: "Unlock Time Dilation", pre: ["s00"]})
+// ns({x:     0, y:     3, id:  "d11", cost: 5000, desc: "Unlock Time Dilation", pre: ["s00"]})
 
 Study.prototype.getPostStudies = function() {
 	var l = []

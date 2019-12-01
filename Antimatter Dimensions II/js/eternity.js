@@ -163,10 +163,10 @@ var eternityMilestones = {
 	iAuto9: {req:  19, desc: "Unlock Infinity Dimension autobuyer 9"},
 	iShift: {req:  20, desc: "Unlock Infinity Shift autobuyer"},
 	etAuto: {req: 100, desc: "Unlock Eternity autobuyer"},
-	repGal: {req: 200, desc: "Unlock Replicanti Galaxy autobuyer"},
-	repCha: {req: 300, desc: "Unlock Replicanti Chance autobuyer"},
-	repInt: {req: 500, desc: "Unlock Replicanti Interval autobuyer"},
-	repMax: {req: 1e3, desc: "Unlock Max Replicanti Galaxy autobuyer"},
+	// repGal: {req: 200, desc: "Unlock Replicanti Galaxy autobuyer"},
+	// repCha: {req: 300, desc: "Unlock Replicanti Chance autobuyer"},
+	// repInt: {req: 500, desc: "Unlock Replicanti Interval autobuyer"},
+	// repMax: {req: 1e3, desc: "Unlock Max Replicanti Galaxy autobuyer"},
 }
 
 function eternityMilestone(id) {

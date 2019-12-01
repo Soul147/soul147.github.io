@@ -36,7 +36,7 @@ function updateDimensionSet(name="dimension", abbr="", curr="", l) {
 			if (display) {
 				ge(abbr + "dimamount" + i).textContent = shortenMoney(game[name + "s"][i].amount)
 				ge(abbr + "dimmult" + i).textContent = shorten(game[name + "s"][i].multiplier)
-				ge(abbr + "dimbuy" + i).textContent = "Cost: " + window[["shortenCosts", "shorten"][!!l+0]](game[name + "s"][i].cost) + curr
+				ge(abbr + "dimbuy" + i).textContent = "Cost: " + window[["shortenCosts", "shortenMoney"][!!l+0]](game[name + "s"][i].cost) + curr
 				ge(abbr + "dimbuy" + i).className = window["canBuy" + Name](i) ? "buy" : "lock"
 			}
 			ge(abbr + "dimDisplay" + i).style.display = display?"":"none"
@@ -286,7 +286,7 @@ function update() {
 			ge("ttbutton1").className = game.infinityPoints.gte(Decimal.pow(1e100, game.timestudy.bought[1])) ? "ttbtn" : "ttbtnlocked"
 			ge("ttbutton1").innerHTML = "Buy Time Theorems<br>Cost: " + shortenCosts(Decimal.pow(1e100, game.timestudy.bought[1])) + " IP"
 			ge("ttbutton2").className = game.eternityPoints.gte(Decimal.pow(2, game.timestudy.bought[2])) ? "ttbtn" : "ttbtnlocked"
-			ge("ttbutton2").innerHTML = "Buy Time Theorems<br>Cost: " + shorten(Decimal.pow(2, game.timestudy.bought[2])) + " EP"
+			ge("ttbutton2").innerHTML = "Buy Time Theorems<br>Cost: " + shortenMoney(Decimal.pow(2, game.timestudy.bought[2])) + " EP"
 			ge("respecTS").className = atEternity() ? "ttbtn" : "ttbtnlocked"
 			ge("respecTS").setAttribute("tooltip", 
 				atEternity() ? 
