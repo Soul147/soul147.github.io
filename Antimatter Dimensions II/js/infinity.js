@@ -34,7 +34,7 @@ function getInfinity() {
 function bigCrunch(force) {
 	if(!atInfinity() && !force) return;
 	
-	if(!(game.bestInfinityTime < 60000 || game.break)) {
+	if(!(game.bestInfinityTime < 60000 || game.break || haveEternitied())) {
 		showTab(lastTab);
 		lastTab = null;
 	}

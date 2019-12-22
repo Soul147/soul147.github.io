@@ -198,11 +198,20 @@ function runAu(line, log) {
 			logAu(arg)
 		}
 		if(ccmd(cmd, "run")) { // write something in the console
-			if(!args[1]) return;
-			var file = au.save[args[1]];
-			if(!file) return;
-			var script = file.script.split(`
+			if(!args[1]) {
+				script = au.raw;
+				if(log) logAu("Running current script.")
+			}
+			else {
+				var file = au.save[args[1]];
+				if(!file) {
+					if(log) logAu("File " + args[1] + ".au doesn't exist.")
+					return;
+				}
+				if(log) logAu("Running file " + args[1] + ".au.")
+				script = file.script.split(`
 `);
+			}
 			var prevLine = au.line;
 			for(au.line = 0; au.line < script.length; au.line++) {
 				runAu(script[au.line]);
@@ -244,14 +253,15 @@ function runAu(line, log) {
 			if(log) logAu("Activated extension " + e + ".")
 		}
 		if(ccmd(cmd, "pause")) {
-			if(isNaN(args[1])) args[1] = "0"
+			t = parseInt(args[1])
+			if(isNaN(t)) t = 0
 			if(args[2] == "t" || args[2] == "tick" || args[2] == "ticks") { // ticks
-				au.tickDelay += parseInt(args[1])
-				if(log) logAu("Paused for " + args[1] + "ticks.")
+				au.tickDelay += t
+				if(log) logAu("Paused for " + t + "ticks.")
 			}
 			else { // milliseconds
-				au.delay += parseInt(args[1])
-				if(log) logAu("Paused for " + args[1] + "milliseconds.")
+				au.delay += t
+				if(log) logAu("Paused for " + t + "milliseconds.")
 			}
 		}
 		if(ccmd(cmd, "maxall")) {
@@ -281,6 +291,12 @@ function selectFileOption() {
 	var option = ge("fileOptions").value;
 	au.file[option]();
 	ge("fileOptions").value = "File"
+}
+
+function selectRunOption() {
+	var option = ge("runOptions").value;
+	au.run[option]();
+	ge("runOptions").value = "Run"
 }
 
 function openFileMenu(name) {

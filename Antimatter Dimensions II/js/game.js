@@ -120,7 +120,7 @@ function update() {
 	gc("eternityPoints", function(e) {e.textContent = shortenMoney(game.eternityPoints.floor())})
 	
 	displayIf("infinityPrestige", haveInfinitied())
-	displayIf("gainedIP", (game.bestInfinityTime < 60000 || game.break) && (atInfinity() || getChallengeSet() < 3));
+	displayIf("gainedIP", (game.bestInfinityTime < 60000 || game.break || haveEternitied()) && (atInfinity()));
 	ge("gainedIP").style.fontSize = game.break || inChallenge() ? "11px" : "30px"
 	ge("gainedIP").innerHTML = getChallengeSet() == 1 || getChallengeSet() == 2 ? 
 		(canCompleteChallenge() ? "Big Crunch to complete challenge." : "Reach " + shortenMoney(getChallengeGoal()) + " antimatter to complete challenge.") : 
@@ -445,6 +445,7 @@ function update() {
 	ge("auClass").innerText = au.class
 	ge("upgradeCore").innerText = `Unlock Class ${au.class+1} - ${layerNames[au.class+1]}`;
 	ge("upgradeCore").className = canUpgradeAutomator() ? "buy" : "lock"
+	ge("auAutorun").innerText = "Turn Autorun O" + ["n","ff"][!!au.autorun+0]
 
 	for(var i = 0; i < 3; i++) displayIf("class" + i + "Automation", au.class >= i)
 	
@@ -464,11 +465,11 @@ function update() {
 		var div = ge(names[e.id])
 		div.style.visibility = extUnlocked(e.id) ? "visible" : "hidden";
 		
-		ge("buyauto" + (e.id)).innerHTML = "50% smaller interval<br>Cost: " + shortenCosts(e.cost) + " " + smallCurrency[e.currency]
+		ge("buyauto" + (e.id)).innerHTML = e.level.lt(2**au.class*10) ? "50% smaller interval<br>Cost: " + shortenCosts(e.cost) + " " + smallCurrency[e.currency] : "Max Level"
 		
 		if(!div.children.length) return; // extension exists but no element does
 		
-		div.children[1].innerHTML = "Level " + getFullExpansion(e.level) + "/" + (2**au.class*10) + "<br>Interval: " + timeDisplayShort(1 / e.speed) + "<br>" + (e.speed <= 1 ? timeDisplayShort(Math.max(1 / e.speed * (1 - e.charge), 0)) + " until charged" : shortenMoney(e.speed) + " activations per second")
+		div.children[1].innerHTML = "Level " + getFullExpansion(e.level) + "/" + (2**au.class*10) + (e.speed <= 1 ? "<br>Charge Time: " + timeDisplayShort(Math.max(1 / e.speed * (1 - (e.charge % 1)), 0)) : "<br>" + shortenMoney(e.speed) + " activations/s")
 		div.children[2].style.width = Math.min(e.charge, 1) * 230
 		div.children[2].innerText = (e.charge*100).toFixed(0) + "%"
 	})
@@ -478,15 +479,20 @@ function update() {
 `);
 	if(!au.tickDelay) au.tickDelay = 0;
 	if(au.tickDelay > 0) au.tickDelay--;
-	else {
+	else if(au.autorun) {
 		au.delay -= diff / hacker;
-		if(au.delay < 0) {
-			au.delay = 0;
+		if(au.delay < 0 || isNaN(au.delay)) {
+			au.delay = 100;
 			au.line++;
 			if(au.line >= au.script.length || !au.line) au.line = 0;
 			runAu(au.script[au.line])
 		}
+		var a = ge("auScriptHighlight")
+		var p = ge("auScript").getBoundingClientRect()
+		a.style.left = p.x + 1;
+		a.style.top = p.y + 1 + 18 * au.line;
 	}
+	displayIf("auScriptHighlight", au.autorun)
 	
 	// Give the Automator memory access to important stuff
 	

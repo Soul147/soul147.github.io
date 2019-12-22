@@ -1,4 +1,4 @@
-var devMode = false;
+var devMode = true;
 
 var lastTab;
 var tierNames = ["0", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"]
@@ -103,7 +103,7 @@ function updateSave() {
 	if(!game.options) game.options = {
 		notation: "Scientific",
 		mixedCutoff: 1e33,
-		fps: 30
+		autosave: true
 	}
 	
 	if(!game.achievements) game.achievements = [];
@@ -154,6 +154,7 @@ function updateSave() {
 	if(!game.automator) game.automator = {
 		class: 0,
 		extensions: [],
+		autorun: true,
 	}
 	
 	au = game.automator;
@@ -212,6 +213,20 @@ function updateSave() {
 		isUnsaved: function() {
 			return au.currentFile ? au.raw !== au.save[au.currentFile].script : au.raw.length;
 		}
+	}
+	au.run = {
+		"Run Current Script": function() {
+			
+		},
+		"Turn Autorun On": function() {
+			au.autorun = true;
+		},
+		"Toggle Autorun": function() {
+			au.autorun = !au.autorun;
+		},
+		"Turn Autorun Off": function() {
+			au.autorun = false;
+		},
 	}
 	au.cmdline = {
 		current: 0,

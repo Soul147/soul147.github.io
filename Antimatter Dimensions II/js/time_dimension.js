@@ -65,7 +65,7 @@ function maxAllTimeDimensions() {
 }
 
 function getFreeTickspeedMult() {
-	return new Decimal(4/3);
+	return new Decimal(2);
 }
 
 function getFreeTickspeedUpgrades() {

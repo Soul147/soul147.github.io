@@ -1,4 +1,4 @@
-<title>Antimatter Dimensions -1</title>
+<title>Antimatter Dimensions II</title>
 
 <link rel = "stylesheet" href = "css/main.css">
 
@@ -165,7 +165,7 @@
 			<h1>AUTOMATOR CORE</h1>
 			<h2>Class <span id = "auClass"></span></h2>
 			<button id = "upgradeCore" style = "width: 300; height: 50; font-size: 16px" onclick = "upgradeAutomator()"></button><br><br>
-			<select id = "fileOptions" onchange = "selectFileOption()">
+			<select style = "width: 75" id = "fileOptions" onchange = "selectFileOption()">
 				<option disabled selected style = "display: none">File</option>
 				<option>New</option>
 				<option>Open</option>
@@ -174,7 +174,14 @@
 				<option>Rename</option>
 				<option>Delete</option>
 			</select>
+			<select style = "width: 75"  id = "runOptions" onchange = "selectRunOption()">
+				<option disabled selected style = "display: none">Run</option>
+				<option>Run Current Script</option>
+				<option id = "auAutorun">Toggle Autorun</option>
+			</select>
 			<br>
+			<!-- <div style = "text-align: left; background: #eee; width: 775; height: 20"><span></span></div> -->
+			<div id = "auScriptHighlight" style = "position: fixed; background: #00f4; width: 382; height: 20"></div>
 			<textarea id = "auScript" style = "color: white; background-color: #1f1f1f; width: 384; height: 256"></textarea>
 			<span style = "text-align: left; color: #0f0; background-color: #1f1f1f; width: 384; height: 254; display: inline-block; overflow: auto"><div id = "auLog" style = "padding: 4px; padding-bottom: 24px; white-space: pre-wrap"></div></span>
 			<input id = "cmdline" style = "color: #0f0; background-color: #1f1f1f; font-family: lucida console; width: 384; margin-left: -390; position: relative; top: -6;">
