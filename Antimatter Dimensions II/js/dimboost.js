@@ -26,11 +26,15 @@ function boost(bulk) {
 	
 	if(game.boosts.gte(bought)) return;
 	
-	game.totalBoosts = game.totalBoosts.add(bought.subtract(game.boosts));
+	game.totalBoosts = game.totalBoosts.add(getDimensionBoostGain());
 	game.boosts = bought;
 	game.boostTime = game.resetTime = Date.now();
 	if(!devMode) resetDimensions();
 	return true;
+}
+
+function getDimensionBoostGain() {
+	return game.dimensions[inChallenge(11) ? 4 : 9].amount.subtract(4).divide(getDimensionBoostScaling()).add(1).floor().subtract(game.boosts).max(1);
 }
 
 function getDimensionBoostScaling() {
@@ -50,7 +54,6 @@ function getDimensionBoostPower() {
 	// if(game.infinityUpgrades.includes(24)) r = r.multiply(1.6)
 	if(game.achievements.includes(41)) r = r.multiply(1.01)
 	if(challengeCompleted(7, 1)) r = r.multiply(2.5)
-	if(tree.hasStudy("p23")) r = r.multiply(4);
 	if(inChallenge(7, 1)) r = r.pow(2)
 	return r;
 }

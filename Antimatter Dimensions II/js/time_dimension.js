@@ -25,8 +25,6 @@ function getTimeDimensionProduction(i) {
 	var dim = game.timeDimensions[i];
 	
 	dim.multiplier = Decimal.pow(timeDimensionBuyMults[dim.id], dim.bought)
-	if(tree.hasStudy("t11") && i == 1) dim.multiplier = dim.multiplier.multiply(tree.getEff("t11"))
-	if(tree.hasStudy("t21")) dim.multiplier = dim.multiplier.multiply(tree.getEff("t21"))
 	
 	return dim.amount.multiply(dim.multiplier);
 }

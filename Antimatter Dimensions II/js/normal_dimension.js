@@ -72,8 +72,6 @@ function getDimensionProduction(i) {
 	if(i == 1 && game.achievements.includes(54)) dim.multiplier = dim.multiplier.multiply(game.dimensions[1].amount.pow(0.001).max(1))
 	if(game.achievements.includes(56)) dim.multiplier = dim.multiplier.multiply(game.dimensions[0].amount.pow(0.0001).max(1))
 	if(game.achievements.includes(65)) dim.multiplier = dim.multiplier.multiply(game.dimensions[0].amount.pow(0.0002).max(1))
-	if(tree.hasStudy("p11")) dim.multiplier = dim.multiplier.multiply(tree.getEff("p11"));
-	if(tree.hasStudy("p31") && i !== 9) dim.multiplier = dim.multiplier.multiply(tree.getEff("p31"));
 
 	if(i == 9 && game.achievements.includes(17)) dim.multiplier = dim.multiplier.multiply(1.09);
 	if(i !== 9 && game.achievements.includes(24)) dim.multiplier = dim.multiplier.multiply(1.08);
@@ -188,7 +186,6 @@ function getSacrificeMult() {
 		var power = 0.01;
 		if(game.achievements.includes(18)) power += 0.001;
 		if(game.achievements.includes(59)) power += 0.001;
-		if(tree.hasStudy("r31")) power += 0.001;
 		r = game.dimensions[1].amount.pow(power); // this is for later (ICs or something)
 	}
 	

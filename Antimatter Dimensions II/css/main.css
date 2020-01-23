@@ -503,6 +503,7 @@ currency {
 	content: attr(tooltip);
 	transition-duration: 0.2s;
 	z-index: 1000;
+	white-space: pre-wrap;
 }
 
 [tooltip]:hover:before {
@@ -511,20 +512,37 @@ currency {
 }
 
 .autobuyer {
-	font-size: 12px !important;
+	font-size: 11px !important;
 	border: 1px solid gray;
 	width: 230px;
 	height: 155px;
-	text-align: center;
+	text-align: center !important;
 	font-size: 100%;
 	padding: 10px;
 	border-radius: 4px;
 }
 
 .autobuyerInner {
-	background: #0001;
+	background: #ddd;
 	height: 20;
 	overflow: visible;
+}
+
+.autobuyerMode {
+	background: #ddd;
+	border: 1px solid #bbb;
+	border-radius: 4px;
+	width: 75;
+	height: 25;
+}
+
+.autobuyerModeInner {
+	background: #fff;
+	border: 1px solid #bbb;
+	border-radius: 4px;
+	width: 25;
+	height: 25;
+	position: relative;
 }
 
 .autobuyerButton {

@@ -67,13 +67,23 @@ function eternity(force) {
 	game.galaxies = new Decimal(0);
 	game.replicanti.galaxies = new Decimal(0);
 	resetDimensions();
+	if(game.options.respecTS) {
+		game.options.respecTS = false;
+		respecTimeStudies(false);
+	}
 	
 	return true;
 }
 
-function respecTimeStudies() {
+function respecTimeStudies(toggle=!game.options.instantRespec) {
+	if(toggle) {
+		return game.options.respecTS = !game.options.respecTS
+	}
+	
 	game.timestudy.theorems = getTotalTT();
-	game.timestudy.studies = [];
+	game.timestudy.studies = game.timestudy.studies.filter(function(study) {
+		return study.includes("s");
+	})
 	eternity();
 }
 
@@ -98,7 +108,7 @@ function getEternityUpgradeEffect(n) {
 		case 1:
 			return game.eternities.pow(game.eternities.log10()).max(1);
 		case 2:
-			return Math.max(1e25 / getChallengeTimes(1) ** 4, 1)
+			return Math.max(1e25 / getChallengeTimes(1) ** 4, 1) || 1
 		case 3:
 			return game.infinityDimensions[9].bought.pow(10).max(1)
 		case 4:

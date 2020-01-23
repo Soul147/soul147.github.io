@@ -14,14 +14,12 @@ function getInfinityPointMult() {
 	r = Decimal.pow(2, game.repeatInf[0])
 	
 	if(game.achievements.includes(37)) r = r.multiply(2)
-	if(tree.hasStudy("i23")) r = r.multiply(tree.getEff("i23"));
 	
 	return r;
 }
 
 function getInfinityMult() {
 	r = new Decimal(1);
-	if(tree.hasStudy("p21")) r = r.multiply(tree.getEff("p21"))
 	
 	return r;
 }
@@ -92,12 +90,11 @@ function bigCrunch(force) {
 	return true;
 }
 
-var infinityUpgradeCosts = "1,1,3,20,1,2,5,40,1,3,10,100,1,4,15,200,0,1e3,5e3,1e4,2e5,3e6,1e7,1e10,1e18,1e25,1e7,1e7,1e8,0,0,0".split(",");
+var infinityUpgradeCosts = "1,1,3,10,1,2,3,20,1,3,8,50,1,4,10,100,0,1e3,2e3,5e3,1e4,2e5,3e6,1e10,1e17,1e25,1e7,1e7,1e8,0,0,0".split(",");
 
 function canBuyInfinityUpgrade(i) {
 	if(game.infinityUpgrades.includes(i)) return false;
 	if(game.infinityPoints.lt(infinityUpgradeCosts[i])) return false;
-	if(i % 16 > 3 && !game.infinityUpgrades.includes(i - 4) && i < 16) return false;
 	return true;
 }
 
@@ -131,7 +128,6 @@ function buyRepeatInf(i) {
 
 function getInfinityBonus() {
 	r = 1;
-	if(tree.hasStudy("p22")) r *= 10;
 	return r;
 }
 
@@ -158,7 +154,7 @@ function getInfinityUpgradeEffect(n) {
 		case 20:
 			return game.infinities.multiply(308).sqrt().add(1).pow(getInfinityBonus());
 		case 21: 
-			return Math.max(1e9 / getChallengeTimes(0), 1);
+			return Math.max(1e9 / getChallengeTimes(0), 1) || 1;
 		case 22:
 			return Decimal.tetrate(Math.log10(game.achievements.length+1)+1, 3);
 		case 23: 
@@ -181,7 +177,7 @@ function getIUDescriptions() {
 		"Dimensions 4-6 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
 		"Dimension boost multiplier is 25% stronger",
 		"Infinity point generation based on fastest infinity",
-		"You start with the ninth dimensions unlocked and one galaxy",
+		"You start with the ninth dimension unlocked and two galaxies",
 		"Dimensions 7-9 gain a multiplier based on infinities<br>Currently: " + shorten(getInfinityUpgradeEffect(4)) + "x",
 		"Dimension boost cost increases by 25% less",
 		"Infinity stat generation based on fastest infinity",
@@ -215,7 +211,7 @@ function resetInfinityUpgrades() {
 }
 
 function canBreakInfinity() {
-	return getChallengeCompletions() > 10 || haveEternitied();
+	return getChallengeCompletions() >= 10 || haveEternitied();
 }
 
 function breakInfinity() {

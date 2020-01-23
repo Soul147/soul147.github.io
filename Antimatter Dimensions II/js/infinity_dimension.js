@@ -52,7 +52,6 @@ function resetInfinityDimensions() {
 function getInfinityShiftPower() {
 	var r = new Decimal(10);
 	if(challengeCompleted(12, 1)) r = r.pow(4);
-	if(tree.hasStudy("i22")) r = r.multiply(tree.getEff("i22"));
 	return r;
 }
 
@@ -73,10 +72,6 @@ function getInfinityDimensionProduction(i) {
 	if(game.eternityUpgrades.includes(2)) dim.multiplier = dim.multiplier.multiply(getEternityUpgradeEffect(2))
 	if(game.eternityUpgrades.includes(3)) dim.multiplier = dim.multiplier.multiply(getEternityUpgradeEffect(3))
 	if(game.eternityUpgrades.includes(4)) dim.multiplier = dim.multiplier.multiply(getEternityUpgradeEffect(4))
-	if(tree.hasStudy("i11")) dim.multiplier = dim.multiplier.multiply(tree.getEff("i11"))
-	if(tree.hasStudy("i21")) dim.multiplier = dim.multiplier.multiply(tree.getEff("i21"))
-	if(tree.hasStudy("i31") && i == 9) dim.multiplier = dim.multiplier.multiply(tree.getEff("i31"))
-	
 	return dim.amount.multiply(dim.multiplier);
 }
 

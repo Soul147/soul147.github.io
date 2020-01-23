@@ -37,7 +37,6 @@ function getReplChance() {
 
 function getReplSpeed() {
 	var r = game.replicanti.upgrades[1].divide(10).add(1)
-	if(tree.hasStudy("r22")) r = r.multiply(3)
 	
 	return r;
 }

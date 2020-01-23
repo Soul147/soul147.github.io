@@ -22,6 +22,13 @@ function gc(e, f, o=0) {
 	}
 }
 
+function gn(e, f, o=0) {
+	l = document.getElementsByName(e);
+	for(var i = o; i < l.length + o; i++) {
+		f(l[i % l.length], i); 
+	}
+}
+
 function transformToDecimal(object) { // It's so much better than hevi's version, because it's recursive and I'm a lazy piece of shit
 	for(i in object) {
 		if(i == "automator") continue; // for fuck's sake
@@ -126,7 +133,11 @@ function updateSave() {
 	if(!game.eternityPoints) game.eternityPoints = new Decimal(0);
 	if(!game.eternities) game.eternities = new Decimal(0);
 	if(!game.timeDimensions) resetTimeDimensions();
-	if(!game.timestudy) game.timestudy = {theorems: new Decimal(0), bought: [new Decimal(0), new Decimal(0), new Decimal(0)], studies: []};
+	if(!game.timestudy) game.timestudy = {};
+	if(!game.timestudy.theorems) game.timestudy.theorems = new Decimal(0);
+	if(!game.timestudy.unlockTheorems) game.timestudy.unlockTheorems = new Decimal(0);
+	if(!game.timestudy.bought) game.timestudy.bought = [new Decimal(0), new Decimal(0), new Decimal(0)];
+	if(!game.timestudy.studies) game.timestudy.studies = [];
 	if(!game.eternityUpgrades) resetEternityUpgrades();
 	if(!game.replicanti) resetReplicanti();
 	
@@ -160,6 +171,8 @@ function updateSave() {
 	au = game.automator;
 	if(!au.save) au.save = {}
 	if(!au.memory) au.memory = {}
+	if(!au.forcedStates) au.forcedStates = [];
+	ge("auForceState1").value = au.forcedStates[0]||0;
 	
 	au.file = {
 		"New": function(force) {
@@ -216,7 +229,7 @@ function updateSave() {
 	}
 	au.run = {
 		"Run Current Script": function() {
-			
+			runAu("run")
 		},
 		"Turn Autorun On": function() {
 			au.autorun = true;
@@ -236,8 +249,8 @@ function updateSave() {
 	ge("auScript").value = au.raw || "";
 	
 	var c = []
-	for(var i = 0; i < 15; i++) au.extensions[i] = Extension(0.5**i, 2**i, "infinityPoints", au.extensions[i]?au.extensions[i].level:0)
-	for(var i = 0; i < 15; i++) au.extensions[i+15] = Extension(0.5**i/3600, 2**i, "eternityPoints", au.extensions[i]?au.extensions[i].level:0)
+	for(var i = 0; i < 15; i++) au.extensions[i] = Extension(0.5**i, 1, "infinityPoints", au.extensions[i]?au.extensions[i].level:0, au.extensions[i]?au.extensions[i].mode:1)
+	for(var i = 0; i < 15; i++) au.extensions[i+15] = Extension(0.5**i/3600, (i+1)*5, "eternityPoints", au.extensions[i+15]?au.extensions[i+15].level:0, au.extensions[i+15]?au.extensions[i+15].mode:1)
 }
 
 if(localStorage.ad2) {
@@ -445,29 +458,24 @@ ge("eternityUpgrades").innerHTML = h + `
 `
 
 var t = `<tr>`
+var sh = `
+Shortcut: `
 
-for(var i = 0; i < 9; i++) t += `
-<td class = "autobuyer" id = "dimensionAutobuyer${i}">${tierNames[i+1]} Dimension Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${i}" onclick = "upgradeExtension(${i})"></button></td>${(i+1)%3?"":"</tr><tr>"}
+for(var i = 0; i < 15; i++) t += `
+<td class = "autobuyer" id = "${i < 9 ? "dimensionAutobuyer" + i : ["tickspeed","boost","galaxy","sacrifice","infinity","ipmult"][i-9] + "Autobuyer"}"><p tooltip = "ID: ${i+(i<10?"":sh + ["[boost]","[galaxy]","[sacrifice]","[crunch]"][i-10])}" style = "margin: 0px">${i < 9 ? tierNames[i+1] + " Dimension" : ["Tickspeed","Dimension Boost","Antimatter Galaxy","Dimensional Sacrifice","Big Crunch","IP Multiplier"][i-9]} Autobuyer</p><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${i}" onclick = "upgradeExtension(${i})"></button><br><span></span><span></span></td>${(i+1)%3?"":"</tr><tr>"}
 `
 
-ge("automationTable1").innerHTML += t + `
-<td class = "autobuyer" id = "tickspeedAutobuyer">Tickspeed Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${9}" onclick = "upgradeExtension(9)"></button></td>
-<td class = "autobuyer" id = "boostAutobuyer">Dimension Boost Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${10}" onclick = "upgradeExtension(10)"></button></td>
-<td class = "autobuyer" id = "galaxyAutobuyer">Antimatter Galaxy Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${11}" onclick = "upgradeExtension(11)"></button></td></tr>
-<td class = "autobuyer" id = "sacrificeAutobuyer">Dimensional Sacrifice Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${12}" onclick = "upgradeExtension(12)"></button></td>
-<td class = "autobuyer" id = "infinityAutobuyer">Big Crunch Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${13}" onclick = "upgradeExtension(13)"></button></td>
-<td class = "autobuyer" id = "ipmultAutobuyer">IP Multiplier Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${14}" onclick = "upgradeExtension(14)"></button></td>
-`
+ge("automationTable1").innerHTML += t;
 
 var t = `<tr>`
 
 for(var i = 0; i < 9; i++) t += `
-<td class = "autobuyer" id = "infdimensionAutobuyer${i}">${tierNames[i+1]} Infinity Dimension Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${i+15}" onclick = "upgradeExtension(${i+15})"></button></td>${(i+1)%3?"":"</tr><tr>"}
+<td class = "autobuyer" id = "infdimensionAutobuyer${i}">${tierNames[i+1]} Infinity Dimension Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${i+15}" onclick = "upgradeExtension(${i+15})"></button><br><span></span><span></span></td>${(i+1)%3?"":"</tr><tr>"}
 `
 
 ge("automationTable2").innerHTML += t + `
-<td class = "autobuyer" id = "infinityShiftAutobuyer">Infinity Shift Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${24}" onclick = "upgradeExtension(24)"></button></td>
-<td class = "autobuyer" id = "eternityAutobuyer">Eternity Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${25}" onclick = "upgradeExtension(25)"></button></td>
+<td class = "autobuyer" id = "infinityShiftAutobuyer">Infinity Shift Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${24}" onclick = "upgradeExtension(24)"></button><br><span></span><span></span></td>
+<td class = "autobuyer" id = "eternityAutobuyer">Eternity Autobuyer<br><div class = "autobuyerInfo"></div><div class = "autobuyerInner"></div><button class = "autobuyerButton" id = "buyauto${25}" onclick = "upgradeExtension(25)"></button><br><span></span><span></span></td>
 `
 
 function f() {
@@ -490,10 +498,34 @@ f()
 
 window.onresize = f;
 
+var typing = 0;
+
+ge("auScript").onfocus = function() {typing++}
+ge("auScript").onblur = function() {typing--}
+ge("cmdline").onfocus = function() {typing++}
+ge("cmdline").onblur = function() {typing--}
+
 addEventListener("keydown", function(e) {
+	if(typing) return;
+	
 	var c = e.keyCode;
 	
-	if(c == 77) maxAll();
+	if(c == 77) {
+		if(e.shiftKey) {
+			maxAllInfinityDimensions();
+			maxAllTimeDimensions();
+		}
+		maxAll();
+	}
+	if(c == 68) {shift(); boost();}
+	if(c == 71) galaxy();
+	if(c == 83) {
+		if(e.ctrlKey && c == 83) {
+			save();
+			e.preventDefault();
+		}
+		else sacrifice();
+	}
 	if(c == 67) bigCrunch();
 	if(c == 69) eternity();
 	if(c == 27) exitChallenge();
@@ -504,10 +536,7 @@ addEventListener("keydown", function(e) {
 	}
 	if(c == 48) maxTickspeed();
 	
-	if(e.ctrlKey && c == 83) {
-		save();
-		e.preventDefault();
-	}
+	
 })
 
 var mouse = {x: 0, y: 0, dx: 0, dy: 0}

@@ -44,8 +44,6 @@ function exitChallenge() {
 		}
 		if(exited) return;
 	}
-	
-	selectChallenge(-1);
 }
 
 var layerNames = ["", "Infinity ", "Eternity ", "Reality ", "Quantum ", "Omnipotence ", "Oblivion "]
@@ -78,7 +76,7 @@ function updateChallengeDescriptions() {
 		`All Infinity Challenge rewards are disabled.ICDATAReward: Your achievement multiplier affects infinity dimensions.`,
 		`Dimension boosts and dimensional sacrifice are disabled.ICDATAReward: Multiplier to Infinity Dimensions based on infinities.`,
 		`Dimension multipliers are reduced based on tier.ICDATAReward: Break Infinity upgrade 8 is stronger.`,
-		`Infinity Power is 33% weaker.ICDATAReward: Infinity Shifts are ???% stronger.`,
+		`Infinity Power is 33% weaker.ICDATAReward: Infinity Shifts are 1000x stronger.`,
 	]
 	
 	for(var i = 13; i < 25; i++) {
@@ -198,7 +196,7 @@ function getChallengeCompletions(s=0) {
 function getChallengeTimes(s=game.selectedChallengeType) {
 	var sum = 0;
 	for(var i = 0; i < 12; i++) {
-		sum += game.challenges[s][i].completed ? game.challenges[s][i].bestTime : Infinity
+		sum += game.challenges[s][i].completed ? game.challenges[s][i].bestTime||Infinity : Infinity
 	}
 	return sum;
 }
@@ -217,7 +215,7 @@ function suffer(n, a) {
 }
 
 var icRequirements = ["1e2000", "1e2500", "1e5000", "1e7750", "1e9000", "1e12500", "1e17000", "1e25000", "1e35000", "1e35000", "1e35000", "1e50000"]
-var icGoals = ["1e1000", "1e1500", "1e2500", "1e3300", "1e4000", "1e5500", "1e6900", "1e3000", "1e15000", "1e17000", "1e8250", "1e21000"]
+var icGoals = ["1e1000", "1e1500", "1e2500", "1e3000", "1e3333", "1e5500", "1e6900", "1e3000", "1e15000", "1e17000", "1e8250", "1e20000"]
 
 function getInfinityChallengesUnlocked() {
 	var unl = 0;
@@ -266,7 +264,7 @@ function getChallengeReward(i, j) {
 			0,
 			game.dimensions[9].multiplier.pow(0.1),
 			0,
-			game.infinities.pow(1/2),
+			game.infinities.pow(1/2).max(1),
 		]
 	][j][i-1]
 }
@@ -329,7 +327,7 @@ function getChallengeBenefits() {
 					`${getAchievementMultiplier()}x on all infinity dimensions.`,
 					`${shorten(getChallengeReward(10, 1))}x on all infinity dimensions.`,
 					`Boost to infinity dimensions based on tier.`,
-					`+???% Infinity Shift effectiveness.`,
+					`1000x to Infinity Shift power.`,
 				]
 				for(var i = 1; i <= 12; i++) if(challengeCompleted(i, 1)) lines.push(t[i-1])
 				if(inChallenge(9, 1)) lines.push("REWARDS DISABLED");

@@ -99,15 +99,15 @@ function update() {
 	
 	// Prestige Rates
 	
-	var iprate = gainedInfinityPoints().divide(getTimeSince("infinity")/60000)
-	if(!game.bestIPRate || game.bestIPRate.lt(iprate)) {
-		game.bestIPRate = iprate;
+	game.iprate = gainedInfinityPoints().divide(getTimeSince("infinity")/60000)
+	if(!game.bestIPRate || game.bestIPRate.lt(game.iprate)) {
+		game.bestIPRate = game.iprate;
 		game.bestIPRateAt = gainedInfinityPoints()
 	}
 	
-	var eprate = gainedEternityPoints().divide(getTimeSince("eternity")/60000)
-	if(!game.bestEPRate || game.bestEPRate.lt(eprate)) {
-		game.bestEPRate = eprate;
+	game.eprate = gainedEternityPoints().divide(getTimeSince("eternity")/60000)
+	if(!game.bestEPRate || game.bestEPRate.lt(game.eprate)) {
+		game.bestEPRate = game.eprate;
 		game.bestEPRateAt = gainedEternityPoints()
 	}
 	
@@ -126,7 +126,7 @@ function update() {
 		(canCompleteChallenge() ? "Big Crunch to complete challenge." : "Reach " + shortenMoney(getChallengeGoal()) + " antimatter to complete challenge.") : 
 		game.break ? 
 			"<b>Big Crunch for " + shortenMoney(gainedInfinityPoints()) + "<br>Infinity Points.</b><br>" + 
-			shorten(iprate) + " IP/min<br>Peak: " + 
+			shorten(game.iprate) + " IP/min<br>Peak: " + 
 			(game.options.showBestRateAt ? shorten(game.bestIPRateAt) + " IP" : shorten(game.bestIPRate) + " IP/min") : "<b>Big Crunch</b>"
 
 	displayIf("eternityPrestige", atEternity() || haveEternitied())
@@ -136,7 +136,7 @@ function update() {
 		(canCompleteChallenge() ? "Other challenges await...<br>I need to become Eternal." : "Reach " + shortenMoney(getChallengeGoal()) + " IP to complete challenge.") : 
 		haveEternitied() ? 
 			"<b>I need to become eternal.</b><br>Gain " + shortenMoney(gainedEternityPoints()) + " Eternity Points.<br>" + 
-			shorten(eprate) + " EP/min<br>Peak: " + 
+			shorten(game.eprate) + " EP/min<br>Peak: " + 
 			(game.options.showBestRateAt ? shorten(game.bestEPRateAt) + " EP" : shorten(game.bestEPRate) + " EP/min") : "<b>Other times await...<br>I need to become eternal.</b>"
 	
 	// Tab Buttons
@@ -193,9 +193,9 @@ function update() {
 			
 			ge("boostName").textContent = getEffectiveDimensionBoosts().gte(getDimensionHypersonicStart()) ? "Dimension Hypersonic" : game.boosts.gte(getDimensionSupersonicStart()) ? "Dimension Supersonic" : "Dimension Boost"
 			ge("galaxyName").textContent = getEffectiveNormalGalaxies().gte(getDarkGalaxyStart()) ? "Dark Antimatter Galaxies" : getEffectiveNormalGalaxies().gte(getRemoteGalaxyStart()) ? "Remote Antimatter Galaxies" : game.galaxies.gte(getDistantGalaxyStart()) ? "Distant Antimatter Galaxies" : "Antimatter Galaxies"
-			ge("boostPower").textContent = shorten(getDimensionBoostPower(), 2, 1)
+			ge("boostPower").textContent = shorten(getDimensionBoostPower().pow(getDimensionBoostGain()), 2, 1)
 			ge("boostEffect").textContent = "(" + shorten(getDimensionBoostEffect()) + "x on all dimensions)"
-			ge("galaxyPower").textContent = shortenMoney(getGalaxyPower(), 2, 1)
+			ge("galaxyPower").textContent = shorten(Decimal.pow(1.1, getGalaxyPower().multiply(getGalaxyGain())), 2, 1)
 			ge("galaxyEffect").innerHTML = inChallenge(7) ? "x" + shorten(getTickPower().pow(7)) + " on 9th dimensions" : getTickPower().gte(2) ? "x" + shorten(getTickPower()) : "+" + shorten(getTickPower().subtract(1).multiply(100)) + "%"
 			
 			displayIf("resetDimsButton", inChallenge())
@@ -280,19 +280,17 @@ function update() {
 		// Time Studies
 		
 		if(game.currentEternityTab == "timeStudies") {
-			ge("ttamount").innerText = getFullExpansion(game.timestudy.theorems)
+			ge("ttamount").innerText = shortenMoney(game.timestudy.theorems) + " / " + shortenMoney(getTotalTT());
 			ge("ttbutton0").className = game.dimensions[0].amount.gte(Decimal.pow("1e20000", game.timestudy.bought[0])) ? "ttbtn" : "ttbtnlocked"
 			ge("ttbutton0").innerHTML = "Buy Time Theorems<br>Cost: " + shortenCosts(Decimal.pow("1e20000", game.timestudy.bought[0])) + " AM"
 			ge("ttbutton1").className = game.infinityPoints.gte(Decimal.pow(1e100, game.timestudy.bought[1])) ? "ttbtn" : "ttbtnlocked"
 			ge("ttbutton1").innerHTML = "Buy Time Theorems<br>Cost: " + shortenCosts(Decimal.pow(1e100, game.timestudy.bought[1])) + " IP"
 			ge("ttbutton2").className = game.eternityPoints.gte(Decimal.pow(2, game.timestudy.bought[2])) ? "ttbtn" : "ttbtnlocked"
 			ge("ttbutton2").innerHTML = "Buy Time Theorems<br>Cost: " + shortenMoney(Decimal.pow(2, game.timestudy.bought[2])) + " EP"
-			ge("respecTS").className = atEternity() ? "ttbtn" : "ttbtnlocked"
-			ge("respecTS").setAttribute("tooltip", 
-				atEternity() ? 
-					`Start a new eternity, resetting the study tree and refunding all of your spent time theorems.` : 
-					`You have to be able to eternity to respec time studies.`
-			)
+			ge("respecTS").className = (game.options.instantRespec ? atEternity() : game.options.respecTS) ? "ttbtn" : "ttbtnlocked"
+			ge("respecTS").innerHTML = game.options.instantRespec ? "Respec Time Studies" : "Respec on next Eternity"
+			ge("respecTS").setAttribute("tooltip", `Start a new eternity, resetting the study tree and refunding all of your spent time theorems.`)
+			ge("ttbuying").innerHTML = game.options.ttbuying < 1000 ? game.options.ttbuying : "Max"
 			
 			ge("timeStudies").style.transform = "scale(" + tree.camera.zoom + ", " + tree.camera.zoom + ")"
 			tree.camera.x += tree.camera.xVel;
@@ -384,6 +382,7 @@ function update() {
 		ge("saveTabsOption").innerText = "Save Tabs: " + ["Off", "On"][!!game.options.saveTabs+0]
 		ge("smallOptionsOption").innerText = "Small Options: " + ["Off", "On"][!!game.options.smallOptions+0]
 		ge("bestRateOption").innerText = "Peak Gain: " + ["Rate", "Amount"][!!game.options.showBestRateAt+0]
+		ge("instantRespecOption").innerText = "Instant Respec: " + ["Off", "On"][!!game.options.instantRespec+0]
 	}
 	
 	// Statistics
@@ -418,7 +417,7 @@ function update() {
 	if(game.infinityPoints.gte(1000)) giveAchievement(28);
 	if(game.infinities.gte(1000)) giveAchievement(30);
 	if(getChallengeCompletions() > 0) giveAchievement(32);
-	if(game.challenges[0][9].completed) giveAchievement(33);
+	if(game.challenges[0][8].completed) giveAchievement(33);
 	if(getChallengeCompletions() > 11) giveAchievement(35);
 	if(game.break) giveAchievement(36);
 	if(game.totalAntimatter.gt(infp(2))) giveAchievement(37);
@@ -449,10 +448,13 @@ function update() {
 
 	for(var i = 0; i < 3; i++) displayIf("class" + i + "Automation", au.class >= i)
 	
+	ge("automationState1").innerHTML = ["None", "Disabled", "Enabled", "Constant"][parseInt(ge("auForceState1").value)||0]
+
 	au.extensions.forEach(function(e) {
 		e.charge += e.speed * diff / 1000 / hacker;
 		if(e.charge > 2**au.class) e.charge = 2**au.class;
 		e.id = au.extensions.indexOf(e)
+		if(e.getMode() == 2 && autobuyerFunctions[e.id]) fireExtension(e.id, true)
 		
 		if(game.currentTab !== "automation") return;
 		
@@ -469,30 +471,86 @@ function update() {
 		
 		if(!div.children.length) return; // extension exists but no element does
 		
-		div.children[1].innerHTML = "Level " + getFullExpansion(e.level) + "/" + (2**au.class*10) + (e.speed <= 1 ? "<br>Charge Time: " + timeDisplayShort(Math.max(1 / e.speed * (1 - (e.charge % 1)), 0)) : "<br>" + shortenMoney(e.speed) + " activations/s")
+		div.children[1].innerHTML = "Level " + getFullExpansion(e.level) + "/" + (2**au.class*10) + (e.speed <= 1 ? "<br>Time until charged: " + timeDisplayShort(Math.max(1 / e.speed * (1 - (e.charge % 1)), 0)) : "<br>" + shortenMoney(e.speed) + " activations/s")
 		div.children[2].style.width = Math.min(e.charge, 1) * 230
 		div.children[2].innerText = (e.charge*100).toFixed(0) + "%"
+		var t = div.children[5];
+		var m = ["Disabled", "Enabled", "Constant"]
+		t.innerHTML = "Mode: " + (au.forcedStates[0] && au.forcedStates[0] !== e.mode+1 ? m[e.mode].strike() + " " + m[au.forcedStates[0]-1] : m[e.mode])
+		t = div.children[6];
+		if(!t.children.length) {
+			d = t.appendChild(document.createElement("form"));
+			for(var n = 0; n < 3; n++) {
+				var i = d.appendChild(document.createElement("input"));
+				i.type = "radio"
+				i.name = "auto" + e.id + "mode"
+				i.value = n;
+				if(n == e.mode) i.checked = true;
+				i.onchange = function() {
+					if(this.checked) e.mode = parseInt(this.value);
+				}
+			}
+		}
+		gn("auto" + e.id + "mode", function(l, i) {if(i == e.mode) l.checked = true})
 	})
 	
 	au.raw = ge("auScript").value;
-	au.script = au.raw.split(`
-`);
-	if(!au.tickDelay) au.tickDelay = 0;
-	if(au.tickDelay > 0) au.tickDelay--;
-	else if(au.autorun) {
-		au.delay -= diff / hacker;
-		if(au.delay < 0 || isNaN(au.delay)) {
-			au.delay = 100;
-			au.line++;
-			if(au.line >= au.script.length || !au.line) au.line = 0;
-			runAu(au.script[au.line])
-		}
-		var a = ge("auScriptHighlight")
-		var p = ge("auScript").getBoundingClientRect()
-		a.style.left = p.x + 1;
-		a.style.top = p.y + 1 + 18 * au.line;
+	
+	if(!au.save.CURRENT) au.save.CURRENT = {name: "CURRENT"}
+	au.save.CURRENT.script = au.raw;
+	au.save.CURRENT.lastEdit = Date.now();
+	
+	if(au.autorun) runAuScript("CURRENT")
+		
+	// Run all active automator scripts
+	
+	activeScripts = [];
+	
+	for(var i in au.save) {
+		if(au.save[i].running) activeScripts.push(au.save[i]);
 	}
-	displayIf("auScriptHighlight", au.autorun)
+	
+	activeScripts.forEach(function(file) {
+		var script = file.script.split(`
+`)
+		au.currentScript = file;
+		
+		if(!file.line) file.line = 0;
+		if(!file.delay) file.delay = 0;
+		if(!file.tickDelay) file.tickDelay = 0;
+		
+		function isDelay() {
+			return (file.delay > 0) || (file.tickDelay > 0)
+		}
+		
+		file.delay -= diff / hacker;
+		file.tickDelay--;
+		
+		while(1) {
+			if(isDelay()) break;
+			file.line++
+			if(file.line >= script.length) {
+				file.line = -1;
+				file.running = false;
+				break;
+			}
+			var line = script[file.line]
+			var out = runAu(line)
+			
+			// Do shit based on the command
+			
+			switch(line.split(" ")[0]) {
+				case "if":
+					if(!out) file.line++; // Make this jump to next } later.
+			}
+		}
+	})
+	
+	var a = ge("auScriptHighlight")
+	var p = ge("auScript").getBoundingClientRect()
+	a.style.left = p.x + 1;
+	a.style.top = p.y + 1 + 18 * au.currentScript.line;
+	displayIf("auScriptHighlight", activeScripts.includes(au.save.CURRENT) && au.currentScript.line >= 0)
 	
 	// Give the Automator memory access to important stuff
 	
@@ -503,10 +561,14 @@ function update() {
 	runAu("set sacgain " + getSacrificeGain());
 	runAu("set ip " + game.infinityPoints);
 	runAu("set ipg " + gainedInfinityPoints());
+	runAu("set iprate " + game.iprate);
+	runAu("set ippeak " + game.bestIPRate);
 	runAu("set inf " + game.infinities);
 	runAu("set inftime " + getTimeSince("infinity"));
 	runAu("set ep " + game.eternityPoints);
 	runAu("set epg " + gainedEternityPoints());
+	runAu("set eprate " + game.eprate);
+	runAu("set eppeak " + game.bestEPRate);
 	runAu("set eter " + game.eternities);
 	runAu("set etertime " + getTimeSince("eternity"));
 }
@@ -540,7 +602,7 @@ function getStatisticsDisplay(type) {
 		case "challenge":
 			lines.push("")
 			if(getChallengeCompletions(game.selectedChallengeType)) lines.push("")
-			for(var i = 0; i < 12; i++) if(game.challenges[game.selectedChallengeType][i].completed) lines.push(`Challenge ${i+1} Record: ${game.challenges[game.selectedChallengeType][i].completed ? timeDisplay(game.challenges[game.selectedChallengeType][i].bestTime) : "N/A"}`)
+			for(var i = 0; i < 12; i++) if(game.challenges[game.selectedChallengeType][i].completed) lines.push(`Challenge ${i+1} Record: ${game.challenges[game.selectedChallengeType][i].completed ? timeDisplay(game.challenges[game.selectedChallengeType][i].bestTime||Infinity) : "N/A"}`)
 			lines.push(`<br>Sum of all ${layerNames[game.selectedChallengeType].toLowerCase()}challenge times is ${timeDisplay(getChallengeTimes(game.selectedChallengeType))}`)
 			break;
 	}

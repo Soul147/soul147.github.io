@@ -93,7 +93,7 @@ function galaxy() {
 	
 	var bought = game.dimensions[inChallenge(11) ? 4 : 9].amount.subtract(getGalaxyScaling()).divide(getGalaxyScaling()).add(1).ceil();
 	
-	game.totalGalaxies = game.totalGalaxies.add(bought.subtract(game.galaxies));
+	game.totalGalaxies = game.totalGalaxies.add(getGalaxyGain());
 	game.galaxies = bought;
 	
 	game.shifts = getStartingShifts();
@@ -103,13 +103,16 @@ function galaxy() {
 	return true;
 }
 
+function getGalaxyGain() {
+	return game.dimensions[inChallenge(11) ? 4 : 9].amount.subtract(getGalaxyScaling()).divide(getGalaxyScaling()).add(1).ceil().subtract(game.galaxies)
+}
+
 function getGalaxyReq() {
 	return game.galaxies.multiply(getGalaxyScaling()).add(getGalaxyScaling());
 }
 
 function getGalaxyScaling() {
 	r = new Decimal(5);
-	if(tree.hasStudy("r11")) r = r.multiply(0.9)
 	return r;
 }
 
@@ -160,13 +163,12 @@ function getNormalGalaxyPower() {
 
 function getReplicantiGalaxyPower() {
 	var r = new Decimal(1);
-	if(tree.hasStudy("r32")) r = r.multiply(1.5);
 	
 	return r;
 }
 
 function getDistantGalaxyStart() {
-	return 75+tree.hasStudy("r22")*25;
+	return 75;
 }
 
 function getRemoteGalaxyStart() {

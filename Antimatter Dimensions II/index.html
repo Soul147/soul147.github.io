@@ -72,11 +72,11 @@
 			</tr>
 			<tr id = "boostDisplay">
 				<td style = "padding-bottom: 10px"><span id = "boostName"></span> (<span id = "boosts"></span>): requires <span id = "boostReq"></span> dimensions <span id = "boostEffect"></span></td>
-				<td style = "position: absolute; right: 20"><button id = "boost" onclick = "boost()" style = "width: 250px">Reset the game for a <span id = "boostPower"></span>x boost</button></td>
+				<td style = "position: absolute; right: 20"><button id = "boost" onclick = "boost()" style = "width: 250px">Reset dimensions for a <span id = "boostPower"></span>x boost</button></td>
 			</tr>
 			<tr id = "galaxyDisplay">
 				<td><span id = "galaxyName"></span> (<span id = "galaxies"></span>): requires <span id = "galaxyReq"></span> dimensions</td>
-				<td style = "position: absolute; right: 20"><button id = "galaxy" onclick = "galaxy()" style = "width: 250px; height: 40px">Lose all your previous progress,<br>but get a tickspeed boost</button></td>
+				<td style = "position: absolute; right: 20"><button id = "galaxy" onclick = "galaxy()" style = "width: 250px; height: 40px">Reset dimensions and dimension boosts<br>for a <span id = "galaxyPower"></span>x boost to tickspeed upgrades</button></td>
 			</tr>
 		</table>
 	</div>
@@ -181,7 +181,7 @@
 			</select>
 			<br>
 			<!-- <div style = "text-align: left; background: #eee; width: 775; height: 20"><span></span></div> -->
-			<div id = "auScriptHighlight" style = "position: fixed; background: #00f4; width: 382; height: 20"></div>
+			<div id = "auScriptHighlight" style = "position: fixed; background: #00f2; width: 382; height: 20; pointer-events: none"></div>
 			<textarea id = "auScript" style = "color: white; background-color: #1f1f1f; width: 384; height: 256"></textarea>
 			<span style = "text-align: left; color: #0f0; background-color: #1f1f1f; width: 384; height: 254; display: inline-block; overflow: auto"><div id = "auLog" style = "padding: 4px; padding-bottom: 24px; white-space: pre-wrap"></div></span>
 			<input id = "cmdline" style = "color: #0f0; background-color: #1f1f1f; font-family: lucida console; width: 384; margin-left: -390; position: relative; top: -6;">
@@ -201,6 +201,22 @@
 		
 		<div class = "automationTab" id = "class1AutomationTab">
 			You have <span class = "infinityPoints"></span> IP.<br>
+			<table style = "font-size: 100%; text-align: center">
+				<tr>
+					<td>Set State</td>
+					<td>Force State</td>
+				</tr>
+				<tr>
+					<td>
+						<button class = "autobuyerbutton" style = "width: 35" onclick = "for(var i=0;i<15;i++)au.extensions[i].mode=0">D</button>
+						<button class = "autobuyerbutton" style = "width: 35" onclick = "for(var i=0;i<15;i++)au.extensions[i].mode=1">E</button>
+						<button class = "autobuyerbutton" style = "width: 35" onclick = "for(var i=0;i<15;i++)au.extensions[i].mode=2">C</button>
+					</td>
+					<td>
+						<input type = "range" min = 0 max = 3 value = 0 style = "width: 114" id = "auForceState1" onchange = "au.forcedStates[0]=parseInt(this.value)"><br><span id = "automationState1">None</span>
+					</td>
+				</tr>
+			</table>
 			<table id = "automationTable1" cellspacing = 8></table>
 		</div>
 		
@@ -240,10 +256,12 @@
 		</div>
 		<div class = "eternityTab" id = "timeStudiesTab">
 			<canvas id = "studyTreeCanvas"></canvas>
-			<div id = "timeStudyTree" style = "position: fixed; left: 0; top: 200; width: 100%; height: 100%; overflow: hidden; box-shadow: inset 0px 0px 50px black"><div id = "timeStudies" draggable = false></div></div>
+			<div id = "timeStudyTree" style = "position: fixed; left: 0; top: 200; width: 100%; height: 100%; overflow: hidden; border-top: 1px solid black"><div id = "timeStudies" draggable = false></div></div>
 			<div style = "position: fixed; left: 0; bottom: -3; padding: 10px; border-radius: 4px; border-top: 1px solid black; border-right: 1px solid black; background: #ddd">
-				Time Theorems: <span id = "ttamount"></span><br>
-				<button class = "buy" style = "height: 30" id = "respecTS" onclick = "respecTimeStudies()">Respec Time Studies</button><br>
+				Time Theorems:<br><span id = "ttamount" style = "font-size: 120%"></span><br>
+				Buying <span id = "ttbuying"></span><br>
+				<button id = "ttbuy1" class = "ttbtn" style = "width: 40; height: 30; margin: 1.5px;" onclick = "game.options.ttbuying=1">1</button><button id = "ttbuy10" class = "ttbtn" style = "width: 40; height: 30; margin: 1.5px;" onclick = "game.options.ttbuying=10">10</button><button id = "ttbuy100" class = "ttbtn" style = "width: 40; height: 30; margin: 1.5px;" onclick = "game.options.ttbuying=100">100</button><button id = "ttbuymax" class = "ttbtn" style = "width: 40; height: 30; margin: 1.5px;" onclick = "game.options.ttbuying=1/0">Max</button><br>
+				<button class = "buy" style = "height: 30" id = "respecTS" onclick = "respecTimeStudies()">Respec on next Eternity</button><br>
 				<button id = "ttbutton0" onclick = "tree.buyTheorems(0)"></button><br>
 				<button id = "ttbutton1" onclick = "tree.buyTheorems(1)"></button><br>
 				<button id = "ttbutton2" onclick = "tree.buyTheorems(2)"></button>
@@ -279,10 +297,11 @@
 		<button class = "buy" onclick="hardReset();">HARD RESET</button>
 		<br>
 		<br>
-		<button class = "buy" id = "autosaveOption" onclick="game.options.autosave = !game.options.autosave;">Autosave: Off</button>
-		<button class = "buy" id = "saveTabsOption" onclick="game.options.saveTabs = !game.options.saveTabs;">Save Tabs: Off</button>
-		<button class = "buy" id = "smallOptionsOption" onclick="game.options.smallOptions = !game.options.smallOptions;">Small Options: Off</button>
-		<button class = "buy" id = "bestRateOption" onclick="game.options.showBestRateAt = !game.options.showBestRateAt;">Best Rate At X: Off</button>
+		<button class = "buy" id = "autosaveOption" onclick="game.options.autosave = !game.options.autosave;" tooltip = "Automatically saves every 30 seconds.">Autosave: Off</button>
+		<button class = "buy" id = "saveTabsOption" onclick="game.options.saveTabs = !game.options.saveTabs;" tooltip = "Keeps the same tabs you had open when you reload the game.">Save Tabs: Off</button>
+		<button class = "buy" id = "smallOptionsOption" onclick="game.options.smallOptions = !game.options.smallOptions;" tooltip = "Collapses the options, statistics, and achievements tab buttons into a smaller button in the bottom right.">Small Options: Off</button>
+		<button class = "buy" id = "bestRateOption" onclick="game.options.showBestRateAt = !game.options.showBestRateAt;" tooltip = "Toggles between showing the peak gain rate for a currency and the amount at the peak.">Best Rate At X: Off</button>
+		<button class = "buy" id = "instantRespecOption" onclick="game.options.instantRespec = !game.options.instantRespec;" tooltip = "Instantly eternity upon clicking the respec time studies button.">Instant Respec: Off</button>
 		<br>
 		<br>
 		Exported Save: <input id = "exported" style = "width: 170" placeholder = "Save will appear here"></input>

@@ -1,6 +1,6 @@
 var currencyNames = ["infinityPoints"]
 
-function Extension(s = 1, c, u = "infinityPoints", l = 0) {
+function Extension(s = 1, c, u = "infinityPoints", l = 0, m = 1) {
 	var extension = {
 		id: au.extensions.length,
 		level: new Decimal(l),
@@ -9,6 +9,12 @@ function Extension(s = 1, c, u = "infinityPoints", l = 0) {
 		charge: 0,
 		speed: new Decimal(s).multiply(Decimal.pow(2, l)),
 		baseSpeed: new Decimal(s),
+		mode: m,
+		
+		getMode: function() {
+			var f = au.forcedStates[Math.floor(this.id / 15)];
+			return f ? f-1 : this.mode
+		}
 	}
 	
 	return extension;
@@ -36,6 +42,7 @@ function upgradeExtension(n) {
 function fireExtension(i, a, b, c, d, e, f) {
 	var ext = au.extensions[i]
 	if(ext.charge < 1) return;
+	if(!ext.getMode()) return;
 	
 	if(autobuyerFunctions[i](a, b, c, d, e, f)) ext.charge -= 1;
 }
@@ -115,7 +122,7 @@ function ccmd(a, b, c) {
 	return true;
 }
 
-function runAu(line, log) {
+function runAu(line, log, explicit=true) {
 	try {
 		var args = line.split(" ")
 		var cmd = args[0];
@@ -125,27 +132,71 @@ function runAu(line, log) {
 		args2.shift(1);
 		var arg2 = args2.join(" ")
 		
-		if(ccmd(cmd, "help")) {
+		if(cmd == "cls") {
+			ge("auLog").innerHTML = ""
+		}
+		if(cmd == "echo") { // write something in the console
+			if(!args[1]) return;
+			logAu(arg)
+		}
+		if(cmd == "extension") { // modify extensions
+			if(!isNaN(parseInt(args[1]))) e = args[1];
+			else if(getExtByName(args[1])) e = getExtByName(args[1]);
+			else {
+				if(log) logAu("Invalid extension.")
+				return;
+			}
+			
+			if(log) logAu("This command is incomplete and currently useless.")
+		}
+		if(cmd == "fire") { // activate extensions
+			if(!isNaN(parseInt(args[1]))) e = args[1];
+			else if(getExtByName(args[1])) e = getExtByName(args[1]);
+			else {
+				if(log) logAu("Invalid extension.")
+				return;
+			}
+			
+			fireExtension(e, args[2] == "true")
+			if(log) logAu("Activated extension " + e + ".")
+		}
+		if(cmd == "get") {
+			arg = arg.replace(/ /g, "")
+			var r = au.memory[arg];
+			if(new Decimal("e" + r).mag) r = new Decimal(r);
+			else if(parseFloat(r)) r = parseFloat(r);
+			if(log) logAu(r)
+			return r;
+		}
+		if(cmd == "help") {
 			logAu("AUTOMATOR HELP")
 			if(!args[1]) {
 				logAu("Welcome to the help menu.")
-				logAu("Type \"help h\" for an explanation of the Automator.")
-				logAu("Type \"help l\" for a list of commands.")
+				logAu("Type [help h] for an explanation of the Automator.")
+				logAu("Type [help t] for a tutorial on how to use it effectively.")
+				logAu("Type [help l] for a list of commands.")
 			}
 			if(args[1] == "h") {
 				logAu("General Info")
 				logAu("The Automator is a metaprogram that helps with the automation of tasks. Its heart is the Automator Core, which sends signals to its Extensions to interact with various aspects of reality.")
-				logAu("Type \"help c\" for more information about the Core.")
-				logAu("Type \"help e\" for more information about Extensions.")
+				logAu("Type [help c] for more information about the Core.")
+				logAu("Type [help e] for more information about Extensions.")
+			}
+			if(args[1] == "t") {
+				logAu("Tutorial (WIP)")
+				logAu("The basic function of the Automator is to run a series of commands, which can be entered to the left. You can also type commands in the interface below, which can be useful for testing or checking values.")
+				logAu("The fire command is arguably the most important. It is used to trigger an extension specified by its ID, which can be found by hovering over the name of the extension. For example, running the command [fire 0] would activate the first dimension autobuyer.")
+				logAu("There are also a few shortcut commands, such as [maxall], which activates all of the dimension autobuyers for a specific layer. For more info about specific commands, type [help l].")
 			}
 			if(args[1] == "l") {
 				logAu("Command List")
 				logAu("boost            Activates extension 10.")
+				logAu("challenge        Several commands that interact with challenges.")
 				logAu("cls              Clears the Automator panel.")
 				logAu("crunch           Activates extension 13.")
 				logAu("echo <t>         Writes t in the Automator panel.")
 				if(haveEternitied())
-				logAu("eternity         Activates extension 14.")
+				logAu("eternity         Activates extension 24.")
 				logAu("fire <n>         Activates extension n.")
 				logAu("galaxy           Activates extension 11.")
 				logAu("help [t]         Displays help page t.")
@@ -170,7 +221,7 @@ function runAu(line, log) {
 				
 			}
 		}
-		if(ccmd(cmd, "if")) {
+		if(cmd == "if") {
 			if(!arg) return;
 			var operators = "==,<,>,<=,>=,!==".split(",")
 			var split, operator;
@@ -190,46 +241,10 @@ function runAu(line, log) {
 				out = t1[newOp](t2)
 			}
 			else out = eval(t1 + operator + t2);
-			if(!out) au.line++;
 			if(log) logAu(arg + " is " + out)
+			return out
 		}
-		if(ccmd(cmd, "echo")) { // write something in the console
-			if(!args[1]) return;
-			logAu(arg)
-		}
-		if(ccmd(cmd, "run")) { // write something in the console
-			if(!args[1]) {
-				script = au.raw;
-				if(log) logAu("Running current script.")
-			}
-			else {
-				var file = au.save[args[1]];
-				if(!file) {
-					if(log) logAu("File " + args[1] + ".au doesn't exist.")
-					return;
-				}
-				if(log) logAu("Running file " + args[1] + ".au.")
-				script = file.script.split(`
-`);
-			}
-			var prevLine = au.line;
-			for(au.line = 0; au.line < script.length; au.line++) {
-				runAu(script[au.line]);
-			}
-			au.line = prevLine;
-		}
-		if(ccmd(cmd, "cls")) {
-			ge("auLog").innerHTML = ""
-		}
-		if(ccmd(cmd, "get")) {
-			arg = arg.replace(/ /g, "")
-			var r = au.memory[arg];
-			if(new Decimal("e" + r).mag) r = new Decimal(r);
-			else if(parseFloat(r)) r = parseFloat(r);
-			if(log) logAu(r)
-			return r;
-		}
-		if(ccmd(cmd, "parse")) {
+		if(cmd == "parse") {
 			var r = arg;
 			if(new Decimal("e" + r).mag) r = new Decimal(r);
 			else if(parseFloat(r)) r = parseFloat(r);
@@ -237,43 +252,46 @@ function runAu(line, log) {
 			if(log) logAu(r)
 			return r;
 		}
-		if(ccmd(cmd, "set")) {
+		if(cmd == "pause" || cmd == "wait") { // stops until a condition is met or time elapses
+			if(args[1] == "until") {
+				au.waitUntil = arg2;
+			}
+			else {
+				t = parseInt(args[1])
+				if(isNaN(t)) t = 0
+				if(args[2] == "t" || args[2] == "tick" || args[2] == "ticks") { // ticks
+					au.currentScript.tickDelay += t
+					if(log) logAu("Paused for " + t + "ticks.")
+				}
+				else { // milliseconds
+					au.currentScript.delay += t;
+					if(log) logAu("Paused for " + t + "milliseconds.")
+				}
+			}
+		}
+		if(cmd == "run") { // write something in the console
+			runAuScript(args[1] || "CURRENT")
+		}
+		if(cmd == "set") {
 			au.memory[args[1]] = arg2
 			if(log) logAu("Set " + args[1] + " to " + arg2)
 		}
-		if(ccmd(cmd, "fire", parseInt(args[1]))) { // activate extensions
-			if(!isNaN(parseInt(args[1]))) e = args[1];
-			else if(getExtByName(args[1])) e = getExtByName(args[1]);
-			else {
-				if(log) logAu("Invalid extension.")
-				return;
-			}
-			
-			fireExtension(e, args[2] == "true")
-			if(log) logAu("Activated extension " + e + ".")
+	
+		// Game-related commands
+		
+		if(cmd == "challenge") { // enter/exit/unlock challenges
+			if(args[1] == "exit") exitChallenge();
 		}
-		if(ccmd(cmd, "pause")) {
-			t = parseInt(args[1])
-			if(isNaN(t)) t = 0
-			if(args[2] == "t" || args[2] == "tick" || args[2] == "ticks") { // ticks
-				au.tickDelay += t
-				if(log) logAu("Paused for " + t + "ticks.")
-			}
-			else { // milliseconds
-				au.delay += t
-				if(log) logAu("Paused for " + t + "milliseconds.")
-			}
-		}
-		if(ccmd(cmd, "maxall")) {
+		if(cmd == "maxall") {
 			var s = parseInt(args[1]) || 0;
 			for(var i = 0; i < 10-!!s; i++) runAu("fire " + (i+s*15) + " true")
 			if(log) logAu("Maxed all " + layerNames[i] + "dimensions.")
 		}
-		if(ccmd(cmd, "boost")) runAu("fire 10", log)
-		if(ccmd(cmd, "galaxy")) runAu("fire 11", log)
-		if(ccmd(cmd, "infinity") || ccmd(cmd, "crunch")) runAu("fire 13", log)
-		if(ccmd(cmd, "sacrifice")) runAu("fire 12", log)
-		if(ccmd(cmd, "eternity")) runAu("fire 25", log)
+		if(cmd == "boost") runAu("fire 10", log)
+		if(cmd == "galaxy") runAu("fire 11", log)
+		if(cmd == "infinity" || cmd == "crunch") runAu("fire 13", log)
+		if(cmd == "sacrifice") runAu("fire 12", log)
+		if(cmd == "eternity") runAu("fire 25", log)
 	}
 	catch(e) {
 		console.error(e)
@@ -285,6 +303,12 @@ function logAu(t, h) {
 	if(h) ge("auLog").innerHTML += t;
 	else ge("auLog").innerText += t;
 	ge("auLog").innerHTML += "<br>";
+}
+
+function runAuScript(name) {
+	var script = au.save[name];
+	if(script.running) return;
+	script.running = true;
 }
 
 function selectFileOption() {
