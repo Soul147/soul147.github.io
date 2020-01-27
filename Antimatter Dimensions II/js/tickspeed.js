@@ -30,7 +30,7 @@ function maxTickspeed() {
 	game.buyTime = Date.now();
 	
 	if(dim.cost.lte(Number.MAX_VALUE)) {
-		var bought = game.dimensions[0].amount.min(Number.MAX_VALUE).log10().subtract(dim.cost.log10()).divide(dim.costMult.log10()).ceil()
+		var bought = game.dimensions[0].amount.min(Number.MAX_VALUE).log10().subtract(dim.cost.log10()).divide(dim.costMult.log10()).floor()
 		
 		dim.bought = dim.bought.add(bought);
 		dim.cost = dim.cost.multiply(dim.costMult.pow(bought));
@@ -91,7 +91,7 @@ function canGalaxy() {
 function galaxy() {
 	if(!canGalaxy()) return;
 	
-	var bought = game.dimensions[inChallenge(11) ? 4 : 9].amount.subtract(getGalaxyScaling()).divide(getGalaxyScaling()).add(1).ceil();
+	var bought = game.dimensions[inChallenge(11) ? 4 : 9].amount.subtract(getGalaxyScaling()).divide(getGalaxyScaling()).add(1).floor();
 	
 	game.totalGalaxies = game.totalGalaxies.add(getGalaxyGain());
 	game.galaxies = bought;
@@ -104,7 +104,7 @@ function galaxy() {
 }
 
 function getGalaxyGain() {
-	return game.dimensions[inChallenge(11) ? 4 : 9].amount.subtract(getGalaxyScaling()).divide(getGalaxyScaling()).add(1).ceil().subtract(game.galaxies)
+	return game.dimensions[inChallenge(11) ? 4 : 9].amount.subtract(getGalaxyScaling()).divide(getGalaxyScaling()).add(1).floor().subtract(game.galaxies)
 }
 
 function getGalaxyReq() {
