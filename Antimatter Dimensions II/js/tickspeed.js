@@ -30,7 +30,7 @@ function maxTickspeed() {
 	game.buyTime = Date.now();
 	
 	if(dim.cost.lte(Number.MAX_VALUE)) {
-		var bought = game.dimensions[0].amount.min(Number.MAX_VALUE).log10().subtract(dim.cost.log10()).divide(dim.costMult.log10()).floor()
+		var bought = game.dimensions[0].amount.min(Number.MAX_VALUE).log10().subtract(dim.cost.log10()).divide(dim.costMult.log10()).ceil()
 		
 		dim.bought = dim.bought.add(bought);
 		dim.cost = dim.cost.multiply(dim.costMult.pow(bought));
