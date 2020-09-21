@@ -8625,6 +8625,10 @@ window.addEventListener('keydown', function(event) {
 			}
 			if(player.mods.ngt) {
 				buyMaxOmniDimensions()
+				if(ngt.omni > 0) {
+					buyMaxTimeDimensions();
+					buyMaxEPMult();
+				}
 			}
 		break;
 
