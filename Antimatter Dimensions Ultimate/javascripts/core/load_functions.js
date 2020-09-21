@@ -1644,9 +1644,6 @@ if (player.version < 5) {
 					ngModeMessages.push("Welcome to NG+-+-+ mode, created by earthernsence! This mode combines NG--, NG-, and NG+++ features. Good luck!")
 			}
 			if (inflationCheck) ngModeMessages = ["I'm terribly sorry. But your save was appeared that there is an inflation, which it defeats the rule of incremental games. Your save was forced to reset everything."]
-			if (oof) {
-				ngModeMessages = ["I'm terribly sorry. But your save was appeared that there is an inflation, which it defeats the rule of incremental games. Your save was forced to reset everything."]; 
-			}
 			if (forceToQuantumAndRemove) {
 					quantum(false, true, 0)
 					ngModeMessages = ["Due to balancing changes, you are forced to quantum but you will now lose all your time theorems and best TP too."]

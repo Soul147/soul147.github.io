@@ -7704,6 +7704,9 @@ function gameLoop(diff) {
 
 	if (isNaN(player.totalmoney)) player.totalmoney = new Decimal(10)
 	if (player.timestudy.studies.includes(181)) player.infinityPoints = player.infinityPoints.plus(gainedInfinityPoints().times(diff/1000))
+	if(player.mods.ngt && omniMilestoneReached(7)) if(gainedEternityPoints().gt(1000)) {
+		player.eternityPoints = player.eternityPoints.add(gainedEternityPoints().divide(1000).multiply(diff/10));
+	}
 	if (player.masterystudies) {
 		if (player.masterystudies.includes("t291")) {
 			player.eternityPoints = player.eternityPoints.plus(gainedEternityPoints().times(diff/1000))

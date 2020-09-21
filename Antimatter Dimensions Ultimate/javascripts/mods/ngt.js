@@ -1,8 +1,14 @@
 // Initialize NGT stuff
 
+<<<<<<< Updated upstream
 function resetNGT(hardReset) {
 	if(hardReset) player.mods.ngt = {
 		version: 2,
+=======
+function resetNGT(hardReset, divisionReset) {
+	if(hardReset || divisionReset) player.mods.ngt = {
+		version: 2.12,
+>>>>>>> Stashed changes
 		omni: 0, // times gone omnipotent stat
 		thisOmni: 0, // time this run
 		lastRun: new Decimal(0), // OP gained during previous run
@@ -49,7 +55,7 @@ function gainedOP() {
 	return Decimal.pow(10, player.eternityPoints.plus(gainedEternityPoints()).e/(308)).times(player.mods.ngt.opMult || 1).divide(10).floor();
 }
 
-const omReqList = ["10", "100", "1e5", "1e10", "1e20", "1e33", "1e50", "1e10000", "1e1000000"]
+const omReqList = ["10", "100", "1e5", "1e10", "1e20", "1e33", "1e50", "1e100", "1e10000", "1e1000000"]
 
 function omniMilestoneReq(n) {
 	return new Decimal(omReqList[n])
@@ -335,7 +341,7 @@ function omnipotenceReset(force, auto) {
 		dimlife: true,
 		dead: true,
 		dilation: {
-			studies: omniMilestoneReached(7) ? player.dilation.studies : [],
+			studies: omniMilestoneReached(8) ? player.dilation.studies : [],
 			active: false,
 			tachyonParticles: player.achievements.includes("ng3p37") ? player.dilation.bestTP.sqrt() : new Decimal(0),
 			dilatedTime: new Decimal(0),
@@ -343,7 +349,7 @@ function omnipotenceReset(force, auto) {
 			bestTP: player.dilation.bestTP,
 			nextThreshold: new Decimal(1000),
 			freeGalaxies: 0,
-			upgrades: omniMilestoneReached(7) ? player.dilation.upgrades : [],
+			upgrades: omniMilestoneReached(8) ? player.dilation.upgrades : [],
 			rebuyables: {
 				1: 0,
 				2: 0,
@@ -788,6 +794,171 @@ function getDilationRequirement() {
 }
 
 function divide() {
+<<<<<<< Updated upstream
     resetNGT(true)
 	omnipotenceReset(true)
+=======
+	if(!hasUpg(20)) return false;
+	ngt.division.times++
+	ngt.animating = true;
+	ge("blade").style.transitionDuration = "0.5s"
+	ge("blade").style.top = "50px"
+	setTimeout(function() {
+		ge("blade").style.top = "2000px"
+	}, 1900)
+	setTimeout(function() {
+		if(animation) {
+			ge("death").style.display = ""
+			ge("bleed").style.opacity = 1
+		}
+		else {
+			ge("blade").style.transitionDuration = "0s"
+			ngt.animating = false
+		}
+		leftoverOP = ngt.op;
+		resetNGT(false, true)
+		omnipotenceReset(true, true)
+		player.infinityPoints = new Decimal(0)
+		setTheme()
+		player.autobuyers.forEach(function(a) {
+			a.isOn = false;
+		})
+		player.break = false;
+		showTab("dimensions")
+		showDimTab("antimatterdimensions")
+		omnipotenceReset(true, true)
+		player.infinityUpgrades.push("skipResetGalaxy")
+		softReset(0)
+		ngt.division.um = ngt.division.um.max(leftoverOP.log10()) // gain up to your log(OP) in unstable matter at a time
+	}, 2000)
+	if(animation) {
+		setTimeout(function() {
+			i=0;
+			text = "the universe is bleeding.NNyou feel the energy of something that cannot exist.NNyou will regain what is lost and become stronger than ever.NNthe time has come to go beyond infinity.".split("")
+			text.forEach(function(letter) {i += 1+(letter=="N")*9-(letter==" "); setTimeout(function() {ge("bleed").innerHTML += letter == "N" ? "<br>" : letter}, i * 100)})
+		}, 5000)
+		setTimeout(function() {
+			ge("bleed").style.opacity = 0
+		}, 25000)
+		setTimeout(function() {
+			ge("death").style.display = "none"
+		}, 30000)
+	}
+}
+
+function getHalfLife() {
+	return 3600
+}
+
+function getEnergyInput(base) {
+	ret = ge("energyinput").value**2;
+	if(base) return ret;
+	return ngt.division.um.multiply(ret/100);
+}
+
+function getEighthDimensions() {
+	return player.eightAmount.add(ngt.division.eightProduced || 0)
+}
+
+function getEighthProduction(display) {
+	ret = ngt.division.energy.sqrt().divide(1000);
+	if(display) {
+		// do this twice - once for hours, once for minutes
+		if(ret.lt(1)) ret = ret.multiply(60)
+		if(ret.lt(1)) ret = ret.multiply(60)
+	}
+	return ret;
+}
+
+function getRiftDamage() {
+	return ngt.division.energy
+}
+
+function getRiftStability() {
+	return ngt.division.health.divide(ngt.division.maxHealth);
+}
+
+function dumpEnergy() { // remove energy from the rift, gaining virtual particles
+	dumped = ngt.division.energy;
+	gain = getVPGain()
+	ngt.division.energy = new Decimal(0);
+	ngt.division.vp = ngt.division.vp.add(gain);
+	ngt.division.totalvp = ngt.division.totalvp.add(gain);
+}
+
+function getVPGain() {
+	return ngt.division.energy.divide(1e3).pow(2).floor()
+}
+
+function getVGalBase() {
+	return 2
+}
+
+function getVGalAmount() {
+	return Math.floor(Math.max(ngt.division.totalvp.multiply(getVGalBase()).log(getVGalBase()), 0))
+}
+
+function meltdown() { // you fucked up
+	
+}
+
+function updateDivision(diff) {
+	if(!player.mods.ngt) return;
+	ge("thebladetab").style.display = (hasUpg(20) || ngt.division.times > 0) ? "" : "none";
+	ge("blade").style.display = hasUpg(20) ? "" : "none"
+	if(!ngt.animating && player.options.currentTab == "omnitab" && player.options.currentOmniTab == "theblade") ge("blade").style.top = Math.sin(Date.now() / 1000) * 40 + 200 + "px"
+	
+	// Virtual Particle calculations
+	
+	ngt.division.vgal = getVGalAmount()
+	
+	// Half-life of virtual particles
+	
+	secondsElapsed = diff / 10;
+	
+	logChange = secondsElapsed*Math.log10(2)/getHalfLife();
+	newLog = ngt.division.um.log10() - logChange;
+	average = Decimal.pow(10, newLog);
+	amount = average.floor();
+	variance = average.subtract(amount)
+	if(Math.random() < variance) amount = amount.add(1)
+	gain = ngt.division.um.subtract(amount);
+	if(isNaN(gain.logarithm)) gain = new Decimal(0)
+	
+	ngt.division.shards = ngt.division.shards.add(gain);
+	ngt.division.um = amount;
+	
+	// Rift stability
+	
+	ngt.division.maxHealth = ngt.division.shards.pow(2).multiply(1000);
+	ngt.division.damage = ngt.division.damage.add(getRiftDamage().multiply(diff/10))
+	ngt.division.health = ngt.division.maxHealth.subtract(ngt.division.damage).max(0)
+	
+	// Eighth dimension production
+	
+	ep = getEighthProduction()
+	ngt.division.energy = ngt.division.energy.add(getEnergyInput().multiply(diff/10))
+	amount = ep.multiply(diff/10)
+	if(!ngt.division.eightProduced) ngt.division.eightProduced = new Decimal(0)
+	ngt.division.eightProduced = ngt.division.eightProduced.add(amount)
+	
+	// Update HTML
+	
+	ge("virtualparticles").innerHTML = getFullExpansion(ngt.division.vp)
+	ge("totalvirtualparticles").innerHTML = getFullExpansion(ngt.division.totalvp)
+	ge("virtualgalaxies").innerHTML = getFullExpansion(ngt.division.vgal)
+	ge("virtualgalaxycost").innerHTML = getFullExpansion(Decimal.pow(getVGalBase(), ngt.division.vgal))
+	
+	ge("unstablematter").innerHTML = getFullExpansion(ngt.division.um)
+	ge("drainrate").innerHTML = timeDisplayShort(getHalfLife()*10, true, 3)
+	ge("shards").innerHTML = getFullExpansion(ngt.division.shards)
+	ge("eighthextra").innerHTML = getFullExpansion(ngt.division.eightProduced)
+	ge("eighthprod").innerHTML = getFullExpansion(getEighthProduction(true))
+	ge("eighthunit").innerHTML = ep.gt(1) ? "dimensions/s" : ep.gt(1/60) ? "dimensions/m" : "dimensions/h"
+	ge("energyindisplay").innerHTML = getEnergyInput(true);
+	ge("riftenergy").innerHTML = getFullExpansion(ngt.division.energy);
+	ge("energyrate").innerHTML = getFullExpansion(getEnergyInput());
+	ge("stability").innerHTML = getFullExpansion(ngt.division.health) + "/" + getFullExpansion(ngt.division.maxHealth) + " (" + getRiftStability().multiply(100).toFixed(2) + "%)";
+	ge("vpgain").innerHTML = getFullExpansion(getVPGain())
+>>>>>>> Stashed changes
 }
