@@ -1,0 +1,627 @@
+@font-face {
+	font-family: Typewriter;
+	src: url('MonospaceTypewriter.ttf');
+}
+
+* {
+	font-family: Typewriter;
+	user-select: none;
+}
+
+body, button {
+	font-size: 11px;
+}
+
+body {
+	color: #4f5957;
+}
+
+.achievementLocked, .achievementUnlocked {
+	width: 100;
+	height: 100;
+	border: 2px solid;
+	border-radius: 4px;
+	font-size: 11px;
+	text-align: center;
+	color: #fff;
+	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}
+
+.achievementLocked {
+	border-color: #666;
+	background-color: #6666;
+}
+
+.achievementUnlocked {
+	border-color: #090;
+	background-color: #0909;
+}
+
+currency {
+	color: black;
+	font-size: 30px;
+}
+
+.buy {
+	color: black;
+	background: #F2F2F2;
+	font-weight: bold;
+	font-family: Typewriter;
+	border: 1px solid #127A20;
+	width: 150px;
+	height: 25px;
+	transition-duration: 0.2s;
+	cursor: pointer;
+	border-radius: 4px;
+	font-size: 10px;
+	vertical-align: top;
+}
+
+.buy:hover {
+	color: #fff;
+	background: #5AC467;
+}
+
+.tabButton, .subtabButton {
+	color: black;
+	background: #e0e0e0;
+	font-weight: bold;
+	font-family: Typewriter;
+	border: 2px solid #4980cc;
+	transition-duration: 0.2s;
+	cursor: pointer;
+	border-radius: 4px;
+	vertical-align: top;
+}
+
+.tabButton:hover, .subtabButton:hover {
+	color: #fff;
+	background: #4980cc;
+}
+
+.tabButton {
+	font-size: 20px;
+}
+
+.subtabButton {
+	font-size: 12px;
+	width: 150px;
+}
+
+.infinityTabButton {
+	color: white;
+	background: #1f1f1f;
+	font-family: Typewriter;
+	border: 2px solid #b67f33;
+	transition-duration: 0.2s;
+	cursor: pointer;
+	border-radius: 4px;
+	font-size: 20px;
+	vertical-align: top;
+}
+
+.infinityTabButton:hover {
+	color: black;
+	background: #f30;
+}
+
+.eternityTabButton {
+	color: #b341e0;
+	background: #000;
+	font-family: Typewriter;
+	border: 2px solid #b341e0;
+	transition-duration: 0.2s;
+	cursor: pointer;
+	border-radius: 4px;
+	font-size: 20px;
+	vertical-align: top;
+}
+
+.eternityTabButton:hover {
+	color: black;
+	background: #b341e0;
+}
+
+.eternitymilestone, .eternitymilestonelocked {
+	width: 300px;
+	height: 60px;
+	color: black;
+	border: 1px solid #691fa5;
+	transition-duration: 0.2s;
+	font-weight: bold;
+	border-radius: 4px;
+	vertical-align: top;
+	font-size: 12px;
+	text-align: center;
+}
+
+.eternitymilestone {
+	background: #8D48C3;
+}
+
+.eternitymilestonelocked {
+	background: #696969;
+}
+
+.lock {
+	color: black;
+	background: #A3A3A3;
+	font-weight: bold;
+	font-family: Typewriter;
+	border: 1px solid #B84B5F;
+	width: 150px;
+	height: 25px;
+	transition-duration: 0.2s;
+	cursor: pointer;
+	border-radius: 4px;
+	font-size: 10px;
+	vertical-align: top;
+}
+
+.lock:hover {
+	color: #000;
+	background: #B84B5F;
+}
+
+.infinityUpgrade, .infinityUpgradeLocked, .infinityUpgradeBought {
+	width: 160;
+	height: 80;
+	font-weight: bold;
+	font-size: 10px;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+}
+
+.infinityUpgrade {
+	color: white;
+	background: #1f1f1f;
+	border: 1px solid #b67f33;
+	cursor: pointer;
+}
+
+.infinityUpgrade:hover {
+	color: black;
+	background: #f30;
+}
+
+.infinityUpgradeLocked {
+	color: black;
+	background: #f7f7f7;
+	border: 1px solid #b67f33;
+	cursor: default;
+}
+
+.infinityUpgradeLocked:hover {
+	background: white;
+}
+
+.infinityUpgradeBought {
+	color: black;
+	background: #5ac467;
+	border: 1px solid #b67f33;
+	cursor: default;
+}
+
+.eternityUpgrade, .eternityUpgradeLocked, .eternityUpgradeBought {
+	width: 200;
+	height: 100;
+	font-weight: bold;
+	font-size: 10px;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+}
+
+.eternityUpgrade {
+	color: #b341e0;
+	background: black;
+	border: 1px solid #b341e0;
+	cursor: pointer;
+}
+
+.eternityUpgrade:hover {
+	color: #404;
+	background: white;
+}
+
+.eternityUpgradeLocked {
+	color: black;
+	background: #5f5f5f;
+	border: 1px solid black;
+	cursor: default;
+}
+
+.eternityUpgradeLocked:hover {
+	background: #600;
+}
+
+.eternityUpgradeBought {
+	color: #404;
+	background: #b341e0;
+	border: 1px solid #404;
+	cursor: default;
+}
+
+.timestudy, .timestudylocked, .timestudybought {
+    width: 170px;
+    height: 85px;
+    border-radius: 4px;
+    font-size: 10px;
+    vertical-align: top;
+    margin: 10px;
+	transition: all 0.2s, left 0s, top 0s;
+	font-weight: bold;
+	position: absolute;
+	cursor: default;
+}
+
+.timestudy {
+	cursor: pointer;
+}
+
+.timestudylocked {
+	color: #181818;
+	border: 1px solid #181818;
+	background: #5f5f5f;
+}
+
+.timestudy.special {
+	background: #000;
+	color: #fff;
+	border: 1px solid #fff;
+	box-shadow: inset 0px 0px 10px 0px #fff;
+}
+
+.timestudy.matter {
+	background: #000;
+	color: #f00;
+	border: 1px solid #f00;
+	box-shadow: inset 0px 0px 10px 0px #f00;
+}
+
+.timestudy.power {
+	background: #000;
+	color: #0f6;
+	border: 1px solid #0f6;
+	box-shadow: inset 0px 0px 10px 0px #0f6;
+}
+
+.timestudy.infinity {
+	background: #000;
+	color: #f60;
+	border: 1px solid #f60;
+	box-shadow: inset 0px 0px 10px 0px #f60;
+}
+
+.timestudy.time {
+	background: #000;
+	color: #f0f;
+	border: 1px solid #f0f;
+	box-shadow: inset 0px 0px 10px 0px #f0f;
+}
+
+.timestudy.replication {
+	background: #000;
+	color: #06f;
+	border: 1px solid #06f;
+	box-shadow: inset 0px 0px 10px 0px #06f;
+}
+
+.timestudy.dilation {
+	background: #000;
+	color: #ff0;
+	border: 1px solid #ff0;
+	box-shadow: inset 0px 0px 10px 0px #ff0;
+}
+
+.timestudybought {
+	color: #000;
+	box-shadow: inset 0px 0px 10px #000;
+	border: 1px solid #000;
+}
+
+.timestudybought.special {
+	background: #fff;
+}
+
+.timestudybought.power {
+	background: #0f6;
+}
+
+.timestudybought.infinity {
+	background: #f60;
+}
+
+.timestudybought.time {
+	background: #f0f;
+}
+
+.timestudybought.replication {
+	background: #06f;
+}
+
+.timestudybought.dilation {
+	background: #ff0;
+}
+
+.timestudy:hover {
+	color: #fff;
+}
+
+.timestudy.special:hover {
+	color: #fff;
+	background: #111;
+}
+
+.timestudylocked:hover {
+	background: #600;
+}
+
+.ttbtn, .ttbtnlocked {
+    border: 1px solid #691fa5;
+	font-weight: bold;
+    width: 170px;
+    height: 70px;
+    border-radius: 4px;
+	transition-duration: 0.2s;
+	margin-bottom: 2px;
+	margin-top: 2px;
+}
+
+.ttbtn {
+    color: #3aacd6;
+    background: #232028;
+    transition-duration: 0.2s;
+    cursor: pointer;
+}
+
+.ttbtn:hover {
+    color: #232028;
+    background: #3AACD6;
+}
+
+.ttbtnlocked {
+    color: black;
+    background: #4A4A4A;
+}
+
+.ttbtnlocked:hover {
+    background: #652F2F;
+}
+
+.challenge {
+	width: 80;
+	height: 80;
+	font-weight: bold;
+	color: black;
+	background: #e0e0e0;
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	position: absolute;
+	border: 2px solid #4980cc;
+	z-index: 0;
+	font-size: 50px;
+}
+
+.challenge[completed] {
+	opacity: 0.5;
+}
+
+.challenge[running] {
+	box-shadow: 0px 0px 50px black, 0px 0px 50px black;
+}
+
+.challenge[locked] {
+	opacity: 0.5;
+}
+
+.challenge[infinity] {
+	color: white;
+	background: #1f1f1f;
+	border: 2px solid #b67f33;
+}
+
+.challenge[eternity] {
+	color: #b341e0;
+	background: black;
+	border: 2px solid #b341e0;
+}
+
+.challenge[quantum] {
+	color: #32c832;
+	background: #0a640a;
+	border: 2px solid #32c832;
+}
+
+.challenge[omnipotence] {
+	color: #f00;
+	background: #black;
+	border: 2px solid #f00;
+}
+
+.challenge[oblivion] {
+	color: #333;
+	background: #black;
+	border: 2px solid #333;
+}
+
+.challenge:hover {
+	transform: scale(1.1, 1.1);
+	z-index: 100;
+}
+
+.challengeButton {
+	width:150px;
+	height: 30px;
+	color: black;
+	font-weight: bold;
+	font-family: Typewriter;
+	cursor: pointer;
+	border-radius: 4px;
+	font-size: 16px;
+	transition-duration: 0.2s;
+}
+
+.challengeButtonStart {
+	background: #F2F2F2;
+	border: 2px solid #282;
+}
+
+.challengeButtonStart:hover, .challengeButtonCompleted {
+	color: #FFF;
+	background: #5AC467;
+}
+
+.challengeButtonLocked {
+	background: #666;
+	border: 2px solid #822;
+	cursor: default;
+}
+
+.challengeButtonRunning {
+	background: #222;
+	border: 2px solid #228;
+	cursor: default;
+}
+
+[tooltip] {
+	position: relative;
+	z-index: 2;
+}
+
+[tooltip]:before,
+[tooltip]:after {
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+}
+
+[tooltip]:before {
+	font-size: 10px;
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-bottom: -80px;
+	margin-left: -85px;
+	padding: 10px;
+	width: 150px;
+	border-radius: 3px;
+	background-color: #000d;
+	color: #fff;
+	content: attr(tooltip);
+	transition-duration: 0.2s;
+	z-index: 1000;
+	white-space: pre-wrap;
+}
+
+[tooltip]:hover:before {
+	visibility: visible;
+	opacity: 1;
+}
+
+.autobuyer {
+	font-size: 11px !important;
+	border: 1px solid gray;
+	width: 230px;
+	height: 155px;
+	text-align: center !important;
+	font-size: 100%;
+	padding: 10px;
+	border-radius: 4px;
+}
+
+.autobuyerInner {
+	background: #ddd;
+	height: 20;
+	overflow: visible;
+}
+
+.autobuyerMode {
+	background: #ddd;
+	border: 1px solid #bbb;
+	border-radius: 4px;
+	width: 75;
+	height: 25;
+}
+
+.autobuyerModeInner {
+	background: #fff;
+	border: 1px solid #bbb;
+	border-radius: 4px;
+	width: 25;
+	height: 25;
+	position: relative;
+}
+
+.autobuyerButton {
+	  color: white;
+	  background: #1F1F1F;
+	  border: 1px solid gray;
+	  width: 180px;
+	  height: 35px;
+	  transition-duration: 0.2s;
+	  cursor: pointer;
+	  border-radius: 4px;
+	  font-family: Typewriter;
+}
+
+.autobuyerButton:hover {
+	background: #026;
+	border-radius: 4px;
+}
+
+.redButton {
+	position: absolute; 
+	right: 0; 
+	top: 0; 
+	width: 20; 
+	background: #fff; 
+	color: #000; 
+	font-family: Times New Roman;
+	font-size: 25;
+	padding: 1;
+	padding-left: 10;
+	padding-right: 4;
+	transition: 0.2s;
+	cursor: pointer;
+}
+
+.redButton:hover {
+	background: #e81123; 
+	color: #fff; 
+}
+
+.fileMenuFile:hover {
+	background: #e5f3ff;
+}
+
+.fileMenuFileActive {
+	background: #cce8ff; 
+	border: 1px solid #99d1ff;
+}
+
+#optionsButton {
+	position: fixed;
+	right: -150;
+	bottom: -200;
+	width: 230;
+	height: 220;
+	border-radius: 75px;
+	background: #0006;
+	color: #fff;
+	overflow: visible;
+	padding: 10px;
+	padding-left: 50px;
+	opacity: 0.25;
+	transition: opacity 0.2s, bottom 0.5s;
+	font-size: 20px;
+}
+
+#optionsButtonText {
+	font-size: 12px;
+	cursor: pointer;
+}
+
+#optionsButton:hover {
+	opacity: 0.75;
+	bottom: -150px;
+}
