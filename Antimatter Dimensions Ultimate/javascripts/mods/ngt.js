@@ -1,14 +1,8 @@
 // Initialize NGT stuff
 
-<<<<<<< Updated upstream
-function resetNGT(hardReset) {
-	if(hardReset) player.mods.ngt = {
-		version: 2,
-=======
 function resetNGT(hardReset, divisionReset) {
 	if(hardReset || divisionReset) player.mods.ngt = {
 		version: 2.12,
->>>>>>> Stashed changes
 		omni: 0, // times gone omnipotent stat
 		thisOmni: 0, // time this run
 		lastRun: new Decimal(0), // OP gained during previous run
