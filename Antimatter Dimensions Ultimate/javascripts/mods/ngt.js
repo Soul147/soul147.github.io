@@ -788,10 +788,8 @@ function getDilationRequirement() {
 }
 
 function divide() {
-<<<<<<< Updated upstream
     resetNGT(true)
 	omnipotenceReset(true)
-=======
 	if(!hasUpg(20)) return false;
 	ngt.division.times++
 	ngt.animating = true;
@@ -954,5 +952,4 @@ function updateDivision(diff) {
 	ge("energyrate").innerHTML = getFullExpansion(getEnergyInput());
 	ge("stability").innerHTML = getFullExpansion(ngt.division.health) + "/" + getFullExpansion(ngt.division.maxHealth) + " (" + getRiftStability().multiply(100).toFixed(2) + "%)";
 	ge("vpgain").innerHTML = getFullExpansion(getVPGain())
->>>>>>> Stashed changes
 }
