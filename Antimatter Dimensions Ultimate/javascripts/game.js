@@ -979,7 +979,7 @@ function getInfinitiedGain() {
 
 function getEternitied() {
 	let total = player.eternities
-	if (player.eternitiesBank && !(player.masterystudies && inQC(0)) && !inOC()) total += player.eternitiesBank*(1+player.achievements.includes("ngt16"))
+	if (player.eternitiesBank && !(player.masterystudies && inQC(0))) total += player.eternitiesBank*(1+player.achievements.includes("ngt16"))
 	return total
 }
 
