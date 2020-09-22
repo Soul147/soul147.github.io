@@ -49,7 +49,7 @@ function gainedOP() {
 	return Decimal.pow(10, player.eternityPoints.plus(gainedEternityPoints()).e/(308)).times(player.mods.ngt.opMult || 1).divide(10).floor();
 }
 
-const omReqList = ["10", "100", "1e5", "1e10", "1e20", "1e33", "1e50", "1e100", "1e10000", "1e1000000"]
+const omReqList = ["10", "100", "1e5", "1e10", "1e20", "1e33", "1e50", "1e100", "1e200", "1e10000", "1e1000000"]
 
 function omniMilestoneReq(n) {
 	return new Decimal(omReqList[n])
@@ -335,7 +335,7 @@ function omnipotenceReset(force, auto) {
 		dimlife: true,
 		dead: true,
 		dilation: {
-			studies: omniMilestoneReached(8) ? player.dilation.studies : [],
+			studies: omniMilestoneReached(9) ? player.dilation.studies : [],
 			active: false,
 			tachyonParticles: player.achievements.includes("ng3p37") ? player.dilation.bestTP.sqrt() : new Decimal(0),
 			dilatedTime: new Decimal(0),
@@ -343,7 +343,7 @@ function omnipotenceReset(force, auto) {
 			bestTP: player.dilation.bestTP,
 			nextThreshold: new Decimal(1000),
 			freeGalaxies: 0,
-			upgrades: omniMilestoneReached(8) ? player.dilation.upgrades : [],
+			upgrades: omniMilestoneReached(9) ? player.dilation.upgrades : [],
 			rebuyables: {
 				1: 0,
 				2: 0,
@@ -354,7 +354,7 @@ function omnipotenceReset(force, auto) {
 		why: player.why,
 		options: player.options,
 		meta: player.meta,
-		masterystudies: player.masterystudies ? (omniMilestoneReached(8) ? player.masterystudies : []) : undefined,
+		masterystudies: player.masterystudies ? (omniMilestoneReached(10) ? player.masterystudies : []) : undefined,
 		autoEterOptions: player.autoEterOptions,
 		galaxyMaxBulk: player.galaxyMaxBulk,
 		quantum: player.quantum ? player.quantum : undefined,
@@ -445,7 +445,9 @@ function updateOmniDimMults(reset) {
 		if(hasUpg(4)) mult = mult.multiply(getUpgEff(4))
 		if(hasUpg(8)) mult = mult.multiply(getUpgEff(8))
 		if(hasUpg(10)) mult = mult.multiply(getUpgEff(10))
+		if(hasUpg(12)) mult = mult.multiply(getUpgEff(12))
 		if(hasUpg(14)) mult = mult.multiply(getUpgEff(14))
+		if(hasUpg(15) && i == 1) mult = mult.multiply(getUpgEff(15))
 		if(compOC(3)) mult = mult.multiply(ngt.t.reward[2])
 		if(player.achievements.includes("ngt18")) mult = mult.multiply(player.timestudy.studies.length+1)
 		
@@ -503,7 +505,7 @@ opUpgCosts = [
 	10,
 	1e10, 1e15,
 	1e20, 1e25, 1e30, 1e35, 1e40, 1e45, 1e60, 1e100,
-	"1e110", "1e130", "1e140", "1e145", "1e170", "1e230", "1e250", "1e380", "1e400", "1e480", "1e500", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", 
+	"1e110", "1e130", "1e140", "1e150", "1e170", "1e230", "1e250", "1e380", "1e400", "1e480", "1e500", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", 
 ]
 
 for(var i = 0; i < opUpgCosts.length; i++) {
@@ -564,11 +566,11 @@ function getUpgEff(n) {
 		case 10:
 			return Decimal.pow(1-player.tickspeed.logarithm, 0.1).multiply(100).max(1)
 		case 12:
-			return Decimal.log10(Decimal.max(ngt.r1.amount.log10(),1))**2
+			return Decimal.log10(Decimal.max(ngt.r1.amount.log10(),1))**((hasUpg(9) ? getUpgEff(9) : 3) * (hasUpg(17) ? getUpgEff(17) : 1))
 		case 14: 
 			return getReplMult().pow(0.01)
 		case 15: 
-			return Decimal.pow(69, ngt.d8.amount.pow(2)).max(1)
+			return Decimal.pow(6.9, ngt.d8.amount).max(1)
 		case 16: 
 			return Decimal.pow(getReplicatorMult().log10(), 1.25).max(1)
 		case 17: 
@@ -656,9 +658,9 @@ function updateOmniChallenges() {
 	ngt.t = {
 		req: [
 			new Decimal("1e1350000000"),
-			new Decimal("1e1800000000"),
-			new Decimal("1e2222222222"),
-			new Decimal("1e4200000000"),
+			new Decimal("1e1775000000"),
+			new Decimal("1e2200000000"),
+			new Decimal("1e2500000000"),
 			new Decimal("1e5250000000"),
 			new Decimal("1e5750000000"),
 			new Decimal("1e9999999999"),
@@ -668,9 +670,9 @@ function updateOmniChallenges() {
 		],
 		goal: [
 			new Decimal("1e775000"),
-			new Decimal("1e10500000"),
-			new Decimal("1e11500000"),
-			new Decimal("1e5400000"),
+			new Decimal("1e10000000"),
+			new Decimal("1e12500000"),
+			new Decimal("1e92860000"),
 			new Decimal("1e400000000"),
 			new Decimal("1e250000000"),
 			new Decimal("1e999999999"),
@@ -681,8 +683,8 @@ function updateOmniChallenges() {
 		reward: [
 			Decimal.max((Decimal.log10(player.firstBought) - 1) / 100 + 1, 1),
 			Decimal.max(Decimal.log10(Decimal.max(-player.tickspeed.logarithm, 0)), 0).pow(0.75),
-			Decimal.max(player.timeShards.logarithm, 0).pow(0.2).multiply(3).sqrt().max(3),
-			new Decimal(Decimal.log10(player.infinityPower.log10()+1)).pow(0.1),
+			Decimal.max(player.timeShards.logarithm, 0).pow(0.25).multiply(3).sqrt().max(3),
+			new Decimal(Decimal.log10(Decimal.max(player.infinityPower.log10() - 2**24, 1))).pow(2).divide(100).add(1),
 			"",
 			"",
 			"",
@@ -761,6 +763,17 @@ function toggleAutoOmniMode() {
 	else if (ngt.autobuyer.mode == "time") ngt.autobuyer.mode = "peak"
 	else ngt.autobuyer.mode = "amount"
 	updateAutoOmniMode()
+}
+
+function calculateNewStudyCosts() {
+	for(var i = 0; i < studyCosts.length; i++) {
+		if(i > 57) studyCosts[i] *= 1;
+		else if(i > 45) studyCosts[i] *= 2000/9*(superStudies+1);
+		else if(i > 40) studyCosts[i] *= 20
+		else studyCosts[i] *= 3;
+		studyCosts[37] = 0;
+		if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
+	}
 }
 
 // Progress Bar

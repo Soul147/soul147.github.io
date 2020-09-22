@@ -7779,12 +7779,18 @@ function gameLoop(diff) {
 		
 	// Fix this stupid bug
 	
-	studyCosts = [1, 3, 2, 2, 3, 2, 4, 6, 3, 3, 3, 4, 6, 5, 4, 6, 5, 4, 5, 7, 4, 6, 6, 12, 9, 9, 9, 5, 5, 5, 4, 4, 4, 8, 7, 7, 15, 200, 400, 730, 300, 900, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500, 60, 1e4, 1e4]
+	studyCosts = [1, 3, 2, 2, 3, 2, 4, 6, 3, 3, 3, 4, 6, 5, 4, 6, 5, 4, 5, 7, 4, 6, 6, 12, 9, 9, 9, 5, 5, 5, 4, 4, 4, 8, 7, 7, 15, 200, 400, 730, 300, 900, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500, 60, 1e4, 1e4, 3e5]
 	
 	for(var i = 0; i < studyCosts.length; i++) {
 		if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
 	}
-		
+	
+	ge("224amt").innerText = getFullExpansion(player.resets / 850);
+	ge("225amt").innerText = getFullExpansion(player.replicanti.amount.log10() / (player.mods.ngt ? 308 : 1000));
+	ge("226amt").innerText = getFullExpansion(player.replicanti.gal / (player.mods.ngt ? 8 : 15));
+	
+	ge('replicantibulkmodetoggle').style.display=(player.achievements.includes("ngpp16")||player.timestudy.studies.includes(1021))?"inline-block":"none"
+	
 	if(player.mods.ngt) {
 		ngt = player.mods.ngt || {};
 		player.mods.ngt = ngt;
@@ -7794,14 +7800,7 @@ function gameLoop(diff) {
 		superStudies = 0;
 		player.timestudy.studies.forEach(function(study) {if(study > 220 && study < 1000) superStudies++});
 	
-		for(var i = 0; i < studyCosts.length; i++) {
-			if(i > 57) studyCosts[i] *= 1;
-			else if(i > 45) studyCosts[i] *= 2000/9*(superStudies+1);
-			else if(i > 40) studyCosts[i] *= 20
-			else studyCosts[i] *= 3;
-			studyCosts[37] = 0;
-			if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
-		}
+		calculateNewStudyCosts();
 		
 		ge("223eff").innerHTML = 160
 		ge("224eff").innerHTML = 850

@@ -44,7 +44,6 @@ function getTimeDimensionPower(tier) {
   if(player.mods.ngt) {
 	  if(tier <= 4 && !inOC(6)) {
 		  ret = ret.multiply(getGravitonEffect());
-		  if (hasUpg(15)) ret = ret.times(getUpgEff(15))
 	  }
 	  else {
 		  ret = ret.pow(1-(tier-4)*0.2)
