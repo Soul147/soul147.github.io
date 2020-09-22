@@ -149,12 +149,12 @@
                 </table>
                 <table class="table" id="studytable">
                     <tr>
-                        <td><button class="timestudy" id="1011" onclick="buyTimeStudy(1011)">Unlock autobuyer for time dimensions.<span>Cost: <t id = "studyCost59"></t> Time Theorems</button></td>
+                        <td><button class="timestudy" id="1011" onclick="buyTimeStudy(1011)">Unlock autobuyer for time dimensions.<span>Requires <t id = "studyCost59"></t> total Time Theorems</button></td>
 						<td style="opacity: 0;"><button class="timestudylocked"></button></td>
                         <td><button class="timestudy" id="41" onclick="buyTimeStudy(41)"></button></td>
                         <td><button class="timestudy" id="42" onclick="buyTimeStudy(42)"></button></td>
 						<td style="opacity: 0;"><button class="timestudylocked"></button></td>
-                        <td><button class="timestudy" id="1012" onclick="buyTimeStudy(1012)">Unlock autobuyer for x5 EP upgrades.<span>Cost: <t id = "studyCost60"></t> Time Theorems</button></td>
+                        <td><button class="timestudy" id="1012" onclick="buyTimeStudy(1012)">Unlock autobuyer for x5 EP upgrades.<span>Requires <t id = "studyCost60"></t> total Time Theorems</button></td>
                     </tr>
                 </table>
                 <br>
@@ -279,6 +279,7 @@
                 <table class="table" id="studytable">
                     <tr>
                         <td><button class="timestudy" id="201" onclick="buyTimeStudy(201)">Pick another path from the first split<span>Cost: <t id = "studyCost41"></t> Time Theorems</button></td>
+						<td><button class="timestudy" id="1021" onclick="buyTimeStudy(1021)"><span id="1021desc">Unlock the ability to gain max RGs.</span>Requires <t id = "studyCost61"></t> total Time Theorems</button></td>
                     </tr>
                 </table>
                 <table class="table" id="studytable">
@@ -294,9 +295,9 @@
                         <td><button class="timestudy darkstudy" id="221" onclick="buyTimeStudy(221)">Dimensional boosts affect time dimensions with reduced power.<span>Cost: <t id = "studyCost46"></t> Time Theorems</button></td>
                         <td><button class="timestudy lightstudy" id="222" onclick="buyTimeStudy(222)">Dimensional boost costs scale by another <t id = "ts222pow">2</t> less.<span>Cost: <t id = "studyCost47"></t> Time Theorems</button></td>
                         <td><button class="timestudy darkstudy" id="223" onclick="buyTimeStudy(223)">Galaxy cost scaling starts <t id = "223eff">7</t> galaxies later.<span>Cost: <t id = "studyCost48"></t> Time Theorems</button></td>
-                        <td><button class="timestudy lightstudy" id="224" onclick="buyTimeStudy(224)">Galaxy cost scaling starts 1 galaxy later for every <t id = "224eff">2000</t> dimensional boosts.<span>Cost: <t id = "studyCost49"></t> Time Theorems</button></td>
-                        <td><button class="timestudy darkstudy" id="225" onclick="buyTimeStudy(225)">You gain an extra RG for every <t id = "225eff">1e1000</t>x more replicanti.<span>Cost: <t id = "studyCost50"></t> Time Theorems</button></td>
-                        <td><button class="timestudy lightstudy" id="226" onclick="buyTimeStudy(226)">You gain an extra RG every <t id = "226eff">15</t> normal RGs.<span>Cost: <t id = "studyCost51"></t> Time Theorems</button></td>
+                        <td><button class="timestudy lightstudy" id="224" onclick="buyTimeStudy(224)">Galaxy cost scaling starts 1 galaxy later for every <t id = "224eff">2000</t> dimensional boosts.<span>Currently: +<t id = "224amt"></t><span>Cost: <t id = "studyCost49"></t> Time Theorems</button></td>
+                        <td><button class="timestudy darkstudy" id="225" onclick="buyTimeStudy(225)">You gain an extra RG for every <t id = "225eff">1e1000</t>x more replicanti.<span>Currently: +<t id = "225amt"></t><span>Cost: <t id = "studyCost50"></t> Time Theorems</button></td>
+                        <td><button class="timestudy lightstudy" id="226" onclick="buyTimeStudy(226)">You gain an extra RG every <t id = "226eff">15</t> normal RGs.<span>Currently: +<t id = "226amt"></t><span>Cost: <t id = "studyCost51"></t> Time Theorems</button></td>
                         <td><button class="timestudy darkstudy" id="227" onclick="buyTimeStudy(227)">Sacrifice affects the 4th Time Dimension with reduced effect.<span>Cost: <t id = "studyCost52"></t> Time Theorems</button></td>
                         <td><button class="timestudy lightstudy" id="228" onclick="buyTimeStudy(228)">Sacrifice scales better.<span>Cost: <t id = "studyCost53"></t> Time Theorems</button></td>
                     </tr>
@@ -4721,10 +4722,10 @@
 					<div class = "omniupglocked" name = "ou">free tickspeed upgrades boost replicator effect at reduced rate<br>currently: ^<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou">omni-dimensions are affected by tickspeed at greatly reduced rate<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>unlock omni-challenges<br><span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
-					<div class = "omniupglocked" name = "ou">tier I replicators boost replicanti speed at greatly reduced rate<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
+					<div class = "omniupglocked" name = "ou">tier I replicators boost omni-dimensions and replicanti speed<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>pick all paths from the first timestudy split<span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou">omni-dimensions are affected by replicanti multiplier ^ 0.01.<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
-					<div class = "omniupglocked" name = "ou">eighth omni-dimensions boost time dimensions<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
+					<div class = "omniupglocked" name = "ou">eighth omni-dimensions boost first omni-dimensions<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou">replicanti multiplier is boosted by replicator multiplier<br>currently: ^<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou">replicators are slower, but their effect is boosted by time shards<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>distant galaxy scaling is 20% slower<span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
