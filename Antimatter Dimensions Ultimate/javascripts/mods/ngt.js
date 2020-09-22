@@ -667,7 +667,7 @@ function updateOmniChallenges() {
 			new Decimal("1e9999999999"),
 		],
 		goal: [
-			new Decimal("1e800000"),
+			new Decimal("1e775000"),
 			new Decimal("1e10500000"),
 			new Decimal("1e11500000"),
 			new Decimal("1e5400000"),
