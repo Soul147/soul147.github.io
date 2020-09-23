@@ -83,7 +83,9 @@ dev.implode = function() {
     setTimeout(function(){ document.getElementById("body").style.animation = ""; }, 2000)
 }
 
-dev.omniAnim = function(time=1) {
+dev.omniAnim = function(time=1, force) {
+	if(!force && !player.options.animations.omnipotence) return;
+	
 	ge("omniAnim").style.transitionDuration = time + "s";
 	
     ge("omniAnim").style.width = "2500px";

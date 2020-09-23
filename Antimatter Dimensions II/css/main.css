@@ -271,6 +271,13 @@ currency {
 	box-shadow: inset 0px 0px 10px 0px #fff;
 }
 
+.timestudy.matter {
+	background: #000;
+	color: #f00;
+	border: 1px solid #f00;
+	box-shadow: inset 0px 0px 10px 0px #f00;
+}
+
 .timestudy.power {
 	background: #000;
 	color: #0f6;

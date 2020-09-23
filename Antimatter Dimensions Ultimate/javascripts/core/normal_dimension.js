@@ -526,6 +526,7 @@ function getInfinitiedMult() {
 }
 
 function getDimensionProductionPerSecond(tier) {
+	if(inOC(1) && tier > 1) return new Decimal(0);
 	let ret = getAmount(tier).floor()
 	if ((player.currentChallenge == "challenge7" || inQC(4)) && !player.galacticSacrifice) {
 		if (tier == 4) ret = ret.pow(1.3)

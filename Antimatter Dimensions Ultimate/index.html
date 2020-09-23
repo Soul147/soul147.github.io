@@ -149,12 +149,12 @@
                 </table>
                 <table class="table" id="studytable">
                     <tr>
-                        <td><button class="timestudy" id="1011" onclick="buyTimeStudy(1011)">Unlock autobuyer for time dimensions.<span>Cost: <t id = "studyCost59"></t> Time Theorems</button></td>
+                        <td><button class="timestudy" id="1011" onclick="buyTimeStudy(1011)">Unlock autobuyer for time dimensions.<span>Requires <t id = "studyCost59"></t> total Time Theorems</button></td>
 						<td style="opacity: 0;"><button class="timestudylocked"></button></td>
                         <td><button class="timestudy" id="41" onclick="buyTimeStudy(41)"></button></td>
                         <td><button class="timestudy" id="42" onclick="buyTimeStudy(42)"></button></td>
 						<td style="opacity: 0;"><button class="timestudylocked"></button></td>
-                        <td><button class="timestudy" id="1012" onclick="buyTimeStudy(1012)">Unlock autobuyer for x5 EP upgrades.<span>Cost: <t id = "studyCost60"></t> Time Theorems</button></td>
+                        <td><button class="timestudy" id="1012" onclick="buyTimeStudy(1012)">Unlock autobuyer for x5 EP upgrades.<span>Requires <t id = "studyCost60"></t> total Time Theorems</button></td>
                     </tr>
                 </table>
                 <br>
@@ -214,7 +214,7 @@
                 <table class="table" id="studytable">
                     <tr>
                         <td><button class="eternitychallengestudy" id="ec6unl">Eternity Challenge 6<span>Requirement: 40 replicanti galaxies<span>Cost: 100 Time Theorems</button></td>
-                        <td><button class="timestudy activestudy" id="131" onclick="buyTimeStudy(131)">Automatic replicanti galaxies are disabled, but you can get 50% more<span>Cost: <t id = "studyCost27"></t> Time Theorems</button></td>
+                        <td><button class="timestudy activestudy" id="131" onclick="buyTimeStudy(131)"><t id = "131desc">Automatic replicanti galaxies are disabled, but you can get 50% more</t><span>Cost: <t id = "studyCost27"></t> Time Theorems</button></td>
                         <td><button class="timestudy passivestudy" id="132" onclick="buyTimeStudy(132)">Replicanti galaxies are 40% more effective<span>Cost: <t id = "studyCost28"></t> Time Theorems</button></td>
                         <td><button class="timestudy idlestudy" id="133" onclick="buyTimeStudy(133)">Replicanti are 10x slower until infinity, but their galaxies are 50% stronger<span>Cost: <t id = "studyCost29"></t> Time Theorems</button></td>
                         <td><button class="eternitychallengestudy" id="ec8unl">Eternity Challenge 8<span>Cost: 100 Time Theorems</button></td>
@@ -278,7 +278,8 @@
                 </table>
                 <table class="table" id="studytable">
                     <tr>
-                        <td><button class="timestudy" id="201" onclick="buyTimeStudy(201)">Pick another path from the first split<span>Cost: <t id = "studyCost41"></t> Time Theorems</button></td>
+                        <td><button class="timestudy" id="201" onclick="buyTimeStudy(201)"><t id = "201desc">Pick another path from the first split</t><span>Cost: <t id = "studyCost41"></t> Time Theorems</button></td>
+						<td><button class="timestudy" id="1021" onclick="buyTimeStudy(1021)"><span id="1021desc">Unlock the ability to gain max RGs.</span>Requires <t id = "studyCost61"></t> total Time Theorems</button></td>
                     </tr>
                 </table>
                 <table class="table" id="studytable">
@@ -294,9 +295,9 @@
                         <td><button class="timestudy darkstudy" id="221" onclick="buyTimeStudy(221)">Dimensional boosts affect time dimensions with reduced power.<span>Cost: <t id = "studyCost46"></t> Time Theorems</button></td>
                         <td><button class="timestudy lightstudy" id="222" onclick="buyTimeStudy(222)">Dimensional boost costs scale by another <t id = "ts222pow">2</t> less.<span>Cost: <t id = "studyCost47"></t> Time Theorems</button></td>
                         <td><button class="timestudy darkstudy" id="223" onclick="buyTimeStudy(223)">Galaxy cost scaling starts <t id = "223eff">7</t> galaxies later.<span>Cost: <t id = "studyCost48"></t> Time Theorems</button></td>
-                        <td><button class="timestudy lightstudy" id="224" onclick="buyTimeStudy(224)">Galaxy cost scaling starts 1 galaxy later for every <t id = "224eff">2000</t> dimensional boosts.<span>Cost: <t id = "studyCost49"></t> Time Theorems</button></td>
-                        <td><button class="timestudy darkstudy" id="225" onclick="buyTimeStudy(225)">You gain an extra RG for every <t id = "225eff">1e1000</t>x more replicanti.<span>Cost: <t id = "studyCost50"></t> Time Theorems</button></td>
-                        <td><button class="timestudy lightstudy" id="226" onclick="buyTimeStudy(226)">You gain an extra RG every <t id = "226eff">15</t> normal RGs.<span>Cost: <t id = "studyCost51"></t> Time Theorems</button></td>
+                        <td><button class="timestudy lightstudy" id="224" onclick="buyTimeStudy(224)">Galaxy cost scaling starts 1 galaxy later for every <t id = "224eff">2000</t> dimensional boosts.<span>Currently: +<t id = "224amt"></t><span>Cost: <t id = "studyCost49"></t> Time Theorems</button></td>
+                        <td><button class="timestudy darkstudy" id="225" onclick="buyTimeStudy(225)">You gain an extra RG for every <t id = "225eff">1e1000</t>x more replicanti.<span>Currently: +<t id = "225amt"></t><span>Cost: <t id = "studyCost50"></t> Time Theorems</button></td>
+                        <td><button class="timestudy lightstudy" id="226" onclick="buyTimeStudy(226)">You gain an extra RG every <t id = "226eff">15</t> normal RGs.<span>Currently: +<t id = "226amt"></t><span>Cost: <t id = "studyCost51"></t> Time Theorems</button></td>
                         <td><button class="timestudy darkstudy" id="227" onclick="buyTimeStudy(227)">Sacrifice affects the 4th Time Dimension with reduced effect.<span>Cost: <t id = "studyCost52"></t> Time Theorems</button></td>
                         <td><button class="timestudy lightstudy" id="228" onclick="buyTimeStudy(228)">Sacrifice scales better.<span>Cost: <t id = "studyCost53"></t> Time Theorems</button></td>
                     </tr>
@@ -4690,7 +4691,7 @@
                 <tr>
                     <td><button class="secondarytabbtn" onclick="showOmniTab('omnipotence')">Omnipotence</button></td>
                     <td><button class="secondarytabbtn" onclick="showOmniTab('omnimilestones')">Milestones</button></td>
-                    <td><button class="secondarytabbtn" onclick="showOmniTab('theblade')">The Blade</button></td>
+                    <td><button class="secondarytabbtn" onclick="showOmniTab('theblade')" id = "thebladetab" style = "display: none">The Blade</button></td>
                 </tr>
             </table>
 			<br>
@@ -4720,10 +4721,10 @@
 					<div class = "omniupglocked" name = "ou">free tickspeed upgrades boost replicator effect at reduced rate<br>currently: ^<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou">omni-dimensions are affected by tickspeed at greatly reduced rate<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>unlock omni-challenges<br><span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
-					<div class = "omniupglocked" name = "ou">tier I replicators boost replicanti speed at greatly reduced rate<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
+					<div class = "omniupglocked" name = "ou">tier I replicators boost omni-dimensions and replicanti speed<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>pick all paths from the first timestudy split<span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou">omni-dimensions are affected by replicanti multiplier ^ 0.01.<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
-					<div class = "omniupglocked" name = "ou">eighth omni-dimensions boost time dimensions<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
+					<div class = "omniupglocked" name = "ou">eighth omni-dimensions boost first omni-dimensions<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou">replicanti multiplier is boosted by replicator multiplier<br>currently: ^<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou">replicators are slower, but their effect is boosted by time shards<br>currently: x<span name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
 					<div class = "omniupglocked" name = "ou"><br>distant galaxy scaling is 20% slower<span style = "display: none" name = "ouinfo"></span><br>cost: <span name = "oucost"></span> OP</div>
@@ -4752,8 +4753,9 @@
 					<div class = "omnimilestonelocked" id = "om4">keep banked infinities<br><span id = "omreq4"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om5">keep eternity challenges<br><span id = "omreq5"></span></div><br>
 					<div class = "omnimilestonelocked" id = "om6">keep 5% of eternities<br><span id = "omreq6"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om7">keep dilation studies<br><span id = "omreq7"></span></div><br>
-					<div class = "omnimilestonelocked" id = "om8" style = "display: none">keep mastery studies<br><span id = "omreq8"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om7">gain 1% of EP/s<br><span id = "omreq7"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om8" style = "display: none">keep dilation studies<br><span id = "omreq8"></span></div><br>
+					<div class = "omnimilestonelocked" id = "om9" style = "display: none">keep mastery studies<br><span id = "omreq9"></span></div><br>
 				</center>
 			</div>
 			<div id = "theblade" class = "omnitab" style = "height: 1500px">
@@ -4852,6 +4854,7 @@
 		<button id="floatingTextAnimBtn" class="storebtn" onclick="animationOnOff('floatingText')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
         <button id="bigCrunchAnimBtn" class="storebtn" onclick="animationOnOff('bigCrunch')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline" ach-tooltip="Click here while holding shift to toggle this option to always! (except some conditions)">ON</button>
         <button id="tachyonParticleAnimBtn" class="storebtn" onclick="animationOnOff('tachyonParticles')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
+        <button id="omnipotenceAnimBtn" class="storebtn" onclick="animationOnOff('omnipotence')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
         <button id="blackHoleAnimBtn" class="storebtn" onclick="animationOnOff('blackHole')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
         <button id="quarksAnimBtn" class="storebtn" onclick="animationOnOff('quarks')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
 	</div>

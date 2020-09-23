@@ -24,7 +24,7 @@ function getTimeDimensionPower(tier) {
 
   if (player.eternityUpgrades.includes(4)) ret = ret.times(player.achPow)
   if (player.eternityUpgrades.includes(5)) ret = ret.times(Math.max(player.timestudy.theorem, 1))
-  if (player.eternityUpgrades.includes(6)) ret = ret.times(player.totalTimePlayed / 10 / 60 / 60 / 24)
+  if (player.eternityUpgrades.includes(6)) ret = ret.times(Math.max(player.totalTimePlayed / 10 / 60 / 60 / 24, 1))
   if (player.timestudy.studies.includes(73) && tier == 3) ret = ret.times(calcTotalSacrificeBoost().pow(0.005).min(new Decimal("1e1300")))
   if (player.timestudy.studies.includes(93)) ret = ret.times(Decimal.pow(player.totalTickGained, 0.25).max(1))
   if (player.timestudy.studies.includes(103)) ret = ret.times(Math.max(player.replicanti.galaxies, 1))
@@ -44,7 +44,6 @@ function getTimeDimensionPower(tier) {
   if(player.mods.ngt) {
 	  if(tier <= 4 && !inOC(6)) {
 		  ret = ret.multiply(getGravitonEffect());
-		  if (hasUpg(15)) ret = ret.times(getUpgEff(15))
 	  }
 	  else {
 		  ret = ret.pow(1-(tier-4)*0.2)

@@ -125,7 +125,7 @@ function onLoad(noOffline) {
 	if (player.timeDimension7 === undefined) player.timeDimension7 = {cost: new Decimal("1e3000"), amount: new Decimal(0), power: new Decimal(1), bought: 0 }
 	if (player.timeDimension8 === undefined) player.timeDimension8 = {cost: new Decimal("1e3350"), amount: new Decimal(0), power: new Decimal(1), bought: 0 }
 	if (player.why === undefined) player.why = 0
-	if (player.options.animations === undefined) player.options.animations = {floatingText: true, bigCrunch: true, eternity: true, tachyonParticles: true}
+	if (player.options.animations === undefined) player.options.animations = {floatingText: true, bigCrunch: true, eternity: true, tachyonParticles: true, omnipotence: true}
 	setTheme(player.options.theme);
 
 	sliderText.textContent = "Update rate: " + player.options.updateRate + "ms";
@@ -472,6 +472,7 @@ if (player.version < 5) {
 	document.getElementById("floatingTextAnimBtn").textContent = "Floating text: " + ((player.options.animations.floatingText) ? "ON" : "OFF")
 	document.getElementById("bigCrunchAnimBtn").textContent = "Big crunch: " + (player.options.animations.bigCrunch === "always" ? "ALWAYS" : player.options.animations.bigCrunch ? "ON" : "OFF")
 	document.getElementById("tachyonParticleAnimBtn").textContent = "Tachyon particles: " + ((player.options.animations.tachyonParticles) ? "ON" : "OFF")
+	document.getElementById("omnipotenceAnimBtn").textContent = "Omnipotence: " + ((player.options.animations.omnipotence) ? "ON" : "OFF")
 
 	if (player.infinitied == 0 && getEternitied() == 0) document.getElementById("infinityPoints2").style.display = "none"
 
@@ -1499,7 +1500,6 @@ if (player.version < 5) {
 	document.getElementById("metaAntimatterEffectType").textContent=inQC(3)?"multiplier on all Infinity Dimensions":"extra multiplier per dimension boost"
 	for (i=1;i<9;i++) document.getElementById("td"+i+'auto').style.visibility=player.achievements.includes("ngpp17")||player.timestudy.studies.includes(1011)?"visible":"hidden"
 	document.getElementById('togglealltimedims').style.visibility=player.achievements.includes("ngpp17")?"visible":"hidden"
-	document.getElementById('replicantibulkmodetoggle').style.display=player.achievements.includes("ngpp16")?"inline-block":"none"
 	document.getElementById('replicantibulkmodetoggle').textContent="Mode: "+(player.galaxyMaxBulk?"Max":"Singles")
 	if (player.meta) {
 			document.getElementById('epmultauto').textContent="Auto: O"+(player.autoEterOptions.epmult?"N":"FF")
@@ -1638,9 +1638,6 @@ if (player.version < 5) {
 					ngModeMessages.push("Welcome to NG+-+-+ mode, created by earthernsence! This mode combines NG--, NG-, and NG+++ features. Good luck!")
 			}
 			if (inflationCheck) ngModeMessages = ["I'm terribly sorry. But your save was appeared that there is an inflation, which it defeats the rule of incremental games. Your save was forced to reset everything."]
-			if (oof) {
-				ngModeMessages = ["I'm terribly sorry. But your save was appeared that there is an inflation, which it defeats the rule of incremental games. Your save was forced to reset everything."]; 
-			}
 			if (forceToQuantumAndRemove) {
 					quantum(false, true, 0)
 					ngModeMessages = ["Due to balancing changes, you are forced to quantum but you will now lose all your time theorems and best TP too."]
