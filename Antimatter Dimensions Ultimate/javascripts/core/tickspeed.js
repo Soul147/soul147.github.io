@@ -20,7 +20,13 @@ function getGalaxyPower(ng, bi) {
 	else otherGalPower += Math.min(player.replicanti.galaxies, player.replicanti.gal) * (replGalEff - 1) + extraReplGalPower
 	otherGalPower += Math.floor(player.dilation.freeGalaxies) * ((player.masterystudies ? player.masterystudies.includes("t343") : false) ? replGalEff : 1)
 
-	let galaxyPower = Math.max(ng-(bi?2:0),0)+otherGalPower
+	let virtualGalPower = 0
+	
+	if(player.mods.ngt) {
+		virtualGalPower = player.mods.ngt.division.vgal
+	}
+	
+	let galaxyPower = Math.max(ng-(bi?2:0),0)+otherGalPower+virtualGalPower
 	if ((player.currentChallenge=="challenge7"||inQC(4))&&player.galacticSacrifice) galaxyPower *= galaxyPower
 	return galaxyPower
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>    
+        <script>
+            let antimatter = 0;
+            
+            let x = setInterval(loop, 50);
+            
+            function makeAntimatter() {
+                antimatter++;
+            }
+            
+            function loop() {
+                if (antimatter >= 309) {
+                    document.write('You win. That\'s not much of an achievement');
+                    clearInterval(x);
+                } else {
+                    document.getElementById('ant').innerHTML = antimatter;
+                }
+            }
+        </script>
+    </head>
+    
+    <body>
+        <p id='ant'>0</p>
+        <button id='gen' onclick='makeAntimatter()'>Make Antimatter</button>
+        <br><br>
+        <button>This button doesn't save your game.</button>
+    </body>
+</html>

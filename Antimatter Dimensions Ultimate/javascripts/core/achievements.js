@@ -234,7 +234,6 @@ function clearOldAchieves(){
 }
 
 function giveAchievement(name) {
-
     if (player.achievements.includes(name)){ clearOldAchieves(); }
 
     if (player.achievements.includes(allAchievementNums[name])) return false
@@ -243,7 +242,7 @@ function giveAchievement(name) {
 	var secretAchId = allAchievementNums[name].split("s")[1]
 	
 	var ngtAchId = allAchievementNums[name].split("s")[1]
-	if(ngtAchId != undefined) if(!player.mods.ngt) return
+	if (ngtAchId != undefined) if(!player.mods.ngt) return
 
     var ngudAchId=allAchievementNums[name].split("ngud")[1]
     if (ngudAchId!=undefined) if (player.exdilation==undefined) return
@@ -256,7 +255,7 @@ function giveAchievement(name) {
 	
 	var ng3pAchId=allAchievementNums[name].split("ng3p")[1]
 
-    if (allAchievementNums[name].split("ng3p")[1]&&!player.masterystudies) return false
+    if (ng3pAchId&&!player.masterystudies) return false
 
     if (player.boughtDims) {
         var r=allAchievementNums[name].split("r")[1]
@@ -264,6 +263,9 @@ function giveAchievement(name) {
         else r=parseInt(allAchievementNums[name].split("r")[1])
         if (r==105||(r!=117&&r>110)) return false
     }
+	
+    player.achievements.push(allAchievementNums[name]);
+    document.getElementById(name).className = "achievementunlocked"
 
     if(player.mods.ngpt) {
 		value = 1
@@ -287,8 +289,6 @@ function giveAchievement(name) {
 	
     if (name == "A sound financial decision") localStorage.setItem(btoa("dsAM_asfd"),"")
     else $.notify(name, "success");
-    player.achievements.push(allAchievementNums[name]);
-    document.getElementById(name).className = "achievementunlocked"
     if (name == "All your IP are belong to us" || name == "MAXIMUM OVERDRIVE") {
         player.infMult = player.infMult.times(4);
         player.autoIP = player.autoIP.times(4);

@@ -19,7 +19,19 @@ function resetNGT(hardReset, divisionReset) {
 		t: {req: [], goal: [], reward: []}, // info for OCs
 		autobuyer: {
 			
-		}
+		},
+		division: hardReset ? {
+			times: 0,
+			// light
+			vp: new Decimal(0),
+			totalvp: new Decimal(0),
+			vgal: 0,
+			// dark
+			um: new Decimal(0),
+			shards: new Decimal(0),
+			energy: new Decimal(0),
+			damage: new Decimal(0),
+		} : player.mods.ngt.division,
 	}
 	for(var i = 1; i <= 8; i++) {
 		j = i - 1
@@ -586,8 +598,16 @@ function updateOmniUpgrades() {
 	if(hasUpg(2)) ngt.unlockedRings++;
 	if(hasUpg(10)) ngt.unlockedRings++;
 	
+	if(player.options.currentTab !== "omnitab" || player.options.currentOmniTab !== "omnipotence") return; // only run when tab is active
 	gn("ouinfo", function(n, i) {n.innerHTML = shorten(getUpgEff(i))})
 	gn("oucost", function(n, id) {n.innerHTML = shortenCosts(opUpgCosts[id])})
+	gn("ou", function(div, id) {
+		div.className = !hasUpg(id-1) ? "omniupghidden" : hasUpg(id) ? "omniupgbought" : affordUpg(id) ? "omniupg" : "omniupglocked"
+		div.upgID = id;
+		div.onclick = function() {
+			buyUpg(this.upgID);
+		}
+	})
 	
 	updateOmniSpins()
 }
@@ -636,11 +656,6 @@ function updateOmniSpins() {
 			div.style.position = "absolute"
 			div.style.left = centerX + offsetX + randomX + "px";
 			div.style.top = centerY + offsetY + randomY + "px";
-			div.className = !hasUpg(id-1) ? "omniupghidden" : hasUpg(id) ? "omniupgbought" : affordUpg(id) ? "omniupg" : "omniupglocked"
-			div.upgID = id;
-			div.onclick = function() {
-				buyUpg(this.upgID);
-			}
 		}
 	}			
 }
@@ -793,8 +808,10 @@ function getDilationRequirement() {
 	return new Decimal("1e10000")
 }
 
+animation = true
+
 function divide() {
-    resetNGT(true)
+  resetNGT(true)
 	omnipotenceReset(true)
 	if(!hasUpg(20)) return false;
 	ngt.division.times++

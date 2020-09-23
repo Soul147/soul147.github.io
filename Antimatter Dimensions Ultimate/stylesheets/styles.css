@@ -2033,6 +2033,50 @@ br {
 	transition-duration: 0.2s
 }
 
+.lightcurrency, .darkcurrency {
+	font-size: 20px;
+}
+
+.lightcurrency {
+	color: white;
+	text-shadow: 0px 0px 2px black, 0px 0px 4px white;
+}
+
+.darkcurrency {
+	color: black;
+	text-shadow: 0px 0px 2px white, 0px 0px 4px black;
+}
+
+.lightbutton {
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	background: #bdf !important;
+	border: 3px solid #468;
+	color: #468;
+	box-shadow: inset 0px 0px 10px 0px #468, inset 0px 0px 20px 0px #468;
+    font-family: Typewriter;
+	transition-duration: 0.2s
+}
+
+.lightbutton:hover {
+	background: #fff !important;
+}
+
+.darkbutton {
+	border-radius: 4px;
+	transition-duration: 0.2s;
+	background: #000 !important;
+	border: 3px solid #3d3;
+	color: #3d3;
+	box-shadow: inset 0px 0px 10px 0px #3d3, inset 0px 0px 0px 0px #3d3;
+    font-family: Typewriter;
+	transition-duration: 0.2s
+}
+
+.darkbutton:hover {
+	background: #121 !important;
+}
+
 .op {
 	color: black;
 	font-size: 35px;

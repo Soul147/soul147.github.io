@@ -13,8 +13,10 @@ var resetOmniDims = false
 var inflationCheck = false
 var oof = false
 var notifyId = 0
+var ngt = {division: {}} // just to fix stuff
 function onLoad(noOffline) {
 	happyHalloween=false
+	if(!player.mods) player.mods = {}
 	if (player.totalmoney === undefined || isNaN(player.totalmoney)) player.totalmoney = player.money;
 	if (player.tickspeed === undefined) player.tickspeed = new Decimal(1000)
 	if (player.options === undefined) {
@@ -1596,14 +1598,6 @@ if (player.version < 5) {
 	updatePowers()
 	document.getElementById("newsbtn").textContent=(player.options.newsHidden?"Show":"Hide")+" news ticker"
 	document.getElementById("game").style.display=player.options.newsHidden?"none":"block"
-	showDimTab('antimatterdimensions')
-	showStatsTab('stats')
-	showAchTab('normalachievements')
-	showChallengesTab('normalchallenges')
-	showInfTab('preinf')
-	showEternityTab('timestudies', true)
-	showQuantumTab('uquarks')
-	showOmniTab('omnipotence')
 	if (!player.options.newsHidden) scrollNextMessage()
 	var detectNGPStart = player.lastUpdate == 1531944153054
 	if (player.aarexModifications.switch) {
@@ -1664,6 +1658,27 @@ if (player.version < 5) {
 			showNextModeMessage()
 	} else if (player.aarexModifications.popUpId!=1) showNextModeMessage()
 	if(player.mods.secret) ge("secretachbaseinput").value = player.options.secretachbase * 10
+
+	options = {};
+	for(var i in player.options) options[i] = player.options[i]
+	showDimTab('antimatterdimensions')
+	showStatsTab('stats')
+	showAchTab('normalachievements')
+	showChallengesTab('normalchallenges')
+	showInfTab('preinf')
+	showEternityTab('timestudies', true)
+	showQuantumTab('uquarks')
+	showOmniTab('omnipotence')
+	if(options.currentTab) showTab(options.currentTab)
+	if(options.currentDimTab) showDimTab(options.currentDimTab)
+	if(options.currentInfTab) showInfTab(options.currentInfTab)
+	if(options.currentStatsTab) showStatsTab(options.currentStatsTab)
+	if(options.currentChallengesTab) showChallengesTab(options.currentChallengesTab)
+	if(options.currentEternityTab) showEternityTab(options.currentEternityTab)
+	if(options.currentAchTab) showAchTab(options.currentAchTab)
+	if(options.currentOptionTab) showOptionTab(options.currentOptionTab)
+	if(options.currentOmniTab) showOmniTab(options.currentOmniTab)
+	if(options.currentQuantumTab) showQuantumTab(options.currentQuantumTab)
 }
 
 function checkNGM(imported) {
@@ -1872,6 +1887,13 @@ function new_game(id) {
 	showOmniTab('omnipotence')
 }
 
+function transformObjectToDecimal(object) { // It's so much better than hevi's version, because it's recursive and I'm a lazy piece of shit
+	for(i in object) {
+		if(typeof(object[i]) == "string" && !isNaN(new Decimal(object[i]).logarithm)) object[i] = new Decimal(object[i]); 
+		if(typeof(object[i]) == "object") transformObjectToDecimal(object[i]) // iterates over all objects inside the object
+	}
+}
+
 function transformSaveToDecimal() {
 
 	player.infinityPoints = new Decimal(player.infinityPoints)
@@ -1893,7 +1915,7 @@ function transformSaveToDecimal() {
 	player.thirdAmount = new Decimal(player.thirdAmount)
 	player.fourthAmount = new Decimal(player.fourthAmount)
 	player.fifthAmount = new Decimal(player.fifthAmount)
-	player.sixthAmount = new Decimal(player.sixthAmount)
+	player.sixthAmount = new Decimal(player.sixthAmount)				// I feel bad for hevi who had to write this out.
 	player.seventhAmount = new Decimal(player.seventhAmount)
 	player.eightAmount = new Decimal(player.eightAmount)
 	player.firstPow = new Decimal(player.firstPow)
@@ -2094,6 +2116,8 @@ function transformSaveToDecimal() {
 		ngt.newReplicatorCost = new Decimal(ngt.newReplicatorCost);
 		if(ngt.autobuyer) ngt.autobuyer.limit = new Decimal(ngt.autobuyer.limit);
 		
+		transformObjectToDecimal(ngt.division)
+		
 		for(var i = 1; i <= 8; i++) {
 			d = ngt["d" + i]
 			
@@ -2155,6 +2179,21 @@ function transformSaveToDecimal() {
 			resetNGT()
 			resetOmniDims = 2;
 		});
+		
+		updateToVersion(2.11, function() {
+			ngt.division = {
+				times: 0,
+				// light
+				vp: new Decimal(0),
+				totalvp: new Decimal(0),
+				vgal: 0,
+				// dark
+				um: new Decimal(0),
+				shards: new Decimal(0),
+				energy: new Decimal(0),
+				damage: new Decimal(0),
+			}
+		})
 		
 		ngt.version = ver;
 	}

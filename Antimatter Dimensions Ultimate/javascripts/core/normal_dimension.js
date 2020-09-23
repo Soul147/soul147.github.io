@@ -119,7 +119,7 @@ function getDimensionFinalMultiplier(tier) {
 
 function getDimensionDescription(tier) {
   var name = TIER_NAMES[tier];
-  if (tier > Math.min(inQC(1) ? 1 : player.currentEternityChall == "eterc3" ? 3 : player.currentChallenge == "challenge4" || player.currentChallenge == "postc1" ? 5 : 7, player.resets + 3) - (player.currentChallenge == "challenge7" || inQC(4) ? 1 : 0)) return getFullExpansion(player.currentChallenge == "challenge11" ? getAmount(tier) : player[name + 'Bought']) + ' (' + dimBought(tier) + ')';
+  if (tier > Math.min(inQC(1) ? 1 : player.currentEternityChall == "eterc3" ? 3 : player.currentChallenge == "challenge4" || player.currentChallenge == "postc1" ? 5 : 7, player.resets + 3) - (player.currentChallenge == "challenge7" || inQC(4) ? 1 : 0)) return getFullExpansion(player.currentChallenge == "challenge11" ? getAmount(tier) : getBought(tier)) + ' (' + dimBought(tier) + ')';
   else return shortenDimensions(player[name + 'Amount']) + ' (' + dimBought(tier) + ')  (+' + formatValue(player.options.notation, getDimensionRateOfChange(tier), 2, 2) + dimDescEnd;
 }
 
@@ -274,9 +274,14 @@ function hasInfinityMult(tier) {
     }
     
 	function getAmount(tier) {
-		let ret = player[TIER_NAMES[tier]+"Amount"].toNumber()
-		if (!break_infinity_js) ret = Math.round(ret)
+		if(tier == 8) return getEighthDimensions();
+		let ret = player[TIER_NAMES[tier]+"Amount"]
+		if (!break_infinity_js) ret = Decimal.round(ret)
 		return ret
+	}
+	function getBought(tier) {
+		if(tier == 8) return getEighthDimensions();
+		return player[TIER_NAMES[tier]+"Bought"]
 	}
     function dimBought(tier) {
         return player[TIER_NAMES[tier]+"Bought"] % 10;
@@ -522,7 +527,7 @@ function getInfinitiedMult() {
 
 function getDimensionProductionPerSecond(tier) {
 	if(inOC(1) && tier > 1) return new Decimal(0);
-	let ret = player[TIER_NAMES[tier] + 'Amount'].floor()
+	let ret = getAmount(tier).floor()
 	if ((player.currentChallenge == "challenge7" || inQC(4)) && !player.galacticSacrifice) {
 		if (tier == 4) ret = ret.pow(1.3)
 		else if (tier == 2) ret = ret.pow(1.5)

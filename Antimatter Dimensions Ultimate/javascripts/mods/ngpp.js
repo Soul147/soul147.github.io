@@ -862,7 +862,7 @@ function quantumReset(force, auto, challid, implode=false) {
 			epcost: new Decimal(1),
 			studies: [],
 		},
-		eternityChalls: {},
+		eternityChalls: player.aarexModifications.ngpppp ? player.eternityChalls : {}, // always keep ECs if in NG+4
 		eternityChallGoal: new Decimal(Number.MAX_VALUE),
 		currentEternityChall: "",
 		eternityChallUnlocked: 0,

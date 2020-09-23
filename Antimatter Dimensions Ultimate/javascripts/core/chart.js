@@ -81,6 +81,8 @@ function addData(chart, label, data) {
         chart.data.datasets[0].data.shift();
     }
     data = Math.max(data.log(10), 0.1);
+    if(data > 1e9) data = Math.log10(data)
+	if(debug) data = player.fps
     comp1 = Array.max(chart.data.datasets[0].data);
     comp2 = Array.min(chart.data.datasets[0].data);
     if (data > comp1) {
@@ -122,6 +124,7 @@ function addData(chart, label, data) {
         failSafe++;
     }
     chart.data.labels.push(label);
+	
     chart.data.datasets.forEach( function(dataset) {
         if (data < chart.data.datasets[0].data[chart.data.datasets[0].data.length-1] && !player.options.chart.dips) dataset.data.push(chart.data.datasets[0].data[chart.data.datasets[0].data.length-1]);
         else dataset.data.push(data);

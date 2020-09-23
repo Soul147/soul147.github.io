@@ -44,9 +44,9 @@ function updateNewPlayer(reseted) {
 		}
 	} else var modesChosen = modes
 	player = {
-		money: new Decimal(modesChosen.ngp>1?20:10),
+		money: new Decimal(modesChosen.arrows>0?20:10),
 		tickSpeedCost: new Decimal(1000),
-		tickspeed: new Decimal(modesChosen.ngp>1?500:1000),
+		tickspeed: new Decimal(modesChosen.arrows>1?500:1000),
 		firstCost: new Decimal(10),
 		secondCost: new Decimal(100),
 		thirdCost: new Decimal(10000),
@@ -85,7 +85,7 @@ function updateNewPlayer(reseted) {
 		challenges: [],
 		currentChallenge: "",
 		infinityPoints: new Decimal(0),
-		infinitied: modesChosen.ngm ? 990 : modesChosen.ngp%2>0 ? 1 : 0,
+		infinitied: modesChosen.ngm ? 990 : modesChosen.ngp>0 ? 1 : 0,
 		infinitiedBank: modesChosen.ngm ? -1000 : 0,
 		totalTimePlayed: 0,
 		bestInfinityTime: 9999999999,
@@ -351,7 +351,7 @@ function updateNewPlayer(reseted) {
 		player.achievements.push("r85")
 		player.aarexModifications.newGameMinusVersion = 2.2
 	}
-	if (modesChosen.ngp%2>0) {
+	if (modesChosen.ngp>0) {
 		player.achievements.push("r123")
 		for (ec = 1; ec < 13; ec++) player.eternityChalls['eterc' + ec] = 5
 		player.aarexModifications.newGamePlusVersion = 1
@@ -586,6 +586,31 @@ function updateNewPlayer(reseted) {
 		for (dim=1;dim<9;dim++) player.dimtechs["dim"+dim+"Upgrades"] = 0
 		player.setsUnlocked = 0
 		player.infMultCost = 1
+	}
+	if (modesChosen.ngp>1&&modesChosen.ngpp>1) {
+		player.break = true; // this one's obvious
+		player.eternities = 100; // this grind sucks
+		player.dilation.dilatedTime = new Decimal(1e100); // you should have these from the speedrun
+		player.dilation.upgrades = [4,5,6,7,8,9,10,"ngpp1","ngpp2","ngpp3","ngpp4","ngpp5","ngpp6"]
+		player.eternityChalls.eterc13 = player.eternityChalls.eterc14 = 5
+		player.timestudy.theorem = 1e106
+		player.meta.antimatter = new Decimal(100); // fixes an unintended side effect of getting the autobuyer before enough for the autobuyer to buy it
+		player.quantum.times = 1; 
+		player.quantum.best = 50; // skips the milestones
+		player.quantum.challenges = {1:2,2:2,3:2,4:2,5:2,6:2,7:2,8:2} // skips QCs
+		player.quantum.pairedChallenges.completed = 4
+		player.quantum.electrons.mult += 2
+		player.quantum.gluons.rg = player.quantum.gluons.gb = player.quantum.gluons.br = new Decimal(107)
+		player.quantum.nanofield.rewards = 18; // nanofield had a lot of potential but ended up being "sit and do basically nothing for days at a time"
+		// Give achievements that require resets
+		giveAchievement("Sub-atomic")
+		giveAchievement("Work harder.")
+		giveAchievement("No more tax fraud!")
+		giveAchievement("Intergalactic") 
+		giveAchievement("Studies are wasted") 
+		updateAchievements()
+		// save this setting
+		player.aarexModifications.ngpppp = true
 	}
 }
 updateNewPlayer()
@@ -907,8 +932,9 @@ let kongEPMult = 1
 
 
 function showTab(tabName) {
+	player.options.currentTab = tabName
 	if (tabName=='quantumtab' && !player.masterystudies) {
-		alert("Wait! The owner of NG++, dan-simon, have abandoned the development! However, this is not a win. You need to reach real Infinite antimatter to win! (it's impossible, get fucked)")
+		alert("Wait! The owner of NG++, dan-simon, has abandoned the development! However, this is not a win. You need to reach real Infinite antimatter to win! (it's impossible unless you're NiceManKSP, who can somehow break anything)")
 		return
 	}
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
@@ -2922,7 +2948,7 @@ function changeSaveDesc(saveId, placement) {
 			if (temp.mods.ngt) message+="NG↑↑, "
 			else if (temp.aarexModifications.newGameExpVersion) message+="NG^, "
 			if (temp.exdilation!=undefined) message+="NG Update, "
-			if (temp.meta) message+="NG++"+(temp.masterystudies?"+":"")+", "+(temp.aarexModifications.newGamePlusVersion?"":"No NG+ features, ")
+			if (temp.meta) message+="NG++"+(temp.masterystudies?"+":"")+(temp.aarexModifications.newGamePlusVersion?", ":" Grand Run, ")+(temp.aarexModifications.ngpppp?", ":", NG+4, ")
 			else if (temp.aarexModifications.newGamePlusVersion) message+="NG+, "
 		}
 		message+=isSaveCurrent?"Selected<br>":"Played for "+timeDisplayShort(temp.totalTimePlayed)+"<br>"
@@ -2997,11 +3023,12 @@ function toggle_mode(id) {
 		modes[id]++
 		if(modes[id] > 2) modes[id] = 0
 	}
-	else if (id=="ngpp"&&modes[id]===3) modes[id]=4
-	else if (id=="ngpp"&&modes[id]===2) modes[id]=3
+	else if (id=="ngp"&&modes[id]==1) modes[id]=2
+	else if (id=="ngpp"&&modes[id]==2) modes[id]=3
+	else if (id=="ngpp"&&modes[id]==3) modes[id]=4
 	else if ((id=="ngpp"||id=="ngmm"||id=="rs")&&modes[id]===true) modes[id]=2
 	else modes[id]=!modes[id]
-	document.getElementById(id+"Btn").textContent=(id=="rs"?"Respecced":id=="ngpp"?"NG++":id=="ngp"?"NG+":id=="ngmm"?"NG--":"NG-")+": "+(id=="rs"?(modes.rs>1?"Infinity":modes.rs>0?"Eternity":"NONE"):modes[id]>1?"NG"+(id=="ngp"?"^"+(modes[id]>2?"+-":""):id=="ngpp"?(modes[id]==4?"Ud+":(modes[id]>2?"Ud":"+++")):"---"):modes[id]?"ON":"OFF")
+	document.getElementById(id+"Btn").textContent=(id=="rs"?"Respecced":id=="ngpp"?"NG++":id=="ngp"?"NG+":id=="ngmm"?"NG--":"NG-")+": "+(id=="rs"?(modes.rs>1?"Infinity":modes.rs>0?"Eternity":"NONE"):modes[id]>1?"NG"+(id=="ngp"?"+4"+(modes[id]>2?"+-":""):id=="ngpp"?(modes[id]==4?"Ud+":(modes[id]>2?"Ud":"+++")):"---"):modes[id]?"ON":"OFF")
 	if (id=="ngpp"&&modes.ngpp) {
 		if (!modes.ngp) toggle_mode("ngp")
 		modes.rs=0
@@ -5576,7 +5603,7 @@ function canUnlockEC(idx, cost, study, study2) {
 		break;
 
 		case 3:
-		if (player.eightAmount.gte(17300+(ECTimesCompleted("eterc3")*1250))) return true
+		if (getEighthDimensions().gte(17300+(ECTimesCompleted("eterc3")*1250))) return true
 		break;
 
 		case 4:
@@ -6720,7 +6747,7 @@ setInterval(function() {
 		if (player.money.gte(Decimal.pow(10,3*86400*365.2425*2019))) giveAchievement("Old age")
 		if (player.infinityPoints.e>=4e5&&ableToGetRid3) giveAchievement("I already got rid of you...")
 		if (player.meta.resets == 8) if (player.meta.antimatter.e>1499) giveAchievement("We are not going squared.")
-		if (player.eightBought>=4e6&&player.replicanti.galaxies+extraReplGalaxies+player.dilation.freeGalaxies<1) giveAchievement("Intergalactic")
+		if (getEighthDimensions()>=4e6&&player.replicanti.galaxies+extraReplGalaxies+player.dilation.freeGalaxies<1) giveAchievement("Intergalactic")
 		if (player.old&&player.meta.antimatter.e>1699) giveAchievement("Old memories come true")
 		if (player.infinityPoints.e>=354e3&&ableToGetRid4) giveAchievement("Seriously, I already got rid of you.")
 		if (player.meta.antimatter.e>332&&player.meta[2].amount.eq(0)&&player.meta.resets<1) giveAchievement("ERROR 500: INTERNAL DIMENSION ERROR")
@@ -6824,11 +6851,16 @@ function updateEPminpeak(diff) {
 	return currentEPmin;
 }
 
+debug = true
 
 function gameLoop(diff) {
 	var thisUpdate = new Date().getTime();
 	if (thisUpdate - player.lastUpdate >= 21600000) giveAchievement("Don't you dare to sleep")
-	if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
+	if (typeof diff === 'undefined') diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
+	
+	player.fps = 1000/diff
+	ge("fps").innerHTML = Math.round(player.fps) + "FPS";
+	
 	diff = diff / 100;
 	if (diff < 0) diff = 1;
 	player.totalTimePlayed += diff
@@ -7478,7 +7510,7 @@ function gameLoop(diff) {
 		document.getElementById("infiMult").className = "infinistorebtnlocked"
 	}
 
-	if (player.eightBought > 0 && player.resets > 4 && player.currentEternityChall !== "eterc3") document.getElementById("sacrifice").className = "storebtn"
+	if (getEighthDimensions() > 0 && player.resets > 4 && player.currentEternityChall !== "eterc3") document.getElementById("sacrifice").className = "storebtn"
 	else document.getElementById("sacrifice").className = "unavailablebtn"
 
 	if (isEmptiness) {
@@ -7777,6 +7809,7 @@ function gameLoop(diff) {
 	ge("omnitabbtn").style.display = "none";
 	ge("odtabbtn").style.display = "none"
 	ge("octabbtn").style.display = "none"
+	ge("replicatorstabbtn").style.display = "none"
 		
 	// Fix this stupid bug
 	
@@ -7850,7 +7883,7 @@ function gameLoop(diff) {
 			ngt.bestOPTime = ngt.thisOmni;
 		}
 		
-		ge("omnitabbtn").style.display = (gainedOP().gte(1) || ngt.omni) ? "" : "none"
+		ge("omnitabbtn").style.display = (gainedOP().gte(1) || ngt.omni || ngt.division.times) ? "" : "none"
 		
 		ge("gravdisable").innerHTML = " and gravitons (to time dimensions)"
 		
@@ -8006,6 +8039,10 @@ function gameLoop(diff) {
 		
 		if(compOC(3)) ngt.omniPower = ngt.t.reward[2]
 		
+		// division and the blade
+		
+		updateDivision(diff)
+		
 		// Omnipotence statistics
 		
 		stats = ""
@@ -8109,7 +8146,7 @@ function dimBoolean() {
 	var name = TIER_NAMES[getShiftRequirement(0).tier]
 	if (!player.autobuyers[9].isOn) return false
 	if (player.autobuyers[9].ticks*100 < player.autobuyers[9].interval) return false
-	if (player[name + "Bought"] < getShiftRequirement(0).amount) return false
+	if (getBought(tier) < getShiftRequirement(0).amount) return false
 	if (getEternitied() < 10 && !player.autobuyers[9].bulkBought && player[name + "Bought"] < getShiftRequirement(player.autobuyers[9].bulk-1).amount) return false
 	if (player.overXGalaxies <= player.galaxies) return true
 	if ((player.currentChallenge =="challenge4" || player.currentChallenge == "postc1") && player.autobuyers[9].priority < getShiftRequirement(0).amount && getShiftRequirement(0).tier == 6) return false
@@ -8344,6 +8381,7 @@ document.getElementById("challenge12").onclick = function () {
 
 
 function showInfTab(tabName) {
+	player.options.currentInfTab = tabName
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
 	var tabs = document.getElementsByClassName('inftab');
 	var tab;
@@ -8358,6 +8396,7 @@ function showInfTab(tabName) {
 }
 
 function showStatsTab(tabName) {
+	player.options.currentStatsTab = tabName
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
 	var tabs = document.getElementsByClassName('statstab');
 	var tab;
@@ -8372,6 +8411,7 @@ function showStatsTab(tabName) {
 }
 
 function showDimTab(tabName) {
+	player.options.currentDimTab = tabName
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
 	var tabs = document.getElementsByClassName('dimtab');
 	var tab;
@@ -8393,6 +8433,7 @@ function toggleProgressBar() {
 }
 
 function showChallengesTab(tabName) {
+	player.options.currentChallengesTab = tabName
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
 	var tabs = document.getElementsByClassName('challengeTab');
 	var tab;
@@ -8407,6 +8448,7 @@ function showChallengesTab(tabName) {
 }
 
 function showEternityTab(tabName, init) {
+	player.options.currentEternityTab = tabName
 	if (tabName=="timestudies"&&player.boughtDims) tabName="ers_"+tabName
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
 	var tabs = document.getElementsByClassName('eternitytab');
@@ -8421,7 +8463,7 @@ function showEternityTab(tabName, init) {
 			tab.style.display = 'none';
 		}
 	}
-	if ((tabName === 'timestudies' || tabName === 'ers_timestudies' || tabName === 'masterystudies') && !init) document.getElementById("TTbuttons").style.display = "block"
+	if ((tabName === 'timestudies' || tabName === 'ers_timestudies' || tabName === 'masterystudies') && !init && player.options.currentTab == "eternitystore") document.getElementById("TTbuttons").style.display = "block"
 	else document.getElementById("TTbuttons").style.display = "none"
 	if (tabName != oldTab) {
 		if (tabName === 'timestudies' || tabName === 'masterystudies' || tabName === 'dilation' || tabName === 'blackhole') resizeCanvas()
@@ -8432,6 +8474,7 @@ function showEternityTab(tabName, init) {
 }
 
 function showAchTab(tabName) {
+	player.options.currentAchTab = tabName
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
 	var tabs = document.getElementsByClassName('achtab');
 	var tab;
@@ -8446,6 +8489,7 @@ function showAchTab(tabName) {
 }
 
 function showOptionTab(tabName) {
+	player.options.currentOptionTab = tabName
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
 	var tabs = document.getElementsByClassName('optionstab');
 	var tab;
@@ -8462,6 +8506,7 @@ function showOptionTab(tabName) {
 
 function showOmniTab(tabName) {
 	if(!player.mods.ngt) return;
+	player.options.currentOmniTab = tabName
 	//iterate over all elements in div_tab class. Hide everything that's not tabName and show tabName
 	var tabs = document.getElementsByClassName('omnitab');
 	var tab;
@@ -8517,7 +8562,7 @@ function initGame() {
 	migrateOldSaves()
 	localStorage.setItem('AD_aarexModifications', btoa(JSON.stringify(metaSave)))
 	load_game();
-	if (player.aarexModifications.progressBar) document.getElementById("progress").style.display = "block"
+	if ((document.getElementById("antimatterdimensions").style.display != "none" || document.getElementById("metadimensions").style.display != "none") && player.aarexModifications.progressBar && document.getElementById("dimensions").style.display != "none") document.getElementById("progress").style.display = "block";
 	else document.getElementById("progress").style.display = "none"
 	updateTickSpeed();
 	updateAutobuyers();
