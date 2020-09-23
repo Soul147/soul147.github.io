@@ -214,7 +214,7 @@
                 <table class="table" id="studytable">
                     <tr>
                         <td><button class="eternitychallengestudy" id="ec6unl">Eternity Challenge 6<span>Requirement: 40 replicanti galaxies<span>Cost: 100 Time Theorems</button></td>
-                        <td><button class="timestudy activestudy" id="131" onclick="buyTimeStudy(131)">Automatic replicanti galaxies are disabled, but you can get 50% more<span>Cost: <t id = "studyCost27"></t> Time Theorems</button></td>
+                        <td><button class="timestudy activestudy" id="131" onclick="buyTimeStudy(131)"><t id = "131desc">Automatic replicanti galaxies are disabled, but you can get 50% more</t><span>Cost: <t id = "studyCost27"></t> Time Theorems</button></td>
                         <td><button class="timestudy passivestudy" id="132" onclick="buyTimeStudy(132)">Replicanti galaxies are 40% more effective<span>Cost: <t id = "studyCost28"></t> Time Theorems</button></td>
                         <td><button class="timestudy idlestudy" id="133" onclick="buyTimeStudy(133)">Replicanti are 10x slower until infinity, but their galaxies are 50% stronger<span>Cost: <t id = "studyCost29"></t> Time Theorems</button></td>
                         <td><button class="eternitychallengestudy" id="ec8unl">Eternity Challenge 8<span>Cost: 100 Time Theorems</button></td>
@@ -278,7 +278,7 @@
                 </table>
                 <table class="table" id="studytable">
                     <tr>
-                        <td><button class="timestudy" id="201" onclick="buyTimeStudy(201)">Pick another path from the first split<span>Cost: <t id = "studyCost41"></t> Time Theorems</button></td>
+                        <td><button class="timestudy" id="201" onclick="buyTimeStudy(201)"><t id = "201desc">Pick another path from the first split</t><span>Cost: <t id = "studyCost41"></t> Time Theorems</button></td>
 						<td><button class="timestudy" id="1021" onclick="buyTimeStudy(1021)"><span id="1021desc">Unlock the ability to gain max RGs.</span>Requires <t id = "studyCost61"></t> total Time Theorems</button></td>
                     </tr>
                 </table>
@@ -4830,6 +4830,7 @@
 		<button id="floatingTextAnimBtn" class="storebtn" onclick="animationOnOff('floatingText')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
         <button id="bigCrunchAnimBtn" class="storebtn" onclick="animationOnOff('bigCrunch')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline" ach-tooltip="Click here while holding shift to toggle this option to always! (except some conditions)">ON</button>
         <button id="tachyonParticleAnimBtn" class="storebtn" onclick="animationOnOff('tachyonParticles')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
+        <button id="omnipotenceAnimBtn" class="storebtn" onclick="animationOnOff('omnipotence')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
         <button id="blackHoleAnimBtn" class="storebtn" onclick="animationOnOff('blackHole')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
         <button id="quarksAnimBtn" class="storebtn" onclick="animationOnOff('quarks')" style="width: 200px; height: 55px; font-size: 15px" style="display: inline">ON</button>
 	</div>

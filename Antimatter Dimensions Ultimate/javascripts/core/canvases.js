@@ -51,6 +51,7 @@ function animationOnOff(name) {
     if (name == "floatingText") document.getElementById("floatingTextAnimBtn").textContent = "Floating text: " + ((player.options.animations.floatingText) ? "ON" : "OFF")
     else if (name == "bigCrunch") document.getElementById("bigCrunchAnimBtn").textContent = "Big crunch: " + (player.options.animations.bigCrunch === "always" ? "ALWAYS" : player.options.animations.bigCrunch ? "ON" : "OFF")
     else if (name == "tachyonParticles") document.getElementById("tachyonParticleAnimBtn").textContent = "Tachyon particles: " + ((player.options.animations.tachyonParticles) ? "ON" : "OFF")
+	else if (name == "omnipotence") document.getElementById("omnipotenceAnimBtn").textContent = "Omnipotence: " + ((player.options.animations.omnipotence) ? "ON" : "OFF")
     else if (name == "blackHole") document.getElementById("blackHoleAnimBtn").textContent = "Black hole: " + ((player.options.animations.blackHole) ? "ON" : "OFF")
     else if (name == "quarks") document.getElementById("quarksAnimBtn").textContent="Quarks: O"+(player.options.animations[name]?"N":"FF")
 }

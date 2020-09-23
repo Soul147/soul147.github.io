@@ -272,7 +272,7 @@ function formatValue(notation, value, places, placesUnder1000, noInf) {
             }
         }
         if (notation === "Game percentages") {
-            return (Math.log10(Decimal.log10(value))/Math.log10(3.5e8)*100).toFixed(4)+'%'
+            return (Math.log10(Decimal.log10(value))/Math.log10(5e9)*100).toFixed(4)+'%'
         }
         if (notation === "Engineering" || notation === "Mixed engineering") pow = power - (power % 3)
         else pow = power

@@ -113,7 +113,7 @@ function buyTimeStudy(name, check, quickBuy) {
       player.timestudy.ers_studies[name]++
       updateTimeStudyButtons()
   } else if (shiftDown && check === undefined) studiesUntil(name);
-  else if (player.timestudy.theorem >= cost && canBuyStudy(name) && !player.timestudy.studies.includes(name)) {
+  else if (((name !== 1011 && name !== 1012 && name !== 1021 ? player.timestudy.theorem : player.timestudy.totalTheorem) >= cost) && canBuyStudy(name) && !player.timestudy.studies.includes(name)) {
       player.timestudy.studies.push(name)
       if(name !== 1011 && name !== 1012 && name !== 1021) player.timestudy.theorem -= cost
       if (name == 71 || name == 81 || name == 91 || name == 101) {
@@ -237,7 +237,7 @@ function canBuyStudy(name) {
 
       case 7:
       if (!player.timestudy.studies.includes(61)) return false;
-      if (player.dilation.upgrades.includes(8) || hasUpg(13)) return true;
+      if (player.dilation.upgrades.includes(8) || (player.timestudy.studies.includes(201) && hasUpg(13))) return true;
       var have = player.timestudy.studies.filter(function(x) {return Math.floor(x / 10) == 7}).length;
       if (player.timestudy.studies.includes(201)) return have < 2;
       return have < 1;
@@ -490,6 +490,7 @@ function exportStudyTree() {
 };
 
 function importStudyTree(input) {
+	console.log("g");
 	onImport = true
 	if (typeof input !== 'string') var input = prompt()
 	onImport = false
@@ -504,6 +505,12 @@ function importStudyTree(input) {
 		}
 	} else {
 		var studiesToBuy = input.split("|")[0].split(",");
+		console.log(studiesToBuy)
+		if(studiesToBuy.includes("201")) { // very nice workaround here
+			buyTimeStudy(181);
+			buyTimeStudy(192);
+			buyTimeStudy(201);
+		}
 		var secondSplitPick = 0
 		var laterSecondSplits = []
 		var earlyDLStudies = []

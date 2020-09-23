@@ -70,7 +70,7 @@ function omnipotenceReset(force, auto) {
 	if(player.eternityPoints.add(gainedEternityPoints()).lt(1e308) && !(force || ocGoalMet(currentOC()))) return;
 	
 	out = inOC() && ocGoalMet(ngt.ocr[0]) && !force
-	if(out && !player.mods.ngt.oc.includes(currentOC())) {
+	if(out && (!player.options.retryChallenge || !player.mods.ngt.oc.includes(currentOC()))) {
 		player.mods.ngt.oc.push(currentOC())
 		return exitOmniChallenge()
 	}
@@ -505,7 +505,7 @@ opUpgCosts = [
 	10,
 	1e10, 1e15,
 	1e20, 1e25, 1e30, 1e35, 1e40, 1e45, 1e60, 1e100,
-	"1e110", "1e130", "1e140", "1e150", "1e170", "1e230", "1e250", "1e380", "1e400", "1e480", "1e500", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", 
+	"1e110", "1e130", "1e140", "1e150", "1e170", "1e235", "1e250", "1e320", "1e380", "1e40069", "1e500", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", 
 ]
 
 for(var i = 0; i < opUpgCosts.length; i++) {
@@ -554,7 +554,7 @@ function getUpgEff(n) {
 		case 4:
 			return Decimal.pow(ngt.op.logarithm, 1.5).max(1);
 		case 5:
-			return Decimal.pow(1+ngt.replicatorsUnlocked*0.1, Math.log10(getInfinitied())+1).pow(2).max(1);
+			return Decimal.pow(1+ngt.replicatorsUnlocked**2/40, Math.log10(getInfinitied())+1).pow(2).max(1);
 		case 6:
 			return Decimal.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0).add(4).multiply(4).sqrt().min(8)
 		case 7:
@@ -572,7 +572,7 @@ function getUpgEff(n) {
 		case 15: 
 			return Decimal.pow(6.9, ngt.d8.amount).max(1)
 		case 16: 
-			return Decimal.pow(getReplicatorMult().log10(), 1.25).max(1)
+			return Decimal.pow(getReplicatorMult().log10()+1, 1.25).add(1)
 		case 17: 
 			return Decimal.pow(Decimal.log10(player.timeShards.log10()), 0.5).max(1)
 	}
@@ -585,13 +585,6 @@ function updateOmniUpgrades() {
 	if(hasUpg(0)) ngt.unlockedRings++;
 	if(hasUpg(2)) ngt.unlockedRings++;
 	if(hasUpg(10)) ngt.unlockedRings++;
-	
-	if(hasUpg(20)) {
-		opUpgCosts[20] = new Decimal("1e500")
-	}
-	else {
-		opUpgCosts[20] = Decimal.pow(10, Math.random() * 20 + 490)
-	}
 	
 	gn("ouinfo", function(n, i) {n.innerHTML = shorten(getUpgEff(i))})
 	gn("oucost", function(n, id) {n.innerHTML = shortenCosts(opUpgCosts[id])})
@@ -661,8 +654,8 @@ function updateOmniChallenges() {
 			new Decimal("1e1775000000"),
 			new Decimal("1e2200000000"),
 			new Decimal("1e2500000000"),
-			new Decimal("1e5250000000"),
-			new Decimal("1e5750000000"),
+			new Decimal("1e3800000000"),
+			new Decimal("1e4500000000"),
 			new Decimal("1e9999999999"),
 			new Decimal("1e9999999999"),
 			new Decimal("1e9999999999"),
@@ -672,9 +665,9 @@ function updateOmniChallenges() {
 			new Decimal("1e775000"),
 			new Decimal("1e10000000"),
 			new Decimal("1e12500000"),
-			new Decimal("1e92860000"),
-			new Decimal("1e400000000"),
-			new Decimal("1e250000000"),
+			new Decimal("1e2860000"),
+			new Decimal("1e275000000"),
+			new Decimal("1e360000000"),
 			new Decimal("1e999999999"),
 			new Decimal("1e999999999"),
 			new Decimal("1e999999999"),

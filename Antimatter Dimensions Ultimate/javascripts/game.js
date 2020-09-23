@@ -2301,11 +2301,11 @@ function updateMilestones() {
 function replicantiGalaxyAutoToggle() {
 	if (player.replicanti.galaxybuyer) {
 		player.replicanti.galaxybuyer = false
-		if (player.timestudy.studies.includes(131)&&speedrunMilestonesReached<20) document.getElementById("replicantiresettoggle").textContent = "Auto galaxy OFF (disabled)"
+		if (player.timestudy.studies.includes(131)&&speedrunMilestonesReached<20&&!player.achievements.includes("ngt15")) document.getElementById("replicantiresettoggle").textContent = "Auto galaxy OFF (disabled)"
 		else document.getElementById("replicantiresettoggle").textContent = "Auto galaxy OFF"
 	} else {
 		player.replicanti.galaxybuyer = true
-		if (player.timestudy.studies.includes(131)&&speedrunMilestonesReached<20) document.getElementById("replicantiresettoggle").textContent = "Auto galaxy ON (disabled)"
+		if (player.timestudy.studies.includes(131)&&speedrunMilestonesReached<20&&!player.achievements.includes("ngt15")) document.getElementById("replicantiresettoggle").textContent = "Auto galaxy ON (disabled)"
 		else document.getElementById("replicantiresettoggle").textContent = "Auto galaxy ON"
 	}
 }
@@ -3462,8 +3462,8 @@ function setAchieveTooltip() {
 	keemstar.setAttribute('ach-tooltip', "Reach "+shorten(Decimal.pow(10, player.totalTimePlayed/100))+" EP.")
 	yeet.setAttribute('ach-tooltip', "Go Omnipotent. Reward: Start with 100 eternities and dimensions cost " + shorten(Number.MAX_VALUE) + "x less.")
 	never.setAttribute('ach-tooltip', "Reach a " + shorten(1e20) + "x replicator multiplier. Reward: Your dimensions and tickspeed don't reset when you dimension boost.")
-	rvb.setAttribute('ach-tooltip', "Reach " + shorten(Number.MAX_VALUE) + " OP. Reward: Your dimension boosts don't reset when creating galaxies.")
-	stillhere.setAttribute('ach-tooltip', "Reach " + shorten(new Decimal("1e10000")) + " IP without any time studies while running OC1. Reward: omni-dimensions are multiplied by the number of studies you have.")
+	rvb.setAttribute('ach-tooltip', "Reach " + shorten(Number.MAX_VALUE) + " OP. Reward: TS131's downside is removed, and your dimension boosts don't reset when creating galaxies.")
+	stillhere.setAttribute('ach-tooltip', "Reach " + shorten(new Decimal("1e8600")) + " IP without any time studies while running OC1. Reward: omni-dimensions are multiplied by the number of studies you have.")
 }
 
 
@@ -6778,7 +6778,7 @@ setInterval(function() {
 		if(ngt.op.gte(Number.MAX_VALUE)) giveAchievement("You ever wonder why we're here?")
 		if(player.eternitiesBank >= 5e9) giveAchievement("You don't need to grind anymore")
 		if(ngt.op.gte("9.99e999")) giveAchievement("This Achievement Doesn't Exist 4")
-		if(player.infinityPoints.gte("1e10000") && player.timestudy.studies.length == 0 && inOC(1)) giveAchievement("I don't know why I can't get rid of you.")
+		if(player.infinityPoints.gte("1e8600") && player.timestudy.studies.length == 0 && inOC(1)) giveAchievement("I don't know why I can't get rid of you.")
 	}
 
 	setAchieveTooltip()
@@ -7184,6 +7184,7 @@ function gameLoop(diff) {
 	let chance = player.replicanti.chance
 	let interval = player.replicanti.interval
 	if (hasUpg(12)) interval = interval/getUpgEff(12)
+	// if (hasUpg(16)) interval = Decimal.pow(interval, getUpgEff(16)); // fucking balance this, maybe
 	if (player.timestudy.studies.includes(62)) interval = interval/(player.aarexModifications.newGameExpVersion?4:3)
 	if (player.replicanti.amount.gt(Number.MAX_VALUE)||player.timestudy.studies.includes(133)) interval *= 10
 	if (player.timestudy.studies.includes(213)) interval /= 20
@@ -7237,7 +7238,7 @@ function gameLoop(diff) {
 	if (current == Decimal.ln(Number.MAX_VALUE) && player.thisInfinityTime < 600*30) giveAchievement("Is this safe?");
 	if (player.replicanti.galaxies >= 10 && player.thisInfinityTime < 150) giveAchievement("The swarm");
 
-	if (player.replicanti.galaxybuyer === true && player.replicanti.amount.gte(getReplicantiLimit()) && !(player.timestudy.studies.includes(131)&&speedrunMilestonesReached<20)) {
+	if (player.replicanti.galaxybuyer === true && player.replicanti.amount.gte(getReplicantiLimit()) && !(player.timestudy.studies.includes(131)&&speedrunMilestonesReached<20&&!player.achievements.includes("ngt15"))) {
 		document.getElementById("replicantireset").click()
 	}
 	if (player.masterystudies ? player.masterystudies.includes("t273") : false) {
@@ -7802,18 +7803,20 @@ function gameLoop(diff) {
 	
 		calculateNewStudyCosts();
 		
-		ge("223eff").innerHTML = 160
-		ge("224eff").innerHTML = 850
-		ge("225eff").innerHTML = "1e308"
-		ge("226eff").innerHTML = 8
+		ge("131desc").innerText = player.achievements.includes("ngt15") ? "You can get 50% more replicanti galaxies" : "Automatic replicanti galaxies are disabled, but you can get 50% more";
+		ge("201desc").innerText = hasUpg(13) ? "Pick all paths from the first split" : "Pick another path from the first split";
+		ge("223eff").innerText = 160
+		ge("224eff").innerText = 850
+		ge("225eff").innerText = "1e308"
+		ge("226eff").innerText = 8
 		
 		i = 7
-		ge("td5unl").innerHTML = shorten(1e6**i)
-		ge("td6unl").innerHTML = shorten(1e7**i)
-		ge("td7unl").innerHTML = shorten(1e8**i)
-		ge("td8unl").innerHTML = shorten(1e9**i)
+		ge("td5unl").innerText = shorten(1e6**i)
+		ge("td6unl").innerText = shorten(1e7**i)
+		ge("td7unl").innerText = shorten(1e8**i)
+		ge("td8unl").innerText = shorten(1e9**i)
 		
-		ge("ts222pow").innerHTML = 1
+		ge("ts222pow").innerText = 1
 		
 		if(ngt.omni <= 0) {
 			ge("ngtlockedstudies").style.display = "none"

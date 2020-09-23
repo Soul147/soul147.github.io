@@ -1166,7 +1166,7 @@ function getCurrentQCData() {
 var bankedEterGain
 function updateBankedEter(updateHtml=true) {
 	bankedEterGain=0
-	if (player.achievements.includes("ng3p15")||player.mods.ngt) bankedEterGain=player.eternities/5
+	if (player.achievements.includes("ng3p15")||(player.mods.ngt&&omniMilestoneReached(6))) bankedEterGain=player.eternities/20
 	bankedEterGain=Math.floor(bankedEterGain)
 	if (updateHtml) {
 		setAndMaybeShow("bankedEterGain",bankedEterGain>0,'"You will gain "+getFullExpansion(bankedEterGain)+" banked eternities next "+(player.mods.ngt?"omnipotence":"quantum")+"."')
