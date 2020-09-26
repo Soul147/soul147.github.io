@@ -2,51 +2,27 @@ function PrestigeLayer(p) {
 	this.layerNumber = game.layers.length;
 	
 	this.pName = p.pName;								// Name of prestige layer
-	this.sinM = p.sinM || 2;							// Whether or not this layer's name has a plural form. (1 = "", 2 = "s", 3 = "es")
 	this.pAbbr = p.pAbbr;								// Abbreviation of the layer name
-	this.times = new Decimal(0);						// How many times everything below this layer has been reset
-	this.currency = new Decimal(0);						// The amount of this layer's currency
-	this.cName = p.cName;								// The name of this layer's currency
-	this.sinC = p.sinC || 2;							// Whether or not this layer's currency has a plural form.
+	this.cName = p.cName;								// Name of gained currency on prestige
+	this.pcName = p.pcName;								// Name of previous currency
 	this.upgrades = []									// List of bought upgrades for this layer
-	this.upgradeCosts = p.upgradeCosts;					// Costs of nonrebuyable upgrades
+	this.upgradeCosts = upgradeCosts;					// Costs of nonrebuyable upgrades
+	for(i in this.upgradeCosts) this.upgradeCosts[i] = new Decimal(this.upgradeCosts[i]);
 	this.currencyMultipliersBought = new Decimal(0);	// Upgrades which increase currency gain
 	this.hasCostReduction = p.hasCostReduction;			// Whether or not this layer has upgrades that reduce FR cost
 	this.costReductionBought = new Decimal(0);			// How many cost reduction upgrades have been bought
-	this.lastPrestige = Date.now();						// When the last prestige was
-	this.meta = p.meta;									// How many meta-layers are before this - determines styling
-	
-	for(i in this.upgradeCosts) this.upgradeCosts[i] = new Decimal(this.upgradeCosts[i]);
-
-	// Display functions
-	
-	this.abbrC = function(small) {
-		return (small ? "" : "<span class = 'currency'>") + shortenMoney(this.currency) + (small ? " " : "</span> ") + this.cName + (this.currency.eq(1) ? "" : ["","s","es"][this.sinC-1])
-	}
-	
-	this.abbrP = function(small) {
-		return (small ? "" : "<span class = 'currency'>") + shortenMoney(this.gainedCurrency()) + (small ? " " : "</span> ") + this.cName + (this.currency.eq(1) ? "" : ["","s","es"][this.sinC-1])
-	}
-	
-	this.getTimeSpent = function() {
-		return Date.now() - this.lastPrestige;
-	}
 
 	// Prestige function
 	
 	this.prestige = function() {
-		if(this.gainedCurrency().lt(1)) return;
-		this.times = game.newEpisode.add(1);
-		this.currency = this.currency.add(this.gainedCurrency());
-		prestige(this.layerNumber);
-	}
-	
-	this.getPrevCurr = function() {
-		return game.layers[this.layerNumber-1] ? game.layers[this.layerNumber-1].currency : game.forks
+		if(gainedKeys().lt(1)) return;
+		game.newEpisode = game.newEpisode.add(1);
+		game.keys = game.keys.add(gainedKeys());
+		prestige(0);
 	}
 	
 	this.gainedCurrency = function() {
-		return this.getPrevCurr().divide(Decimal.pow(1e3, this.layerNumber+1)).pow(1/(2+this.layerNumber/2)).multiply(this.getCurrencyMultiplier()).floor();
+		return game[this.pcName].divide(Decimal.pow(1e3, this.layerNumber)).pow(1/(2+this.layerNumber/2)).multiply(this.getCurrencyMultiplier());
 	}
 	
 	// Functions that handle consistent repeatable upgrades
@@ -67,14 +43,15 @@ function PrestigeLayer(p) {
 		return Decimal.pow(1.15+0.025*this.layerNumber, this.costReductionBought)
 	}
 
-	this.buyCurrencyMultiplier = function(auto) {
-		if(this.currency.lt(game.keyMultiplierCost.multiply(1+!!auto*9))) return;
-		this.currency = this.currency.subtract(this.getCurrencyMultiplierCost());
-		this.currencyMultipliersBought = this.currencyMultipliersBought.add(1);
+	function buyCurrencyMultiplier(auto) {
+		if(game.keys.lt(game.keyMultiplierCost.multiply(1+!!auto*9))) return;
+		game.keys = game.keys.subtract(game.keyMultiplierCost);
+		game.keyMultiplier = game.keyMultiplier.multiply(1.05);
+		game.keyMultiplierCost = game.keyMultiplierCost.multiply(1.2);
 		return true;
 	}
 
-	this.buyCostReduction = function(auto) {
+	function buyCostReduction(auto) {
 		if(game.keys.lt(game.keyReductionCost.multiply(1+!!auto*9))) return;
 		game.keys = game.keys.subtract(game.keyReductionCost);
 		game.keyReductionUpgrades = game.keyReductionUpgrades.add(1)
@@ -101,38 +78,4 @@ function PrestigeLayer(p) {
 				return game.newEpisode.multiply(100).pow(0.5)
 		}
 	}
-	
-	// Setup the HTML on the page
-	
-	ge("Layers").innerHTML += `
-		<div class = "tab" id = "` + this.pName + `">
-			<center>
-				You have <span name = "currency` + this.layerNumber + `"></span>.<br>
-				` + (this.layerNumber ? `You have <span name = "currency` + (this.layerNumber-1) + `"></span>.` : ``) + `<br>
-				<button onclick = "prestige(` + this.layerNumber + `)" class = "` + this.meta + `">
-					Start a ` + this.pName + `<br>
-					Gain <span name = "prestige` + this.layerNumber + `"></span>.<br>
-					<span name = "prestigerate` + this.layerNumber + `"></span><br>
-				</button>
-			</center>
-		</div>
-	`
 }
-
-function newLayer(p) {
-	layer = new PrestigeLayer(p);
-	console.log(layer)
-	game.layers.push(layer)
-}
-
-newLayer({
-	pName: "New Episode",
-	cName: "key",
-	meta: "normal"
-})
-
-newLayer({
-	pName: "New Cake at Stake",
-	cName: "cake",
-	meta: "normal"
-})
