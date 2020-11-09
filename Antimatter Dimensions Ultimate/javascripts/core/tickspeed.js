@@ -11,8 +11,8 @@ function getGalaxyPower(ng, bi) {
 	else if (ECTimesCompleted("eterc8") > 0) replGalEff = Math.max(Math.pow(Math.log10(player.infinityPower.plus(1).log10()+1), 0.03 * ECTimesCompleted("eterc8")), 1)
 	if (player.masterystudies) if (player.masterystudies.includes("t344")) replGalEff *= getMTSMult(344)
 	let extraReplGalPower = 0
-	if (player.timestudy.studies.includes(133)) extraReplGalPower += player.replicanti.galaxies/2
-	if (player.timestudy.studies.includes(132)) extraReplGalPower += player.replicanti.galaxies*0.4
+	if (hasTimeStudy(133)) extraReplGalPower += player.replicanti.galaxies/2
+	if (hasTimeStudy(132)) extraReplGalPower += player.replicanti.galaxies*0.4
 	extraReplGalPower += extraReplGalaxies
 	
 	let otherGalPower = player.replicanti.galaxies
@@ -23,7 +23,7 @@ function getGalaxyPower(ng, bi) {
 	let virtualGalPower = 0
 	
 	if(player.mods.ngt) {
-		virtualGalPower = player.mods.ngt.division.vgal
+		virtualGalPower = player.mods.ngt.division.vgal * getVGalPower()
 	}
 	
 	let galaxyPower = Math.max(ng-(bi?2:0),0)+otherGalPower+virtualGalPower
@@ -44,13 +44,13 @@ function getGalaxyPowerEff(ng, bi) {
 		if (player.challenges.length > 14 && player.achievements.includes("r67")) eff *= .07*player.challenges.length
 	}
 	if (player.achievements.includes("ngpp8") && player.meta != undefined) eff *= 1.001;
-	if (player.timestudy.studies.includes(212)) eff *= Math.min(Math.pow(player.timeShards.max(2).log2(), 0.005), 1.1)
-	if (player.timestudy.studies.includes(232)&&bi) {
+	if (hasTimeStudy(212)) eff *= Math.min(Math.pow(player.timeShards.max(2).log2(), 0.005), 1.1)
+	if (hasTimeStudy(232)&&bi) {
 		let exp = player.mods.ngt ? 0.02 : 0.2
 		if (player.masterystudies != undefined && !player.mods.ngt) if (player.galaxies >= 1e4) exp *= 6 - player.galaxies / 2e3
 		eff *= Math.pow(1+ng/1000, exp)
 	}
-	if(compOC(2)) eff *= 1+ngt.t.reward[1]/100;
+	if(compOC(2)) eff *= 1+ngt.t.reward[1]/100 || 1;
 	eff *= colorBoosts.r
 	if (GUBought("rg2")) eff *= Math.pow(player.dilation.freeGalaxies/5e3+1,0.25)
 	if (GUBought("rg4")) eff *= 1.5

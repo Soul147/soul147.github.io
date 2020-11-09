@@ -384,8 +384,8 @@ function getMTSMult(id) {
 	if (id==264) return Math.pow(player.galaxies+1,0.25)*2
 	if (id>280) {
 		var replmult = Decimal.pow(Decimal.log2(Decimal.max(player.replicanti.amount, 1)), 2)
-		if (player.timestudy.studies.includes(21)) replmult = replmult.add(Decimal.pow(player.replicanti.amount, 0.032))
-		if (player.timestudy.studies.includes(102)) replmult = replmult.times(Decimal.pow(5, player.replicanti.galaxies, 150))
+		if (hasTimeStudy(21)) replmult = replmult.add(Decimal.pow(player.replicanti.amount, 0.032))
+		if (hasTimeStudy(102)) replmult = replmult.times(Decimal.pow(5, player.replicanti.galaxies, 150))
 	}
 	if (id==281) return Decimal.pow(10,Math.pow(replmult.max(1).log10(),0.25)/10)
 	if (id==282) return Decimal.pow(10,Math.pow(replmult.max(1).log10(),0.25)/15)
@@ -668,9 +668,10 @@ function updateSpeedruns() {
 }
 
 function toggleAutoTT() {
-	if (speedrunMilestonesReached < 2) maxTheorems()
+	c = speedrunMilestonesReached < 2 && (!player.mods.ngt || !ngt.division.times);
+	if (c) maxTheorems()
 	else player.autoEterOptions.tt = !player.autoEterOptions.tt
-	document.getElementById("theoremmax").innerHTML = speedrunMilestonesReached > 2 ? ("Auto max: O"+(player.autoEterOptions.tt?"N":"FF")) : "Buy max Theorems"
+	document.getElementById("theoremmax").innerHTML = c ? "Buy max Theorems" : ("Auto max: O"+(player.autoEterOptions.tt?"N":"FF"))
 }
 
 //v1.8

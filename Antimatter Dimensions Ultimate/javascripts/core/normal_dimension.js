@@ -59,14 +59,14 @@ function getDimensionFinalMultiplier(tier) {
   if (player.achievements.includes("ngt17")) multiplier = multiplier.times(player.money.pow(0.001).plus(1));
 
 
-  if (player.timestudy.studies.includes(71) && tier !== 8) multiplier = multiplier.times(calcTotalSacrificeBoost().pow(0.25).min("1e210000"));
-  if (player.timestudy.studies.includes(91)) multiplier = multiplier.times(Decimal.pow(10, Math.min(player.thisEternity, 18000)/60));
+  if (hasTimeStudy(71) && tier !== 8) multiplier = multiplier.times(calcTotalSacrificeBoost().pow(0.25).min("1e210000"));
+  if (hasTimeStudy(91)) multiplier = multiplier.times(Decimal.pow(10, Math.min(player.thisEternity, 18000)/60));
   let ndReplMult = 1
   let useHigherNDReplMult = !player.dilation.active ? false : !player.masterystudies ? false : player.masterystudies.includes("t323")
-  if (player.timestudy.studies.includes(101)) ndReplMult = player.replicanti.amount.max(1)
+  if (hasTimeStudy(101)) ndReplMult = player.replicanti.amount.max(1)
   if (!useHigherNDReplMult) multiplier = multiplier.times(ndReplMult)
-  if (player.timestudy.studies.includes(161)) multiplier = multiplier.times(new Decimal(player.aarexModifications.newGameExpVersion?"1e3080":"1e616"))
-  if (player.timestudy.studies.includes(234) && tier == 1) multiplier = multiplier.times(calcTotalSacrificeBoost())
+  if (hasTimeStudy(161)) multiplier = multiplier.times(new Decimal(player.aarexModifications.newGameExpVersion?"1e3080":"1e616"))
+  if (hasTimeStudy(234) && tier == 1) multiplier = multiplier.times(calcTotalSacrificeBoost())
 
   multiplier = multiplier.times(player.postC3Reward)
   if (player.challenges.includes("postc8") && tier < 8 && tier > 1) multiplier = multiplier.times(mult18);
@@ -79,10 +79,10 @@ function getDimensionFinalMultiplier(tier) {
 
   if (player.currentChallenge == "postc4" && player.postC4Tier != tier) multiplier = multiplier.pow(0.25)
   if (player.challenges.includes("postc4") && player.galacticSacrifice === undefined) multiplier = multiplier.pow(1.05);
-  if (compOC(1)) multiplier = multiplier.pow(ngt.t.reward[0]);
+  if (compOC(1)) multiplier = multiplier.pow(ngt.t.reward[0] || 1);
   if (player.currentEternityChall == "eterc10") multiplier = multiplier.times(ec10bonus)
-  if (player.timestudy.studies.includes(193)) multiplier = multiplier.times(Decimal.pow(1.03+!!player.mods.ngt*0.07, getEternitied()).min(Decimal.pow("1e13000", 1+!!player.mods.ngt*9)))
-  if (tier == 8 && player.timestudy.studies.includes(214)) multiplier = multiplier.times((calcTotalSacrificeBoost().pow(8)).min("1e46000").times(calcTotalSacrificeBoost().pow(1.1).min(new Decimal("1e125000"))))
+  if (hasTimeStudy(193)) multiplier = multiplier.times(Decimal.pow(1.03+!!player.mods.ngt*0.07, getEternitied()).min(Decimal.pow("1e13000", 1+!!player.mods.ngt*9)))
+  if (tier == 8 && hasTimeStudy(214)) multiplier = multiplier.times((calcTotalSacrificeBoost().pow(8)).min("1e46000").times(calcTotalSacrificeBoost().pow(1.1).min(new Decimal("1e125000"))))
   if (tier == 8 && player.achievements.includes("ng3p27")) multiplier = multiplier.times(Decimal.pow(10,Math.pow(player.galaxies,Math.min(Math.sqrt(Math.log10(Math.max(player.galaxies,1)))*2,2.5))))
 	  
   if (player.galacticSacrifice) {
@@ -518,11 +518,11 @@ function infUpg13Pow() {
 }
 
 function dimMults() {
-	return Decimal.pow(1+getInfinitied()*0.2,(player.galacticSacrifice?2:1)*(player.timestudy.studies.includes(31)?!!player.mods.ngt*6+4:1))
+	return Decimal.pow(1+getInfinitied()*0.2,(player.galacticSacrifice?2:1)*(hasTimeStudy(31)?!!player.mods.ngt*6+4:1))
 }
 
 function getInfinitiedMult() {
-	return (player.galacticSacrifice?0:1)+Math.pow((player.galacticSacrifice?1:0)+Math.log10(getInfinitied()+1)*(player.galacticSacrifice?100:10),(player.galacticSacrifice?2:1)*(player.timestudy.studies.includes(31)?4:1))
+	return (player.galacticSacrifice?0:1)+Math.pow((player.galacticSacrifice?1:0)+Math.log10(getInfinitied()+1)*(player.galacticSacrifice?100:10),(player.galacticSacrifice?2:1)*(hasTimeStudy(31)?4:1))
 }
 
 function getDimensionProductionPerSecond(tier) {

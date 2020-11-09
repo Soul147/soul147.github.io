@@ -378,10 +378,10 @@ function toggleAutoEter(id) {
 
 function doAutoEterTick() {
 	if(!player.autoEterOptions) return;
-	if (player.achievements.includes("ngpp17") || player.timestudy.studies.includes(1011)) {
+	if (player.achievements.includes("ngpp17") || hasTimeStudy(1011) || (player.mods.ngt && ngt.division.times)) {
 		for (d=1;d<9;d++) if (player.autoEterOptions["td"+d]) buyMaxTimeDimension(d)
 	}
-	if (player.achievements.includes("ngpp17") || player.timestudy.studies.includes(1012)) {
+	if (player.achievements.includes("ngpp17") || hasTimeStudy(1012) || (player.mods.ngt && ngt.division.times)) {
 		if (player.autoEterOptions.epmult) buyMaxEPMult()
 	}
 	if (player.autoEterOptions.tt && !player.dilation.upgrades.includes(10)) maxTheorems()

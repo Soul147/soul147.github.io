@@ -2,7 +2,7 @@
 
 function resetNGT(hardReset, divisionReset) {
 	if(hardReset || divisionReset) player.mods.ngt = {
-		version: 2.12,
+		version: 2.3,
 		omni: 0, // times gone omnipotent stat
 		thisOmni: 0, // time this run
 		lastRun: new Decimal(0), // OP gained during previous run
@@ -11,20 +11,23 @@ function resetNGT(hardReset, divisionReset) {
 		gravitons: new Decimal(0),
 		gCostInc: 10, // cost scaling factor (like dimension cost multiplier decrease)
 		opCostInc: 10,
-		opUpgrades: [], // upgrades bought with OP
-		replicatorsUnlocked: 0,
-		newReplicatorCost: new Decimal(1e10),
-		oc: [], // omni-challenges completed
+		opUpgrades: !hardReset && divMilestoneReached(5) ? player.mods.ngt.opUpgrades : [], // upgrades bought with OP
+		replicatorsUnlocked: !hardReset && divMilestoneReached(3) ? player.mods.ngt.replicatorsUnlocked : 0,
+		newReplicatorCost: !hardReset && divMilestoneReached(3) ? player.mods.ngt.newReplicatorCost : new Decimal(1e10),
+		oc: !hardReset && divMilestoneReached(4) ? player.mods.ngt.oc : [], // omni-challenges completed
 		ocr: [], // omni-challenges currently running
 		t: {req: [], goal: [], reward: []}, // info for OCs
-		autobuyer: {
+		autobuyer: player.mods.ngt.autobuyer || {
+			mode: "amount"
+		},
+		divider: player.mods.ngt.divider || {
 			
 		},
+		auto: player.mods.ngt.auto || [],
 		division: hardReset ? {
 			times: 0,
 			// light
 			vp: new Decimal(0),
-			totalvp: new Decimal(0),
 			vgal: 0,
 			// dark
 			um: new Decimal(0),
@@ -46,7 +49,7 @@ function resetNGT(hardReset, divisionReset) {
 			opCostMult: new Decimal(i*10)
 		}
 	}
-	for(var i = 1; i <= 8; i++) player.mods.ngt["r" + i] = {amount: new Decimal(0), power: new Decimal(1)}; 
+	for(var i = 1; i <= 8; i++) player.mods.ngt["r" + i] = {amount: new Decimal(ngt.replicatorsUnlocked >= i ? 1 : 0), power: new Decimal(1)}; 
 	updateOmniChallenges()
 }
 
@@ -62,24 +65,33 @@ function gainedOP() {
 }
 
 const omReqList = ["10", "100", "1e5", "1e10", "1e20", "1e33", "1e50", "1e100", "1e200", "1e10000", "1e1000000"]
+const dmReqList = [400, 100, 25, 5, 1, 1/4, 1/10, 0]
 
 function omniMilestoneReq(n) {
 	return new Decimal(omReqList[n])
 }
 
 function omniMilestoneReached(n) {
+	if(!player.mods.ngt) return;
+	if(player.mods.ngt.division.times && n == 7 && divMilestoneReached(0)) return true;
+	if(n < ngt.division.times && divMilestoneReached(1)) return true;
 	ret = player.mods.ngt.op.gte(omniMilestoneReq(n)) || player.mods.ngt.milestonesReached > n;
 	if(ret) player.mods.ngt.milestonesReached = Math.max(player.mods.ngt.milestonesReached || 0, n)
 	return ret;
 }
 
+function divMilestoneReached(n) {
+	if(!player.mods.ngt) return;
+	ret = dmReqList[n] >= ngt.division.record / ngt.division.times;
+	return ret;
+}
+
 function omnipotenceReset(force, auto) {
-	if(!ngt.omni && !force) setTimeout(function() {
+	if(player.eternityPoints.add(gainedEternityPoints()).lt(1e308) && !(force || ocGoalMet(currentOC()))) return;
+	if(ngt.omni + ngt.division.times < 1 && !force) setTimeout(function() {
 		$("#dimensionsbtn").notify("New Dimension Unlocked", "success");
 		$("#eternitystorebtn").notify("New Time Studies Unlocked", "success");
 	}, 10000);
-	
-	if(player.eternityPoints.add(gainedEternityPoints()).lt(1e308) && !(force || ocGoalMet(currentOC()))) return;
 	
 	out = inOC() && ocGoalMet(ngt.ocr[0]) && !force
 	if(out && (!player.options.retryChallenge || !player.mods.ngt.oc.includes(currentOC()))) {
@@ -143,7 +155,7 @@ function omnipotenceReset(force, auto) {
 		infinitied: 0,
 		infinitiedBank: omniMilestoneReached(4) ? player.infinitiedBank + player.infinitied * 0.05 : 0,
 		totalTimePlayed: player.totalTimePlayed,
-		bestInfinityTime: 9999999999,
+		bestInfinityTime: player.bestInfinityTime,
 		thisInfinityTime: 0,
 		resets: omniMilestoneReached(0) ? 4 : 0,
 		dbPower: player.dbPower,
@@ -411,6 +423,7 @@ function omnipotenceReset(force, auto) {
 	if(player.meta) updateLastTenQuantums()
 	updateAutobuyers()
 	resetTimeDimensions()
+	updateTimeStudyButtons()
 	
 	player.mods.ngt.thisOmni = 0;
 	player.mods.ngt.bestOPRate = new Decimal(0);
@@ -460,6 +473,7 @@ function updateOmniDimMults(reset) {
 		if(hasUpg(12)) mult = mult.multiply(getUpgEff(12))
 		if(hasUpg(14)) mult = mult.multiply(getUpgEff(14))
 		if(hasUpg(15) && i == 1) mult = mult.multiply(getUpgEff(15))
+		if(hasUpg(22)) mult = mult.multiply(getUpgEff(22))
 		if(compOC(3)) mult = mult.multiply(ngt.t.reward[2])
 		if(player.achievements.includes("ngt18")) mult = mult.multiply(player.timestudy.studies.length+1)
 		
@@ -469,6 +483,7 @@ function updateOmniDimMults(reset) {
 }
 
 function getGravitonEffect() {
+	if(inOC(7)) return new Decimal(1);
 	if(hasUpg(6)) return ngt.gravitons.pow(getUpgEff(6)).max(1)
 	return ngt.gravitons.pow(4).max(1);
 }
@@ -486,7 +501,7 @@ function getReplicatorMult() {
 
 function resetReplicators(hardReset) {
 	for(var i = 1; i <= ngt.replicatorsUnlocked; i++) {
-		ngt["r" + i].amount = new Decimal(ngt.replicatorsUnlocked >= i ? 1 : 0)
+		ngt["r" + i].amount = new Decimal(1)
 		if(hardReset) ngt["r" + i].power = new Decimal(1)
 	}
 }
@@ -507,7 +522,8 @@ function updateReplicatorPowers() {
 		
 		r.power = new Decimal(1);
 		if(hasUpg(5)) r.power = r.power.multiply(getUpgEff(5))
-		if(hasUpg(17)) r.power = r.power.divide(1000)
+		if(hasUpg(24)) r.power = r.power.multiply(getUpgEff(24))
+		if(hasUpg(17)) r.power = r.power.divide(1000).max(1)
 	}
 }
 
@@ -517,7 +533,7 @@ opUpgCosts = [
 	10,
 	1e10, 1e15,
 	1e20, 1e25, 1e30, 1e35, 1e40, 1e45, 1e60, 1e100,
-	"1e110", "1e130", "1e140", "1e150", "1e170", "1e235", "1e250", "1e320", "1e380", "1e40069", "1e500", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", "1e1000", 
+	"1e110", "1e130", "1e140", "1e150", "1e170", "1e235", "1e250", "1e320", "1e380", "1e400", "1e420", "1e450", "1e500", "1e700", "1e900", "1e10000", "1e10000", "1e10000", 
 ]
 
 for(var i = 0; i < opUpgCosts.length; i++) {
@@ -531,7 +547,7 @@ function buyUpg(n) {
 	ngt.opUpgrades.push(n);
 	updateOmniUpgrades()
 	
-	if(n == 11) {
+	if(n == 11 && !ngt.division.times) {
 		showTab("challenges")
 		showChallengesTab("omnichallenges")
 	}
@@ -545,6 +561,7 @@ function buyUpg(n) {
 function hasUpg(n) {
 	if(!player.mods.ngt) return;
 	if(n == -1) return true;
+	if(inOC(7)) return false;
 	return ngt.opUpgrades.includes(n);
 }
 
@@ -566,7 +583,7 @@ function getUpgEff(n) {
 		case 4:
 			return Decimal.pow(ngt.op.logarithm, 1.5).max(1);
 		case 5:
-			return Decimal.pow(1+ngt.replicatorsUnlocked**2/40, Math.log10(getInfinitied())+1).pow(2).max(1);
+			return Decimal.pow(1+ngt.replicatorsUnlocked**2/40, Math.log10(getInfinitied()+1)+1).pow(2).max(1);
 		case 6:
 			return Decimal.max(Math.log10(Math.max(ngt.gravitons.logarithm||0,1)),0).add(4).multiply(4).sqrt().min(8)
 		case 7:
@@ -576,7 +593,7 @@ function getUpgEff(n) {
 		case 9:
 			return Math.max(Math.log10(Math.max(player.totalTickGained,1)),0)/3+3
 		case 10:
-			return Decimal.pow(1-player.tickspeed.logarithm, 0.1).multiply(100).max(1)
+			return Decimal.pow(1-player.tickspeed.logarithm, 0.25).multiply(100).max(1)
 		case 12:
 			return Decimal.log10(Decimal.max(ngt.r1.amount.log10(),1))**((hasUpg(9) ? getUpgEff(9) : 3) * (hasUpg(17) ? getUpgEff(17) : 1))
 		case 14: 
@@ -587,6 +604,14 @@ function getUpgEff(n) {
 			return Decimal.pow(getReplicatorMult().log10()+1, 1.25).add(1)
 		case 17: 
 			return Decimal.pow(Decimal.log10(player.timeShards.log10()), 0.5).max(1)
+		case 21: 
+			return gainEternitiedStat()
+		case 22: 
+			return Decimal.pow(getEighthsProduced(), Math.max(Decimal.log10(getEighthsProduced().max(1)) - 2, 1)).max(1)
+		case 23: 
+			return Decimal.max(ngt.gravitons.max(1).log10() / 1000, 1)
+		case 24: 
+			return Decimal.pow(ngt.division.vp.log10(), 2)
 	}
 }
 
@@ -599,8 +624,8 @@ function updateOmniUpgrades() {
 	if(hasUpg(10)) ngt.unlockedRings++;
 	
 	if(player.options.currentTab !== "omnitab" || player.options.currentOmniTab !== "omnipotence") return; // only run when tab is active
-	gn("ouinfo", function(n, i) {n.innerHTML = shorten(getUpgEff(i))})
-	gn("oucost", function(n, id) {n.innerHTML = shortenCosts(opUpgCosts[id])})
+	gn("ouinfo", function(n, i) {n.innerText = shorten(getUpgEff(i))})
+	gn("oucost", function(n, id) {n.innerText = shortenCosts(opUpgCosts[id])})
 	gn("ou", function(div, id) {
 		div.className = !hasUpg(id-1) ? "omniupghidden" : hasUpg(id) ? "omniupgbought" : affordUpg(id) ? "omniupg" : "omniupglocked"
 		div.upgID = id;
@@ -609,7 +634,7 @@ function updateOmniUpgrades() {
 		}
 	})
 	
-	updateOmniSpins()
+	updateOmniSpins();
 }
 
 var rings = [ 1,  2,  8, 18]  // how many upgrades are in each ring
@@ -619,6 +644,7 @@ var last = 0
 
 function updateOmniSpins() {
 	if(!player.mods.ngt) return;
+	if(player.options.currentTab !== "omnitab" || player.options.currentOmniTab !== "omnipotence") return;
 	
 	diff = (Date.now() - last);
 	last = Date.now()
@@ -636,7 +662,7 @@ function updateOmniSpins() {
 			centerX = innerWidth / 2 - 10;
 			centerY = 1000;
 			
-			if(!ngt.omni) centerY = -69420;
+			if(!ngt.omni && !ngt.division.times) centerY = -69420;
 			
 			angle = spins[i] + Math.PI * 2 * j / rings[i]
 			
@@ -644,7 +670,7 @@ function updateOmniSpins() {
 			offsetY = Math.sin(angle) * i * 160
 			
 			index = (total[i-1]||0)+j
-			l = (ngt.opUpgrades.length-10)/2
+			l = ngt.division.times || hasUpg(20) ? 0 : (ngt.opUpgrades.length-10)/2
 			
 			randomX = (index == 20) ? Math.random() * l - l/2 : 0
 			randomY = (index == 20) ? Math.random() * l - l/2 : 0
@@ -669,12 +695,12 @@ function updateOmniChallenges() {
 			new Decimal("1e1775000000"),
 			new Decimal("1e2200000000"),
 			new Decimal("1e2500000000"),
-			new Decimal("1e3800000000"),
+			new Decimal("1e3750000000"),
 			new Decimal("1e4500000000"),
-			new Decimal("1e9999999999"),
-			new Decimal("1e9999999999"),
-			new Decimal("1e9999999999"),
-			new Decimal("1e9999999999"),
+			new Decimal("1e6400000000"),
+			new Decimal("1e10000000000"),
+			new Decimal("1e99999999999"),
+			new Decimal("1e99999999999"),
 		],
 		goal: [
 			new Decimal("1e775000"),
@@ -683,8 +709,8 @@ function updateOmniChallenges() {
 			new Decimal("1e2860000"),
 			new Decimal("1e275000000"),
 			new Decimal("1e360000000"),
-			new Decimal("1e999999999"),
-			new Decimal("1e999999999"),
+			new Decimal("1e1500000000"),
+			new Decimal("1e950000000"),
 			new Decimal("1e999999999"),
 			new Decimal("1e999999999"),
 		],
@@ -751,17 +777,17 @@ function ocGoalMet(n) {
 
 function updateAutoOmniMode() {
 	if (ngt.autobuyer.mode == "amount") {
-		document.getElementById("toggleautoquantummode").textContent = "Auto omnipotence mode: amount"
-		document.getElementById("autoquantumtext").textContent = "Amount of QK to wait until reset:"
+		document.getElementById("toggleautoomnimode").textContent = "Auto omnipotence mode: amount"
+		document.getElementById("autoomnitext").textContent = "Amount of OP to wait until reset:"
 	} else if (ngt.autobuyer.mode == "relative") {
-		document.getElementById("toggleautoquantummode").textContent = "Auto omnipotence mode: X times last run"
-		document.getElementById("autoquantumtext").textContent = "X times last omnipotence:"
+		document.getElementById("toggleautoomnimode").textContent = "Auto omnipotence mode: X times last"
+		document.getElementById("autoomnitext").textContent = "X times last omnipotence:"
 	} else if (ngt.autobuyer.mode == "time") {
-		document.getElementById("toggleautoquantummode").textContent = "Auto omnipotence mode: time"
-		document.getElementById("autoquantumtext").textContent = "Seconds between runs:"
+		document.getElementById("toggleautoomnimode").textContent = "Auto omnipotence mode: time"
+		document.getElementById("autoomnitext").textContent = "Seconds between runs:"
 	} else if (ngt.autobuyer.mode == "peak") {
-		document.getElementById("toggleautoquantummode").textContent = "Auto omnipotence mode: peak"
-		document.getElementById("autoquantumtext").textContent = "Seconds to wait after latest peak gain:"
+		document.getElementById("toggleautoomnimode").textContent = "Auto omnipotence mode: peak"
+		document.getElementById("autoomnitext").textContent = "Seconds to wait after latest peak gain:"
 	}
 }
 
@@ -771,6 +797,11 @@ function toggleAutoOmniMode() {
 	else if (ngt.autobuyer.mode == "time") ngt.autobuyer.mode = "peak"
 	else ngt.autobuyer.mode = "amount"
 	updateAutoOmniMode()
+}
+
+function toggleAutoOmni(t) {
+	// if(!divMilestoneReached(2)) return;
+	ngt.auto[t] = (ngt.auto[t] + 1 || 1) % 3;
 }
 
 function calculateNewStudyCosts() {
@@ -808,120 +839,203 @@ function getDilationRequirement() {
 	return new Decimal("1e10000")
 }
 
-animation = true
+function canDivide() {
+	return hasUpg(20) && ngt.op.add(gainedOP()).gte("1e400");
+}
 
 function divide() {
-  resetNGT(true)
-	omnipotenceReset(true)
-	if(!hasUpg(20)) return false;
-	ngt.division.times++
+	// resetNGT(true)
+	// omnipotenceReset(true)
+	if(!canDivide()) return false;
+	if(!ngt.division.times) player.options.animations.division = true;
 	ngt.animating = true;
-	ge("blade").style.transitionDuration = "0.5s"
+	ge("blade").style.transitionDuration = "1s"
 	ge("blade").style.top = "50px"
 	setTimeout(function() {
-		ge("blade").style.top = "2000px"
-	}, 1900)
-	setTimeout(function() {
-		if(animation) {
-			ge("death").style.display = ""
-			ge("bleed").style.opacity = 1
+		ge("blade").style.top = "3000px"
+	}, 1800)
+	if(player.options.animations.division) {
+		setTimeout(divisionReset, 2000)
+		if(ngt.division.times < 1) {
+			setTimeout(function() {
+				if(player.options.animations.division) {
+					ge("death").style.transitionDuration = "0s"
+					ge("death").style.opacity = 1
+				}
+				else {
+					ge("blade").style.transitionDuration = "0s"
+					ngt.animating = false
+				}
+			}, 2000)
+			setTimeout(function() {
+				i=0;
+				text = "nothing is impossible in this cursed reality.".split("")
+				text.forEach(function(letter) {i++; setTimeout(function() {ge("bleed").innerHTML += letter}, i * 100)})
+			}, 3000)
+			setTimeout(function() {
+				ge("death").style.transitionDuration = "5s"
+				ge("death").style.opacity = 0
+				showTab("dimensions")
+				showDimTab("antimatterdimensions")
+			}, 8000)
 		}
-		else {
-			ge("blade").style.transitionDuration = "0s"
-			ngt.animating = false
-		}
-		leftoverOP = ngt.op;
-		resetNGT(false, true)
-		omnipotenceReset(true, true)
-		player.infinityPoints = new Decimal(0)
-		setTheme()
-		player.autobuyers.forEach(function(a) {
-			a.isOn = false;
-		})
-		player.break = false;
-		showTab("dimensions")
-		showDimTab("antimatterdimensions")
-		omnipotenceReset(true, true)
-		player.infinityUpgrades.push("skipResetGalaxy")
-		softReset(0)
-		ngt.division.um = ngt.division.um.max(leftoverOP.log10()) // gain up to your log(OP) in unstable matter at a time
-	}, 2000)
-	if(animation) {
-		setTimeout(function() {
-			i=0;
-			text = "the universe is bleeding.NNyou feel the energy of something that cannot exist.NNyou will regain what is lost and become stronger than ever.NNthe time has come to go beyond infinity.".split("")
-			text.forEach(function(letter) {i += 1+(letter=="N")*9-(letter==" "); setTimeout(function() {ge("bleed").innerHTML += letter == "N" ? "<br>" : letter}, i * 100)})
-		}, 5000)
-		setTimeout(function() {
-			ge("bleed").style.opacity = 0
-		}, 25000)
-		setTimeout(function() {
-			ge("death").style.display = "none"
-		}, 30000)
 	}
+	else {
+		ge("blade").style.transitionDuration = "0s"
+		ngt.animating = false;
+		divisionReset();
+	}
+}
+
+function getUMGain() {
+	return new Decimal(Decimal.pow(ngt.op.add(gainedOP()).log10() - 400, hasUpg(23) ? getUpgEff(23) : 1) * getShardUpgEff(2)).max(canDivide()*1);
+}
+
+function divisionReset() {
+	if(!canDivide()) return false;
+	if(!ngt.division.record || ngt.omni < ngt.division.record) ngt.division.record = ngt.omni;
+	ngt.division.times++
+	ngt.division.last = Date.now();
+	ngt.division.um = ngt.division.um.add(getUMGain())
+	resetNGT(false, true)
+	omnipotenceReset(true, true)
+	resetReplicators();
+	eternity(true)
+	player.eternityPoints = new Decimal(0)
+	resetDimensions();
 }
 
 function getHalfLife() {
-	return 3600
+	return 600 * getShardUpgEff(1.1);
 }
 
-function getEnergyInput(base) {
-	ret = ge("energyinput").value**2;
-	if(base) return ret;
-	return ngt.division.um.multiply(ret/100);
+function getDecayRate() {
+	return ge("energyinput").value**2 / 100;
+}
+
+function getEnergyRate() {
+	return getShardUpgEff(1).multiply(10);
 }
 
 function getEighthDimensions() {
-	return player.eightAmount.add(ngt.division.eightProduced || 0)
+	return player.eightAmount.add(getEighthsProduced() || 0)
 }
 
-function getEighthProduction(display) {
-	ret = ngt.division.energy.sqrt().divide(1000);
-	if(display) {
-		// do this twice - once for hours, once for minutes
-		if(ret.lt(1)) ret = ret.multiply(60)
-		if(ret.lt(1)) ret = ret.multiply(60)
-	}
-	return ret;
+function getBaseEighthsProduced(display) {
+	var e = ngt.division.energy.multiply(10);
+	if(e.gt(10000)) e = e.subtract(10000).sqrt().add(10000);
+	return e.multiply(getShardUpgEff(2.1)).floor();
+}
+
+function getEighthsProduced() {
+	return ngt.division.eightProduced.multiply(getShardUpgEff(5));
+}
+
+function getRiftDamageRate() {
+	return 1;
 }
 
 function getRiftDamage() {
-	return ngt.division.energy
+	return ngt.division.energy.multiply(getRiftDamageRate());
 }
 
 function getRiftStability() {
-	return ngt.division.health.divide(ngt.division.maxHealth);
+	return ngt.division.health.divide(ngt.division.maxHealth).max(0);
 }
 
-function dumpEnergy() { // remove energy from the rift, gaining virtual particles
-	dumped = ngt.division.energy;
-	gain = getVPGain()
-	ngt.division.energy = new Decimal(0);
-	ngt.division.vp = ngt.division.vp.add(gain);
-	ngt.division.totalvp = ngt.division.totalvp.add(gain);
+function getShardUpgEff(n, l = 0) {
+	var b = Decimal.add(player.mods.ngt.division.shardUpgrades[Math.floor(n)] || new Decimal(0), l);
+	
+	switch(n) {
+		case 0: 
+			return Decimal.pow(2, b);
+		case 0.1: 
+			return Decimal.pow(3, b);
+		case 1: 
+			return Decimal.pow(2, b);
+		case 1.1: 
+			return Decimal.divide(1, b.add(1));
+		case 2: 
+			return Decimal.pow(2, b);
+		case 2.1: 
+			return Decimal.multiply(0.5, b).add(1);
+		case 3: 
+			return Decimal.divide(1, b.multiply(0.15).add(1))
+		case 3.1: 
+			return Decimal.pow(0.5, b);
+		case 4: 
+			return Decimal.add(1, b.multiply(0.6));
+		case 4.1: 
+			return Decimal.add(1, b.multiply(0.3));
+		case 5: 
+			return Decimal.add(1, b.multiply(0.4));
+		case 5.1: 
+			return Decimal.divide(1, b.multiply(0.2).add(1))
+	}
+}
+
+function getShardUpgCost(n) {
+	var b = player.mods.ngt.division.shardUpgrades[n] || new Decimal(0);
+	
+	switch(n) {
+		case 0: return Decimal.pow(2, b.add(1).add(b.subtract(100).max(0)))
+		case 1: return Decimal.pow(4, b.add(1))
+		case 2: return Decimal.pow(8, b.add(1))
+		case 3: return Decimal.pow(3, b).multiply(1e3)
+		case 4: return Decimal.pow(9, b).multiply(1e6)
+		case 5: return Decimal.pow(27, b).multiply(1e9)
+	}
+}
+
+function canBuyShardUpg(n) {
+	return ngt.division.shards.floor().gte(getShardUpgCost(n));
+}
+
+function buyShardUpg(n) {
+	if(!player.mods.ngt) return;
+	if(!ngt.division.times) return;
+	if(!canBuyShardUpg(n)) return;
+	ngt.division.shards = ngt.division.shards.subtract(getShardUpgCost(n));
+	ngt.division.shardUpgrades[n] = Decimal.add(ngt.division.shardUpgrades[n] || 0, 1);
 }
 
 function getVPGain() {
-	return ngt.division.energy.divide(1e3).pow(2).floor()
+	return ngt.division.energy.multiply(getShardUpgEff(0.1)).divide(10).floor()
+}
+
+function getTotalVP() {
+	return ngt.division.vp.multiply(getShardUpgEff(3.1));
 }
 
 function getVGalBase() {
-	return 2
+	return 1 + getShardUpgEff(3) * 2
+}
+
+function getVGalPower() {
+	return getShardUpgEff(4).multiply(getShardUpgEff(5.1))
 }
 
 function getVGalAmount() {
-	return Math.floor(Math.max(ngt.division.totalvp.multiply(getVGalBase()).log(getVGalBase()), 0))
+	return Math.floor(Math.max(getTotalVP().multiply(getVGalBase()).log(getVGalBase()), 0))
 }
 
-function meltdown() { // you fucked up
+function meltdown(respec) { // you fucked up
+	gain = getVPGain()
+	ngt.division.energy = new Decimal(0);
+	ngt.division.vp = ngt.division.vp.add(gain);
 	
+	if(respec) {
+		ngt.division.shards = ngt.division.totalShards;
+		ngt.division.shardUpgrades = [];
+		ge("energyinput").value = 0;
+	}
 }
 
 function updateDivision(diff) {
 	if(!player.mods.ngt) return;
 	ge("thebladetab").style.display = (hasUpg(20) || ngt.division.times > 0) ? "" : "none";
-	ge("blade").style.display = hasUpg(20) ? "" : "none"
-	if(!ngt.animating && player.options.currentTab == "omnitab" && player.options.currentOmniTab == "theblade") ge("blade").style.top = Math.sin(Date.now() / 1000) * 40 + 200 + "px"
+	ge("blade").style.display = canDivide() ? "" : "none"
+	if(!ngt.animating && player.options.currentTab == "omnitab" && player.options.currentOmniTab == "theblade") ge("blade").style.top = Math.sin(Date.now() / 1000) * 30 + 350 + "px"
 	
 	// Virtual Particle calculations
 	
@@ -929,50 +1043,84 @@ function updateDivision(diff) {
 	
 	// Half-life of virtual particles
 	
-	secondsElapsed = diff / 10;
-	
+	secondsElapsed = getDecayRate(true) * diff / 10;
 	logChange = secondsElapsed*Math.log10(2)/getHalfLife();
 	newLog = ngt.division.um.log10() - logChange;
-	average = Decimal.pow(10, newLog);
-	amount = average.floor();
-	variance = average.subtract(amount)
-	if(Math.random() < variance) amount = amount.add(1)
+	amount = Decimal.pow(10, newLog);
 	gain = ngt.division.um.subtract(amount);
+	shardGain = ngt.division.um.floor().subtract(amount.floor()).round();
 	if(isNaN(gain.logarithm)) gain = new Decimal(0)
 	
+	ngt.division.energyInput = ge("energyinput").value;
+	ngt.division.energy = ngt.division.energy.add(gain.multiply(getEnergyRate()));
 	ngt.division.shards = ngt.division.shards.add(gain);
+	ngt.division.totalShards = ngt.division.totalShards.add(gain);
 	ngt.division.um = amount;
 	
 	// Rift stability
 	
-	ngt.division.maxHealth = ngt.division.shards.pow(2).multiply(1000);
-	ngt.division.damage = ngt.division.damage.add(getRiftDamage().multiply(diff/10))
+	ngt.division.maxHealth = getShardUpgEff(0).multiply(10);
+	ngt.division.damage = getRiftDamage();
 	ngt.division.health = ngt.division.maxHealth.subtract(ngt.division.damage).max(0)
+	if(ngt.division.health.lte(0)) meltdown(ngt.division.respec);
 	
 	// Eighth dimension production
 	
-	ep = getEighthProduction()
-	ngt.division.energy = ngt.division.energy.add(getEnergyInput().multiply(diff/10))
-	amount = ep.multiply(diff/10)
-	if(!ngt.division.eightProduced) ngt.division.eightProduced = new Decimal(0)
-	ngt.division.eightProduced = ngt.division.eightProduced.add(amount)
+	ngt.division.eightProduced = ngt.division.eightProduced.max(getBaseEighthsProduced())
 	
 	// Update HTML
 	
 	ge("virtualparticles").innerHTML = getFullExpansion(ngt.division.vp)
-	ge("totalvirtualparticles").innerHTML = getFullExpansion(ngt.division.totalvp)
+	ge("totalvirtualparticles").innerHTML = getFullExpansion(getTotalVP())
 	ge("virtualgalaxies").innerHTML = getFullExpansion(ngt.division.vgal)
+	ge("virtualgalaxypower").innerHTML = getFullExpansion(getVGalPower()*100) + "%"
 	ge("virtualgalaxycost").innerHTML = getFullExpansion(Decimal.pow(getVGalBase(), ngt.division.vgal))
 	
-	ge("unstablematter").innerHTML = getFullExpansion(ngt.division.um)
-	ge("drainrate").innerHTML = timeDisplayShort(getHalfLife()*10, true, 3)
-	ge("shards").innerHTML = getFullExpansion(ngt.division.shards)
-	ge("eighthextra").innerHTML = getFullExpansion(ngt.division.eightProduced)
-	ge("eighthprod").innerHTML = getFullExpansion(getEighthProduction(true))
-	ge("eighthunit").innerHTML = ep.gt(1) ? "dimensions/s" : ep.gt(1/60) ? "dimensions/m" : "dimensions/h"
-	ge("energyindisplay").innerHTML = getEnergyInput(true);
-	ge("riftenergy").innerHTML = getFullExpansion(ngt.division.energy);
-	ge("energyrate").innerHTML = getFullExpansion(getEnergyInput());
+	ge("unstablematter").innerHTML = getFullExpansion(ngt.division.um, 1)
+	ge("umgain").innerHTML = getFullExpansion(getUMGain())
+	ge("umgainrate").innerHTML = getFullExpansion(getUMGain().divide(Date.now() - ngt.division.last).multiply(60000))
+	ge("drainrate").innerHTML = timeDisplayShort(getHalfLife() * 10, true, 3)
+	ge("shards").innerHTML = getFullExpansion(ngt.division.shards.floor())
+	ge("eighthextra").innerHTML = getFullExpansion(getEighthsProduced())
+	ge("eighthextracurrent").innerHTML = getFullExpansion(getBaseEighthsProduced()) + (Decimal.gt(ngt.division.shardUpgrades[5], 0) ? "+" + getBaseEighthsProduced().multiply(getShardUpgEff(5).subtract(1)) : "")
+	ge("energyindisplay").innerHTML = getDecayRate() * 100;
+	ge("riftenergy").innerHTML = getFullExpansion(ngt.division.energy, 1);
+	ge("energyrate").innerHTML = "+" + getFullExpansion(ngt.division.um.multiply(getEnergyRate() * getDecayRate() / getHalfLife()), 2);
 	ge("stability").innerHTML = getFullExpansion(ngt.division.health) + "/" + getFullExpansion(ngt.division.maxHealth) + " (" + getRiftStability().multiply(100).toFixed(2) + "%)";
+	ge("shardrespec").innerHTML = getFullExpansion(ngt.division.totalShards.subtract(ngt.division.shards));
 	ge("vpgain").innerHTML = getFullExpansion(getVPGain())
+	
+	for(var i = 0; i < 6; i++) {
+		ge("shardupg" + i).className = "timestudy " + (canBuyShardUpg(i) ? (i % 6 < 3 ? "lightstudy" : "darkstudy") : "timestudylocked")
+		ge("shardupg" + i).style.height = "100px";
+		var t = ""
+		t += ["MATRIX","OVERCHARGE","AUGMENTATION","COMPRESSION","DILATION","REALITY"][i] + " " + roman(Decimal.add(ngt.division.shardUpgrades[i], 1) || 1) + "<br>"
+		t += [
+			`2x to rift HP<br>3x to VP gain<br>
+			HP: ${shortenDimensions(getShardUpgEff(0))}x > ${shortenDimensions(getShardUpgEff(0, 1))}x<br>
+			VP gain: ${shortenDimensions(getShardUpgEff(0.1))}x > ${shortenDimensions(getShardUpgEff(0.1, 1))}x`,
+			
+			`2x to energy gain<br>+100% to decay speed<br>
+			UM gain: ${shortenDimensions(getShardUpgEff(1))}x > ${shortenDimensions(getShardUpgEff(1, 1))}x<br>
+			Half-life: 1/${getFullExpansion(getShardUpgEff(1.1).pow(-1))} > 1/${getFullExpansion(getShardUpgEff(1.1, 1).pow(-1))}`,
+			
+			`2x to UM gain<br>+50% to ED gain<br>
+			UM gain: ${shortenDimensions(getShardUpgEff(2))}x > ${shortenDimensions(getShardUpgEff(2, 1))}x<br>
+			ED gain: ${shortenMoney(getShardUpgEff(2.1))}x > ${shortenMoney(getShardUpgEff(2.1, 1))}x`,
+			
+			`-15% to VG scaling<br>-50% to VP gain<br>
+			VG scaling: ${getFullExpansion(getShardUpgEff(3).multiply(100))}% > ${getFullExpansion(getShardUpgEff(3, 1).multiply(100))}%<br>
+			VP gain: 1/${getFullExpansion(getShardUpgEff(3.1).pow(-1))}x > 1/${getFullExpansion(getShardUpgEff(3.1, 1).pow(-1))}x`,
+			
+			`+60% to VG power<br>+30% to VG scaling<br>
+			VG power: ${getFullExpansion(getShardUpgEff(4),1)}x > ${getFullExpansion(getShardUpgEff(4, 1),1)}x<br>
+			VG scaling: ${shortenMoney(getShardUpgEff(4.1))}x > ${shortenMoney(getShardUpgEff(4.1, 1))}x`,
+			
+			`+40% to ED power<br>-20% to VG power<br>
+			ED power: ${shortenDimensions(getShardUpgEff(5))}x > ${shortenDimensions(getShardUpgEff(5, 1))}x<br>
+			VG power: ${getFullExpansion(getShardUpgEff(5.1).multiply(100))}% > ${getFullExpansion(getShardUpgEff(5.1, 1).multiply(100))}%`,
+		][i] + "<br>"
+		t += "Cost: " + shortenDimensions(getShardUpgCost(i)) + " DS"
+		ge("shardupg" + i).innerHTML = t;
+	}
 }

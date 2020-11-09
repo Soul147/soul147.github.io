@@ -561,12 +561,12 @@ if (player.version < 5) {
 
 	if (player.version < 9.5) {
 			player.version = 9.5
-			if (player.timestudy.studies.includes(191)) player.timestudy.theorem += 100
+			if (hasTimeStudy(191)) player.timestudy.theorem += 100
 	}
 
 	if (player.version < 10) {
 			player.version = 10
-			if (player.timestudy.studies.includes(72)) {
+			if (hasTimeStudy(72)) {
 					for (i=4; i<8; i++) {
 							player["infinityDimension"+i].amount = player["infinityDimension"+i].amount.div(calcTotalSacrificeBoost().pow(0.02))
 					}
@@ -765,7 +765,7 @@ if (player.version < 5) {
 	if (player.aarexModifications.newGamePlusPlusVersion < 2) {
 			for (dim=1;dim<5;dim++) {
 					var dim = player["timeDimension" + dim]
-					if (Decimal.gte(dim.cost, "1e20000")) dim.cost = Decimal.pow(timeDimCostMults[dim]*2.2, dim.bought).times(timeDimStartCosts[dim]).times(Decimal.pow(new Decimal('1e1000'),Math.pow(dim.cost.log(10) / 1000 - 20, 2)))
+					if (Decimal.gte(dim.cost, "1e20000")) dim.cost = Decimal.pow(timeDimCostMults[dim]*2.2, dim.bought).times(timeDimStartCosts(dim)).times(Decimal.pow(new Decimal('1e1000'),Math.pow(dim.cost.log(10) / 1000 - 20, 2)))
 			}
 
 			player.meta = {resets: 0, antimatter: 10, bestAntimatter: 10}
@@ -774,7 +774,7 @@ if (player.version < 5) {
 	if (player.aarexModifications.newGamePlusPlusVersion < 2.2) {
 			for (dim=1;dim<5;dim++) {
 					var dim = player["timeDimension" + dim]
-					if (Decimal.gte(dim.cost, "1e100000")) dim.cost = Decimal.pow(timeDimCostMults[dim]*100, dim.bought).times(timeDimStartCosts[dim]).times(Decimal.pow(new Decimal('1e1000'),Math.pow(dim.cost.log(10) / 1000 - 100, 2)))
+					if (Decimal.gte(dim.cost, "1e100000")) dim.cost = Decimal.pow(timeDimCostMults[dim]*100, dim.bought).times(timeDimStartCosts(dim)).times(Decimal.pow(new Decimal('1e1000'),Math.pow(dim.cost.log(10) / 1000 - 100, 2)))
 			}
 
 			player.autoEterMode == "amount"
@@ -1285,7 +1285,7 @@ if (player.version < 5) {
 			player.version = 12
 			for (i=1; i<5; i++) {
 				if (player["timeDimension"+i].cost.gte("1e1300")) {
-						player["timeDimension"+i].cost = Decimal.pow(timeDimCostMults[i]*2.2, player["timeDimension"+i].bought).times(timeDimStartCosts[i])
+						player["timeDimension"+i].cost = Decimal.pow(timeDimCostMults[i]*2.2, player["timeDimension"+i].bought).times(timeDimStartCosts(i))
 					}
 			}
 			if (player.bestEternity <= 0.01 || player.bestInfinityTime <= 0.01) giveAchievement("Less than or equal to 0.001");
@@ -1498,7 +1498,7 @@ if (player.version < 5) {
 	document.getElementById("achRowng3p1").style.display=player.masterystudies==undefined?"none":""
 	document.getElementById("achRowng3p2").style.display=player.masterystudies==undefined?"none":""
 	document.getElementById("metaAntimatterEffectType").textContent=inQC(3)?"multiplier on all Infinity Dimensions":"extra multiplier per dimension boost"
-	for (i=1;i<9;i++) document.getElementById("td"+i+'auto').style.visibility=player.achievements.includes("ngpp17")||player.timestudy.studies.includes(1011)?"visible":"hidden"
+	for (i=1;i<9;i++) document.getElementById("td"+i+'auto').style.visibility=player.achievements.includes("ngpp17")||hasTimeStudy(1011)?"visible":"hidden"
 	document.getElementById('togglealltimedims').style.visibility=player.achievements.includes("ngpp17")?"visible":"hidden"
 	document.getElementById('replicantibulkmodetoggle').textContent="Mode: "+(player.galaxyMaxBulk?"Max":"Singles")
 	if (player.meta) {
@@ -1658,6 +1658,16 @@ if (player.version < 5) {
 			showNextModeMessage()
 	} else if (player.aarexModifications.popUpId!=1) showNextModeMessage()
 	if(player.mods.secret) ge("secretachbaseinput").value = player.options.secretachbase * 10
+
+	// division upgrade setup
+
+	var t = "";
+	for(var i = 0; i < 6; i++) {
+		t += "<button style = 'width: 180px; height: 130px' id = 'shardupg" + i + "' onclick = 'buyShardUpg(" + i + ")'></button>" + (i%3==2?"</tr><tr>":"")
+	}
+	ge("shardupgs").innerHTML = t;
+	ge("energyinput").value = player.mods.ngt && player.mods.ngt.division.energyInput;
+	ge("divrespec").checked = player.mods.ngt && player.mods.ngt.division.respec;
 
 	options = {};
 	for(var i in player.options) options[i] = player.options[i]
@@ -2115,8 +2125,11 @@ function transformSaveToDecimal() {
 		ngt.omniPower = new Decimal(ngt.omniPower);
 		ngt.newReplicatorCost = new Decimal(ngt.newReplicatorCost);
 		if(ngt.autobuyer) ngt.autobuyer.limit = new Decimal(ngt.autobuyer.limit);
+		if(ngt.divider) ngt.divider.limit = new Decimal(ngt.divider.limit);
 		
 		transformObjectToDecimal(ngt.division)
+		if(!ngt.division.totalShards) ngt.division.totalShards = new Decimal(0);
+		for(var i in ngt.division.shardUpgrades) ngt.division.shardUpgrades[i] = new Decimal(ngt.division.shardUpgrades[i]);
 		
 		for(var i = 1; i <= 8; i++) {
 			d = ngt["d" + i]
@@ -2195,6 +2208,22 @@ function transformSaveToDecimal() {
 			}
 		})
 		
+		updateToVersion(2.2, function() {
+			ngt.division.record = Infinity;
+			ngt.division.shardUpgrades = [];
+		})
+		
+		updateToVersion(2.3, function() {
+			ngt.division.last = Date.now();
+			ngt.autobuyer.mode = "amount"
+			ngt.divider = {
+				enabled: false,
+				limit: new Decimal(0),
+				mode: "amount",
+			}
+			ngt.auto = {}
+		})
+		
 		ngt.version = ver;
 	}
 }
@@ -2217,7 +2246,10 @@ function loadAutoBuyerSettings() {
 	document.getElementById("prioritySac").value = player.autoSacrifice.priority
 	document.getElementById("bulkgalaxy").value = player.autobuyers[10].bulk
 	document.getElementById("priority13").value = formatValue("Scientific", player.eternityBuyer.limit, 2, 0)
-	if (player.mods.ngt) document.getElementById("priorityomnipotence").value = formatValue("Scientific", player.mods.ngt.autobuyer.limit, 2, 0)
+	if (player.mods.ngt) {
+		document.getElementById("priorityomnipotence").value = formatValue("Scientific", player.mods.ngt.autobuyer.limit, 2, 0)
+		document.getElementById("prioritydivision").value = formatValue("Scientific", player.mods.ngt.divider.limit, 2, 0)
+	}
 	if (player.autobuyers[12] !== undefined) document.getElementById("priority14").value = formatValue("Scientific", new Decimal(player.autobuyers[12].priority), 2, 0)
 	if (player.autobuyers[13] !== undefined) {
 			document.getElementById("priority15").value = player.autobuyers[13].priority

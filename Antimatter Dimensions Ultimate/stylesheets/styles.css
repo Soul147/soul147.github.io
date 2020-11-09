@@ -2083,6 +2083,11 @@ br {
 	text-shadow: 0px 0px 7px #ff0000
 }
 
+[name=ou] {
+	font-size: 11px;
+	padding: 0px;
+}
+
 .omniupg {
 	background: #f00 !important;
 	opacity: 0;

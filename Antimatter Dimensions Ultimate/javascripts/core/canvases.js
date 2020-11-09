@@ -236,7 +236,7 @@ function drawStudyTree() {
 		drawTreeBranch("181", "autochallenge2")
 		drawTreeBranch("192", "1021")
 	}
-	if((player.mods.ngt && player.mods.ngt.omni) || !player.mods.ngt) {
+	if((player.mods.ngt && player.mods.ngt.omni + player.mods.ngt.division.times) || !player.mods.ngt) {
 		drawTreeBranch("ec10unl", "191")
 		drawTreeBranch("ec10unl", "192")
 		drawTreeBranch("ec10unl", "193")
@@ -270,9 +270,15 @@ function drawStudyTree() {
 		drawTreeBranch("ec10unl", "ec11unl")
 		drawTreeBranch("ec10unl", "ec12unl")
 	}
+	if(player.mods.ngt) {
+		drawTreeBranch("ec11unl", "dilstudy2")
+		drawTreeBranch("ec12unl", "dilstudy3")
+	}
+	else {
+		drawTreeBranch("dilstudy1", "dilstudy2")
+	}
 	drawTreeBranch("ec11unl", "dilstudy1")
 	drawTreeBranch("ec12unl", "dilstudy1")
-	drawTreeBranch("dilstudy1", "dilstudy2")
 	drawTreeBranch("dilstudy2", "dilstudy3")
 	drawTreeBranch("dilstudy3", "dilstudy4")
 	drawTreeBranch("dilstudy4", "dilstudy5")

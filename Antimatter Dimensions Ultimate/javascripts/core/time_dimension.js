@@ -6,7 +6,7 @@ function getTimeDimensionPower(tier) {
   var ret = dim.power.pow(player.boughtDims?1:2)
   ret = ret.times(kongAllDimMult)
 
-  if (player.timestudy.studies.includes(11) && tier == 1) ret = ret.multiply(getTS11Effect())
+  if (hasTimeStudy(11) && tier == 1) ret = ret.multiply(getTS11Effect())
   if (player.achievements.includes("r105")) {
       var mult = Decimal.div(1000,player.tickspeed).pow(0.000005)
       if (mult.gt("1e120000")) mult = Decimal.pow(10, Math.pow(mult.log10()/12e4,0.5)*12e4)
@@ -22,20 +22,20 @@ function getTimeDimensionPower(tier) {
 
   ret = ret.times(kongAllDimMult)
 
-  if (player.eternityUpgrades.includes(4)) ret = ret.times(player.achPow)
-  if (player.eternityUpgrades.includes(5)) ret = ret.times(Math.max(player.timestudy.theorem, 1))
-  if (player.eternityUpgrades.includes(6)) ret = ret.times(Math.max(player.totalTimePlayed / 10 / 60 / 60 / 24, 1))
-  if (player.timestudy.studies.includes(73) && tier == 3) ret = ret.times(calcTotalSacrificeBoost().pow(0.005).min(new Decimal("1e1300")))
-  if (player.timestudy.studies.includes(93)) ret = ret.times(Decimal.pow(player.totalTickGained, 0.25).max(1))
-  if (player.timestudy.studies.includes(103)) ret = ret.times(Math.max(player.replicanti.galaxies, 1))
-  if (player.timestudy.studies.includes(151)) ret = ret.times(1e4)
-  if (player.timestudy.studies.includes(221)) ret = ret.times(Decimal.pow(1.0025+!!player.mods.ngt*0.0065, player.resets))
-  if (player.timestudy.studies.includes(227) && tier == 4) ret = ret.times(Decimal.pow(calcTotalSacrificeBoost().max(10).log10(), 10+!!player.mods.ngt*290))
+  if (hasEternityUpgrade(4)) ret = ret.times(player.achPow)
+  if (hasEternityUpgrade(5)) ret = ret.times(Math.max(player.timestudy.theorem, 1))
+  if (hasEternityUpgrade(6)) ret = ret.times(Math.max(player.totalTimePlayed / 10 / 60 / 60 / 24, 1))
+  if (hasTimeStudy(73) && tier == 3) ret = ret.times(calcTotalSacrificeBoost().pow(0.005).min(new Decimal("1e1300")))
+  if (hasTimeStudy(93)) ret = ret.times(Decimal.pow(player.totalTickGained, 0.25).max(1))
+  if (hasTimeStudy(103)) ret = ret.times(Math.max(player.replicanti.galaxies, 1))
+  if (hasTimeStudy(151)) ret = ret.times(1e4)
+  if (hasTimeStudy(221)) ret = ret.times(Decimal.pow(1.0025+!!player.mods.ngt*0.0065, player.resets))
+  if (hasTimeStudy(227) && tier == 4) ret = ret.times(Decimal.pow(calcTotalSacrificeBoost().max(10).log10(), 10+!!player.mods.ngt*290))
   if (player.currentEternityChall == "eterc9") ret = ret.times((Decimal.pow(Math.max(player.infinityPower.log2(), 1), 4)).max(1))
   if (ECTimesCompleted("eterc1") !== 0) ret = ret.times(Math.pow(Math.max(player.thisEternity*10, 0.9), 0.3+(ECTimesCompleted("eterc1")*0.05)))
   let ec10bonus = new Decimal(1)
   if (ECTimesCompleted("eterc10") !== 0) ec10bonus = new Decimal(Math.max(Math.pow(getInfinitied(), 0.9) * ECTimesCompleted("eterc10") * 0.000002+1, 1))
-  if (player.timestudy.studies.includes(31)) ec10bonus = ec10bonus.pow(!!player.mods.ngt*6+4)
+  if (hasTimeStudy(31)) ec10bonus = ec10bonus.pow(!!player.mods.ngt*6+4)
   ret = ret.times(ec10bonus)
   if (player.achievements.includes("r128")) ret = ret.times(Math.max(player.timestudy.studies.length, 1))
 
@@ -46,7 +46,7 @@ function getTimeDimensionPower(tier) {
 		  ret = ret.multiply(getGravitonEffect());
 	  }
 	  else {
-		  ret = ret.pow(1-(tier-4)*0.2)
+		  ret = ret.pow(0.4*0.5**(tier-5))
 	  }
   }
 
@@ -124,13 +124,18 @@ function updateTimeDimensions() {
 }
 
 var timeDimCostMults = [null, 3, 9, 27, 81, 243, 729, 2187, 6561]
-var timeDimStartCosts = [null, 1, 5, 100, 1000, "1e2350", "1e2650", "1e3000", "1e3350"]
+var timeDimStartCostsRegular = [null, 1, 5, 100, 1000, "1e2350", "1e2650", "1e3000", "1e3350"]
+var timeDimStartCostsNGT = [null, 1, 5, 100, 1000, "1e2350", "1e180000", "1e3000", "1e3350"]
+
+function timeDimStartCosts(tier) {
+	return player.mods.ngt ? timeDimStartCostsNGT[tier] : timeDimStartCostsRegular[tier];
+}
 
 function timeDimCost(tier, bought) {
-	cost = Decimal.pow(timeDimCostMults[tier], bought).times(timeDimStartCosts[tier])
-	if (cost.gte(Number.MAX_VALUE)) cost = Decimal.pow(timeDimCostMults[tier]*1.5, bought).times(timeDimStartCosts[tier])
-	if (cost.gte("1e1300")) cost = Decimal.pow(timeDimCostMults[tier]*2.2, bought).times(timeDimStartCosts[tier])
-	if (tier > 4) cost = Decimal.pow(timeDimCostMults[tier]*100, bought).times(timeDimStartCosts[tier])
+	cost = Decimal.pow(timeDimCostMults[tier], bought).times(timeDimStartCosts(tier))
+	if (cost.gte(Number.MAX_VALUE)) cost = Decimal.pow(timeDimCostMults[tier]*1.5, bought).times(timeDimStartCosts(tier))
+	if (cost.gte("1e1300")) cost = Decimal.pow(timeDimCostMults[tier]*2.2, bought).times(timeDimStartCosts(tier))
+	if (tier > 4) cost = Decimal.pow(timeDimCostMults[tier]*100, bought).times(timeDimStartCosts(tier))
 	if (cost.gte(tier > 4 ? "1e300000" : "1e20000")) {
 		// rather than fixed cost scaling as before, quadratic cost scaling
 		// to avoid exponential growth
@@ -165,6 +170,7 @@ function resetTimeDimensions() {
 function buyMaxTimeDimension(tier) {
 	if (tier>4&&!player.dilation.studies.includes(tier-3)) return
 	var dim=player['timeDimension'+tier]
+	if (player.mods.ngt && tier > 4 && dim.cost.eq(timeDimStartCostsRegular[tier])) dim.cost = new Decimal(timeDimStartCostsNGT[tier]);
 	if (player.eternityPoints.lt(dim.cost)) return
 	var increment=1
 	while (player.eternityPoints.gte(timeDimCost(tier,dim.bought+increment*2-1))) {

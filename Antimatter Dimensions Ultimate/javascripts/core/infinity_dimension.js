@@ -73,25 +73,25 @@ function DimensionPower(tier) {
   if (player.replicanti.unl && player.replicanti.amount.gt(1)) mult = mult.times(getIDReplMult())
   if(player.mods.ngt) mult = mult.multiply(getGravitonEffect());
 
-  if (player.timestudy.studies.includes(72) && tier == 4) {
+  if (hasTimeStudy(72) && tier == 4) {
       mult = mult.times(calcTotalSacrificeBoost().pow(0.04).max(1).min("1e30000"))
   }
 
-  if (player.timestudy.studies.includes(82)) {
+  if (hasTimeStudy(82)) {
       mult = mult.times(Decimal.pow(1.0000109,Math.pow(player.resets,2)).min(player.meta==undefined?1/0:'1e80000'))
   }
 
-  if (player.eternityUpgrades.includes(1)) {
+  if (hasEternityUpgrade(1)) {
       if(player.mods.ngt) mult = mult.times(player.eternityPoints.pow(1.5).plus(1))
       else mult = mult.times(player.eternityPoints.plus(1))
   }
 
-  if (player.eternityUpgrades.includes(2)) mult = mult.times(getEU2Mult())
+  if (hasEternityUpgrade(2)) mult = mult.times(getEU2Mult())
 
-  if (player.eternityUpgrades.includes(3)) mult = mult.times(getEU3Mult())
+  if (hasEternityUpgrade(3)) mult = mult.times(getEU3Mult())
 
-  if (player.timestudy.studies.includes(92)) mult = mult.times(Decimal.pow(2, 600/Math.max(player.bestEternity, 20)))
-  if (player.timestudy.studies.includes(162)) mult = mult.times(player.aarexModifications.newGameExpVersion?1e55:1e11)
+  if (hasTimeStudy(92)) mult = mult.times(Decimal.pow(2, 600/Math.max(player.bestEternity, 20)))
+  if (hasTimeStudy(162)) mult = mult.times(player.aarexModifications.newGameExpVersion?1e55:1e11)
   if (ECTimesCompleted("eterc2") !== 0 && tier == 1) mult = mult.times(player.infinityPower.pow(1.5/(700-ECTimesCompleted("eterc2")*100)).min(new Decimal("1e100")).plus(1))
   if (player.currentEternityChall == "eterc2" || player.currentEternityChall == "eterc10" || player.currentEternityChall == "eterc13") mult = mult.times(0)
 

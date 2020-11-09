@@ -2,6 +2,11 @@ presets={}
 
 // Time studies
 
+function hasTimeStudy(n) {
+	if(inOC(8)) return false;
+	return player.timestudy.studies.includes(n);
+}
+
 function buyWithAntimatter() {
 	if(!player.timestudy.totalTheorem) player.timestudy.totalTheorem = 0;
   if (player.money.gte(player.timestudy.amcost)) {
@@ -100,9 +105,9 @@ function updateTheoremButtons() {
 		document.getElementById("theoremep").innerHTML = "Buy Time Theorems <br>Cost: "+shortenDimensions(player.timestudy.epcost)+" EP"
 		document.getElementById("theoremip").innerHTML = "Buy Time Theorems <br>Cost: "+shortenCosts(player.timestudy.ipcost)+" IP"
 		document.getElementById("theoremam").innerHTML = "Buy Time Theorems <br>Cost: "+shortenCosts(player.timestudy.amcost)
-		document.getElementById("theoremmax").innerHTML = (speedrunMilestonesReached > 2 && player.masterystudies) ? ("Auto max: O"+(player.autoEterOptions.tt?"N":"FF")) : "Buy max Theorems"
+		document.getElementById("theoremmax").innerHTML = (speedrunMilestonesReached < 2 && (!player.mods.ngt || !ngt.division.times)) ? "Buy max Theorems" : ("Auto max: O"+(player.autoEterOptions.tt?"N":"FF"))
 	}
-	document.getElementById("timetheorems").innerHTML = "You have <span style='display:inline' class=\"TheoremAmount\">"+(player.timestudy.theorem>99999?shortenMoney(player.timestudy.theorem):getFullExpansion(Math.floor(player.timestudy.theorem)))+"</span> Time Theorem"+ (player.timestudy.theorem == 1 ? "." : "s.")
+	document.getElementById("timetheorems").innerHTML = "<span style='display:inline' class=\"TheoremAmount\">"+(player.timestudy.theorem>999999?shortenMoney(player.timestudy.theorem):getFullExpansion(Math.floor(player.timestudy.theorem)))+"/"+(player.timestudy.totalTheorem>9999999?shortenMoney(player.timestudy.totalTheorem):getFullExpansion(Math.floor(player.timestudy.totalTheorem)))+"</span> Time Theorem"+ (player.timestudy.totalTheorem == 1 ? "" : "s")
 }
 
 function buyTimeStudy(name, check, quickBuy) {
@@ -148,9 +153,10 @@ function buyTimeStudy(name, check, quickBuy) {
 
 function buyDilationStudy(name, cost) {
 	if (name > 1 && name < 6 && player.mods.ngt) {
-		cost = cost**7
+		cost = getDilStudyCosts(name);
+		if(!canBuyDilationStudy(name, cost)) return;
 	}
-    if (player.timestudy.theorem >= cost && !player.dilation.studies.includes(name) && (player.dilation.studies.includes(name-1)||name<2)) {
+    if (player.mods.ngt ? player.timestudy.totalTheorem : player.timestudy.theorem >= cost && !player.dilation.studies.includes(name) && (player.dilation.studies.includes(name-1)||name<2)) {
         if (name < 2) {
             if (ECTimesCompleted("eterc11")+ECTimesCompleted("eterc12")<10||getTotalTT(player)<13000||(player.mods.ngt&&player.mods.ngt.op.lt(getDilationRequirement()))) return
             showEternityTab("dilation")
@@ -164,7 +170,7 @@ function buyDilationStudy(name, cost) {
             for (id=14;id<18;id++) document.getElementById("dil"+id+"cost").textContent = "Cost: " + shortenCosts(DIL_UPG_COSTS[id]) + " dilated time"
         }
         player.dilation.studies.push(name)
-        player.timestudy.theorem -= cost
+        if(!player.mods.ngt) player.timestudy.theorem -= cost
         document.getElementById("dilstudy"+name).className = "dilationupgbought"
         updateTheoremButtons()
         updateTimeStudyButtons()
@@ -183,10 +189,10 @@ function canBuyStudy(name) {
   var row = Math.floor(name/10)
   var col = name%10
   if (name == 33) {
-      if (player.timestudy.studies.includes(21)) return true; else return false
+      if (hasTimeStudy(21)) return true; else return false
   }
   if (name == 62) {
-      if (player.eternityChalls.eterc5 !== undefined && player.timestudy.studies.includes(42)) return true; else return false
+      if (player.eternityChalls.eterc5 !== undefined && hasTimeStudy(42)) return true; else return false
   }
 
   if ((name == 71 || name == 72) && player.eternityChallUnlocked == 12) {
@@ -199,13 +205,13 @@ function canBuyStudy(name) {
 
   if (name == 181) {
 	  if(player.mods.ngt) return true;
-      if (player.eternityChalls.eterc1 !== undefined && player.eternityChalls.eterc2 !== undefined && player.eternityChalls.eterc3 !== undefined && player.timestudy.studies.includes(171)) return true; else return false;
+      if (player.eternityChalls.eterc1 !== undefined && player.eternityChalls.eterc2 !== undefined && player.eternityChalls.eterc3 !== undefined && hasTimeStudy(171)) return true; else return false;
   }
-  if (name == 201) if(player.timestudy.studies.includes(192) && !player.dilation.upgrades.includes(8)) return true; else return false
-  if (name == 211) if(player.timestudy.studies.includes(191)) return true; else return false
-  if (name == 212) if(player.timestudy.studies.includes(191)) return true; else return false
-  if (name == 213) if(player.timestudy.studies.includes(193)) return true; else return false
-  if (name == 214) if(player.timestudy.studies.includes(193)) return true; else return false
+  if (name == 201) if(hasTimeStudy(192) && !player.dilation.upgrades.includes(8)) return true; else return false
+  if (name == 211) if(hasTimeStudy(191)) return true; else return false
+  if (name == 212) if(hasTimeStudy(191)) return true; else return false
+  if (name == 213) if(hasTimeStudy(193)) return true; else return false
+  if (name == 214) if(hasTimeStudy(193)) return true; else return false
   switch(row) {
 
       case 1: return true
@@ -228,7 +234,7 @@ function canBuyStudy(name) {
       case 10:
       case 13:
       case 14:
-      if (player.timestudy.studies.includes((row-1)*10 + col)) return true; else return false
+      if (hasTimeStudy((row-1)*10 + col)) return true; else return false
       break;
 
       case 12:
@@ -236,23 +242,23 @@ function canBuyStudy(name) {
       break;
 
       case 7:
-      if (!player.timestudy.studies.includes(61)) return false;
-      if (player.dilation.upgrades.includes(8) || (player.timestudy.studies.includes(201) && hasUpg(13))) return true;
+      if (!hasTimeStudy(61)) return false;
+      if (player.dilation.upgrades.includes(8) || (hasTimeStudy(201) && hasUpg(13))) return true;
       var have = player.timestudy.studies.filter(function(x) {return Math.floor(x / 10) == 7}).length;
-      if (player.timestudy.studies.includes(201)) return have < 2;
+      if (hasTimeStudy(201)) return have < 2;
       return have < 1;
       break;
 
       case 19:
-      if (player.eternityChalls.eterc10 !== undefined && player.timestudy.studies.includes(181)) return true; else return false
+      if (player.eternityChalls.eterc10 !== undefined && hasTimeStudy(181)) return true; else return false
       break;
 
       case 22:
-      if (player.timestudy.studies.includes(210 + Math.round(col/2)) && (((name%2 == 0) ? !player.timestudy.studies.includes(name-1) : !player.timestudy.studies.includes(name+1)) || (player.masterystudies ? player.masterystudies.includes("t302") : !!player.mods.ngt))) return true; else return false
+      if (hasTimeStudy(210 + Math.round(col/2)) && (((name%2 == 0) ? !hasTimeStudy(name-1) : !hasTimeStudy(name+1)) || (player.masterystudies ? player.masterystudies.includes("t302") : !!player.mods.ngt))) return true; else return false
       break;
 
       case 23:
-      if ( (player.timestudy.studies.includes(220 + Math.floor(col*2)) || player.timestudy.studies.includes(220 + Math.floor(col*2-1))) && (!player.timestudy.studies.includes((name%2 == 0) ? name-1 : name+1) || (player.masterystudies ? player.masterystudies.includes("t302") : !!player.mods.ngt))) return true; else return false;
+      if ( (hasTimeStudy(220 + Math.floor(col*2)) || hasTimeStudy(220 + Math.floor(col*2-1))) && (!hasTimeStudy((name%2 == 0) ? name-1 : name+1) || (player.masterystudies ? player.masterystudies.includes("t302") : !!player.mods.ngt))) return true; else return false;
       break;
   }
 }
@@ -276,7 +282,7 @@ function updateTimeStudyButtons() {
   }
   for (var i=0; i<all.length; i++) {
       if (!player.timestudy.studies.includes(all[i])) {
-          if (canBuyStudy(all[i]) && studyCosts[i]<=player.timestudy.theorem) {
+          if (canBuyStudy(all[i]) && studyCosts[i]<=player.timestudy.theorem && !inOC(8)) {
               if (all[i] == 71 || all[i] == 81 || all[i] == 91 || all[i] == 101) {
                   document.getElementById(all[i]).className = "timestudy normaldimstudy"
               } else if (all[i] == 72 || all[i] == 82 || all[i] == 92 || all[i] == 102) {
@@ -314,13 +320,13 @@ function updateTimeStudyButtons() {
                   document.getElementById(all[i]).className = "timestudylocked"
               }
           }
-		  if(all[i] == 1011 || all[i] == 1012 || all[i] == 1021) document.getElementById(all[i]).className = "timestudy" + (player.timestudy.totalTheorem < studyCosts[i] ? "locked" : "") + " idlestudy"
+		  if(!inOC(8)); if(all[i] == 1011 || all[i] == 1012 || all[i] == 1021) document.getElementById(all[i]).className = "timestudy" + (player.timestudy.totalTheorem < studyCosts[i] ? "locked" : "") + " idlestudy"
       }
   }
 
   for (i=1; i<7; i++) {
     if (player.dilation.studies.includes(i)) document.getElementById("dilstudy"+i).className = "dilationupgbought"
-    else if (player.timestudy.theorem >= ([null, 5e3, 1e6, 1e7, 1e8, 1e9, 1e24])[i] && (player.dilation.studies.includes(i-1) || (i<2 && ECTimesCompleted("eterc11") > 4 && ECTimesCompleted("eterc12") > 4 && getTotalTT(player) >= 13e3 && player.mods.ngt ? player.mods.ngt.op.gt(getDilationRequirement()) : true))) document.getElementById("dilstudy"+i).className = "dilationupg"
+    else if(canBuyDilationStudy(i)) document.getElementById("dilstudy"+i).className = "dilationupg"
     else document.getElementById("dilstudy"+i).className = "timestudylocked"
   }
   document.getElementById("dilstudy6").style.display = player.meta ? "" : "none"
@@ -331,13 +337,33 @@ function updateTimeStudyButtons() {
   }
 }
 
+function getDilStudyCosts() {
+	if(player.mods.ngt) return [null, 9e99, 1e6, 16e5, 1e8, 1e9, 1e24];
+	return [null, 5e3, 1e6, 1e7, 1e8, 1e9, 1e24];
+}
+
+function canBuyDilationStudy(name) {
+	cost = getDilStudyCosts()[name];
+	if((player.mods.ngt ? player.timestudy.totalTheorem : player.timestudy.theorem) < cost) return false;
+	if(name < 2) {
+		if(ECTimesCompleted("eterc11") < 5) return false;
+		if(ECTimesCompleted("eterc12") < 5) return false;
+		if(player.timestudy.totalTheorem < 13e3) return false;
+		if(player.mods.ngt && player.mods.ngt.op.lt(getDilationRequirement())) return false;
+	}
+	else if(player.mods.ngt && name < 6) {
+		if(!ngt.oc.includes(name + 5)) return false;
+	}
+	return true;
+}
+
 function studiesUntil(id) {
   var col = id % 10;
   var row = Math.floor(id / 10);
   var path = [0,0];
   for(var i=1;i<4;i++){
-      if (player.timestudy.studies.includes(70+i)) path[0] = i;
-      if (player.timestudy.studies.includes(120+i))path[1] = i;
+      if (hasTimeStudy(70+i)) path[0] = i;
+      if (hasTimeStudy(120+i))path[1] = i;
   }
   if ((row > 10 && path[0] === 0) || (row > 14 && path[1] === 0)) {
       return;
@@ -346,7 +372,7 @@ function studiesUntil(id) {
       var chosenPath = path[i > 11 ? 1 : 0];
       if (row > 6 && row < 11) var secondPath = col;
       if ((i > 6 && i < 11) || (i > 11 && i < 15)) buyTimeStudy(i * 10 + (chosenPath === 0 ? col : chosenPath), 0, true);
-      if ((i > 6 && i < 11) && player.timestudy.studies.includes(201)) buyTimeStudy(i * 10 + secondPath, 0, true);
+      if ((i > 6 && i < 11) && hasTimeStudy(201)) buyTimeStudy(i * 10 + secondPath, 0, true);
       else for (var j = 1; all.includes(i * 10 + j) ; j++) buyTimeStudy(i * 10 + j, 0, true);
   }
   buyTimeStudy(id, studyCosts[all.indexOf(id)], 0, true);
@@ -368,7 +394,7 @@ function respecTimeStudies(force) {
           player.timestudy.ers_studies=[null,0,0,0,0,0,0]
        } else {
           for (var i=0; i<all.length; i++) {
-              if (player.timestudy.studies.includes(all[i])) {
+              if (hasTimeStudy(all[i])) {
                   gotAch=false
               }
           }
@@ -383,7 +409,7 @@ function respecTimeStudies(force) {
       var earlyDLStudies=[]
       for (t=0;t<all.length;t++) {
           var id=all[t]
-          if (player.timestudy.studies.includes(id)) {
+          if (hasTimeStudy(id)) {
               if ((id<120||id>150||secondSplitPick<1||secondSplitPick==id%10)&&(id<220||!earlyDLStudies.includes(id%2>0?id+1:id-1))) {
                   respecedTS.push(id)
                   if (id>120&&id<130) secondSplitPick=id%10

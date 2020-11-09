@@ -5,17 +5,17 @@ function getDimensionBoostPower(next, focusOn) {
   if (!player.galacticSacrifice) {
       if (player.infinityUpgrades.includes("resetMult")) ret = 2.5
       if (player.challenges.includes("postc7")) ret = 4
-      if (player.currentChallenge == "postc7" || inQC(6) || player.timestudy.studies.includes(81)) ret = 10
+      if (player.currentChallenge == "postc7" || inQC(6) || hasTimeStudy(81)) ret = 10
   }
   if (player.boughtDims) ret += player.timestudy.ers_studies[4] + (next ? 1 : 0)
   if (player.galacticSacrifice ? (player.galacticSacrifice.upgrades.includes(23) && player.currentChallenge != "challenge15") || focusOn == "g23" : false) ret *= galUpgrade23()
   if (player.infinityUpgrades.includes("resetMult")&&player.galacticSacrifice) ret *= 1.2 + 0.05 * player.infinityPoints.max(1).log(10)
   if (!player.boughtDims&&player.achievements.includes("r25")&&player.mods.ac) ret = ret*1.01
   if (!player.boughtDims&&player.achievements.includes("r101")) ret = ret*1.01
-  if (player.timestudy.studies.includes(83)) ret = Decimal.pow(1.0004, player.totalTickGained).times(ret);
-  if (player.timestudy.studies.includes(231)) ret = Decimal.pow(Math.max(player.resets, 0), 0.3).times(ret)
+  if (hasTimeStudy(83)) ret = Decimal.pow(1.0004, player.totalTickGained).times(ret);
+  if (hasTimeStudy(231)) ret = Decimal.pow(Math.max(player.resets, 0), 0.3).times(ret)
   if (player.galacticSacrifice) {
-      if (player.currentChallenge == "postc7" || inQC(6) || player.timestudy.studies.includes(81)) ret = Math.pow(ret,3)
+      if (player.currentChallenge == "postc7" || inQC(6) || hasTimeStudy(81)) ret = Math.pow(ret,3)
       else if (player.challenges.includes("postc7")) ret = Math.pow(ret,2)
   }
   if (player.dilation.studies.includes(6)&&player.currentEternityChall!="eterc14"&&!inQC(3)&&!inQC(7)) ret = getExtraDimensionBoostPower().times(ret)
@@ -360,8 +360,8 @@ function getDimboostCostIncrease () {
 		if (player.infinityUpgrades.includes('dimboostCost')) ret -= 1
 		if (player.infinityUpgrades.includes("postinfi50")) ret -= 0.5
 	} else {
-		if (player.timestudy.studies.includes(211)) ret -= 5
-		if (player.timestudy.studies.includes(222)) ret -= 2-!!player.mods.ngt
+		if (hasTimeStudy(211)) ret -= 5
+		if (hasTimeStudy(222)) ret -= 2-!!player.mods.ngt
 		if (player.mods.ngt) if(hasUpg(1)) ret -= 2
 		if (player.masterystudies) if (player.masterystudies.includes("t261")) ret -= 1
 		if (player.currentChallenge == "challenge4") ret += 5
