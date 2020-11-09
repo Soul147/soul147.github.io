@@ -1,6 +1,7 @@
 // Initialize NGT stuff
 
 function resetNGT(hardReset, divisionReset) {
+	if(hardReset) player.mods.ngt = {}
 	if(hardReset || divisionReset) player.mods.ngt = {
 		version: 2.3,
 		omni: 0, // times gone omnipotent stat
@@ -34,6 +35,8 @@ function resetNGT(hardReset, divisionReset) {
 			shards: new Decimal(0),
 			energy: new Decimal(0),
 			damage: new Decimal(0),
+			eightProduced: new Decimal(0),
+			shardUpgrades: []
 		} : player.mods.ngt.division,
 	}
 	for(var i = 1; i <= 8; i++) {
@@ -335,6 +338,7 @@ function omnipotenceReset(force, auto) {
 		},
 		timestudy: omniMilestoneReached(3) ? player.timestudy : {
 			theorem: 0,
+			totalTheorem: 0,
 			amcost: new Decimal("1e20000"),
 			ipcost: new Decimal(1),
 			epcost: new Decimal(1),
@@ -928,6 +932,7 @@ function getBaseEighthsProduced(display) {
 }
 
 function getEighthsProduced() {
+	if(!player.mods.ngt) return 0;
 	return ngt.division.eightProduced.multiply(getShardUpgEff(5));
 }
 
@@ -944,6 +949,7 @@ function getRiftStability() {
 }
 
 function getShardUpgEff(n, l = 0) {
+	if(!player.mods.ngt) return 0;
 	var b = Decimal.add(player.mods.ngt.division.shardUpgrades[Math.floor(n)] || new Decimal(0), l);
 	
 	switch(n) {

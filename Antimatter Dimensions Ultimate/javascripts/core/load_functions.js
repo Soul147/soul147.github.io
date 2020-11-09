@@ -1666,7 +1666,7 @@ if (player.version < 5) {
 		t += "<button style = 'width: 180px; height: 130px' id = 'shardupg" + i + "' onclick = 'buyShardUpg(" + i + ")'></button>" + (i%3==2?"</tr><tr>":"")
 	}
 	ge("shardupgs").innerHTML = t;
-	ge("energyinput").value = player.mods.ngt && player.mods.ngt.division.energyInput;
+	ge("energyinput").value = player.mods.ngt && (player.mods.ngt.division.energyInput || "0");
 	ge("divrespec").checked = player.mods.ngt && player.mods.ngt.division.respec;
 
 	options = {};
@@ -2126,6 +2126,7 @@ function transformSaveToDecimal() {
 		ngt.newReplicatorCost = new Decimal(ngt.newReplicatorCost);
 		if(ngt.autobuyer) ngt.autobuyer.limit = new Decimal(ngt.autobuyer.limit);
 		if(ngt.divider) ngt.divider.limit = new Decimal(ngt.divider.limit);
+		ngt.division.eightProduced = ngt.division.eightProduced || new Decimal(0);
 		
 		transformObjectToDecimal(ngt.division)
 		if(!ngt.division.totalShards) ngt.division.totalShards = new Decimal(0);

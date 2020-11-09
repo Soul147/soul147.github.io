@@ -107,7 +107,7 @@ function updateTheoremButtons() {
 		document.getElementById("theoremam").innerHTML = "Buy Time Theorems <br>Cost: "+shortenCosts(player.timestudy.amcost)
 		document.getElementById("theoremmax").innerHTML = (speedrunMilestonesReached < 2 && (!player.mods.ngt || !ngt.division.times)) ? "Buy max Theorems" : ("Auto max: O"+(player.autoEterOptions.tt?"N":"FF"))
 	}
-	document.getElementById("timetheorems").innerHTML = "<span style='display:inline' class=\"TheoremAmount\">"+(player.timestudy.theorem>999999?shortenMoney(player.timestudy.theorem):getFullExpansion(Math.floor(player.timestudy.theorem)))+"/"+(player.timestudy.totalTheorem>9999999?shortenMoney(player.timestudy.totalTheorem):getFullExpansion(Math.floor(player.timestudy.totalTheorem)))+"</span> Time Theorem"+ (player.timestudy.totalTheorem == 1 ? "" : "s")
+	document.getElementById("timetheorems").innerHTML = "<span style='display:inline' class=\"TheoremAmount\">"+(player.timestudy.theorem>999999?shortenMoney(player.timestudy.theorem):getFullExpansion(Math.floor(player.timestudy.theorem)))+"/"+(player.timestudy.totalTheorem>9999999?shortenMoney(player.timestudy.totalTheorem||0):getFullExpansion(Math.floor(player.timestudy.totalTheorem)))+"</span> Time Theorem"+ (player.timestudy.totalTheorem == 1 ? "" : "s")
 }
 
 function buyTimeStudy(name, check, quickBuy) {

@@ -7816,12 +7816,14 @@ function gameLoop(diff) {
 	if (eterchallscompletedtotal >= 50) giveAchievement("5 more eternities until the update");
 		
 	// Hide stuff from NG^^ that shouldn't be there
+	ge("omnibtndiv").style.display = player.mods.ngt && (player.mods.ngt.omni + player.mods.ngt.division.times > 0 || player.eternityPoints.gte(Number.MAX_VALUE)) ? "" : "none"
 	ge("autochallenge1").style.display = "none";
 	ge("autochallenge2").style.display = "none";
 	ge("omnitabbtn").style.display = "none";
 	ge("odtabbtn").style.display = "none"
 	ge("octabbtn").style.display = "none"
 	ge("replicatorstabbtn").style.display = "none"
+	ge("dma").style.display = player.mods.ngt && player.mods.ngt.division.times > 0 ? "" : "none"
 		
 	// Fix this stupid bug
 	
