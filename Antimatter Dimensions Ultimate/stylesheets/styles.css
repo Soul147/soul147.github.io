@@ -531,6 +531,14 @@ button {
 	font-size:12px;
 }
 
+.OP {
+	position:absolute;
+	right:50%;
+	transform:translate(155px,-5px);
+	width:310px;
+	font-size:12px;
+}
+
 .hideEmpty:empty {
    display: none;
 }

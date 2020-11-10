@@ -130,6 +130,12 @@ function onLoad(noOffline) {
 
 	sliderText.textContent = "Update rate: " + player.options.updateRate + "ms";
 	slider.value = player.options.updateRate;
+	
+	var t = "";
+	for(var i = 0; i < 6; i++) {
+		t += "<button style = 'width: 180px; height: 130px' id = 'shardupg" + i + "' onclick = 'buyShardUpg(" + i + ")'></button>" + (i%3==2?"</tr><tr>":"")
+	}
+	ge("shardupgs").innerHTML = t;
 
 	if (player.secondAmount !== 0) {
 			document.getElementById("thirdRow").style.display = "table-row";
@@ -1661,11 +1667,6 @@ if (player.version < 5) {
 
 	// division upgrade setup
 
-	var t = "";
-	for(var i = 0; i < 6; i++) {
-		t += "<button style = 'width: 180px; height: 130px' id = 'shardupg" + i + "' onclick = 'buyShardUpg(" + i + ")'></button>" + (i%3==2?"</tr><tr>":"")
-	}
-	ge("shardupgs").innerHTML = t;
 	ge("energyinput").value = player.mods.ngt && (player.mods.ngt.division.energyInput || "0");
 	ge("divrespec").checked = player.mods.ngt && player.mods.ngt.division.respec;
 
