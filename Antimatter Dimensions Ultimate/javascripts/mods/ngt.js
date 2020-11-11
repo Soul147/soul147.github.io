@@ -24,7 +24,7 @@ function resetNGT(hardReset, divisionReset) {
 		divider: player.mods.ngt.divider || {
 			
 		},
-		auto: player.mods.ngt.auto || [],
+		auto: player.mods.ngt.auto || {},
 		division: hardReset ? {
 			times: 0,
 			// light
@@ -33,8 +33,8 @@ function resetNGT(hardReset, divisionReset) {
 			// dark
 			um: new Decimal(0),
 			shards: new Decimal(0),
+			totalShards: new Decimal(0),
 			energy: new Decimal(0),
-			damage: new Decimal(0),
 			eightProduced: new Decimal(0),
 			shardUpgrades: []
 		} : player.mods.ngt.division,
@@ -574,6 +574,13 @@ function affordUpg(n) {
 	return ngt.op.gte(opUpgCosts[n])
 }
 
+// distance incremental flashbacks
+
+function cap(n, o, p, s, b) {
+	if(Decimal.lt(n, s)) return n;
+	return Decimal.min(n, Decimal[b?"divide":"subtract"](n, s)[o](p)[b?"multiply":"add"](s));
+}
+
 function getUpgEff(n) {
 	switch(n) {
 		case 0:
@@ -613,7 +620,7 @@ function getUpgEff(n) {
 		case 22: 
 			return Decimal.pow(getEighthsProduced(), Math.max(Decimal.log10(getEighthsProduced().max(1)) - 2, 1)).max(1)
 		case 23: 
-			return Decimal.max(ngt.gravitons.max(1).log10() / 1000, 1)
+			return Decimal.max(cap(ngt.gravitons.max(1).log10() / 1000, "pow", 0.5, 2), 1)
 		case 24: 
 			return Decimal.pow(ngt.division.vp.log10(), 2)
 	}
@@ -900,6 +907,7 @@ function divisionReset() {
 	if(!ngt.division.record || ngt.omni < ngt.division.record) ngt.division.record = ngt.omni;
 	ngt.division.times++
 	ngt.division.last = Date.now();
+	ngt.division.peak = 0
 	ngt.division.um = ngt.division.um.add(getUMGain())
 	resetNGT(false, true)
 	omnipotenceReset(true, true)
@@ -926,8 +934,7 @@ function getEighthDimensions() {
 }
 
 function getBaseEighthsProduced(display) {
-	var e = ngt.division.energy.multiply(10);
-	if(e.gt(10000)) e = e.subtract(10000).sqrt().add(10000);
+	var e = cap(cap(ngt.division.energy, "pow", 0.5, 1e6, true).multiply(10), "pow", 0.5, 10000);
 	return e.multiply(getShardUpgEff(2.1)).floor();
 }
 
@@ -936,16 +943,8 @@ function getEighthsProduced() {
 	return ngt.division.eightProduced.multiply(getShardUpgEff(5));
 }
 
-function getRiftDamageRate() {
-	return 1;
-}
-
-function getRiftDamage() {
-	return ngt.division.energy.multiply(getRiftDamageRate());
-}
-
 function getRiftStability() {
-	return ngt.division.health.divide(ngt.division.maxHealth).max(0);
+	return ngt.division.maxHealth.subtract(ngt.division.energy).divide(ngt.division.maxHealth).max(0);
 }
 
 function getShardUpgEff(n, l = 0) {
@@ -1025,9 +1024,11 @@ function getVGalAmount() {
 	return Math.floor(Math.max(getTotalVP().multiply(getVGalBase()).log(getVGalBase()), 0))
 }
 
-function meltdown(respec) { // you fucked up
-	gain = getVPGain()
-	ngt.division.energy = new Decimal(0);
+function meltdown(energy, respec) { // you fucked up
+	// console.log(Math.floor(energy.divide(ngt.division.maxHealth)))
+	gain = getVPGain() * Math.floor(energy.divide(ngt.division.maxHealth))
+	ngt.division.energy = Decimal.mod(energy, ngt.division.maxHealth)
+	console.log(Decimal.mod(ngt.division.energy, ngt.division.maxHealth))
 	ngt.division.vp = ngt.division.vp.add(gain);
 	
 	if(respec) {
@@ -1057,22 +1058,29 @@ function updateDivision(diff) {
 	shardGain = ngt.division.um.floor().subtract(amount.floor()).round();
 	if(isNaN(gain.logarithm)) gain = new Decimal(0)
 	
-	ngt.division.energyInput = ge("energyinput").value;
-	ngt.division.energy = ngt.division.energy.add(gain.multiply(getEnergyRate()));
-	ngt.division.shards = ngt.division.shards.add(gain);
-	ngt.division.totalShards = ngt.division.totalShards.add(gain);
-	ngt.division.um = amount;
-	
 	// Rift stability
 	
 	ngt.division.maxHealth = getShardUpgEff(0).multiply(10);
-	ngt.division.damage = getRiftDamage();
-	ngt.division.health = ngt.division.maxHealth.subtract(ngt.division.damage).max(0)
-	if(ngt.division.health.lte(0)) meltdown(ngt.division.respec);
 	
-	// Eighth dimension production
+	// Energy and eighth dimension gain
 	
+	energyGain = gain.multiply(getEnergyRate());
+	overflow = ngt.division.energy.add(energyGain);
+	ngt.division.energyInput = ge("energyinput").value;
+	ngt.division.energy = ngt.division.energy.add(energyGain).min(ngt.division.maxHealth);
+	// console.log(ngt.division.energy.toString())
+	ngt.division.shards = ngt.division.shards.add(gain);
+	ngt.division.totalShards = ngt.division.totalShards.add(gain);
+	ngt.division.um = amount;
+	// console.log(getBaseEighthsProduced().toString(), ngt.division.energy.toString())
 	ngt.division.eightProduced = ngt.division.eightProduced.max(getBaseEighthsProduced())
+	
+	// console.log(overflow.divide(ngt.division.maxHealth).toString())
+	if(ngt.division.energy.gte(ngt.division.maxHealth)) meltdown(overflow, ngt.division.respec);
+	// console.log(energyGain.divide(ngt.division.maxHealth))
+	
+	umRate = getUMGain().divide(Date.now() - (ngt.division.last || Date.now() - player.totalTimePlayed*100)).multiply(60000);
+	ngt.division.peak = Decimal.max(ngt.division.peak, umRate);
 	
 	// Update HTML
 	
@@ -1084,7 +1092,7 @@ function updateDivision(diff) {
 	
 	ge("unstablematter").innerHTML = getFullExpansion(ngt.division.um, 1)
 	ge("umgain").innerHTML = getFullExpansion(getUMGain())
-	ge("umgainrate").innerHTML = getFullExpansion(getUMGain().divide(Date.now() - ngt.division.last).multiply(60000))
+	ge("umgainrate").innerHTML = getFullExpansion(umRate) + " / " + getFullExpansion(ngt.division.peak)
 	ge("drainrate").innerHTML = timeDisplayShort(getHalfLife() * 10, true, 3)
 	ge("shards").innerHTML = getFullExpansion(ngt.division.shards.floor())
 	ge("eighthextra").innerHTML = getFullExpansion(getEighthsProduced())
@@ -1092,7 +1100,7 @@ function updateDivision(diff) {
 	ge("energyindisplay").innerHTML = getDecayRate() * 100;
 	ge("riftenergy").innerHTML = getFullExpansion(ngt.division.energy, 1);
 	ge("energyrate").innerHTML = "+" + getFullExpansion(ngt.division.um.multiply(getEnergyRate() * getDecayRate() / getHalfLife()), 2);
-	ge("stability").innerHTML = getFullExpansion(ngt.division.health) + "/" + getFullExpansion(ngt.division.maxHealth) + " (" + getRiftStability().multiply(100).toFixed(2) + "%)";
+	ge("stability").innerHTML = getFullExpansion(ngt.division.maxHealth - ngt.division.energy) + "/" + getFullExpansion(ngt.division.maxHealth) + " (" + getRiftStability().multiply(100).toFixed(2) + "%)";
 	ge("shardrespec").innerHTML = getFullExpansion(ngt.division.totalShards.subtract(ngt.division.shards));
 	ge("vpgain").innerHTML = getFullExpansion(getVPGain())
 	

@@ -2205,8 +2205,7 @@ function transformSaveToDecimal() {
 				// dark
 				um: new Decimal(0),
 				shards: new Decimal(0),
-				energy: new Decimal(0),
-				damage: new Decimal(0),
+				energy: new Decimal(0)
 			}
 		})
 		

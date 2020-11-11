@@ -2275,6 +2275,9 @@ function upgradeReplicantiGalaxy() {
 				if (player.replicanti.gal > 2998) player.replicanti.galCost = player.replicanti.galCost.times(Decimal.pow("1e10000", player.replicanti.gal - 2994))
 			}
 		}
+		if (player.replicanti.gal >= 1200 && player.mods.ngt) {
+			player.replicanti.galCost = player.replicanti.galCost = player.replicanti.galCost.times(Decimal.pow("1e3000", player.replicanti.gal - 1200))
+		}
 		player.replicanti.gal += 1
 		if (inQC(5)) player.replicanti.galCost = Decimal.pow(1e170, Math.pow(1.2, player.replicanti.gal))
 		if (player.currentEternityChall == "eterc8") player.eterc8repl-=1
