@@ -111,16 +111,16 @@ function updateTheoremButtons() {
 }
 
 function buyTimeStudy(name, check, quickBuy) {
-  var cost = studyCosts[all.indexOf(name)]
+  var cost = getStudyCost(all.indexOf(name))
   if (player.boughtDims) {
       if (player.timestudy.theorem<player.timestudy.ers_studies[name]+1) return
       player.timestudy.theorem-=player.timestudy.ers_studies[name]+1
       player.timestudy.ers_studies[name]++
       updateTimeStudyButtons()
   } else if (shiftDown && check === undefined) studiesUntil(name);
-  else if (((name !== 1011 && name !== 1012 && name !== 1021 ? player.timestudy.theorem : player.timestudy.totalTheorem) >= cost) && canBuyStudy(name) && !player.timestudy.studies.includes(name)) {
+  else if (((name !== 43 && name !== 44 && name !== 202 ? player.timestudy.theorem : player.timestudy.totalTheorem) >= cost) && canBuyStudy(name) && !player.timestudy.studies.includes(name)) {
       player.timestudy.studies.push(name)
-      if(name !== 1011 && name !== 1012 && name !== 1021) player.timestudy.theorem -= cost
+      if(name !== 43 && name !== 44 && name !== 202) player.timestudy.theorem -= cost
       if (name == 71 || name == 81 || name == 91 || name == 101) {
           document.getElementById(""+name).className = "timestudybought normaldimstudy"
       } else if (name == 72 || name == 82 || name == 92 || name == 102) {
@@ -185,12 +185,12 @@ function hasRow(row) {
 }
 
 function canBuyStudy(name) {
-  if(name > 1000) return true;
   var row = Math.floor(name/10)
   var col = name%10
-  if (name == 33) {
-      if (hasTimeStudy(21)) return true; else return false
-  }
+  if (name == 33) return hasTimeStudy(21);
+  if (name == 34) return hasTimeStudy(22);
+  if (name == 43) return hasTimeStudy(33);
+  if (name == 44) return hasTimeStudy(34);
   if (name == 62) {
       if (player.eternityChalls.eterc5 !== undefined && hasTimeStudy(42)) return true; else return false
   }
@@ -263,8 +263,8 @@ function canBuyStudy(name) {
   }
 }
 
-var all =        [11, 21, 22, 33, 31, 32, 41, 42, 51, 61, 62, 71, 72, 73, 81, 82 ,83, 91, 92, 93, 101, 102, 103, 111, 121, 122, 123, 131, 132, 133, 141, 142, 143, 151, 161, 162, 171, 181, 191, 192, 193, 201, 211, 212, 213, 214, 221, 222, 223, 224, 225, 226, 227, 228, 231, 232, 233, 234, 1001, 1011, 1012, 1021]
-var studyCosts = [ 1,  3,  2,  2,  3,  2,  4,  6,  3,  3,  3,  4,  6,  5,  4,  6,  5,  4,  5,  7,   4,   6,   6,  12,   9,   9,   9,   5,   5,   5,   4,   4,   4,   8,   7,   7,  15, 200, 400, 730, 300, 900, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500,   60,  1e4,  1e4,  3e5]
+var all =        [11, 21, 22, 31, 32, 33, 34, 41, 42,  43,  44, 51, 61, 62, 71, 72, 73, 81, 82 ,83, 91, 92, 93, 101, 102, 103, 111, 121, 122, 123, 131, 132, 133, 141, 142, 143, 151, 161, 162, 171, 181, 191, 192, 193, 201, 202, 211, 212, 213, 214, 221, 222, 223, 224, 225, 226, 227, 228, 231, 232, 233, 234]
+var studyCosts = [ 1,  3,  2,  3,  2,  2, 60,  4,  6, 1e4, 1e4,  3,  3,  3,  4,  6,  5,  4,  6,  5,  4,  5,  7,   4,   6,   6,  12,   9,   9,   9,   5,   5,   5,   4,   4,   4,   8,   7,   7,  15, 200, 400, 730, 300, 900, 3e5, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500,   60,  1e4,  1e4,  3e5]
 function updateTimeStudyButtons() {
 	
   if (player.boughtDims) {
@@ -282,7 +282,7 @@ function updateTimeStudyButtons() {
   }
   for (var i=0; i<all.length; i++) {
       if (!player.timestudy.studies.includes(all[i])) {
-          if (canBuyStudy(all[i]) && studyCosts[i]<=player.timestudy.theorem && !inOC(8)) {
+          if (canBuyStudy(all[i]) && getStudyCost(i)<=player.timestudy.theorem && !inOC(8)) {
               if (all[i] == 71 || all[i] == 81 || all[i] == 91 || all[i] == 101) {
                   document.getElementById(all[i]).className = "timestudy normaldimstudy"
               } else if (all[i] == 72 || all[i] == 82 || all[i] == 92 || all[i] == 102) {
@@ -320,7 +320,6 @@ function updateTimeStudyButtons() {
                   document.getElementById(all[i]).className = "timestudylocked"
               }
           }
-		  if(!inOC(8)); if(all[i] == 1011 || all[i] == 1012 || all[i] == 1021) document.getElementById(all[i]).className = "timestudy" + (player.timestudy.totalTheorem < studyCosts[i] ? "locked" : "") + " idlestudy"
       }
   }
 
@@ -374,6 +373,7 @@ function studiesUntil(id) {
       if ((i > 6 && i < 11) || (i > 11 && i < 15)) buyTimeStudy(i * 10 + (chosenPath === 0 ? col : chosenPath), 0, true);
       if ((i > 6 && i < 11) && hasTimeStudy(201)) buyTimeStudy(i * 10 + secondPath, 0, true);
       else for (var j = 1; all.includes(i * 10 + j) ; j++) buyTimeStudy(i * 10 + j, 0, true);
+	  console.log(i, j)
   }
   buyTimeStudy(id, studyCosts[all.indexOf(id)], 0, true);
 }
@@ -414,7 +414,7 @@ function respecTimeStudies(force) {
                   respecedTS.push(id)
                   if (id>120&&id<130) secondSplitPick=id%10
                   if (id>220) earlyDLStudies.push(id)
-              } else player.timestudy.theorem+=studyCosts[t]
+              } else player.timestudy.theorem+=getStudyCost(t)
           }
       }
       player.timestudy.studies=respecedTS

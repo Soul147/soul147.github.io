@@ -178,9 +178,9 @@ function drawStudyTree() {
     drawTreeBranch("21", "31");
     drawTreeBranch("21", "33");
     drawTreeBranch("22", "32");
-    drawTreeBranch("22", "1001");
-    drawTreeBranch("33", "1011");
-    drawTreeBranch("1001", "1012");
+    drawTreeBranch("22", "34");
+    drawTreeBranch("33", "43");
+    drawTreeBranch("34", "44");
     drawTreeBranch("31", "41");
     drawTreeBranch("32", "42");
     drawTreeBranch("41", "51");
@@ -234,7 +234,7 @@ function drawStudyTree() {
 	if(player.mods.ngt) {
 		drawTreeBranch("181", "autochallenge1")
 		drawTreeBranch("181", "autochallenge2")
-		drawTreeBranch("192", "1021")
+		drawTreeBranch("192", "202")
 	}
 	if((player.mods.ngt && player.mods.ngt.omni + player.mods.ngt.division.times) || !player.mods.ngt) {
 		drawTreeBranch("ec10unl", "191")

@@ -815,15 +815,19 @@ function toggleAutoOmni(t) {
 	ngt.auto[t] = (ngt.auto[t] + 1 || 1) % 3;
 }
 
-function calculateNewStudyCosts() {
-	for(var i = 0; i < studyCosts.length; i++) {
-		if(i > 57) studyCosts[i] *= 1;
-		else if(i > 45) studyCosts[i] *= 2000/9*(superStudies+1);
-		else if(i > 40) studyCosts[i] *= 20
-		else studyCosts[i] *= 3;
-		studyCosts[37] = 0;
-		if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
+function getStudyCost(i) {
+	var c = studyCosts[i];
+	if(player.mods.ngt) {
+		superStudies = 0;
+		player.timestudy.studies.forEach(function(study) {if(study > 220 && study < 1000) superStudies++});
+		
+		if(all[i] == 181) return 0;
+		if(all[i] == 43 || all[i] == 44 || all[i] == 202) return c;
+		if(all[i] > 220) c *= 2000/9*(superStudies+1);
+		else if(all[i] > 200) console.log(all[i]), c *= 20
+		else c *= 3;
 	}
+	return c;
 }
 
 // Progress Bar

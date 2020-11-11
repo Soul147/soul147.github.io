@@ -2112,7 +2112,7 @@ function updateInfCosts() {
 		document.getElementById("11desc").textContent = "Currently: "+shortenMoney(getTS11Effect())+"x"
 		document.getElementById("31desc").textContent = !!player.mods.ngt*6+4
 		document.getElementById("32desc").textContent = "You gain "+getFullExpansion(Math.pow(Math.max(player.resets,1),!!player.mods.ngt+1))+"x more infinitied stat (based on dimension boosts)"
-		document.getElementById("1001desc").textContent = "You gain "+getFullExpansion(Math.pow(Math.max(player.galaxies,1),1+!!player.mods.ngt))+"x more eternitied stat (based on antimatter galaxies)"
+		document.getElementById("34desc").textContent = "You gain "+getFullExpansion(Math.pow(Math.max(player.galaxies,1),1+!!player.mods.ngt))+"x more eternitied stat (based on antimatter galaxies)"
 		document.getElementById("51desc").textContent = "You gain "+shortenCosts(player.aarexModifications.newGameExpVersion?1e30:1e15)+"x more IP"
 		document.getElementById("71desc").textContent = "Currently: "+shortenMoney(calcTotalSacrificeBoost().pow(0.25).max(1).min("1e210000"))+"x"
 		document.getElementById("72desc").textContent = "Currently: "+shortenMoney(calcTotalSacrificeBoost().pow(0.04).max(1).min("1e30000"))+"x"
@@ -2287,7 +2287,7 @@ function upgradeReplicantiGalaxy() {
 	return false
 }
 
-var extraReplGalaxies = 0
+var extraReplGalaxies = 0, ts225Eff = 0, ts226Eff = 0
 function replicantiGalaxy() {
 	var maxGal=Math.floor(player.replicanti.gal*(hasTimeStudy(131)?1.5:1))
 	if (player.replicanti.amount.lt(getReplicantiLimit())||player.replicanti.galaxies==maxGal) return
@@ -2298,8 +2298,8 @@ function replicantiGalaxy() {
 }
 
 function updateExtraReplGalaxies() {
-	let ts225Eff = 0
-	let ts226Eff = 0
+	ts225Eff = 0
+	ts226Eff = 0
 	if (hasTimeStudy(225)) {
 		ts225Eff = Math.floor(player.replicanti.amount.e / (player.mods.ngt ? 308 : 1000))
 		if (ts225Eff > 99) ts225Eff = Math.floor(Math.sqrt(0.25 + 2 * (ts225Eff - 99) * getQCReward(8)) + 98.5)
@@ -5290,7 +5290,7 @@ function challengesCompletedOnEternity() {
 
 function gainEternitiedStat() {
 	if (getEternitied() < 1 && player.achievements.includes("ng3p12")) return 20
-	return (player.dilation.upgrades.includes('ngpp2') ? Math.floor(Decimal.pow(player.dilation.dilatedTime, .1).toNumber()) : 1)*(player.achievements.includes("r124") && (player.bestEternity < 2 || player.eternityPoints.gt(1e50)) && (player.thisEternity >= 600 || hasUpg(21)) ? 3000 : 1)*(hasTimeStudy(1001) ? Math.max(Math.pow(player.galaxies, 1+!!player.mods.ngt), 1) : 1)
+	return (player.dilation.upgrades.includes('ngpp2') ? Math.floor(Decimal.pow(player.dilation.dilatedTime, .1).toNumber()) : 1)*(player.achievements.includes("r124") && (player.bestEternity < 2 || player.eternityPoints.gt(1e50)) && (player.thisEternity >= 600 || hasUpg(21)) ? 3000 : 1)*(hasTimeStudy(34) ? Math.max(Math.pow(player.galaxies, 1+!!player.mods.ngt), 1) : 1)
 }
 
 function gainBankedInf() {
@@ -7793,10 +7793,10 @@ function gameLoop(diff) {
 	
 	if(!player.autoEterOptions) player.autoEterOptions = {}
 	
-	if(hasTimeStudy(1011) || (player.mods.ngt && ngt.division.times)) {
+	if(hasTimeStudy(43) || (player.mods.ngt && ngt.division.times)) {
         for (i=1;i<9;i++) document.getElementById("td"+i+'auto').style.visibility="visible"
     }
-	if(hasTimeStudy(1012) || (player.mods.ngt && ngt.division.times)) {
+	if(hasTimeStudy(44) || (player.mods.ngt && ngt.division.times)) {
         document.getElementById('epmultauto').style.display=""	
 	}
 	
@@ -7830,28 +7830,19 @@ function gameLoop(diff) {
 		
 	// Fix this stupid bug
 	
-	studyCosts = [1, 3, 2, 2, 3, 2, 4, 6, 3, 3, 3, 4, 6, 5, 4, 6, 5, 4, 5, 7, 4, 6, 6, 12, 9, 9, 9, 5, 5, 5, 4, 4, 4, 8, 7, 7, 15, 200, 400, 730, 300, 900, 120, 150, 200, 120, 900, 900, 900, 900, 900, 900, 900, 900, 500, 500, 500, 500, 60, 1e4, 1e4, 3e5]
-	
 	for(var i = 0; i < studyCosts.length; i++) {
-		if(ge("studyCost" + i)) ge("studyCost" + i).innerHTML = getFullExpansion(studyCosts[i]);
+		if(ge("studyCost" + all[i])) ge("studyCost" + all[i]).innerHTML = getFullExpansion(getStudyCost(i));
 	}
 	
 	ge("224amt").innerText = getFullExpansion(player.resets / 850);
-	ge("225amt").innerText = getFullExpansion(player.replicanti.amount.log10() / (player.mods.ngt ? 308 : 1000));
-	ge("226amt").innerText = getFullExpansion(player.replicanti.gal / (player.mods.ngt ? 8 : 15));
+	ge("225amt").innerText = getFullExpansion(ts225Eff);
+	ge("226amt").innerText = getFullExpansion(ts226Eff);
 	
-	ge('replicantibulkmodetoggle').style.display=(player.achievements.includes("ngpp16")||hasTimeStudy(1021)||(player.mods.ngt && ngt.division.times))?"inline-block":"none"
+	ge('replicantibulkmodetoggle').style.display=(player.achievements.includes("ngpp16")||hasTimeStudy(202)||(player.mods.ngt && ngt.division.times))?"inline-block":"none"
 	
 	if(player.mods.ngt) {
 		ngt = player.mods.ngt || {};
 		player.mods.ngt = ngt;
-	
-		// Super expensive studies
-	
-		superStudies = 0;
-		player.timestudy.studies.forEach(function(study) {if(study > 220 && study < 1000) superStudies++});
-	
-		calculateNewStudyCosts();
 		
 		ge("131desc").innerText = player.achievements.includes("ngt15") ? "You can get 50% more replicanti galaxies" : "Automatic replicanti galaxies are disabled, but you can get 50% more";
 		ge("201desc").innerText = hasUpg(13) ? "Pick all paths from the first split" : "Pick another path from the first split";

@@ -1469,11 +1469,11 @@ if (player.version < 5) {
 	document.getElementById("ic7desc").textContent="You can't get Antimatter Galaxies, but dimensional boost multiplier "+(player.galacticSacrifice?"is cubed":"2.5x -> 10x")
 	document.getElementById("ic7reward").textContent="Reward: Dimensional boost multiplier "+(player.galacticSacrifice?"is squared":"2.5x -> 4x")
 	document.getElementById("replicantitabbtn").style.display=player.infinityUpgradesRespecced?"none":""
-	document.getElementById("41").innerHTML="Each galaxy gives a "+(player.mods.ngt?5:player.aarexModifications.newGameExpVersion?1.5:1.2)+"x multiplier on IP gained. <span>Cost: <t id = 'studyCost6'></t> Time Theorems"
-	document.getElementById("42").innerHTML="Galaxy requirement goes up "+(player.aarexModifications.newGameExpVersion?48:52)+" 8ths instead of 60.<span>Cost: <t id = 'studyCost7'></t> Time Theorems"
-	document.getElementById("61").innerHTML="You gain 10"+(player.aarexModifications.newGameExpVersion?0:"")+"x more EP<span>Cost: <t id = 'studyCost9'></t> Time Theorems"
-	document.getElementById("62").innerHTML="You gain replicanti "+(player.aarexModifications.newGameExpVersion?4:3)+" times faster<span>Cost: <t id = 'studyCost10'></t> Time Theorems"
-	document.getElementById("81").innerHTML="Dimensional boost power "+(player.galacticSacrifice?"is cubed":"becomes 10x")+"<span>Cost: <t id = 'studyCost14'></t> Time Theorems"
+	document.getElementById("41").innerHTML="Each galaxy gives a "+(player.mods.ngt?5:player.aarexModifications.newGameExpVersion?1.5:1.2)+"x multiplier on IP gained. <span>Cost: <t id = 'studyCost41'></t> Time Theorems"
+	document.getElementById("42").innerHTML="Galaxy requirement goes up "+(player.aarexModifications.newGameExpVersion?48:52)+" 8ths instead of 60.<span>Cost: <t id = 'studyCost42'></t> Time Theorems"
+	document.getElementById("61").innerHTML="You gain 10"+(player.aarexModifications.newGameExpVersion?0:"")+"x more EP<span>Cost: <t id = 'studyCost61'></t> Time Theorems"
+	document.getElementById("62").innerHTML="You gain replicanti "+(player.aarexModifications.newGameExpVersion?4:3)+" times faster<span>Cost: <t id = 'studyCost62'></t> Time Theorems"
+	document.getElementById("81").innerHTML="Dimensional boost power "+(player.galacticSacrifice?"is cubed":"becomes 10x")+"<span>Cost: <t id = 'studyCost81'></t> Time Theorems"
 
 	updateAutobuyers();
 	setAchieveTooltip();
@@ -1504,7 +1504,7 @@ if (player.version < 5) {
 	document.getElementById("achRowng3p1").style.display=player.masterystudies==undefined?"none":""
 	document.getElementById("achRowng3p2").style.display=player.masterystudies==undefined?"none":""
 	document.getElementById("metaAntimatterEffectType").textContent=inQC(3)?"multiplier on all Infinity Dimensions":"extra multiplier per dimension boost"
-	for (i=1;i<9;i++) document.getElementById("td"+i+'auto').style.visibility=player.achievements.includes("ngpp17")||hasTimeStudy(1011)?"visible":"hidden"
+	for (i=1;i<9;i++) document.getElementById("td"+i+'auto').style.visibility=player.achievements.includes("ngpp17")||hasTimeStudy(43)?"visible":"hidden"
 	document.getElementById('togglealltimedims').style.visibility=player.achievements.includes("ngpp17")?"visible":"hidden"
 	document.getElementById('replicantibulkmodetoggle').textContent="Mode: "+(player.galaxyMaxBulk?"Max":"Singles")
 	if (player.meta) {
@@ -2117,6 +2117,13 @@ function transformSaveToDecimal() {
 					player.quantum.nanofield.powerThreshold = new Decimal(player.quantum.nanofield.powerThreshold)
 			}
 	}
+	
+	// fuck that shit
+	var s = player.timestudy.studies, b = -1;
+	if((b = s.indexOf(1001)) > -1) s[b] = 34;
+	if((b = s.indexOf(1011)) > -1) s[b] = 43;
+	if((b = s.indexOf(1012)) > -1) s[b] = 44;
+	if((b = s.indexOf(1021)) > -1) s[b] = 202;
 	
 	if(player.mods.ngt) {
 		ngt = player.mods.ngt;
