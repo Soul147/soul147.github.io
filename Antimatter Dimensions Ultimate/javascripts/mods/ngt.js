@@ -824,7 +824,7 @@ function getStudyCost(i) {
 		if(all[i] == 181) return 0;
 		if(all[i] == 43 || all[i] == 44 || all[i] == 202) return c;
 		if(all[i] > 220) c *= 2000/9*(superStudies+1);
-		else if(all[i] > 200) console.log(all[i]), c *= 20
+		else if(all[i] > 200) c *= 20
 		else c *= 3;
 	}
 	return c;
@@ -1028,8 +1028,7 @@ function getVGalAmount() {
 	return Math.floor(Math.max(getTotalVP().multiply(getVGalBase()).log(getVGalBase()), 0))
 }
 
-function meltdown(energy, respec) { // you fucked up
-	// console.log(Math.floor(energy.divide(ngt.division.maxHealth)))
+function meltdown(energy, respec) {
 	gain = getVPGain() * Math.floor(energy.divide(ngt.division.maxHealth))
 	ngt.division.energy = Decimal.mod(energy, ngt.division.maxHealth)
 	console.log(Decimal.mod(ngt.division.energy, ngt.division.maxHealth))
@@ -1072,16 +1071,12 @@ function updateDivision(diff) {
 	overflow = ngt.division.energy.add(energyGain);
 	ngt.division.energyInput = ge("energyinput").value;
 	ngt.division.energy = ngt.division.energy.add(energyGain).min(ngt.division.maxHealth);
-	// console.log(ngt.division.energy.toString())
 	ngt.division.shards = ngt.division.shards.add(gain);
 	ngt.division.totalShards = ngt.division.totalShards.add(gain);
 	ngt.division.um = amount;
-	// console.log(getBaseEighthsProduced().toString(), ngt.division.energy.toString())
 	ngt.division.eightProduced = ngt.division.eightProduced.max(getBaseEighthsProduced())
 	
-	// console.log(overflow.divide(ngt.division.maxHealth).toString())
 	if(ngt.division.energy.gte(ngt.division.maxHealth)) meltdown(overflow, ngt.division.respec);
-	// console.log(energyGain.divide(ngt.division.maxHealth))
 	
 	umRate = getUMGain().divide(Date.now() - (ngt.division.last || Date.now() - player.totalTimePlayed*100)).multiply(60000);
 	ngt.division.peak = Decimal.max(ngt.division.peak, umRate);
@@ -1109,7 +1104,7 @@ function updateDivision(diff) {
 	ge("vpgain").innerHTML = getFullExpansion(getVPGain())
 	
 	for(var i = 0; i < 6; i++) {
-		ge("shardupg" + i).className = "timestudy " + (canBuyShardUpg(i) ? (i % 6 < 3 ? "lightstudy" : "darkstudy") : "timestudylocked")
+		ge("shardupg" + i).className = canBuyShardUpg(i) ? (i % 6 < 3 ? "timestudy lightstudy" : "timestudy darkstudy") : "timestudylocked"
 		ge("shardupg" + i).style.height = "100px";
 		var t = ""
 		t += ["MATRIX","OVERCHARGE","AUGMENTATION","COMPRESSION","DILATION","REALITY"][i] + " " + roman(Decimal.add(ngt.division.shardUpgrades[i], 1) || 1) + "<br>"

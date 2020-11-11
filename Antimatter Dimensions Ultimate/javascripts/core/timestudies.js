@@ -282,7 +282,7 @@ function updateTimeStudyButtons() {
   }
   for (var i=0; i<all.length; i++) {
       if (!player.timestudy.studies.includes(all[i])) {
-          if (canBuyStudy(all[i]) && getStudyCost(i)<=player.timestudy.theorem && !inOC(8)) {
+          if (canBuyStudy(all[i]) && getStudyCost(i)<=(all[i]==34||all[i]==43||all[i]==44||all[i]==202?player.timestudy.totalTheorem:player.timestudy.theorem) && !inOC(8)) {
               if (all[i] == 71 || all[i] == 81 || all[i] == 91 || all[i] == 101) {
                   document.getElementById(all[i]).className = "timestudy normaldimstudy"
               } else if (all[i] == 72 || all[i] == 82 || all[i] == 92 || all[i] == 102) {
@@ -373,7 +373,6 @@ function studiesUntil(id) {
       if ((i > 6 && i < 11) || (i > 11 && i < 15)) buyTimeStudy(i * 10 + (chosenPath === 0 ? col : chosenPath), 0, true);
       if ((i > 6 && i < 11) && hasTimeStudy(201)) buyTimeStudy(i * 10 + secondPath, 0, true);
       else for (var j = 1; all.includes(i * 10 + j) ; j++) buyTimeStudy(i * 10 + j, 0, true);
-	  console.log(i, j)
   }
   buyTimeStudy(id, studyCosts[all.indexOf(id)], 0, true);
 }
@@ -516,7 +515,6 @@ function exportStudyTree() {
 };
 
 function importStudyTree(input) {
-	console.log("g");
 	onImport = true
 	if (typeof input !== 'string') var input = prompt()
 	onImport = false
@@ -530,8 +528,8 @@ function importStudyTree(input) {
 			}
 		}
 	} else {
+		input = input.replace("1001","34").replace("1011","43").replace("1012","44").replace("1021","202")
 		var studiesToBuy = input.split("|")[0].split(",");
-		console.log(studiesToBuy)
 		if(studiesToBuy.includes("201")) { // very nice workaround here
 			buyTimeStudy(181);
 			buyTimeStudy(192);
