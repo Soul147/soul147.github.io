@@ -7,6 +7,11 @@ body, button {
 	font-family: Typewriter !important;
 }
 
+button, br {
+    user-select: none;
+    outline: none;
+}
+
 .before {
 	color: #000000;
     background: #ABB5E6;
